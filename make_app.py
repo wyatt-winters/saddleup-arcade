@@ -33,24 +33,18 @@ html='''<!doctype html>
 <meta name="theme-color" content="#0b1222">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Arcade">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/favicon-64.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 '''+START+'''
 <style>html,body{margin:0;height:100%;background:#0f172a;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%}
-#idf-bleed{position:fixed!important;top:0!important;bottom:auto!important;left:0!important;right:0!important;width:auto!important;height:100vh!important;height:100lvh!important;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) 0 env(safe-area-inset-left,0px)!important;margin:0!important;box-sizing:border-box!important}\n#idf-frame{height:100%!important}
+#idf-bleed{position:fixed!important;top:0!important;bottom:0!important;left:0!important;right:0!important;width:auto!important;height:auto!important;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) 0 env(safe-area-inset-left,0px)!important;margin:0!important;box-sizing:border-box!important}\n#idf-frame{height:100%!important}
 '''+SPCSS+'''</style>
 </head><body>
 <div class="sp" id="splash">'''+SPIN+'''<div class="sp-bar"><i></i></div></div>
 '''+emb+'''
-<script>/* iOS home-screen app: innerHeight leaves out the status bar a second time, so size to the real screen */
-(function(){var el=null;function fit(){el=el||document.getElementById('idf-bleed');if(!el)return;
-  var sa=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: fullscreen)').matches),H=innerHeight;
-  if(sa&&/iP(hone|ad|od)|Macintosh/.test(navigator.userAgent)&&'ontouchend' in document){var land=innerWidth>innerHeight,sh=land?Math.min(screen.width,screen.height):Math.max(screen.width,screen.height);if(sh>H&&sh-H<140)H=sh;}
-  el.style.setProperty('height',H+'px','important');}
- fit();addEventListener('resize',fit);addEventListener('orientationchange',function(){setTimeout(fit,250);});addEventListener('load',fit);setTimeout(fit,600);})();</script>
 <script>/* splash: fade out once the first room has loaded (at least 1.1s, at most 9s) */
 (function(){var t0=Date.now(),sp=document.getElementById('splash');if(!sp)return;
  function ready(){try{var sd=document.getElementById('idf-frame').contentDocument,g=sd&&sd.querySelector('.frames iframe:not(.off)'),gd=g&&g.contentDocument;
@@ -60,7 +54,7 @@ html='''<!doctype html>
 (function(){function q(){try{var b=document.getElementById('idf-bleed').getBoundingClientRect(),f=document.getElementById('idf-frame'),fr=f.getBoundingClientRect(),sw=f.contentWindow,sd=sw.document,
  g=sd.querySelector('.frames iframe:not(.off)'),gr=g?g.getBoundingClientRect():null,gd=g&&g.contentDocument,gv=gd?getComputedStyle(gd.documentElement).getPropertyValue('--fsvh'):'',
  st=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
- return 'v8 sa:'+(st?1:0)+' win:'+innerWidth+'x'+innerHeight+' vv:'+(window.visualViewport?Math.round(visualViewport.height):'-')+' scr:'+screen.height+
+ return 'v9 sa:'+(st?1:0)+' win:'+innerWidth+'x'+innerHeight+' vv:'+(window.visualViewport?Math.round(visualViewport.height):'-')+' scr:'+screen.height+
  ' | bleed:'+Math.round(b.top)+'-'+Math.round(b.bottom)+' frame:'+Math.round(fr.top)+'-'+Math.round(fr.bottom)+' | shell:'+sw.innerHeight+' fs:'+(sd.documentElement.classList.contains('fs')?1:0)+
  ' game:'+(gr?Math.round(gr.top)+'+'+Math.round(gr.height):'-')+' fsvh:'+gv+' gH:'+(gd?gd.documentElement.scrollHeight:'-');}catch(e){return 'err '+e.message;}}
  var d=document.createElement('div');d.style.cssText='position:fixed;left:6px;right:6px;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);z-index:2147483647;background:#b91c1c;color:#fff;font:12px/1.35 monospace;padding:6px 8px;border-radius:8px;pointer-events:none;white-space:normal';
