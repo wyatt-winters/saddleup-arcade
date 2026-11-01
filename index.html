@@ -118,6 +118,8 @@ html.fs .mhandle{display:flex;position:fixed;left:50%;top:0;z-index:301;transfor
   height:20px;padding:0 12px 2px;border:1px solid rgba(198,167,94,.45);border-top:0;border-radius:0 0 10px 10px;background:rgba(8,12,24,.72);color:#f2d27e;
   font:800 10px Inter,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;opacity:.55;transition:opacity .2s,top .25s cubic-bezier(.2,.8,.3,1);-webkit-appearance:none;appearance:none}
 html.fs .mhandle:hover,html.fs .mhandle:focus-visible{opacity:1}
+.backtab{display:none}
+@media (max-width:759px){html.fs .mhandle,html.fs .bar{display:none!important}html.fs .backtab{display:flex;position:fixed;left:50%;top:0;z-index:301;transform:translateX(-50%);align-items:center;gap:4px;height:24px;padding:0 13px 2px;border:1px solid rgba(198,167,94,.55);border-top:0;border-radius:0 0 11px 11px;background:rgba(8,12,24,.82);color:#f2d27e;font:800 10.5px Inter,system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent}html.fs .backtab svg{width:12px;height:12px}html.fs .backtab.off{display:none!important}}
 html.fs .mhandle svg{width:12px;height:12px;transition:transform .25s}
 html.fs.menuopen .mhandle{opacity:1;top:var(--barh,56px)}
 html.fs.menuopen .mhandle svg{transform:rotate(180deg)}
@@ -203,6 +205,7 @@ html.fs #acTxt{display:none!important}
 </head>
 <body>
 <div class="wrap">
+  <button class="backtab off" id="backTab" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span>Casino Floor</span></button>
   <button class="mhandle" id="mHandle" type="button" aria-label="Show the game menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>Games</button>
   <div class="bar">
     <div class="brand"><span class="wm" role="img" aria-label="Saddle Up AI"></span><span class="pill"><i></i>Arcade</span></div>
@@ -511,6 +514,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+})();
+
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
 })();
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
@@ -1686,6 +1708,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+})();
+
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
 })();
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
@@ -4559,6 +4600,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+})();
+
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
 })();
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
@@ -7539,6 +7599,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
 })();
 
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
+})();
+
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
 (function(){
   var LIST=/*SKINLIST*/[]/*SKINLIST*/;
@@ -10056,6 +10135,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
 })();
 
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
+})();
+
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
 (function(){
   var LIST=/*SKINLIST*/[]/*SKINLIST*/;
@@ -11802,6 +11900,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
 })();
 
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
+})();
+
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
 (function(){
   var LIST=/*SKINLIST*/[]/*SKINLIST*/;
@@ -13037,6 +13154,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+})();
+
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
 })();
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
@@ -14895,6 +15031,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+})();
+
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
 })();
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
@@ -17181,6 +17336,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+})();
+
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
 })();
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
@@ -19532,6 +19706,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+})();
+
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
 })();
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
@@ -21935,6 +22128,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
 })();
 
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
+})();
+
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
 (function(){
   var LIST=/*SKINLIST*/[]/*SKINLIST*/;
@@ -23260,6 +23472,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+})();
+
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
 })();
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
@@ -25842,6 +26073,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
 })();
 
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
+})();
+
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
 (function(){
   var LIST=/*SKINLIST*/[]/*SKINLIST*/;
@@ -27465,6 +27715,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+})();
+
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
 })();
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
@@ -29502,6 +29771,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+})();
+
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
 })();
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
@@ -31827,6 +32115,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+})();
+
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
 })();
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
@@ -34246,6 +34553,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+})();
+
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
 })();
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
@@ -37147,6 +37473,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
 })();
 
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
+})();
+
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
 (function(){
   var LIST=/*SKINLIST*/[]/*SKINLIST*/;
@@ -39746,6 +40091,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
 })();
 
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
+})();
+
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
 (function(){
   var LIST=/*SKINLIST*/[]/*SKINLIST*/;
@@ -40655,6 +41019,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
 })();
 
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
+})();
+
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
 (function(){
   var LIST=/*SKINLIST*/[]/*SKINLIST*/;
@@ -41527,6 +41910,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
 })();
 
+/* account in Options: sign in / save wallet opens the arcade's account panel */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex;align-items:center;justify-content:space-between;gap:10px}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''};
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  function add(){
+    if(document.querySelector('.su-acct'))return;
+    var p=document.querySelector('.panel[data-opt]')||document.querySelector('[data-opt]');if(!p)return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    var h=p.querySelector('h4');if(h&&h.parentNode===p)p.insertBefore(r,h.nextSibling);else p.insertBefore(r,p.firstChild);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
+})();
+
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
 (function(){
   var LIST=/*SKINLIST*/[]/*SKINLIST*/;
@@ -41925,7 +42327,7 @@ window.__ad={S:S,place:place,discard:discard,why:why,anyMove:anyMove};
     box.appendChild(f);
     f.setAttribute('allow','autoplay; fullscreen');f.setAttribute('allowfullscreen','');
     f.setAttribute('srcdoc',source(id));
-    f.addEventListener('load',function(){if(fsOn)post(f,{arcade:'fs',on:true,vh:gameH()});post(f,{arcade:'skin',skin:skin,skins:SKIN_IDS});});
+    f.addEventListener('load',function(){if(fsOn)post(f,{arcade:'fs',on:true,vh:gameH()});post(f,{arcade:'skin',skin:skin,skins:SKIN_IDS});if(window.__acctB)window.__acctB(f);});
     frames[id]=f;return f;
   }
 
@@ -42037,13 +42439,17 @@ window.__ad={S:S,place:place,discard:discard,why:why,anyMove:anyMove};
   function casinoLabel(id){var on=!!CAS[id];cbtn.classList.toggle('on',on);var nm=on?(id==='slots'?'Slots':id==='floor'?'Floor':id==='wheel'?'Wheel':id==='crash'?'Crash':id==='derby'?'Derby':id==='pool'?'Pool':id==='backgammon'?'Backgammon':NAMES[id].replace("Texas ","")):'Casino';
     document.getElementById('casLbl').textContent=nm;document.getElementById('casLblS').textContent=nm;cbtn.title=on?'Casino: '+NAMES[id]:'Casino games';}
   function post(f,msg){try{f.contentWindow.postMessage(msg,'*');}catch(e){}}
+  /* phones in full screen: no menu; a small tab goes back to the room the game belongs to */
+  function navTab(id){var b=document.getElementById('backTab');if(!b)return;var room=id==='floor'||id==='parlor';b.classList.toggle('off',room);
+    if(!room){var to=PAR[id]?'parlor':'floor';b.setAttribute('data-to',to);b.querySelector('span').textContent=to==='parlor'?'Game Parlor':'Casino Floor';b.setAttribute('aria-label','Back to the '+(to==='parlor'?'Game Parlor':'Casino Floor'));}}
+  document.getElementById('backTab').addEventListener('click',function(){show(this.getAttribute('data-to')||'floor',true);});
   function show(id,focus){
     if(!NAMES[id])id='floor';
     var f=ensure(id),prev=active;
     for(var k in frames){var on=k===id;frames[k].classList.toggle('off',!on);post(frames[k],{arcade:'visible',on:on,from:on?prev:null});}
     Array.prototype.forEach.call(document.querySelectorAll('.tab'),function(t){
       var on=t.getAttribute('data-g')===id;t.classList.toggle('on',on);t.setAttribute('aria-selected',on?'true':'false');t.tabIndex=on?0:-1;});
-    active=id;try{localStorage.setItem('su_arcade_tab',id);}catch(e){}
+    active=id;try{localStorage.setItem('su_arcade_tab',id);}catch(e){}navTab(id);
     casinoLabel(id);parlorLabel(id);if(cmenu.classList.contains('open'))openMenu(false);if(pmenu.classList.contains('open'))openP(false);if(typeof menu==='function'&&root.classList.contains('menuopen'))menu(false);
     if(focus){var tryFocus=function(){try{f.contentWindow.focus();}catch(e){}};tryFocus();f.addEventListener('load',tryFocus,{once:true});}
   }
@@ -42135,6 +42541,7 @@ window.__ad={S:S,place:place,discard:discard,why:why,anyMove:anyMove};
       var t=document.getElementById('acTxt'),f=document.getElementById('acFace');
       if(tok){f.textContent=face();t.textContent=nm()||uname||'Account';btn.classList.add('in');btn.title='Signed in as '+uname+' · your bankroll is saved';}
       else{f.textContent='👤';t.textContent='Save wallet';btn.classList.remove('in');btn.title='Make an account to keep your bankroll on any computer';}
+      if(window.__acctB)window.__acctB();
     }
     function status(txt,bad){var s=$('.ac-st');if(s){s.textContent=txt||'';s.classList.toggle('bad',!!bad);}}
     function setMode(m){mode=m;$('.ac-tabs [data-m="new"]').classList.toggle('on',m==='new');$('.ac-tabs [data-m="old"]').classList.toggle('on',m==='old');
@@ -42149,6 +42556,8 @@ window.__ad={S:S,place:place,discard:discard,why:why,anyMove:anyMove};
     }
     function open(){modal.hidden=false;if(tok)view('in');else{view('auth');setMode(mode);}}
     function close(){modal.hidden=true;}
+    window.addEventListener('message',function(e){var d=e.data;if(!d||d.arcade!=='account')return;for(var k in frames){if(frames[k].contentWindow===e.source){open();return;}}});
+    window.__acctB=function(f){var m={arcade:'acct',in:!!tok,name:tok?(nm()||uname):''};if(f){post(f,m);return;}for(var k in frames)post(frames[k],m);};
     btn.addEventListener('click',function(e){e.stopPropagation();modal.hidden?open():close();});
     modal.addEventListener('click',function(e){if(e.target===modal)close();});
     $('.ac-x').onclick=close;
