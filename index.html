@@ -42737,7 +42737,7 @@ window.__ad={S:S,place:place,discard:discard,why:why,anyMove:anyMove};
   window.addEventListener('resize',function(){postImm(false);if(immOn()){curH=0;setH(0);}});
 
   var curH=0, holder=null, tier2=false;
-  function setH(h){
+  function setH(h){imp(frame,'height','100%');return;
     if(immOn()) h=bleed.getBoundingClientRect().height||window.innerHeight||h;
     h=Math.max(MIN_HEIGHT,Math.ceil(h));
     if(Math.abs(h-curH)<2) return;

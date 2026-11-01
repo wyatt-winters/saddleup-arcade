@@ -7,7 +7,8 @@ a="function immOn(){try{return IMMERSIVE&&window.innerWidth>=900&&!(window.match
 assert emb.count(a)==1;emb=emb.replace(a,"function immOn(){return true;}")
 # app: keep clear of the iPhone Dynamic Island / notch and home bar. The arcade box sits inside the safe area
 for a,b in [("if(immOn()) h=window.innerHeight||document.documentElement.clientHeight||h;","if(immOn()) h=bleed.getBoundingClientRect().height||window.innerHeight||h;"),
-            ("var FULL_BLEED=true;","var FULL_BLEED=false;"),("var UNCLIP=true;","var UNCLIP=false;")]:
+            ("var FULL_BLEED=true;","var FULL_BLEED=false;"),("var UNCLIP=true;","var UNCLIP=false;"),
+            ("  function setH(h){\n","  function setH(h){imp(frame,'height','100%');return;\n")]:
   assert emb.count(a)==1,a;emb=emb.replace(a,b)
 # app: hide the Full screen button (the app is already full screen)
 a="if(TRIM_INNER) src=src.replace('</head>',"
