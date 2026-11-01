@@ -2,6 +2,10 @@
 import os,shutil,re,json,base64,time,hashlib
 D='/tmp/work/app/dist';shutil.rmtree(D,ignore_errors=True);os.makedirs(D+'/icons')
 for f in os.listdir('/tmp/work/app/icons'):shutil.copy('/tmp/work/app/icons/'+f,D+'/icons/'+f)
+os.makedirs(D+'/splash');[shutil.copy('/tmp/work/app/splash/'+f,D+'/splash/'+f) for f in os.listdir('/tmp/work/app/splash') if f.endswith('.png')]
+SPCSS=open('/tmp/work/app/splash/splash.css').read();SPIN=open('/tmp/work/app/splash/inner.html').read()
+DEV=[(440,956,3),(430,932,3),(402,874,3),(393,852,3),(390,844,3),(428,926,3),(414,896,3),(375,812,3),(414,896,2),(375,667,2),(414,736,3),(320,568,2)]
+START=''.join('<link rel="apple-touch-startup-image" media="screen and (device-width: %dpx) and (device-height: %dpx) and (-webkit-device-pixel-ratio: %d) and (orientation: portrait)" href="splash/launch-%dx%d.png">\n'%(w,h,d,w*d,h*d) for w,h,d in DEV)
 emb=open('/tmp/work/arcade_embed.html',encoding='utf-8').read()
 a="function immOn(){try{return IMMERSIVE&&window.innerWidth>=900&&!(window.matchMedia&&matchMedia('(hover: none) and (pointer: coarse)').matches);}catch(e){return false;}}"
 assert emb.count(a)==1;emb=emb.replace(a,"function immOn(){return true;}")
@@ -34,15 +38,29 @@ html='''<!doctype html>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/favicon-64.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+'''+START+'''
 <style>html,body{margin:0;height:100%;background:#0f172a;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%}
-#idf-bleed{position:fixed!important;top:env(safe-area-inset-top,0px)!important;right:env(safe-area-inset-right,0px)!important;bottom:0!important;left:env(safe-area-inset-left,0px)!important;width:auto!important;height:auto!important;padding:0!important;margin:0!important}\n#idf-frame{height:100%!important}</style>
+#idf-bleed{position:fixed!important;top:0!important;bottom:auto!important;left:0!important;right:0!important;width:auto!important;height:100vh!important;height:100lvh!important;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) 0 env(safe-area-inset-left,0px)!important;margin:0!important;box-sizing:border-box!important}\n#idf-frame{height:100%!important}
+'''+SPCSS+'''</style>
 </head><body>
+<div class="sp" id="splash">'''+SPIN+'''<div class="sp-bar"><i></i></div></div>
 '''+emb+'''
+<script>/* iOS home-screen app: innerHeight leaves out the status bar a second time, so size to the real screen */
+(function(){var el=null;function fit(){el=el||document.getElementById('idf-bleed');if(!el)return;
+  var sa=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: fullscreen)').matches),H=innerHeight;
+  if(sa&&/iP(hone|ad|od)|Macintosh/.test(navigator.userAgent)&&'ontouchend' in document){var land=innerWidth>innerHeight,sh=land?Math.min(screen.width,screen.height):Math.max(screen.width,screen.height);if(sh>H&&sh-H<140)H=sh;}
+  el.style.setProperty('height',H+'px','important');}
+ fit();addEventListener('resize',fit);addEventListener('orientationchange',function(){setTimeout(fit,250);});addEventListener('load',fit);setTimeout(fit,600);})();</script>
+<script>/* splash: fade out once the first room has loaded (at least 1.1s, at most 9s) */
+(function(){var t0=Date.now(),sp=document.getElementById('splash');if(!sp)return;
+ function ready(){try{var sd=document.getElementById('idf-frame').contentDocument,g=sd&&sd.querySelector('.frames iframe:not(.off)'),gd=g&&g.contentDocument;
+   return !!(gd&&gd.readyState==='complete'&&gd.body&&gd.body.childElementCount);}catch(e){return false;}}
+ var iv=setInterval(function(){var el=Date.now()-t0;if((ready()&&el>1100)||el>9000){clearInterval(iv);setTimeout(function(){sp.classList.add('gone');setTimeout(function(){sp.remove();},600);},250);}},120);})();</script>
 <script>/* TEMP size readout (remove after the iPhone chin is fixed) */
 (function(){function q(){try{var b=document.getElementById('idf-bleed').getBoundingClientRect(),f=document.getElementById('idf-frame'),fr=f.getBoundingClientRect(),sw=f.contentWindow,sd=sw.document,
  g=sd.querySelector('.frames iframe:not(.off)'),gr=g?g.getBoundingClientRect():null,gd=g&&g.contentDocument,gv=gd?getComputedStyle(gd.documentElement).getPropertyValue('--fsvh'):'',
  st=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
- return 'v7 sa:'+(st?1:0)+' win:'+innerWidth+'x'+innerHeight+' vv:'+(window.visualViewport?Math.round(visualViewport.height):'-')+' scr:'+screen.height+
+ return 'v8 sa:'+(st?1:0)+' win:'+innerWidth+'x'+innerHeight+' vv:'+(window.visualViewport?Math.round(visualViewport.height):'-')+' scr:'+screen.height+
  ' | bleed:'+Math.round(b.top)+'-'+Math.round(b.bottom)+' frame:'+Math.round(fr.top)+'-'+Math.round(fr.bottom)+' | shell:'+sw.innerHeight+' fs:'+(sd.documentElement.classList.contains('fs')?1:0)+
  ' game:'+(gr?Math.round(gr.top)+'+'+Math.round(gr.height):'-')+' fsvh:'+gv+' gH:'+(gd?gd.documentElement.scrollHeight:'-');}catch(e){return 'err '+e.message;}}
  var d=document.createElement('div');d.style.cssText='position:fixed;left:6px;right:6px;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);z-index:2147483647;background:#b91c1c;color:#fff;font:12px/1.35 monospace;padding:6px 8px;border-radius:8px;pointer-events:none;white-space:normal';
