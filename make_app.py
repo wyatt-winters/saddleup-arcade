@@ -40,11 +40,18 @@ html='''<!doctype html>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 '''+START+'''
 <style>html,body{margin:0;height:100%;background:#0f172a;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%}
-#idf-bleed{position:fixed!important;top:0!important;bottom:0!important;left:0!important;right:0!important;width:auto!important;height:auto!important;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) 0 env(safe-area-inset-left,0px)!important;margin:0!important;box-sizing:border-box!important}\n#idf-frame{height:100%!important}
+#idf-bleed{position:fixed!important;top:0!important;bottom:0!important;left:0!important;right:0!important;width:auto!important;height:auto!important;padding:env(safe-area-inset-top,0px) var(--sr,env(safe-area-inset-right,0px)) 0 var(--sl,env(safe-area-inset-left,0px))!important;margin:0!important;box-sizing:border-box!important}\n#idf-frame{height:100%!important}
 '''+SPCSS+'''</style>
 </head><body>
 <div class="sp" id="splash">'''+SPIN+'''<div class="sp-bar"><i></i></div></div>
 '''+emb+'''
+<script>/* landscape: only keep clear of the side the Dynamic Island / notch is on; the other side runs to the edge */
+(function(){var R=document.documentElement;function side(){var a=typeof window.orientation==='number'?window.orientation:((screen.orientation&&screen.orientation.angle)||0);
+  a=((a%360)+360)%360;var E='env(safe-area-inset-',L=E+'left,0px)',Rt=E+'right,0px)';
+  if(a===90){R.style.setProperty('--sl',L);R.style.setProperty('--sr','0px');}else if(a===270){R.style.setProperty('--sl','0px');R.style.setProperty('--sr',Rt);}
+  else{R.style.removeProperty('--sl');R.style.removeProperty('--sr');}}
+ side();addEventListener('orientationchange',function(){side();setTimeout(side,300);});addEventListener('resize',side);
+ try{screen.orientation.addEventListener('change',side);}catch(e){}})();</script>
 <script>/* splash: fade out once the first room has loaded (at least 1.1s, at most 9s) */
 (function(){var t0=Date.now(),sp=document.getElementById('splash');if(!sp)return;
  function ready(){try{var sd=document.getElementById('idf-frame').contentDocument,g=sd&&sd.querySelector('.frames iframe:not(.off)'),gd=g&&g.contentDocument;
