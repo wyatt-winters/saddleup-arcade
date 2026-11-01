@@ -34,7 +34,7 @@ html='''<!doctype html>
 <link rel="icon" type="image/png" href="icons/favicon-64.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>html,body{margin:0;height:100%;background:#0f172a;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%}
-#idf-bleed{position:fixed!important;top:env(safe-area-inset-top,0px)!important;right:env(safe-area-inset-right,0px)!important;bottom:env(safe-area-inset-bottom,0px)!important;left:env(safe-area-inset-left,0px)!important;width:auto!important;height:auto!important;padding:0!important;margin:0!important}\n#idf-frame{height:100%!important}</style>
+#idf-bleed{position:fixed!important;top:env(safe-area-inset-top,0px)!important;right:env(safe-area-inset-right,0px)!important;bottom:0!important;left:env(safe-area-inset-left,0px)!important;width:auto!important;height:auto!important;padding:0!important;margin:0!important}\n#idf-frame{height:100%!important}</style>
 </head><body>
 '''+emb+'''
 <script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
