@@ -38,6 +38,15 @@ html='''<!doctype html>
 #idf-bleed{position:fixed!important;top:env(safe-area-inset-top,0px)!important;right:env(safe-area-inset-right,0px)!important;bottom:0!important;left:env(safe-area-inset-left,0px)!important;width:auto!important;height:auto!important;padding:0!important;margin:0!important}\n#idf-frame{height:100%!important}</style>
 </head><body>
 '''+emb+'''
+<script>/* TEMP size readout (remove after the iPhone chin is fixed) */
+(function(){function q(){try{var b=document.getElementById('idf-bleed').getBoundingClientRect(),f=document.getElementById('idf-frame'),fr=f.getBoundingClientRect(),sw=f.contentWindow,sd=sw.document,
+ g=sd.querySelector('.frames iframe:not(.off)'),gr=g?g.getBoundingClientRect():null,gd=g&&g.contentDocument,gv=gd?getComputedStyle(gd.documentElement).getPropertyValue('--fsvh'):'',
+ st=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+ return 'v7 sa:'+(st?1:0)+' win:'+innerWidth+'x'+innerHeight+' vv:'+(window.visualViewport?Math.round(visualViewport.height):'-')+' scr:'+screen.height+
+ ' | bleed:'+Math.round(b.top)+'-'+Math.round(b.bottom)+' frame:'+Math.round(fr.top)+'-'+Math.round(fr.bottom)+' | shell:'+sw.innerHeight+' fs:'+(sd.documentElement.classList.contains('fs')?1:0)+
+ ' game:'+(gr?Math.round(gr.top)+'+'+Math.round(gr.height):'-')+' fsvh:'+gv+' gH:'+(gd?gd.documentElement.scrollHeight:'-');}catch(e){return 'err '+e.message;}}
+ var d=document.createElement('div');d.style.cssText='position:fixed;left:6px;right:6px;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);z-index:2147483647;background:#b91c1c;color:#fff;font:12px/1.35 monospace;padding:6px 8px;border-radius:8px;pointer-events:none;white-space:normal';
+ addEventListener('load',function(){document.body.appendChild(d);var n=0,t=setInterval(function(){d.textContent=q();if(++n>40){clearInterval(t);d.remove();}},500);});})();</script>
 <script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
 </body></html>
 '''
