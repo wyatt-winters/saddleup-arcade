@@ -12010,7 +12010,8 @@ h1 span{display:block;color:var(--green)}
 .lab{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#cbb07a;margin-bottom:-6px}
 .hist{display:flex;flex-direction:column;gap:5px;max-height:132px;overflow:auto}
 .hist div{display:flex;justify-content:space-between;font-size:13px;padding:5px 9px;border-radius:9px;background:rgba(255,255,255,.04)}
-.hist div b{color:var(--green2)}.hist div b.big{color:#fde68a}
+.hist div b{color:var(--green2)}.hist div b.big{color:#fde68a}.hist div b.mb{color:#94a3b8;font-weight:700}
+.reveal.mb div{border-color:#94a3b8;box-shadow:0 20px 60px rgba(0,0,0,.7)}.reveal.mb #rvV{color:#e2e8f0}
 .hist .none{color:#94a3b8;justify-content:center}
 .msg{min-height:20px;text-align:center;font:400 15px Rye,Georgia,serif;color:#fff;letter-spacing:.03em}
 .rules{margin-top:14px;color:var(--muted);font-size:13px;line-height:1.6}
@@ -12992,13 +12993,13 @@ function ui(){
   btn.disabled=spinning||bank<c;
   var lad='';for(var i=0;i<6;i++){var cc=costOf(i);lad+='<i class="'+(i<st.n?'done':i===st.n?'now':'')+'">'+(cc===0?'Free':cc>=1000?'$'+(cc/1000)+'k':'$'+cc)+'</i>';}
   $('ladder').innerHTML=lad;
-  var h=st.hist.slice(-8).reverse().map(function(x){return '<div><span>Spin #'+x.n+(x.c?' \u00b7 '+money(x.c):' \u00b7 free')+'</span><b class="'+(x.v>=2500?'big':'')+'">'+money(x.v)+'</b></div>';}).join('');
+  var h=st.hist.slice(-8).reverse().map(function(x){return '<div><span>Spin #'+x.n+(x.c?' \u00b7 '+money(x.c):' \u00b7 free')+'</span>'+(x.mb||(x.c&&x.v===x.c)?'<b class="mb">Money back</b>':'<b class="'+(x.v>=2500?'big':'')+'">'+money(x.v)+'</b>')+'</div>';}).join('');
   $('hist').innerHTML=h||'<div class="none">No spins yet today</div>';
   $('hint').style.opacity=spinning?0:1;
   relabel();
 }
 var lastN=-1;function relabel(){if(st.n===lastN)return;lastN=st.n;var c=costOf(st.n);
-  SEG.forEach(function(x,i){if(!LBL[i]||x.m)return;var v=c?Math.round(c*PAIDX[x.v]):x.v;var t=short(v);if(x.j){if(LBL2)LBL2.textContent=t;return;}LBL[i].textContent=t;LBL[i].setAttribute('font-size',t.length>6?28:t.length>5?32:38);});
+  SEG.forEach(function(x,i){if(!LBL[i]||x.m)return;var v=c?Math.round(c*PAIDX[x.v]):x.v;var t=(c&&PAIDX[x.v]===1)?'MONEY BACK':short(v);if(x.j){if(LBL2)LBL2.textContent=t;return;}LBL[i].textContent=t;LBL[i].setAttribute('font-size',t==='MONEY BACK'?21:t.length>6?28:t.length>5?32:38);});
   var pm=$('pmul');if(pm){if(!c)pm.textContent='Free spin: base prizes';else{var o=oddsPaid();pm.innerHTML='Worst case: your '+money(c)+' back<br>Win more than you paid: '+Math.round(o.up*100)+'% \u00b7 5\u00d7 or more: '+(o.big*100).toFixed(1)+'%';}}}
 function countdown(){var n=new Date(),m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1),s=Math.max(0,Math.floor((m-n)/1000));
   if(st.d!==today()){load();ui();}
@@ -13029,10 +13030,14 @@ function done(k,c,spinNo){
   if(c>0){var X=s.m?MYSTX[pickW(MYSTX,function(m){return m[1];})][0]:PAIDX[s.v];v=Math.round(c*X);if(s.m)label='Mystery \u00d7'+X;else if(X===1)label='Money back';}
   else if(s.m){v=MYST[pickW(MYST,function(m){return m[1];})][0];label='Mystery prize';}
   if(s.j)label='JACKPOT!';
-  bank+=v;st.won+=v;st.hist.push({n:spinNo,c:c,v:v});save();
+  var mb=c>0&&v===c;
+  /* "Won today" counts what you actually won: on a paid spin that's the payout minus what the spin cost; money back adds nothing */
+  bank+=v;st.won+=c>0?Math.max(0,v-c):v;st.hist.push({n:spinNo,c:c,v:v,mb:mb?1:0});save();
+  if(mb){lightMode='idle';$('rvT').textContent='Your '+money(c)+' is back';$('rvV').textContent='Money back';$('reveal').classList.add('on','mb');
+    msg('Money back on that one. No win, no loss.');setTimeout(function(){$('reveal').classList.remove('on','mb');spinning=false;ui();},2200);ui();return;}
   lightMode='win';$('rvT').textContent=label;$('rvV').textContent=money(v);$('reveal').classList.add('on');
   var big=v>=Math.max(2500,c*5);fanfare(big);confetti(big?140:50);
-  try{if(window.suBanner&&v>=1000)suBanner(s.j?'Jackpot!':big?'Big Win!':'Winner!',money(v),2400);}catch(e){}
+  try{if(window.suBanner&&v-c>=1000)suBanner(s.j?'Jackpot!':big?'Big Win!':'Winner!',money(v),2400);}catch(e){}
   var net=v-c;msg(s.m?'The mystery slot paid '+money(v)+'!':net>0?'Nice spin! Up '+money(net)+'.':net===0?'Broke even on that one.':'The wheel giveth\u2026 down '+money(-net)+' on that spin.');
   setTimeout(function(){$('reveal').classList.remove('on');lightMode='idle';spinning=false;ui();},2600);
   ui();
@@ -20183,6 +20188,48 @@ kbd{font:inherit;font-size:10px;background:rgba(15,23,42,.35);border:1px solid r
 .optslot{display:none}
 html.fs .felt{height:calc(var(--fsvh,100vh) - 16px);padding:48px 12px 8px;border-radius:16px}
 html.fs .fin{margin:0 auto}
+/* ---------- phone layout ---------- */
+html.btmob .felt{padding:4px 4px 4px!important;border-radius:0!important}
+html.btmob .stats.hud,html.btmob .hudgap{display:none!important}
+html.btmob .fin.stack{width:100%!important;height:100%;gap:6px}
+html.btmob #oppbar{height:46px;padding-right:44px;flex:0 0 auto;overflow-x:auto;scrollbar-width:none}
+html.btmob #oppbar::-webkit-scrollbar{display:none}
+html.btmob .fin.stack .op{flex:1 1 0;min-width:86px;height:46px!important;flex-direction:row!important;gap:4px;padding:2px 6px 2px 3px;border-radius:12px}
+html.btmob .op .av{width:30px!important;height:30px!important;font-size:12px}
+html.btmob .op .mt,html.btmob .op .lc{display:none!important}
+html.btmob .op .c{font-size:12px}
+html.btmob .op .pi{text-align:left;min-width:0;overflow:hidden}
+html.btmob .fin.stack .op{justify-content:flex-start!important;overflow:hidden}
+html.btmob .op .nm,html.btmob .op .ps{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html.btmob .op .nm{font-size:10.5px}
+html.btmob .op .ps{font-size:11px}
+html.btmob .optslot{top:4px!important;right:4px!important}
+html.btmob .optslot .fsopt-btn{font-size:0!important;gap:0!important;padding:0!important;width:40px;height:46px;justify-content:center;border-radius:12px}
+html.btmob .optslot .fsopt-btn svg{width:20px;height:20px}
+html.btmob #bwrap{width:100%!important;height:var(--mobh)!important;flex:0 0 auto;overflow:hidden;border-radius:12px;background:rgba(0,0,0,.25)}
+html.btmob #board{inset:auto;left:0;top:0;width:var(--S);height:var(--S);transform-origin:0 0;transition:transform .5s cubic-bezier(.25,.8,.3,1);will-change:transform}
+html.btmob #feed{display:none}
+html.btmob .mzoom{display:flex}
+.mzoom,.mdice,.mdrawx{display:none}
+.mzoom{position:absolute;right:8px;bottom:8px;z-index:40;width:42px;height:42px;border-radius:50%;align-items:center;justify-content:center;background:rgba(10,15,28,.88);border:1px solid rgba(242,210,126,.6);color:#f2d27e;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.5)}
+.mzoom svg{width:22px;height:22px}
+html.btmob #bwrap.zoomed .mdice{display:flex}
+.mdice{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:40;align-items:center;gap:8px;padding:5px 12px 5px 6px;border-radius:14px;background:rgba(10,15,28,.86);border:1px solid rgba(242,210,126,.45);font:800 12px Inter,system-ui,sans-serif;color:#f2d27e;letter-spacing:.06em;text-transform:uppercase;pointer-events:none}
+.mdice:empty,.mdice span:empty{display:none}
+.mdice .mdd{display:flex;gap:5px;font-size:30px}
+.mdice .mdd .die{position:relative;width:1em;height:1em;font-size:inherit}
+html.btmob #side{flex:1 1 auto;min-height:0;gap:6px}
+html.btmob .fin.stack #mebar{height:118px}
+html.btmob #acts .btn,html.btmob #acts .btn2{min-height:46px;font-size:16px}
+html.btmob #tabs{flex:0 0 auto}
+html.btmob #tabs button{min-height:40px}
+html.btmob #tabBody{display:none}
+html.btmob .fin.drawer #tabBody{display:block;position:absolute;left:4px;right:4px;bottom:52px;height:min(62vh,calc(var(--mobh) + 20px));overflow:auto;z-index:60;background:rgba(15,23,42,.98);border:1px solid rgba(242,210,126,.4);border-radius:16px;padding:44px 10px 10px;box-shadow:0 -20px 50px rgba(0,0,0,.6)}
+html.btmob .fin.drawer .mdrawx{display:flex;position:absolute;right:12px;bottom:calc(52px + min(62vh,calc(var(--mobh) + 20px)) - 46px);z-index:61;width:38px;height:38px;border-radius:50%;align-items:center;justify-content:center;background:rgba(10,15,28,.96);border:1px solid rgba(242,210,126,.6);color:#f2d27e;cursor:pointer}
+html.btmob .mdrawx svg{width:18px;height:18px}
+html.btmob #side{position:static}
+html.btmob .felt{position:relative}
+
 html.fs .stats.hud{left:12px;top:8px;display:flex;gap:6px;margin:0}
 html.fs .stats.hud .stat{padding:4px 10px;border-radius:10px;background:rgba(15,23,42,.78);box-shadow:none;min-width:82px}
 html.fs .stats.hud .stat .k{font-size:9px}
@@ -22137,7 +22184,9 @@ function doUi(A){
 }
 $('acts').addEventListener('click',function(e){var b=e.target.closest('button[data-a]');if(!b||b.disabled)return;doUi(b.getAttribute('data-a'));});
 $('tDeeds').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.disabled)return;if(b.hasAttribute('data-deed')){sheetUser='deed';showSheet('deed',+b.getAttribute('data-deed'));return;}var A=b.getAttribute('data-a');if(A)doUi(A);});
-$('tabs').addEventListener('click',function(e){var b=e.target.closest('button[data-tab]');if(!b)return;TAB=b.getAttribute('data-tab');try{localStorage.setItem('bt_tab',TAB);}catch(_){}deedSig='';renderTab();});
+$('tabs').addEventListener('click',function(e){var b=e.target.closest('button[data-tab]');if(!b)return;
+  if(root.classList.contains('btmob')){var t=b.getAttribute('data-tab');if(fin.classList.contains('drawer')&&TAB===t){closeDrawer();return;}fin.classList.add('drawer');}
+  TAB=b.getAttribute('data-tab');try{localStorage.setItem('bt_tab',TAB);}catch(_){}deedSig='';renderTab();});
 $('spaces').addEventListener('click',function(e){var s=e.target.closest('.sp');if(!s)return;openExam(+s.getAttribute('data-sp'));});
 $('deckW').addEventListener('click',function(){toast('Wanted Posters',(G&&G.decks?G.decks.w.length+' cards':'16 cards')+' \u00b7 land on the poster space');});
 $('deckT').addEventListener('click',function(){toast('Town Hall',(G&&G.decks?G.decks.t.length+' cards':'16 cards')+' \u00b7 land on the Town Hall space');});
@@ -22404,19 +22453,58 @@ function onTableChat(m){
 /* =====================================================================
    Fit: the board's size comes from the viewport only (never from what's on it)
    ===================================================================== */
+var MOBH=0;
 function fit(){
-  var fs=root.classList.contains('fs'),cs=getComputedStyle(felt);
+  MOBH=0;var fs=root.classList.contains('fs'),cs=getComputedStyle(felt);
   var W=felt.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight);if(W<60)return;
   var wide,S,side=0,tabh=300;
   if(fs){var H=felt.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
     if(W>=H*1.25&&W>=600){wide=true;side=Math.min(600,Math.max(260,W-H-12));S=Math.min(H,W-side-12);side=Math.min(600,W-S-12);}
+    else if(W<620&&H>W*1.15){wide=false;var mobFixed=46+118+42+6*3;S=Math.min(W,H-mobFixed);MOBH=H-mobFixed;}
     else{wide=false;var fixed=62+113+48+7*3;S=Math.min(W,H-fixed-96);tabh=Math.max(80,H-fixed-S);}}
   else{if(W>=720){wide=true;side=clamp(Math.round(W*0.36),330,460);S=Math.min(W-side-12,680);side=Math.min(W-S-12,520);}else{wide=false;S=W;}}
   S=Math.max(200,Math.floor(S));
+  var mob=fs&&!wide&&W<620&&MOBH>0;root.classList.toggle('btmob',mob);if(mob)root.style.setProperty('--mobh',Math.floor(MOBH)+'px');else{MOBH=0;closeDrawer();}
   var cls='fin '+(wide?'wide':'stack');if(fin.className!==cls)fin.className=cls;
   root.style.setProperty('--S',S+'px');root.style.setProperty('--u',(S/BU).toFixed(3)+'px');boardEl.classList.toggle('small',S/BU<52);root.style.setProperty('--side',Math.floor(side)+'px');root.style.setProperty('--tabh',Math.floor(tabh)+'px');
   renderTokens();
 }
+
+/* =====================================================================
+   Phone layout ("mob"): players across the top, a big board that zooms in and follows whoever is moving,
+   the main button at the bottom, and Deeds / Players / Log in a drawer that slides up.
+   ===================================================================== */
+function closeDrawer(){fin.classList.remove('drawer');}
+(function(){
+  var bw=$('bwrap'),zb=document.createElement('button'),md=document.createElement('div'),dx=document.createElement('button');
+  zb.type='button';zb.className='mzoom';zb.setAttribute('aria-label','Zoom the board');
+  md.className='mdice';dx.type='button';dx.className='mdrawx';dx.setAttribute('aria-label','Close');
+  dx.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  bw.appendChild(zb);bw.appendChild(md);$('side').appendChild(dx);
+  dx.addEventListener('click',closeDrawer);
+  var ZOOM=true;try{ZOOM=localStorage.getItem('bt_zoom')!=='0';}catch(e){}
+  function zIcon(){zb.innerHTML=ZOOM?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5M11 8v6M8 11h6"/></svg>';
+    zb.title=ZOOM?'Show the whole board':'Follow the action';}
+  zIcon();zb.addEventListener('click',function(){ZOOM=!ZOOM;try{localStorage.setItem('bt_zoom',ZOOM?'1':'0');}catch(e){}zIcon();});
+  var last='',lastDice='';
+  function overlayUp(){var cp=$('cpanel'),cs=$('cardShow');return (cp&&!cp.classList.contains('hide'))||(cs&&cs.classList.contains('on'))||boardEl.classList.contains('review')||!!document.querySelector('.sp.exam,.examining');}
+  function loop(){
+    requestAnimationFrame(loop);
+    if(!root.classList.contains('btmob')){if(last){boardEl.style.transform='';last='';}return;}
+    var vw=bw.clientWidth,vh=bw.clientHeight,S=boardEl.offsetWidth;if(!vw||!vh||!S)return;
+    var s=1,tx=(vw-S)/2,ty=(vh-S)/2,follow=ZOOM&&G&&G.seats&&G.phase!=='over'&&G.phase!=='setup'&&!overlayUp();
+    if(follow){var t=TOKEL[actor(G)>=0?actor(G):G.turn];
+      if(t&&!t.classList.contains('gone')){s=1.9;var fx=t.offsetLeft,fy=t.offsetTop;
+        tx=Math.min(0,Math.max(vw-S*s,vw/2-fx*s));ty=S*s<=vh?(vh-S*s)/2:Math.min(0,Math.max(vh-S*s,vh/2-fy*s));}}
+    var tr='translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px) scale('+s+')';
+    if(tr!==last){last=tr;boardEl.style.transform=tr;}
+    bw.classList.toggle('zoomed',s>1);
+    /* the dice sit in the middle of the board: when zoomed in, show them on top instead */
+    var dh=$('dice').innerHTML+'|'+$('dsum').textContent;if(dh!==lastDice){lastDice=dh;md.innerHTML='<div class="mdd">'+$('dice').innerHTML+'</div><span>'+esc($('dsum').textContent||'')+'</span>';}
+  }
+  requestAnimationFrame(loop);
+})();
+
 var fitRaf=0;function refit(){cancelAnimationFrame(fitRaf);fitRaf=requestAnimationFrame(fit);}
 addEventListener('resize',refit);
 addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')setTimeout(fit,40);});
