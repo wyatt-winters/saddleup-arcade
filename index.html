@@ -672,7 +672,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 
   <div class="col" id="col">
     <div class="hdr" id="hdr" data-optbtn>
-      <div class="chip" title="Rattlers left"><svg viewBox="0 0 24 24"><path d="M6 21V3.5" stroke="#f8fafc" stroke-width="2.4" stroke-linecap="round"/><path d="M6.5 4h11.5l-2.6 4.2L18 12.5H6.5z" fill="#ef4444"/></svg><span><small>Leaks</small><b class="r" id="left">10</b></span></div>
+      <div class="chip" title="Rattlers left"><svg viewBox="0 0 24 24"><path d="M6 21V3.5" stroke="#f8fafc" stroke-width="2.4" stroke-linecap="round"/><path d="M6.5 4h11.5l-2.6 4.2L18 12.5H6.5z" fill="#ef4444"/></svg><span><small>Rattlers</small><b class="r" id="left">10</b></span></div>
       <div class="chip" title="Time"><svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2.5h5"/></svg><span><small>Time</small><b id="time">0s</b></span></div>
       <div class="chip best" title="Best time this visit"><svg viewBox="0 0 24 24" fill="none" stroke="#f2d27e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg><span><small>Best</small><b class="g" id="best">&ndash;</b></span></div>
       <span class="sp"></span>
@@ -30486,6 +30486,8 @@ kbd{font:inherit;font-size:10px;background:rgba(15,23,42,.35);border:1px solid r
 .opp small{font-size:10px;color:var(--muted);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .opp.on{border-color:var(--gold2);background:rgba(242,210,126,.1);box-shadow:0 0 18px rgba(242,210,126,.3)}
 .srow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;flex-wrap:wrap}
+/* short screens (a phone on its side): keep the whole setup sheet, Start button included, on screen */
+@media (max-height:460px){.ov{padding:6px}.sheet{padding:8px 14px 10px}.sheet>.pill{display:none}.sheet h2{font-size:20px;margin:2px 0 6px}.opp{padding:4px 2px 3px;flex-direction:row;gap:6px;justify-content:center}.opp .av{width:30px;height:30px}.opp small{display:none}.srow{margin:4px 0}.sheet .note{display:none}.sheet .row{margin-top:6px}}
 .srow>span{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .stakes{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .chip{width:48px;height:48px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;color:#fff;position:relative;
