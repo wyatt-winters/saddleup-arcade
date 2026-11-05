@@ -11125,7 +11125,7 @@ function ui(){
   $('betUI').classList.toggle('hide',!betting);
   $('choice').classList.toggle('hide',phase!=='tie');
   $('bDeal').classList.toggle('hide',phase==='tie');
-  if(MODE==='solo'){$('bDeal').disabled=busy||(phase==='bet'&&you.ante<MIN);$('bDeal').textContent=phase==='done'?'New hand':'Deal';}
+  if(MODE==='solo'){var rb=you.ante<MIN&&(phase==='bet'||phase==='done')&&canRebet();$('bDeal').disabled=busy||(you.ante<MIN&&!rb);$('bDeal').textContent=rb?'Rebet & Deal':'Deal';}
   else{var rd=LV.wanted();$('bDeal').disabled=busy||phase!=='bet'||you.ante<MIN||rd||myIdx()<0;$('bDeal').textContent=phase!=='bet'?'Next hand soon\u2026':rd?'Ready \u2713':'Ready';}
   if(phase==='bet'&&MODE!=='solo')LV.betsSoon();
   var free=bank-onT;
@@ -11139,7 +11139,7 @@ function ui(){
 function msg(t){$('msg').innerHTML='<span>'+t+'</span>';}
 function res(t,cls){var r=$('res');r.textContent=t;r.className='res'+(cls?' '+cls:'');}
 /* the chips pick a value; tapping BET or TIE on your seat drops that chip there (same as the other tables) */
-function addChip(t){if(phase==='done'&&MODE==='solo')resetTable();if(phase!=='bet'||busy)return;var onT=you.ante+you.tie,v=Math.min(chipV,bank-onT);
+function addChip(t){if(phase==='done'&&MODE==='solo')resetTable();if(phase!=='bet'||busy){if(MODE!=='solo'&&phase==='done')msg('The next hand opens in a moment. Then drop your chips.');return;}var onT=you.ante+you.tie,v=Math.min(chipV,bank-onT);
   if(v<=0){msg('Not enough in your bankroll for another chip.');return;}you[t]+=v;sChip();ui();
   msg('Bet '+money(you.ante)+(you.tie?' \u00b7 Tie '+money(you.tie):'')+'. Tap <b>'+(MODE==='solo'?'Deal':'Ready')+'</b>.');}
 function setTarget(){}
@@ -11156,9 +11156,10 @@ function turnover(){var ch=false;for(var i=0;i<NSEAT;i++){var s=seats[i];if(!s||
   if(s.bank<MIN||(s.hands>=6&&s.bank>=s.start*1.8&&Math.random()<.3)||(s.hands>=10&&Math.random()<.08)){seats[i]=newBot();ch=true;}}
   if(ch){buildSeats();msg('A new player sits down. Tap <b>Deal</b> when you\u2019re ready.');}}
 function resetTable(){phase='bet';res('');if(MODE==='solo')turnover();clearCards();seats.forEach(function(s){if(s){s.raise=0;s.c=null;s.w=null;s.res=null;if(!s.me){s.ante=0;s.tie=0;}}});
-  if(MODE==='solo'&&last.ante&&last.ante+last.tie<=bank){you.ante=last.ante;you.tie=last.tie;}else{you.ante=0;you.tie=0;}ui();
+  you.ante=0;you.tie=0;ui();
   if(MODE!=='solo'){msg('Place your bet and tap <b>Ready</b>. <b>Rebet</b> repeats your last bet.');return;}
-  if(!/sits down/.test($('msg').textContent))msg(you.ante?'Same bet as last hand. Tap <b>Deal</b> or change it.':'Tap <b>BET</b> on your seat to drop a chip, then Deal.');}
+  if(!/sits down/.test($('msg').textContent))msg(canRebet()?'Place a new bet, or tap <b>Rebet &amp; Deal</b> to play your last bet again.':'Tap <b>BET</b> on your seat to drop a chip, then Deal.');}
+function canRebet(){return last.ante>=MIN&&last.ante+last.tie<=bank;}
 function shoePt(){var t=$('table').getBoundingClientRect(),e=$('shoe'),r=e&&e.offsetWidth?e.getBoundingClientRect():null;
   return r?{x:r.left+r.width/2,y:r.top+r.height*.35}:{x:t.right-30,y:t.top+30};}
 function put(box,c,cls){var el=makeCard(c,true);if(cls)el.classList.add(cls);var sl=box.querySelector('.slot');if(sl)sl.remove();box.appendChild(el);sCard();
@@ -11174,7 +11175,8 @@ function sweep(){var tb=$('table'),tr=tb.getBoundingClientRect(),cs=tb.querySele
     setTimeout(function(){if(k.parentNode)k.remove();},900);});}
 function flip(el){if(el){el.classList.remove('down');}}
 function wait(ms){return new Promise(function(r){setTimeout(r,ms);});}
-$('bDeal').onclick=function(){if(busy)return;if(MODE!=='solo'){if(phase==='bet'&&you.ante>=MIN)LV.ready();return;}if(phase==='done'){resetTable();return;}if(phase!=='bet'||you.ante<MIN)return;deal();};
+$('bDeal').onclick=function(){if(busy)return;if(MODE!=='solo'){if(phase==='bet'&&you.ante>=MIN)LV.ready();return;}
+  if(phase==='done')resetTable();if(phase!=='bet')return;if(you.ante<MIN){if(!canRebet())return;you.ante=last.ante;you.tie=last.tie;sChip();}deal();};
 var dc=null,dw=null,netMe=0;
 function active(){var a=[];seats.forEach(function(s,i){if(s&&s.ante>0)a.push(i);});return a;}
 function deal(){
@@ -11431,7 +11433,7 @@ var LV=(function(){
     info:function(){return {mode:MODE,round:myRound,dealtRound:dealtRound,phase:cur?cur.phase:null,status:L.status,roster:L.roster().length,host:H?{round:H.round,phase:H.phase}:null};}};
 })();
 buildSeats();
-if(last.ante&&last.ante<=bank){you.ante=last.ante;you.tie=last.tie&&last.ante+last.tie<=bank?last.tie:0;msg('Same bet as last hand. Tap <b>Deal</b> or change it.');}
+msg('Pick a chip, then tap <b>BET</b> on your seat. <b>TIE</b> pays 10 to 1.');
 ui();LV.start();
 window.__war={get bank(){return bank;},get phase(){return phase;},rig:function(a){RIG=a.slice();},seats:function(){return seats;},stack:function(a){a.forEach(function(c,i){c.id='k'+i+Date.now();shoe.push(c);});},live:function(){return LV.info();},get my(){return {phase:phase,ante:you.ante,res:you.res,raise:you.raise};}};
 })();
