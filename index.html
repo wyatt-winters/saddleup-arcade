@@ -12957,9 +12957,9 @@ var svg=$('wsvg'),CX=500,CY=500,R=400,bulbs=[],flap,rotor;
     var p='M'+CX+' '+CY+' L'+(CX+Math.cos(a0)*R)+' '+(CY+Math.sin(a0)*R)+' A'+R+' '+R+' 0 0 1 '+(CX+Math.cos(a1)*R)+' '+(CY+Math.sin(a1)*R)+' Z';
     el('path',{d:p,fill:s.j?'url(#jackG)':s.c,stroke:'#f2d27e','stroke-width':3},rotor);
     var mid=i*STEP+STEP/2,g=el('g',{transform:'rotate('+mid+' '+CX+' '+CY+')'},rotor);
-    var tx=el('text',{x:CX,y:CY-R+26,'text-anchor':'start',transform:'rotate(90 '+CX+' '+(CY-R+26)+')','font-family':s.m||s.j?'Rye,Georgia,serif':'Inter,system-ui,sans-serif','font-weight':900,'font-size':s.m||s.j?28:(s.t.length>5?34:38),fill:s.j?'#2a1606':'#fff7e0','dominant-baseline':'central'},g);
+    var tx=el('text',{x:CX,y:CY-R+64,'text-anchor':'start',transform:'rotate(90 '+CX+' '+(CY-R+64)+')','font-family':s.m||s.j?'Rye,Georgia,serif':'Inter,system-ui,sans-serif','font-weight':900,'font-size':s.m||s.j?26:(s.t.length>5?31:36),fill:s.j?'#2a1606':'#fff7e0','dominant-baseline':'central'},g);
     tx.textContent=s.m?'MYSTERY':s.t;LBL[i]=tx;
-    if(s.j){var t2=el('text',{x:CX+0,y:CY-R+26,'text-anchor':'start',transform:'rotate(90 '+CX+' '+(CY-R+26)+') translate(150 0)','font-family':'Inter,system-ui,sans-serif','font-weight':900,'font-size':24,fill:'#2a1606','dominant-baseline':'central'},g);LBL2=t2;t2.textContent='$25,000';}
+    if(s.j){var t2=el('text',{x:CX+0,y:CY-R+64,'text-anchor':'start',transform:'rotate(90 '+CX+' '+(CY-R+64)+') translate(132 0)','font-family':'Inter,system-ui,sans-serif','font-weight':900,'font-size':24,fill:'#2a1606','dominant-baseline':'central'},g);LBL2=t2;t2.textContent='$25,000';}
     el('circle',{cx:CX,cy:CY-R+8,r:6,fill:'#f2d27e',stroke:'#7c5a1e','stroke-width':2,transform:'rotate('+(STEP/2)+' '+CX+' '+CY+')'},g);
   }
   el('circle',{cx:CX,cy:CY,r:R,fill:'url(#shine)','pointer-events':'none'},rotor);
@@ -12982,7 +12982,17 @@ function lights(now){var k=Math.floor(now/(lightMode==='spin'?70:lightMode==='wi
     b.style.opacity=on?(lightMode==='idle'?.75:1):0;});}
 /* ---------- sound ---------- */
 var AC=null;function ac(){try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){}return AC;}
-function tick(){var a=ac();if(!a)return;var o=a.createOscillator(),g=a.createGain();o.type='square';o.frequency.value=1700+Math.random()*200;g.gain.setValueAtTime(.05,a.currentTime);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+.04);o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.05);}
+/* leather flapper slapping the pegs: a low, soft thwap, built once and replayed; louder while the wheel is fast */
+var TICKB=null,lastTick=0;
+function tickBuf(a){if(TICKB)return TICKB;var sr=a.sampleRate,len=Math.floor(sr*0.05),b=a.createBuffer(1,len,sr),ch=b.getChannelData(0),
+  modes=[[420,1,.006],[950,.6,.004]],p=0,mx=0;
+  for(var i=0;i<len;i++){var t=i/sr,v=0;for(var m=0;m<modes.length;m++)v+=modes[m][1]*Math.sin(2*Math.PI*modes[m][0]*t)*Math.exp(-t/modes[m][2]);
+    p+=0.2*((Math.random()*2-1)*Math.exp(-t/0.003)-p);v+=0.7*p;v*=Math.min(1,t/0.0008);ch[i]=v;if(Math.abs(v)>mx)mx=Math.abs(v);}
+  for(i=0;i<len;i++)ch[i]/=mx||1;TICKB=b;return b;}
+function tick(){var a=ac();if(!a)return;try{var n=performance.now(),iv=Math.max(15,n-lastTick);lastTick=n;
+  var vol=0.22+0.3*Math.pow(Math.min(1,35/iv),0.3);
+  var src=a.createBufferSource(),g=a.createGain();src.buffer=tickBuf(a);src.playbackRate.value=0.96+Math.random()*0.08;g.gain.value=vol;
+  src.connect(g);g.connect(a.destination);src.start();}catch(e){}}
 function fanfare(big){var a=ac();if(!a)return;var notes=big?[523,659,784,1047,1319]:[523,659,784];notes.forEach(function(f,i){var o=a.createOscillator(),g=a.createGain();o.type='triangle';o.frequency.value=f;var t=a.currentTime+i*.11;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.12,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.5);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+.55);});}
 /* ---------- UI ---------- */
 function ui(){
@@ -13001,7 +13011,7 @@ function ui(){
   relabel();
 }
 var lastN=-1;function relabel(){if(st.n===lastN)return;lastN=st.n;var c=costOf(st.n);
-  SEG.forEach(function(x,i){if(!LBL[i]||x.m)return;var v=c?Math.round(c*PAIDX[x.v]):x.v;var t=(c&&PAIDX[x.v]===1)?'MONEY BACK':c?'+'+short(v-c):short(v);if(x.j){if(LBL2)LBL2.textContent=t;return;}LBL[i].textContent=t;LBL[i].setAttribute('font-size',t==='MONEY BACK'?21:t.length>6?28:t.length>5?32:38);});
+  SEG.forEach(function(x,i){if(!LBL[i]||x.m)return;var v=c?Math.round(c*PAIDX[x.v]):x.v;var t=(c&&PAIDX[x.v]===1)?'MONEY BACK':c?'+'+short(v-c):short(v);if(x.j){if(LBL2)LBL2.textContent=t;return;}LBL[i].textContent=t;LBL[i].setAttribute('font-size',t==='MONEY BACK'?20:t.length>6?26:t.length>5?30:36);});
   var pm=$('pmul');if(pm){if(!c)pm.textContent='Free spin: base prizes';else{var o=oddsPaid();pm.innerHTML='Worst case: your '+money(c)+' back<br>Win more than you paid: '+Math.round(o.up*100)+'% \u00b7 5\u00d7 or more: '+(o.big*100).toFixed(1)+'%';}}}
 function countdown(){var n=new Date(),m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1),s=Math.max(0,Math.floor((m-n)/1000));
   if(st.d!==today()){load();ui();}
