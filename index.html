@@ -12513,7 +12513,7 @@ h1 span{display:block;color:var(--green)}
 .T-xw{background:#0f1d4a url(https://saddleup-arcade.vercel.app/art/ticket_xw.webp) center/cover}.T-ttt{background:#7c2d12 url(https://saddleup-arcade.vercel.app/art/ticket_ttt.webp) center/cover}.T-btd{background:#073b1c url(https://saddleup-arcade.vercel.app/art/ticket_btd.webp) center/cover}.T-map{background:#3b1d06 url(https://saddleup-arcade.vercel.app/art/ticket_map.webp) center/cover}.T-pkr{background:#2a0f4a url(https://saddleup-arcade.vercel.app/art/ticket_pkr.webp) center/cover}
 .tcard::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.55));z-index:0}.tcard>*{position:relative;z-index:1}.tcard .tr,.tcard .st{position:absolute;z-index:1}
 .ticket{background-size:100% 100%!important;padding:7% 8% 8%!important}.ticket.T-map{background:#e8d3a2!important;padding:16px!important}
-.ticket.T-xw{padding-top:calc(14% + 34px)!important}.ticket.T-xw .hd b{position:absolute;left:12%;right:12%;top:9.6%;transform:translateY(-50%);font-size:clamp(20px,5vw,30px);line-height:1}.ticket.T-xw .hd>small{margin-top:0}.ticket .hd b,.ticket .hd small{text-shadow:0 2px 4px rgba(0,0,0,.8)}.ticket.T-xw .hd b{color:#2a1606;text-shadow:0 1px 0 rgba(255,255,255,.4)}.ticket.T-xw .hd>small,.ticket.T-xw .hd .tier{margin-top:14px}
+.ticket.T-xw{padding-top:calc(14% + 34px)!important;padding-bottom:calc(20% + 8px)!important}.ticket.T-xw .hd b{position:absolute;left:12%;right:12%;top:9.6%;transform:translateY(-50%);font-size:clamp(20px,5vw,30px);line-height:1}.ticket.T-xw .hd>small{margin-top:0}.ticket .hd b,.ticket .hd small{text-shadow:0 2px 4px rgba(0,0,0,.8)}.ticket.T-xw .hd b{color:#2a1606;text-shadow:0 1px 0 rgba(255,255,255,.4)}.ticket.T-xw .hd>small,.ticket.T-xw .hd .tier{margin-top:14px}
 .ticket.T-map .hd b,.ticket.T-map .hd small,.ticket.T-map .lbl,.ticket.T-map .hint,.ticket.T-map .prizes{color:#3b1d06;text-shadow:none}
 /* the ticket you're playing */
 .play{position:absolute;inset:0;z-index:30;background:rgba(5,8,16,.92);display:flex;flex-direction:column;align-items:center;overflow:auto;padding:14px 10px 18px}
@@ -12540,7 +12540,12 @@ h1 span{display:block;color:var(--green)}
 .word i.on{background:#fde68a;color:#7c2d12}
 .word.full i{background:#34d399;color:#04221a}
 .word em{font-style:normal;font-size:11px;font-weight:800;width:36px;text-align:right;opacity:.8}
-.letters{grid-template-columns:repeat(8,1fr)}.letters .spot{height:44px;font-size:20px}
+.letters{grid-template-columns:repeat(9,1fr)}.letters .spot{height:42px;font-size:19px}
+.xwg{display:grid;gap:2px;width:min(100%,420px);margin:0 auto;padding:6px;border-radius:8px;background:rgba(8,14,40,.55)}
+.xwg i,.xwg b{display:flex;align-items:center;justify-content:center;aspect-ratio:1;border-radius:3px;font-style:normal;font-weight:900;font-size:clamp(11px,3.4vw,19px)}
+.xwg i{background:#7f93b3;color:#1b2742;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}.xwg i.on{background:#fde68a;color:#7c2d12}.xwg i.full{background:#34d399;color:#04221a}
+.ticket .prizes{background:rgba(5,8,20,.72);border-radius:10px;padding:6px 8px;margin:8px auto 0;max-width:440px}.ticket .result{background:rgba(5,8,20,.6);border-radius:10px;max-width:440px;margin-left:auto;margin-right:auto}.ticket .result:empty{background:none}
+.xwc{text-align:center;font-size:13px;font-weight:700;margin-top:6px;text-shadow:0 1px 3px #000}.xwc b{color:#fde68a}
 /* three in a row */
 .board{grid-template-columns:repeat(3,1fr);max-width:300px;margin:0 auto}.board .spot{height:78px;font-size:34px}
 .board .spot.hit{background:#fde68a}.board .spot.line{background:#34d399}
@@ -12564,12 +12569,13 @@ h1 span{display:block;color:var(--green)}
 .paytab{display:grid;grid-template-columns:1fr auto;gap:2px 14px;max-width:300px;margin:10px auto 0;font-size:12px;font-weight:700;opacity:.9}.paytab .on{color:#6ee7b7}
 .prizes{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;font-size:11px;font-weight:800;opacity:.9}
 .prizes span.on{color:#6ee7b7}
-@media (max-width:520px){.map button{height:auto}.letters{grid-template-columns:repeat(8,1fr)}.letters .spot{height:38px;font-size:17px}.word i{width:26px;height:28px;font-size:15px}.board .spot{height:66px}.hands .spot{height:126px}.hands .spot .card{--cw:48px}.pk .spot{height:92px}.pk .spot .card{--cw:58px}.map button{height:52px}.called .spot{height:44px}}
+@media (max-width:520px){.map button{height:auto}.letters{grid-template-columns:repeat(6,1fr)}.letters .spot{height:36px;font-size:17px}.word i{width:26px;height:28px;font-size:15px}.board .spot{height:66px}.hands .spot{height:126px}.hands .spot .card{--cw:48px}.pk .spot{height:92px}.pk .spot .card{--cw:58px}.map button{height:52px}.called .spot{height:44px}}
 html.fs,html.fs body{height:100%;overflow:hidden}
 html.fs .wrap{max-width:none;height:100%;padding:8px 10px;display:flex;flex-direction:column}
 html.fs .wrap>.pill,html.fs .wrap>h1,html.fs .wrap>.sub{display:none}
 html.fs #app{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:34px}
 html.fs .pane{flex:1;min-height:0;overflow:auto}
+html.fs .play{padding-top:48px}
 /* ===== shared playing-card styles ===== */
 .card{position:relative;width:var(--cw);height:calc(var(--cw)*1.4);perspective:900px;flex:0 0 auto;user-select:none;-webkit-user-select:none}
 .card .inner{position:absolute;inset:0;transition:transform .42s cubic-bezier(.3,.7,.3,1);transform-style:preserve-3d}
@@ -13510,7 +13516,7 @@ function sMiss(){tone(330,.25,0,.05);tone(262,.3,.1,.05);}
 /* ---------- tickets ---------- */
 var TIER={b:{name:'BRONZE',mult:1},s:{name:'SILVER',mult:3},g:{name:'GOLD',mult:10}};
 var TYPES={
-  xw:{name:'Crossword Cash',ds:'Scratch your 16 letters. Every word you complete in the grid pays more.'},
+  xw:{name:'Crossword Cash',ds:'Scratch your 18 letters. Complete 3 or more words in the puzzle to win.'},
   ttt:{name:'Three in a Row',ds:'Scratch the board and the called brands. Mark three in a row to win.'},
   btd:{name:'Beat the Dealer',ds:'Five hands against the dealer. Any card that beats the dealer wins its prize.'},
   map:{name:'Treasure Map',ds:'Six digs. Find the buried chests and watch out for rattlers.'},
@@ -13573,14 +13579,33 @@ function scratch(el,onReveal){var cv=document.createElement('canvas');el.appendC
   return {reveal:reveal,isDone:function(){return done;}};}
 /* ---------- the five games: each ticket's outcome is fixed by its seed ---------- */
 var WORDS=['SADDLE','SPURS','RODEO','COWBOY','RANCH','HORSE','BRONCO','CACTUS','DESERT','SHERIFF','OUTLAW','POSSE','WAGON','LASSO','STAMPEDE','PRAIRIE','CANYON','SALOON','DEPUTY','BANDIT','BOUNTY','GOLD','NUGGET','MESA','BADGE','CATTLE','STEER','BOOTS','HOLSTER','RIFLE','TRAIL','CAMPFIRE','COYOTE','EAGLE','BUFFALO','MUSTANG','STABLE','HAYLOFT','WINDMILL','RAILROAD','BUCKLE','POKER','DEALER','JACKPOT','LUCKY','ACES','STETSON','DUSTY','TUMBLE','FRONTIER'];
+var XWORDS=WORDS.concat(['HAT','GUN','COLT','MULE','OXEN','HAY','BARN','CORRAL','REIN','REINS','SPUR','ROPE','DUST','MINE','PICK','PAN','ORE','SILVER','TRAIN','DEPOT','STAGE','COACH','SADDLES','PONY','FOAL','MARE','COLTS','HERD','DRIVE','TRAILS','CREEK','RIVER','FORD','BLUFF','RIDGE','PEAK','DUNE','SAND','HEAT','SUN','MOON','STAR','NIGHT','CAMP','FIRE','COFFEE','BEANS','BACON','STEAK','GRUB','CHUCK','WAGONS','FIDDLE','BANJO','PIANO','CARDS','DICE','CHIPS','POT','ANTE','BLUFFS','HAND','DEAL','DRAW','FLUSH','PAIR','KING','QUEEN','JACK','ACE','JOKER','TOWN','JAIL','BANK','VAULT','SAFE','LOOT','POSSES','MARSHAL','RANGER','SCOUT','TRADER','MINER','SMITH','FORGE','ANVIL','IRON','BRAND','STEERS','BULL','BRONC','RIDER','ROPER','CHAPS','VEST','SCARF','BOOT','HIDE','LEATHER','WOOL','LONGHORN','PRAIRIE','MESAS','ARROYO','ADOBE','PUEBLO','TRADE','POST','WELL','WATER','TROUGH','FENCE','GATE','POSTS','WIRE','PLOW','SEED','CROP','CORN','WHEAT','OATS','APPLE','PIE','SALT','TALL','TALE','YARN','HOWDY','PARTNER','YONDER','RUSTLER','WRANGLER']).filter(function(w,i,a){return w.length>=3&&w.length<=9&&a.indexOf(w)===i;});
+/* builds an interlocking crossword (across and down) on an 11x11 grid, the same way every time for a seed */
+function buildXW(R){var N=11,best=null;
+  for(var tr=0;tr<40;tr++){var g=[],words=[],pool=XWORDS.slice();for(var i=pool.length-1;i>0;i--){var j=Math.floor(R()*(i+1)),t=pool[i];pool[i]=pool[j];pool[j]=t;}
+    for(var y=0;y<N;y++){g.push([]);for(var x=0;x<N;x++)g[y].push('');}
+    function at(x,y){return x<0||y<0||x>=N||y>=N?null:g[y][x];}
+    function fits(w,x,y,d){var dx=d?0:1,dy=d?1:0,cross=0;if(x<0||y<0||x+dx*(w.length-1)>=N||y+dy*(w.length-1)>=N)return -1;
+      if(at(x-dx,y-dy)||at(x+dx*w.length,y+dy*w.length))return -1;
+      for(var k=0;k<w.length;k++){var cx=x+dx*k,cy=y+dy*k,c=g[cy][cx];
+        if(c){if(c!==w[k])return -1;cross++;}else{if(at(cx+dy,cy+dx)||at(cx-dy,cy-dx))return -1;}}
+      return cross;}
+    function put(w,x,y,d){var dx=d?0:1,dy=d?1:0;for(var k=0;k<w.length;k++)g[y+dy*k][x+dx*k]=w[k];words.push({w:w,x:x,y:y,d:d});}
+    var first=pool.filter(function(w){return w.length>=7&&w.length<=N;})[0]||'FRONTIER';pool.splice(pool.indexOf(first),1);
+    put(first,Math.floor((N-first.length)/2),Math.floor(R()*3)+3,0);
+    for(var pi=0;pi<pool.length&&words.length<XWW;pi++){var w=pool[pi],opts=[];
+      words.forEach(function(pw){for(var a=0;a<pw.w.length;a++)for(var b=0;b<w.length;b++){if(pw.w[a]!==w[b])continue;var d=pw.d?0:1,x,y;
+        if(d){x=pw.x+a;y=pw.y-b;}else{x=pw.x-b;y=pw.y+a;}var c=fits(w,x,y,d);if(c>0)opts.push([x,y,d,c]);}});
+      if(opts.length){var o=opts[Math.floor(R()*opts.length)];put(w,o[0],o[1],o[2]);}}
+    if(!best||words.length>best.words.length)best={g:g,words:words,N:N};if(words.length>=XWW)break;}
+  return best;}
 function gen(t){var R=SUQ.rng(t.seed),o={type:t.type};
-  if(t.type==='xw'){var w=SUQ.shuf(WORDS.filter(function(x){return x.length<=7;}),t.seed).slice(0,6);
-    /* your letters lean toward the ones in the grid, like a real crossword scratcher */
-    var al='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),inW=w.join(''),wt=al.map(function(c){return inW.indexOf(c)>=0?XWB:1;}),lt=[];
-    while(lt.length<16){var tw=0;al.forEach(function(c,i){if(lt.indexOf(c)<0)tw+=wt[i];});var x=R()*tw;for(var i=0;i<26;i++){if(lt.indexOf(al[i])>=0)continue;x-=wt[i];if(x<=0){lt.push(al[i]);break;}}}
-    lt.sort();
-    var full=w.filter(function(x){return x.split('').every(function(c){return lt.indexOf(c)>=0;});}).length;
-    o.words=w;o.letters=lt;o.k=full;var pay=XWP;o.pay=pay;o.prize=pay[full];}
+  if(t.type==='xw'){var X=buildXW(R),inW={};X.words.forEach(function(w){w.w.split('').forEach(function(c){inW[c]=(inW[c]||0)+1;});});
+    /* your 18 letters lean toward the ones in the grid, like a real crossword scratcher */
+    var al='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),wt=al.map(function(c){return inW[c]?XWB:1;}),lt=[];
+    while(lt.length<XWN){var tw=0;al.forEach(function(c,i){if(lt.indexOf(c)<0)tw+=wt[i];});var x=R()*tw;for(var i=0;i<26;i++){if(lt.indexOf(al[i])>=0)continue;x-=wt[i];if(x<=0){lt.push(al[i]);break;}}}
+    var full=X.words.filter(function(w){return w.w.split('').every(function(c){return lt.indexOf(c)>=0;});}).length;
+    o.grid=X;o.letters=SUQ.shuf(lt,t.seed^0x77);o.k=full;o.pay=XWP;o.prize=XWP[Math.min(full,XWP.length-1)];}
   else if(t.type==='ttt'){var SY=['\u2b50','\u{1f40e}','\u{1f335}','\u{1f920}','\u{1f462}','\u{1f52b}','\u{1f4b0}','\u{1f37a}','\u{1f985}','\u{1f402}','\u{1f6e1}\ufe0f','\u{1f3b2}'];
     var bd=SUQ.shuf(SY,t.seed).slice(0,9),cl=SUQ.shuf(SY,t.seed^0x9e37).slice(0,6);
     var L=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]],lines=L.filter(function(l){return l.every(function(i){return cl.indexOf(bd[i])>=0;});});
@@ -13594,7 +13619,7 @@ function gen(t){var R=SUQ.rng(t.seed),o={type:t.type};
   else if(t.type==='pkr'){var d=[];for(var s=0;s<4;s++)for(var r=2;r<=14;r++)d.push({r:r,s:'shdc'[s]});d=SUQ.shuf(d,t.seed);o.cards=d.slice(0,5);var hv=pokerHand(o.cards);o.hand=hv[0];o.prize=hv[1];o.table=PKT;}
   return o;}
 var PKT=[['Royal flush',50000],['Straight flush',20000],['Four of a kind',5000],['Full house',1200],['Flush',800],['Straight',600],['Three of a kind',250],['Two pair',100],['Jacks or better',40]];
-var XWB=2.4,XWP=[0,0,10,30,120,600,3000];
+var XWB=1.4,XWN=18,XWW=11,XWP=[0,0,0,3,8,15,40,120,400,1500,5000,20000];
 function pokerHand(cs){var r=cs.map(function(c){return c.r;}).sort(function(a,b){return b-a;}),cnt={};r.forEach(function(x){cnt[x]=(cnt[x]||0)+1;});
   var v=Object.keys(cnt).map(function(k){return cnt[k];}).sort(function(a,b){return b-a;}),fl=cs.every(function(c){return c.s===cs[0].s;});
   var u=Object.keys(cnt).map(Number).sort(function(a,b){return b-a;}),st=u.length===5&&(u[0]-u[4]===4||(u[0]===14&&u[1]===5));
@@ -13621,14 +13646,22 @@ function finish(prize){if(!CUR||CUR.fin)return;CUR.fin=true;var tk=loadT(),t=tk.
 function showRes(p,old){var r=$('res');r.className='result '+(p>0?'win':'lose');r.textContent=p>0?(old?'Won ':'You win ')+money(p)+'!':(old?'No win on this one.':'No win this time.');}
 function prizeList(pay,m,lbls){return '<div class="prizes">'+pay.map(function(v,i){return v?'<span data-i="'+i+'">'+lbls(i)+' '+money(v*m)+'</span>':'';}).join('')+'</div>';}
 /* Crossword Cash */
-function drawXW(o,m,old){var tb=$('tb'),h='<div class="lbl">The grid</div><div class="words">';
-  o.words.forEach(function(w,i){h+='<div class="word" data-w="'+i+'">'+w.split('').map(function(c){return '<i data-c="'+c+'">'+(old?c:'')+'</i>';}).join('')+'</div>';});
-  h+='</div><div class="lbl">Your letters</div><div class="grid letters" id="lts">'+o.letters.map(function(c){return '<div class="spot" data-c="'+c+'">'+c+'</div>';}).join('')+'</div>'+prizeList(o.pay,m,function(i){return i+' words';});
+function drawXW(o,m,old){var tb=$('tb'),X=o.grid,N=X.N,cells={};
+  X.words.forEach(function(w,wi){for(var k=0;k<w.w.length;k++){var key=(w.d?w.x:w.x+k)+','+(w.d?w.y+k:w.y);(cells[key]=cells[key]||{c:w.w[k],ws:[]}).ws.push(wi);}});
+  /* trim the empty edge of the grid */
+  var minx=N,miny=N,maxx=0,maxy=0;Object.keys(cells).forEach(function(k){var p=k.split(',').map(Number);minx=Math.min(minx,p[0]);maxx=Math.max(maxx,p[0]);miny=Math.min(miny,p[1]);maxy=Math.max(maxy,p[1]);});
+  var cols=maxx-minx+1,h='<div class="lbl">The puzzle</div><div class="xwg" style="grid-template-columns:repeat('+cols+',1fr);aspect-ratio:'+cols+'/'+(maxy-miny+1)+'">';
+  for(var y=miny;y<=maxy;y++)for(var x=minx;x<=maxx;x++){var c=cells[x+','+y];h+=c?'<i data-c="'+c.c+'" data-w="'+c.ws.join(' ')+'">'+c.c+'</i>':'<b></b>';}
+  h+='</div><div class="xwc" id="xwc">0 words</div><div class="lbl">Your letters</div><div class="grid letters" id="lts">'+o.letters.map(function(c){return '<div class="spot" data-c="'+c+'">'+c+'</div>';}).join('')+'</div>'+
+    prizeList(o.pay,m,function(i){return i+' words';});
   tb.innerHTML=h;var got={};
-  function upd(){var full=0;[].forEach.call(tb.querySelectorAll('.word'),function(wd){var all=true;[].forEach.call(wd.children,function(t){var c=t.getAttribute('data-c');if(got[c]||old){t.textContent=c;t.classList.add('on');}else all=false;});wd.classList.toggle('full',all);if(all)full++;});
+  function upd(){var full=0,done={};X.words.forEach(function(w,wi){var ok=w.w.split('').every(function(c){return got[c]||old&&o.letters.indexOf(c)>=0;});if(ok){done[wi]=1;full++;}});
+    [].forEach.call(tb.querySelectorAll('.xwg i'),function(e){var c=e.getAttribute('data-c'),on=!!(got[c]||(old&&o.letters.indexOf(c)>=0));e.classList.toggle('on',on);
+      e.classList.toggle('full',e.getAttribute('data-w').split(' ').some(function(w){return done[w];}));});
+    $('xwc').innerHTML='<b>'+full+'</b> word'+(full===1?'':'s')+' complete'+(o.pay[full]?' \u00b7 '+money(o.pay[full]*m):'');
     [].forEach.call(tb.querySelectorAll('.prizes span'),function(s){s.classList.toggle('on',+s.getAttribute('data-i')===full);});return full;}
-  [].forEach.call(tb.querySelectorAll('#lts .spot'),function(sp){if(old)return;SC.push(scratch(sp,function(){got[sp.getAttribute('data-c')]=1;var f=upd();if(allDone()){finish((o.pay[f]||0)*m);}}));});
-  upd();$('hint').textContent=old?'':'Letters you uncover light up in the grid. Complete words to win.';}
+  [].forEach.call(tb.querySelectorAll('#lts .spot'),function(sp){if(old)return;SC.push(scratch(sp,function(){got[sp.getAttribute('data-c')]=1;sDing();var f=upd();if(allDone()){finish((o.pay[Math.min(f,o.pay.length-1)]||0)*m);}}));});
+  upd();$('hint').textContent=old?'':'Every letter you scratch lights up in the puzzle. Light up every letter of a word to complete it. 3 or more words wins.';}
 /* Three in a Row */
 function drawTTT(o,m,old){var tb=$('tb');
   tb.innerHTML='<div class="lbl">Called brands</div><div class="grid called" id="cl">'+o.called.map(function(s){return '<div class="spot">'+s+'</div>';}).join('')+'</div>'+
