@@ -29610,18 +29610,18 @@ function noise(d,vol,hp,lp){if(!okSnd())return;try{var t=ac.currentTime,len=Math
 /* ball-on-ball "clack": a short, bright, woody transient (a few fast-decaying resonances plus a tiny noise snap),
    built once and replayed, with gentle volume for soft touches and limits so a break doesn't turn into static */
 var CLACK=null,clackLog=[];
-function clackBuf(){if(CLACK||!ac)return CLACK;var sr=ac.sampleRate,len=Math.floor(sr*0.055),b=ac.createBuffer(1,len,sr),ch=b.getChannelData(0),
-  modes=[[2350,1,.0095],[3480,.55,.0065],[5150,.28,.004],[1250,.18,.012]];
+function clackBuf(){if(CLACK||!ac)return CLACK;var sr=ac.sampleRate,len=Math.floor(sr*0.035),b=ac.createBuffer(1,len,sr),ch=b.getChannelData(0),
+  modes=[[650,.8,.004],[1500,1,.003],[3200,.5,.0012]],p=0,mx=0;
   for(var i=0;i<len;i++){var t=i/sr,v=0;for(var m=0;m<modes.length;m++)v+=modes[m][1]*Math.sin(2*Math.PI*modes[m][0]*t)*Math.exp(-t/modes[m][2]);
-    v+=(Math.random()*2-1)*0.55*Math.exp(-t/0.0011);ch[i]=v*0.42*Math.min(1,i/(sr*0.0004));}
-  CLACK=b;return b;}
+    p+=0.6*((Math.random()*2-1)*Math.exp(-t/0.001)-p);v+=0.5*p;v*=Math.min(1,t/0.0002);ch[i]=v;if(Math.abs(v)>mx)mx=Math.abs(v);}
+  for(i=0;i<len;i++)ch[i]/=mx||1;CLACK=b;return b;}
 function clack(v){if(!okSnd())return;try{var b=clackBuf();if(!b)return;var s0=ac.createBufferSource(),g=ac.createGain();s0.buffer=b;s0.playbackRate.value=0.94+Math.random()*0.12;
   g.gain.value=v;s0.connect(g);g.connect(ac.destination);s0.start(ac.currentTime);}catch(e){}}
 var SFX={
   click:function(v,key){if(v<35)return;var t=now();
     clackLog=clackLog.filter(function(x){return t-x.t<120;});if(clackLog.length>=6)return;
     if(key)for(var i=0;i<clackLog.length;i++)if(clackLog[i].k===key&&t-clackLog[i].t<90)return;
-    clackLog.push({t:t,k:key});var vol=clamp(Math.pow(v/1500,0.7),0.04,0.75);clack(vol*0.55);},
+    clackLog.push({t:t,k:key});var vol=clamp(Math.pow(v/1500,0.7),0.05,1);clack(vol*0.6);},
   rail:function(v){var vol=clamp(v/2000,0.01,0.3);noise(0.08,vol*0.6,0,420);},
   drop:function(){tone(160,0.18,'sine',0.12);noise(0.12,0.08,0,600);tone(110,0.25,'triangle',0.06,0.08);},
   cue:function(p){noise(0.05,0.08+p*0.25,1200);tone(900,0.03,'sine',0.05);},
