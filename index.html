@@ -12593,7 +12593,7 @@ h1 span{display:block;color:var(--green)}
 .ticket .hd .tier{display:inline-block;margin-top:6px;font-size:10px;font-weight:900;letter-spacing:.1em;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.35)}
 .lbl{font-size:10px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin:10px 0 6px;text-align:center}
 .spot{position:relative;border-radius:10px;background:#fdf6e3;color:#1c1208;display:flex;align-items:center;justify-content:center;font-weight:900;overflow:hidden;user-select:none;-webkit-user-select:none}
-.spot canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair;transition:opacity .35s}
+.spot canvas{position:absolute;inset:0;z-index:5;width:100%;height:100%;touch-action:none;cursor:crosshair;transition:opacity .35s}
 .spot canvas.gone{opacity:0;pointer-events:none}
 .grid{display:grid;gap:6px}
 .result{margin-top:12px;text-align:center;font:400 26px Rye,Georgia,serif;min-height:34px;text-shadow:0 2px 6px #000}
@@ -12631,11 +12631,17 @@ h1 span{display:block;color:var(--green)}
 .map button:disabled{cursor:default}
 .digs{display:flex;justify-content:center;gap:5px;margin-top:8px}.digs i{width:20px;height:20px;border-radius:50%;background:#fde68a;box-shadow:inset 0 -2px 0 rgba(0,0,0,.25)}.digs i.used{background:rgba(255,255,255,.15);box-shadow:none}
 /* poker */
-.pk{grid-template-columns:repeat(5,1fr)}.pk .spot{height:118px;background:transparent}.pk .spot .card{--cw:76px}
-.paytab{display:grid;grid-template-columns:1fr auto;gap:2px 14px;max-width:300px;margin:10px auto 0;font-size:12px;font-weight:700;opacity:.9}.paytab .on{color:#6ee7b7}
+.pk{display:flex;justify-content:center;gap:clamp(5px,1.6vw,10px);--pc:clamp(50px,15vw,84px);padding:12px 8px;border-radius:14px;background:rgba(10,4,24,.55);box-shadow:inset 0 0 0 1px rgba(242,210,126,.35)}
+.pk .spot{width:var(--pc);height:calc(var(--pc)*1.4);flex:0 0 auto;background:transparent;border-radius:calc(var(--pc)*.09);overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.5)}.pk .spot .card{--cw:var(--pc)}
+.pk .spot .ix{position:absolute;left:3px;top:3px;z-index:2;padding:1px 4px 2px;border-radius:5px;background:rgba(253,246,227,.95);font:900 calc(var(--pc)*.2)/1 Inter,sans-serif;color:#1c1208;box-shadow:0 1px 3px rgba(0,0,0,.5)}.pk .spot .ix.red{color:#b91c1c}
+.pk .spot.hl{box-shadow:0 0 0 3px #fde68a,0 0 18px rgba(253,230,138,.6)}
+.ticket.T-pkr{padding-top:calc(5% + 34px)!important;padding-bottom:calc(10% + 8px)!important}
+.paytab{display:grid;grid-template-columns:1fr auto;max-width:340px;margin:12px auto 0;padding:8px 10px;border-radius:12px;background:rgba(10,4,24,.72);border:1px solid rgba(242,210,126,.45);font-size:13px;font-weight:700}
+.paytab span{padding:4px 6px;border-bottom:1px dashed rgba(242,210,126,.16);color:#e9d5ff}.paytab span:nth-child(even){text-align:right;color:#fde68a;font-variant-numeric:tabular-nums}
+.paytab span:nth-last-child(-n+2){border-bottom:0}.paytab span.on{background:rgba(253,230,138,.9);color:#2a0f4a!important;border-bottom-color:transparent}.paytab span.on:nth-child(odd){border-radius:6px 0 0 6px}.paytab span.on:nth-child(even){border-radius:0 6px 6px 0}
 .prizes{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;font-size:11px;font-weight:800;opacity:.9}
 .prizes span.on{color:#6ee7b7}
-@media (max-width:520px){.map button{height:auto}.letters{grid-template-columns:repeat(6,1fr)}.letters .spot{height:36px;font-size:17px}.word i{width:26px;height:28px;font-size:15px}.board .spot{height:66px}.hands .spot{height:126px}.hands .spot .card{--cw:48px}.pk .spot{height:92px}.pk .spot .card{--cw:58px}.map button{height:52px}.called .spot{height:44px}}
+@media (max-width:520px){.map button{height:auto}.letters{grid-template-columns:repeat(6,1fr)}.letters .spot{height:36px;font-size:17px}.word i{width:26px;height:28px;font-size:15px}.board .spot{height:66px}.hands .spot{height:126px}.hands .spot .card{--cw:48px}.map button{height:52px}.called .spot{height:44px}}
 html.fs,html.fs body{height:100%;overflow:hidden}
 html.fs .wrap{max-width:none;height:100%;padding:8px 10px;display:flex;flex-direction:column}
 html.fs .wrap>.pill,html.fs .wrap>h1,html.fs .wrap>.sub{display:none}
@@ -13778,8 +13784,11 @@ function drawMAP(o,m,old){var tb=$('tb'),used=0,found=0,over=old;
 /* Poker Hand */
 function drawPKR(o,m,old){var tb=$('tb');
   tb.innerHTML='<div class="lbl">Your hand</div><div class="grid pk" id="pk">'+o.cards.map(function(){return '<div class="spot"></div>';}).join('')+'</div><div class="paytab" id="pt">'+o.table.map(function(r){return '<span data-h="'+r[0]+'">'+r[0]+'</span><span data-h="'+r[0]+'">'+money(r[1]*m)+'</span>';}).join('')+'</div>';
-  tb.querySelectorAll('#pk .spot').forEach(function(sp,i){sp.appendChild(card(o.cards[i]));if(!old)SC.push(scratch(sp,function(){if(allDone()){hl();finish(o.prize*m);}}));});
-  function hl(){[].forEach.call(tb.querySelectorAll('#pt span'),function(s){s.classList.toggle('on',s.getAttribute('data-h')===o.hand);});$('hint').textContent=o.hand==='No hand'?'No paying hand.':o.hand+'!';}
+  tb.querySelectorAll('#pk .spot').forEach(function(sp,i){var cc=o.cards[i];sp.appendChild(card(cc));
+    /* face cards in the art skins are full paintings: add a clear corner index */
+    if(cc.r>=11&&cc.r<=13){var ix=document.createElement('span');ix.className='ix'+(cc.s==='h'||cc.s==='d'?' red':'');ix.textContent={11:'J',12:'Q',13:'K'}[cc.r]+{s:'\u2660',h:'\u2665',d:'\u2666',c:'\u2663'}[cc.s];sp.appendChild(ix);}if(!old)SC.push(scratch(sp,function(){if(allDone()){hl();finish(o.prize*m);}}));});
+  function hl(){[].forEach.call(tb.querySelectorAll('#pt span'),function(s){s.classList.toggle('on',s.getAttribute('data-h')===o.hand);});
+    if(o.prize){var cnt={};o.cards.forEach(function(c){cnt[c.r]=(cnt[c.r]||0)+1;});var all=/flush|straight|full house/i.test(o.hand);tb.querySelectorAll('#pk .spot').forEach(function(sp,i){sp.classList.toggle('hl',all||cnt[o.cards[i].r]>1);});}$('hint').textContent=o.hand==='No hand'?'No paying hand.':o.hand+'!';}
   if(old)hl();else $('hint').textContent='Scratch all five cards to see your hand.';}
 /* ---------- boot ---------- */
 function refresh(){renderQ();if($('play').classList.contains('hide'))renderT();resetIn();hud();}
