@@ -10018,10 +10018,14 @@ h1 span{display:block;color:var(--green)}
   display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:stretch}
 /* the table: dealer at the flat top edge, four players around the curved bottom */
 .table{position:relative;min-width:0;min-height:540px;border-radius:26px 26px 260px 260px / 26px 26px 170px 170px;
-  background:radial-gradient(ellipse at 50% 20%,#1c7a4f 0%,#0f5a39 55%,#08351f 100%);
+  background:radial-gradient(ellipse at 50% 45%,rgba(60,6,8,.28) 0%,rgba(30,2,4,.45) 70%,rgba(12,0,2,.6) 100%),var(--feltart,none) center/cover no-repeat,radial-gradient(ellipse at 50% 20%,#8e1b1f 0%,#6b1014 55%,#3a0709 100%);
   border:12px solid #4a2a14;box-shadow:inset 0 0 0 3px #c6a75e,inset 0 0 60px rgba(0,0,0,.55),0 16px 40px rgba(0,0,0,.5);
   display:flex;flex-direction:column;justify-content:space-between;align-items:stretch;padding:18px 14px 26px;overflow:hidden;--sw:calc(var(--cw)*.82)}
 .table::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.012) 0 2px,transparent 2px 6px);pointer-events:none}
+.table{--feltart:url(https://saddleup-arcade.vercel.app/art/felt_war.webp)}
+.table .mid .ttl{opacity:0;height:8px;overflow:hidden}
+.table .res{text-shadow:0 2px 4px #000,0 0 14px rgba(0,0,0,.9)}
+.table .mid .pays{color:rgba(255,236,200,.75);text-shadow:0 1px 3px #000}
 .dealer{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:6px}
 .who{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,210,126,.8)}
 .drow{display:flex;gap:12px;align-items:center;justify-content:center;min-height:calc(var(--cw)*1.4)}
@@ -10114,7 +10118,8 @@ div.spot{cursor:default}
   .table{min-height:500px}
 }
 @media (max-width:480px){
-  :root{--cw:78px}
+  :root{--cw:62px}
+  .spot{width:40px;height:40px}.spot.tie,.spot.raise{width:28px;height:28px}.bets{gap:3px}.spot .stk{display:none}
   .panel{padding:12px;gap:10px}
   .stat b{font-size:17px}
   .table{border-width:8px;min-height:470px;padding:14px 6px 22px}
