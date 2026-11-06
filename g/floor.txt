@@ -2029,6 +2029,8 @@ var SUQ=(function(){
   var PARLOR=['sol','spider','mines','gold','dominoes','boomtown','mjsol','mahjong','cwar','checkers','pdice','liars','trail','wrangler'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
+  /* quests added later join the rotation from NEWDAY, so a day's picks never change mid-day */
+  var NEWDAY=Math.floor(Date.UTC(2026,10,6)/864e5);
   var Q=[
     ['bj1','e','Play a hand of Blackjack','bj','bet',1],
     ['rl1','e','Place a bet at Roulette','roul','bet',1],
@@ -2079,8 +2081,24 @@ var SUQ=(function(){
     ['bk3','h','Win a game of Backgammon','backgammon','win',1],
     ['mj3','h','Win a hand of Mahjong','mahjong','win',1],
     ['cw4','h','Win a game of Classic War','cwar','win',1],
-    ['he3','h','Win 5 pots at Texas Hold\u2019em','holdem','pay',5]
-  ].map(function(a){return {id:a[0],t:a[1],txt:a[2],g:a[3],ev:a[4],goal:a[5],amt:!!a[6],distinct:!!a[7]};});
+    ['he3','h','Win 5 pots at Texas Hold\u2019em','holdem','pay',5],
+    ['kn1','e','Play a draw of Keno Blast','keno','play',1,0,0,NEWDAY],
+    ['bs1','e','Play a card of Bingo Spins','bspins','play',1,0,0,NEWDAY],
+    ['vp1','e','Play a hand of Video Poker','vpoker','bet',1,0,0,NEWDAY],
+    ['pk1','e','Drop 10 nuggets at Gold Strike Plinko','plinko','bet',10,0,0,NEWDAY],
+    ['ck1','e','Sit down for a game of Checkers','checkers','open',1,0,0,NEWDAY],
+    ['tw1','e','Play today\u2019s Trail Word','trail','open',1,0,0,NEWDAY],
+    ['kn2','m','Play 5 draws of Keno Blast','keno','play',5,0,0,NEWDAY],
+    ['vp2','m','Collect 5 payouts at Video Poker','vpoker','pay',5,0,0,NEWDAY],
+    ['pd2','m','Finish a game of Prospector\u2019s Dice','pdice','over',1,0,0,NEWDAY],
+    ['ld2','m','Finish a game of Liar\u2019s Dice','liars','over',1,0,0,NEWDAY],
+    ['ww2','m','Finish a round of Word Wrangler','wrangler','over',1,0,0,NEWDAY],
+    ['tw2','m','Solve a Trail Word','trail','win',1,0,0,NEWDAY],
+    ['ck3','h','Win a game of Checkers','checkers','win',1,0,0,NEWDAY],
+    ['pd3','h','Win a game of Prospector\u2019s Dice','pdice','win',1,0,0,NEWDAY],
+    ['ld3','h','Win a game of Liar\u2019s Dice','liars','win',1,0,0,NEWDAY],
+    ['pk3','h','Collect $5,000 at Gold Strike Plinko','plinko','pay',5000,1,0,NEWDAY]
+  ].map(function(a){return {id:a[0],t:a[1],txt:a[2],g:a[3],ev:a[4],goal:a[5],amt:!!a[6],distinct:!!a[7],from:a[8]||0};});
   var BY={};Q.forEach(function(q){BY[q.id]=q;});
   var PER={e:3,m:3,h:1};
   function dayKey(d){d=d||new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
@@ -2089,7 +2107,7 @@ var SUQ=(function(){
   function shuf(arr,seed){var a=arr.slice(),R=rng(seed);for(var i=a.length-1;i>0;i--){var j=Math.floor(R()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
   /* each tier walks through a shuffled order so every quest comes up before any repeats */
   function today(d){var n=dayNum(d),out=[];
-    ['e','m','h'].forEach(function(t,ti){var pool=Q.filter(function(q){return q.t===t;}),per=PER[t],len=Math.ceil(pool.length/per),cyc=Math.floor(n/len),pos=n%len;
+    ['e','m','h'].forEach(function(t,ti){var pool=Q.filter(function(q){return q.t===t&&(!q.from||n>=q.from);}),per=PER[t],len=Math.ceil(pool.length/per),cyc=Math.floor(n/len),pos=n%len;
       var order=shuf(pool,cyc*977+ti*31+7);for(var k=0;k<per;k++)out.push(order[(pos*per+k)%order.length]);});
     return out;}
   function read(k,dflt){try{var v=JSON.parse(localStorage.getItem(k)||'null');return v||dflt;}catch(e){return dflt;}}

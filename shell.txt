@@ -221,7 +221,7 @@ html.fs #acTxt{display:none!important}
       <button class="tab" role="menuitem" type="button" data-g="war" id="tab-war" title="Casino War"><img class="gi" alt="" src="https://saddleup-arcade.vercel.app/art/ic_war.webp"><span class="lg">Casino War</span><span class="sm">War</span></button>
       <button class="tab" role="menuitem" type="button" data-g="craps" id="tab-craps" title="Craps"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4002bce53a65ab290a58c.webp"><span class="lg">Craps</span><span class="sm">Craps</span></button>
       <button class="tab" role="menuitem" type="button" data-g="roul" id="tab-roul" title="Roulette"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4002cc9d5b7168d177593.webp"><span class="lg">Roulette</span><span class="sm">Roulette</span></button>
-      <button class="tab" role="menuitem" type="button" data-g="vpoker" id="tab-vpoker" title="Lucky 7s Video Poker"><img class="gi" alt="" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20x%3D%226%22%20y%3D%228%22%20width%3D%2252%22%20height%3D%2248%22%20rx%3D%228%22%20fill%3D%22%235b1010%22%20stroke%3D%22%23c6a75e%22%20stroke-width%3D%223%22/%3E%3Ctext%20x%3D%2232%22%20y%3D%2247%22%20text-anchor%3D%22middle%22%20font-family%3D%22Georgia%2Cserif%22%20font-weight%3D%22900%22%20font-size%3D%2240%22%20fill%3D%22%23fde68a%22%20stroke%3D%22%23ef4444%22%20stroke-width%3D%221.5%22%3E7%3C/text%3E%3C/svg%3E"><span class="lg">Video Poker</span><span class="sm">Video Poker</span></button><button class="tab" role="menuitem" type="button" data-g="slots" id="tab-slots" title="Slots"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4002cc9d5b7168d17759f.webp"><span class="lg">Slots</span><span class="sm">Slots</span></button>
+      <button class="tab" role="menuitem" type="button" data-g="vpoker" id="tab-vpoker" title="Lucky 7s Video Poker"><img class="gi" alt="" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20x%3D%226%22%20y%3D%228%22%20width%3D%2252%22%20height%3D%2248%22%20rx%3D%228%22%20fill%3D%22%235b1010%22%20stroke%3D%22%23c6a75e%22%20stroke-width%3D%223%22/%3E%3Ctext%20x%3D%2232%22%20y%3D%2247%22%20text-anchor%3D%22middle%22%20font-family%3D%22Georgia%2Cserif%22%20font-weight%3D%22900%22%20font-size%3D%2240%22%20fill%3D%22%23fde68a%22%20stroke%3D%22%23ef4444%22%20stroke-width%3D%221.5%22%3E7%3C/text%3E%3C/svg%3E"><span class="lg">Video Poker</span><span class="sm">Video Poker</span></button><button class="tab" role="menuitem" type="button" data-g="plinko" id="tab-plinko" title="Gold Strike Plinko"><img class="gi" alt="" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cpath%20d%3D%22M32%206L58%2050H6z%22%20fill%3D%22%233b2414%22%20stroke%3D%22%23c6a75e%22%20stroke-width%3D%222.5%22/%3E%3Ccircle%20cx%3D%2232.0%22%20cy%3D%2216%22%20r%3D%222.4%22%20fill%3D%22%23fdf6e3%22/%3E%3Ccircle%20cx%3D%2227.5%22%20cy%3D%2225%22%20r%3D%222.4%22%20fill%3D%22%23fdf6e3%22/%3E%3Ccircle%20cx%3D%2236.5%22%20cy%3D%2225%22%20r%3D%222.4%22%20fill%3D%22%23fdf6e3%22/%3E%3Ccircle%20cx%3D%2223.0%22%20cy%3D%2234%22%20r%3D%222.4%22%20fill%3D%22%23fdf6e3%22/%3E%3Ccircle%20cx%3D%2232.0%22%20cy%3D%2234%22%20r%3D%222.4%22%20fill%3D%22%23fdf6e3%22/%3E%3Ccircle%20cx%3D%2241.0%22%20cy%3D%2234%22%20r%3D%222.4%22%20fill%3D%22%23fdf6e3%22/%3E%3Ccircle%20cx%3D%2218.5%22%20cy%3D%2243%22%20r%3D%222.4%22%20fill%3D%22%23fdf6e3%22/%3E%3Ccircle%20cx%3D%2227.5%22%20cy%3D%2243%22%20r%3D%222.4%22%20fill%3D%22%23fdf6e3%22/%3E%3Ccircle%20cx%3D%2236.5%22%20cy%3D%2243%22%20r%3D%222.4%22%20fill%3D%22%23fdf6e3%22/%3E%3Ccircle%20cx%3D%2245.5%22%20cy%3D%2243%22%20r%3D%222.4%22%20fill%3D%22%23fdf6e3%22/%3E%3Crect%20x%3D%2240%22%20y%3D%2234%22%20width%3D%224%22%20height%3D%229%22%20fill%3D%22%23b91c1c%22/%3E%3Ccircle%20cx%3D%2226%22%20cy%3D%2230%22%20r%3D%224.5%22%20fill%3D%22%23fbbf24%22%20stroke%3D%22%2392400e%22/%3E%3Crect%20x%3D%226%22%20y%3D%2250%22%20width%3D%2252%22%20height%3D%228%22%20rx%3D%222%22%20fill%3D%22%23ea580c%22/%3E%3C/svg%3E"><span class="lg">Gold Strike Plinko</span><span class="sm">Plinko</span></button><button class="tab" role="menuitem" type="button" data-g="slots" id="tab-slots" title="Slots"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4002cc9d5b7168d17759f.webp"><span class="lg">Slots</span><span class="sm">Slots</span></button>
       <button class="tab" role="menuitem" type="button" data-g="wheel" id="tab-wheel" title="Lucky Spur Wheel"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae40047736386d0dc63e712.webp"><span class="lg">Lucky Wheel</span><span class="sm">Wheel</span></button>
       <button class="tab" role="menuitem" type="button" data-g="crash" id="tab-crash" title="Runaway Express"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4d6b964f4028be3c846af.webp"><span class="lg">Runaway Express</span><span class="sm">Crash</span></button>
       <button class="tab" role="menuitem" type="button" data-g="derby" id="tab-derby" title="Dusty Trail Derby"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4f977736386d0dc807561.webp"><span class="lg">Dusty Trail Derby</span><span class="sm">Derby</span></button>
@@ -256,6 +256,8 @@ var SUQ=(function(){
   var PARLOR=['sol','spider','mines','gold','dominoes','boomtown','mjsol','mahjong','cwar','checkers','pdice','liars','trail','wrangler'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
+  /* quests added later join the rotation from NEWDAY, so a day's picks never change mid-day */
+  var NEWDAY=Math.floor(Date.UTC(2026,10,6)/864e5);
   var Q=[
     ['bj1','e','Play a hand of Blackjack','bj','bet',1],
     ['rl1','e','Place a bet at Roulette','roul','bet',1],
@@ -306,8 +308,24 @@ var SUQ=(function(){
     ['bk3','h','Win a game of Backgammon','backgammon','win',1],
     ['mj3','h','Win a hand of Mahjong','mahjong','win',1],
     ['cw4','h','Win a game of Classic War','cwar','win',1],
-    ['he3','h','Win 5 pots at Texas Hold’em','holdem','pay',5]
-  ].map(function(a){return {id:a[0],t:a[1],txt:a[2],g:a[3],ev:a[4],goal:a[5],amt:!!a[6],distinct:!!a[7]};});
+    ['he3','h','Win 5 pots at Texas Hold’em','holdem','pay',5],
+    ['kn1','e','Play a draw of Keno Blast','keno','play',1,0,0,NEWDAY],
+    ['bs1','e','Play a card of Bingo Spins','bspins','play',1,0,0,NEWDAY],
+    ['vp1','e','Play a hand of Video Poker','vpoker','bet',1,0,0,NEWDAY],
+    ['pk1','e','Drop 10 nuggets at Gold Strike Plinko','plinko','bet',10,0,0,NEWDAY],
+    ['ck1','e','Sit down for a game of Checkers','checkers','open',1,0,0,NEWDAY],
+    ['tw1','e','Play today’s Trail Word','trail','open',1,0,0,NEWDAY],
+    ['kn2','m','Play 5 draws of Keno Blast','keno','play',5,0,0,NEWDAY],
+    ['vp2','m','Collect 5 payouts at Video Poker','vpoker','pay',5,0,0,NEWDAY],
+    ['pd2','m','Finish a game of Prospector’s Dice','pdice','over',1,0,0,NEWDAY],
+    ['ld2','m','Finish a game of Liar’s Dice','liars','over',1,0,0,NEWDAY],
+    ['ww2','m','Finish a round of Word Wrangler','wrangler','over',1,0,0,NEWDAY],
+    ['tw2','m','Solve a Trail Word','trail','win',1,0,0,NEWDAY],
+    ['ck3','h','Win a game of Checkers','checkers','win',1,0,0,NEWDAY],
+    ['pd3','h','Win a game of Prospector’s Dice','pdice','win',1,0,0,NEWDAY],
+    ['ld3','h','Win a game of Liar’s Dice','liars','win',1,0,0,NEWDAY],
+    ['pk3','h','Collect $5,000 at Gold Strike Plinko','plinko','pay',5000,1,0,NEWDAY]
+  ].map(function(a){return {id:a[0],t:a[1],txt:a[2],g:a[3],ev:a[4],goal:a[5],amt:!!a[6],distinct:!!a[7],from:a[8]||0};});
   var BY={};Q.forEach(function(q){BY[q.id]=q;});
   var PER={e:3,m:3,h:1};
   function dayKey(d){d=d||new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
@@ -316,7 +334,7 @@ var SUQ=(function(){
   function shuf(arr,seed){var a=arr.slice(),R=rng(seed);for(var i=a.length-1;i>0;i--){var j=Math.floor(R()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
   /* each tier walks through a shuffled order so every quest comes up before any repeats */
   function today(d){var n=dayNum(d),out=[];
-    ['e','m','h'].forEach(function(t,ti){var pool=Q.filter(function(q){return q.t===t;}),per=PER[t],len=Math.ceil(pool.length/per),cyc=Math.floor(n/len),pos=n%len;
+    ['e','m','h'].forEach(function(t,ti){var pool=Q.filter(function(q){return q.t===t&&(!q.from||n>=q.from);}),per=PER[t],len=Math.ceil(pool.length/per),cyc=Math.floor(n/len),pos=n%len;
       var order=shuf(pool,cyc*977+ti*31+7);for(var k=0;k<per;k++)out.push(order[(pos*per+k)%order.length]);});
     return out;}
   function read(k,dflt){try{var v=JSON.parse(localStorage.getItem(k)||'null');return v||dflt;}catch(e){return dflt;}}
@@ -353,11 +371,11 @@ var SUQ=(function(){
 <\/script>
 <script>
 (function(){
-  var NAMES={wrangler:'Word Wrangler',trail:'Trail Word',liars:'Liar\'s Dice',pdice:'Prospector\'s Dice',checkers:'Checkers',vpoker:'Lucky 7s Video Poker',keno:'Keno Blast',bspins:'Bingo Spins',floor:'Casino Floor',parlor:'Game Parlor',wheel:'Lucky Spur Wheel',crash:'Runaway Express',derby:'Dusty Trail Derby',dominoes:'Dominoes',cwar:'Classic War',boomtown:'Boomtown Tycoon',mjsol:'Mahjong Solitaire',mahjong:'Mahjong',pool:'Pool',backgammon:'Backgammon',mines:'Minesweeper',bj:'Blackjack',holdem:"Texas Hold'em",bacc:'Baccarat',war:'Casino War',bingo:'Bingo Hall',quests:'Quests & Tickets',craps:'Craps',roul:'Roulette',slots:'Saddle Up Stampede',sol:'Solitaire',spider:'Spider Solitaire',gold:'Gold Rush'};
+  var NAMES={plinko:'Gold Strike Plinko',wrangler:'Word Wrangler',trail:'Trail Word',liars:'Liar\'s Dice',pdice:'Prospector\'s Dice',checkers:'Checkers',vpoker:'Lucky 7s Video Poker',keno:'Keno Blast',bspins:'Bingo Spins',floor:'Casino Floor',parlor:'Game Parlor',wheel:'Lucky Spur Wheel',crash:'Runaway Express',derby:'Dusty Trail Derby',dominoes:'Dominoes',cwar:'Classic War',boomtown:'Boomtown Tycoon',mjsol:'Mahjong Solitaire',mahjong:'Mahjong',pool:'Pool',backgammon:'Backgammon',mines:'Minesweeper',bj:'Blackjack',holdem:"Texas Hold'em",bacc:'Baccarat',war:'Casino War',bingo:'Bingo Hall',quests:'Quests & Tickets',craps:'Craps',roul:'Roulette',slots:'Saddle Up Stampede',sol:'Solitaire',spider:'Spider Solitaire',gold:'Gold Rush'};
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'203410fd18'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'3ee78b75ca'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}
@@ -469,7 +487,7 @@ var SUQ=(function(){
   skinUI();
 
   /* ---------- casino dropdown ---------- */
-  var CAS={vpoker:1,keno:0,floor:1,wheel:1,crash:1,derby:1,pool:1,backgammon:1,bj:1,holdem:1,bacc:1,war:1,craps:1,roul:1,slots:1},cbtn=document.getElementById('tab-casino'),cmenu=document.getElementById('cmenu');
+  var CAS={plinko:1,vpoker:1,keno:0,floor:1,wheel:1,crash:1,derby:1,pool:1,backgammon:1,bj:1,holdem:1,bacc:1,war:1,craps:1,roul:1,slots:1},cbtn=document.getElementById('tab-casino'),cmenu=document.getElementById('cmenu');
   function placeMenu(){var r=cbtn.getBoundingClientRect(),w=Math.max(220,cmenu.offsetWidth);var left=Math.min(Math.max(8,r.left),innerWidth-w-8);cmenu.style.left=left+'px';cmenu.style.top=Math.round(r.bottom+6)+'px';}
   function walletTxt(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');if(v&&typeof v.amt==='number'){var n=Math.round(v.amt*100)/100;return 'Casino \u00b7 $'+(n%1?n.toFixed(2):String(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',')+' bankroll';}}catch(e){}return 'Casino';}
   function openMenu(on){if(on)cmenu.querySelector('.chead').textContent=walletTxt();cmenu.classList.toggle('open',on);cbtn.setAttribute('aria-expanded',on?'true':'false');if(on){placeMenu();var c=cmenu.querySelector('.tab.on')||cmenu.querySelector('.tab');if(c)setTimeout(function(){try{c.focus();}catch(e){}},20);}}
