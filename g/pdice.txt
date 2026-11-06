@@ -81,6 +81,7 @@ html.fs .wrap{max-width:none;height:100%;padding:8px 10px;display:flex;flex-dire
 html.fs .wrap>.pill,html.fs .wrap>h1,html.fs .wrap>.sub,html.fs .rules{display:none}
 html.fs #felt{flex:1;min-height:0;overflow:auto;padding-top:46px}
 html.has-die_1 .die.v1{background:url(https://saddleup-arcade.vercel.app/art/die_1.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-die_1 .die.v1 i{visibility:hidden!important}html.has-die_2 .die.v2{background:url(https://saddleup-arcade.vercel.app/art/die_2.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-die_2 .die.v2 i{visibility:hidden!important}html.has-die_3 .die.v3{background:url(https://saddleup-arcade.vercel.app/art/die_3.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-die_3 .die.v3 i{visibility:hidden!important}html.has-die_4 .die.v4{background:url(https://saddleup-arcade.vercel.app/art/die_4.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-die_4 .die.v4 i{visibility:hidden!important}html.has-die_5 .die.v5{background:url(https://saddleup-arcade.vercel.app/art/die_5.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-die_5 .die.v5 i{visibility:hidden!important}html.has-die_6 .die.v6{background:url(https://saddleup-arcade.vercel.app/art/die_6.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-die_6 .die.v6 i{visibility:hidden!important}
+.leavebar{display:flex;justify-content:flex-end;width:100%}.leavebar .b2{padding:6px 10px;font-size:11px;opacity:.85}.leavebar .b2.sure{background:#b91c1c;border-color:#fca5a5;opacity:1}
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
 html.fs,html.fs body{height:100%;overflow:hidden!important}
@@ -360,12 +361,12 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   <p class="sub">Five dice, three rolls a turn, 13 boxes to fill. Hold the dice you like, roll the rest, then score. Five of a kind is a <b>Gold Strike</b>. Play 1 to 3 computer prospectors, or up to 4 people in the parlor.</p>
   <div id="felt">
     <div class="stage">
+      <div class="leavebar"><button class="b2" type="button" id="bNew">Leave table</button></div>
       <div class="players" id="players"></div>
       <div class="turn" id="turn"></div>
       <div class="tray"><div class="dice" id="dice"></div></div>
       <div class="ctl"><div class="rolls" id="rolls"></div><button class="rollb" type="button" id="bRoll">Roll</button></div>
       <div class="msg" id="msg"></div>
-      <div class="ctl"><button class="b2" type="button" id="bNew">Leave table</button></div>
     </div>
     <div class="sheetc" id="score"></div>
     <div class="strike" id="strike"><b id="strikeT">GOLD STRIKE!</b></div>
@@ -926,6 +927,9 @@ $('againBtn').onclick=function(){showSheet('setup');};
 $('bRoll').onclick=function(){if(!mine()||view.roll>=3)return;ac();send({t:'roll'});};
 $('bNew').onclick=function(){if(view&&view.online&&view.phase==='play'&&L){L.send('leave',{id:view.id},null);if(hosting){hosting=false;}}
   view=null;S=null;hosting=false;clearTimeout(botT);$('players').innerHTML='';$('score').innerHTML='';$('dice').innerHTML='';showSheet('setup');};
+/* leaving mid-game takes two taps so a stray tap can't end it */
+(function(){var b=$('bNew'),go=b.onclick,t=0;b.onclick=function(){var live=view&&view.phase!=='over';if(!live||b.classList.contains('sure')){clearTimeout(t);b.classList.remove('sure');b.textContent='Leave table';go();return;}
+  b.classList.add('sure');b.textContent='Tap again to leave';clearTimeout(t);t=setTimeout(function(){b.classList.remove('sure');b.textContent='Leave table';},3000);};})();
 if(L){
   try{Live.chat(L,$('felt'),{local:function(){return false;}});}catch(e){}
   L.on('status',function(){setTimeout(lobby,100);});

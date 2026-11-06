@@ -86,6 +86,7 @@ html.fs .wrap{max-width:none;height:100%;padding:8px 10px;display:flex;flex-dire
 html.fs .wrap>.pill,html.fs .wrap>h1,html.fs .wrap>.sub,html.fs .rules{display:none}
 html.fs #felt{flex:1;min-height:0;overflow:auto;padding-top:46px}
 html.has-die_1 .die.v1{background:url(https://saddleup-arcade.vercel.app/art/die_1.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-die_1 .die.v1 i{visibility:hidden!important}html.has-die_2 .die.v2{background:url(https://saddleup-arcade.vercel.app/art/die_2.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-die_2 .die.v2 i{visibility:hidden!important}html.has-die_3 .die.v3{background:url(https://saddleup-arcade.vercel.app/art/die_3.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-die_3 .die.v3 i{visibility:hidden!important}html.has-die_4 .die.v4{background:url(https://saddleup-arcade.vercel.app/art/die_4.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-die_4 .die.v4 i{visibility:hidden!important}html.has-die_5 .die.v5{background:url(https://saddleup-arcade.vercel.app/art/die_5.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-die_5 .die.v5 i{visibility:hidden!important}html.has-die_6 .die.v6{background:url(https://saddleup-arcade.vercel.app/art/die_6.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-die_6 .die.v6 i{visibility:hidden!important}html.has-ld_cup .cup{background:url(https://saddleup-arcade.vercel.app/art/ld_cup.webp) center/contain no-repeat!important;box-shadow:none!important;border-radius:0;transform:none!important;width:60px;height:60px}html.has-ld_cup .cup::after{display:none}html.has-ld_cup .cup.shake{animation:shk2 .5s}@keyframes shk2{25%{transform:rotate(-8deg) translateX(3px)}75%{transform:rotate(8deg) translateX(-3px)}}
+.leavebar{display:flex;justify-content:flex-end;width:100%}.leavebar .b2{padding:6px 10px;font-size:11px;opacity:.85}.leavebar .b2.sure{background:#b91c1c;border-color:#fca5a5;opacity:1}
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
 html.fs,html.fs body{height:100%;overflow:hidden!important}
@@ -364,6 +365,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   <h1>Bluff or call it.<span>Liar's Dice.</span></h1>
   <p class="sub">Everyone shakes 5 dice under a cup. Bid on how many of a face are on the <b>whole table</b>, or call the last bid a <b>lie</b>. Ones are wild. Lose a call and you lose a die; the last one with dice wins.</p>
   <div id="felt">
+    <div class="leavebar"><button class="b2" type="button" id="bNew">Leave table</button></div>
     <div class="opps" id="opps"></div>
     <div class="mid"><div class="bid none" id="bid"><span class="q">No bid yet</span></div><div class="note" id="note"></div></div>
     <div class="me" id="me">
@@ -375,7 +377,6 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
         <div class="act"><button class="raise" type="button" id="bBid">Bid</button><button class="liar" type="button" id="bLiar">Liar!</button></div>
       </div>
     </div>
-    <div class="foot"><button class="b2" type="button" id="bNew">Leave table</button></div>
     <div class="sheet" id="sheet">
       <div class="box">
         <div id="setup">
@@ -918,6 +919,9 @@ function lobby(){var live=L&&L.available()&&L.status==='live',os=others();$('ldo
 $('bOnline').onclick=function(){var os=others().slice(0,3);if(!os.length)return;ac();newGame([{id:ME,name:MYNAME}].concat(os.map(function(o){return {id:o.id,name:String(o.name||'Guest').slice(0,18)};})),true);};
 $('againBtn').onclick=function(){showSheet('setup');};
 $('bNew').onclick=function(){if(view&&view.online&&L)L.send('leave',{id:view.id},null);view=null;S=null;hosting=false;clearTimeout(botT);$('opps').innerHTML='';$('mine').innerHTML='';showSheet('setup');};
+/* leaving mid-game takes two taps so a stray tap can't end it */
+(function(){var b=$('bNew'),go=b.onclick,t=0;b.onclick=function(){var live=view&&view.phase!=='over';if(!live||b.classList.contains('sure')){clearTimeout(t);b.classList.remove('sure');b.textContent='Leave table';go();return;}
+  b.classList.add('sure');b.textContent='Tap again to leave';clearTimeout(t);t=setTimeout(function(){b.classList.remove('sure');b.textContent='Leave table';},3000);};})();
 if(L){
   try{Live.chat(L,$('felt'),{local:function(){return false;}});}catch(e){}
   L.on('status',function(){setTimeout(lobby,100);});
