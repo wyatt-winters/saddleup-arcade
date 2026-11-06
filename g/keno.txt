@@ -81,6 +81,12 @@ html.fs #hall{flex:1;min-height:0;overflow:auto;padding-top:46px;align-content:s
 html.fs.fsnarrow #hall{grid-template-columns:1fr;gap:8px;padding:44px 8px 8px}
 html.fs.fsnarrow .sign{gap:6px;padding:8px}html.fs.fsnarrow .sign .nm{font-size:18px}html.fs.fsnarrow .chip2 b{font-size:13px}
 html.has-keno_ball .kball:not(.empty){background:url(https://saddleup-arcade.vercel.app/art/keno_ball.webp) center/contain no-repeat!important;box-shadow:none!important;color:#1c1208;text-shadow:0 1px 0 #fff}
+.board button.op{box-shadow:inset 0 -3px 0 rgba(0,0,0,.18),inset 0 0 0 2px rgba(244,114,182,.0)}
+.board button .od{position:absolute;left:2px;right:2px;bottom:2px;display:flex;justify-content:center;gap:2px;pointer-events:none}
+.board button .od i{width:7px;height:7px;border-radius:50%;box-shadow:0 0 0 1.5px #fff}
+.others{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12px;color:#e2e8f0;padding:2px 4px 2px 30px}.others:empty{display:none}.others b{color:#f2d27e;font-size:11px;letter-spacing:.06em;text-transform:uppercase;width:100%}
+.others span{display:inline-flex;align-items:center;gap:5px}.others i{width:10px;height:10px;border-radius:50%;display:inline-block;box-shadow:0 0 0 1.5px #fff}.others em{font-style:normal;color:#6ee7b7;font-weight:800}
+@media (max-width:520px){.board button .od i{width:5px;height:5px;box-shadow:0 0 0 1px #fff}}
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>.chip.c5,.fchip.c5{background:url(https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae40019c9d5b7168d176fe7.webp) center/100% 100% no-repeat!important;border:0!important;outline:0!important}
 .chip.c25,.fchip.c25{background:url(https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4001936aa4a07e862d320.webp) center/100% 100% no-repeat!important;border:0!important;outline:0!important}
@@ -380,7 +386,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
         <div class="dinfo"><div class="say" id="say">Bets open</div><div class="st" id="dst"></div></div>
         <div class="blast" id="blastBox"><em>BLAST</em><b id="blastX">?</b></div>
       </div>
-      <div class="board" id="board"></div>
+      <div class="board" id="board"></div><div class="others" id="others"></div>
     </div>
     <div class="panel">
       <div class="t">Your ticket</div>
@@ -810,6 +816,7 @@ var ART=(function(){var B='https://saddleup-arcade.vercel.app/art/',ok={},cbs=[]
 (function(){'use strict';
 try{ART.probe(["keno_ball"]);}catch(e){}
 var $=function(i){return document.getElementById(i);};
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function money(n){n=Math.round(n*100)/100;var s=Math.abs(n),t=(s%1?s.toFixed(2):String(s)).replace(/\B(?=(\d{3})+(?!\d))/g,',');return (n<0?'-$':'$')+t;}
 function rng(s){var a=s>>>0;return function(){a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;};}
 function q(ev,n){try{if(window.suQ)suQ(ev,n);}catch(e){}}
@@ -849,6 +856,11 @@ function tick(){if(!H)return;var now=Date.now();
 /* ---------- your side ---------- */
 var settled={},lastK=0,net=0;
 function hud(){$('sBank').textContent=money(bank);}
+/* other players' tickets this draw (everyone shares their picks when they lock in) */
+var OTH={},OCOL=['#f472b6','#fb923c','#a78bfa','#2dd4bf','#a3e635','#f87171','#facc15','#38bdf8'];
+function colorFor(id){var h=0;for(var i=0;i<id.length;i++)h=(h*31+id.charCodeAt(i))>>>0;return OCOL[h%OCOL.length];}
+function othersFor(round){var ids=L&&L.roster?L.roster().map(function(p){return p.id;}):[];return Object.keys(OTH).map(function(k){return OTH[k];}).filter(function(o){return o.round===round&&o.picks.length&&(!ids.length||ids.indexOf(o.id)>=0);});}
+function sharePicks(to){if(!L||MODE==='local'||!cur)return;var mine=locked&&locked.round===cur.round;L.send('pick',{round:cur.round,host:cur.host,picks:mine?locked.picks:[],name:L.me.name},to||null);}
 function cost(){return pref.bet*(pref.blast?2:1);}
 function onState(st,self){
   if(!self){if(st.host===lastHost&&st.seq<=lastSeq)return;lastHost=st.host;lastSeq=st.seq;if(MODE==='host')return;}
@@ -877,8 +889,11 @@ function render(st){
   var D=st.seed?drawOf(st.seed):null,k=st.k||0,set={};if(D)for(var i=0;i<k;i++)set[D.balls[i]]=1;
   var picks=locked&&locked.round===st.round?locked.picks:pref.picks,pk={};picks.forEach(function(n){pk[n]=1;});
   var hits=D?hitsOf(picks,D.balls,k):0,canPick=st.phase==='bet'&&!(locked&&locked.round===st.round);
-  var bh='';for(var n=1;n<=80;n++)bh+='<button type="button" data-n="'+n+'" class="'+(pk[n]?'pk ':'')+(set[n]?'dr ':'')+(D&&k&&D.balls[k-1]===n?'last':'')+'"'+(canPick?'':' disabled')+'>'+n+'</button>';
+  var oth=othersFor(st.round),om={};oth.forEach(function(o){o.picks.forEach(function(n){(om[n]=om[n]||[]).push(o);});});
+  var bh='';for(var n=1;n<=80;n++){var os=om[n]||[];bh+='<button type="button" data-n="'+n+'" class="'+(pk[n]?'pk ':'')+(set[n]?'dr ':'')+(os.length?'op ':'')+(D&&k&&D.balls[k-1]===n?'last':'')+'"'+(canPick?'':' disabled')+(os.length?' title="'+os.map(function(o){return o.name;}).join(', ')+'"'+(pk[n]||set[n]?'':' style="box-shadow:inset 0 0 0 2px '+os[0].color+',inset 0 -3px 0 rgba(0,0,0,.18)"'):'')+'>'+n+
+    (os.length?'<span class="od">'+os.slice(0,4).map(function(o){return '<i style="background:'+o.color+'"></i>';}).join('')+'</span>':'')+'</button>';}
   $('board').innerHTML=bh;
+  $('others').innerHTML=oth.length?'<b>Others in this draw</b>'+oth.map(function(o){var h=D?hitsOf(o.picks,D.balls,k):0;return '<span><i style="background:'+o.color+'"></i>'+esc(o.name)+' \u00b7 '+o.picks.length+' spot'+(o.picks.length>1?'s':'')+(D&&k?' \u00b7 <em>'+h+' hit'+(h===1?'':'s')+'</em>':'')+'</span>';}).join(''):'';
   [].forEach.call($('board').children,function(b){b.onclick=function(){if(!canPick)return;ac();var n=+b.getAttribute('data-n'),i=pref.picks.indexOf(n);
     if(i>=0)pref.picks.splice(i,1);else{if(pref.picks.length>=10){msg('That\u2019s 10. Tap a blue number to drop it.');return;}pref.picks.push(n);}tone(i>=0?440:660,.06,0,.05);savePref();render(cur);};});
   /* the draw */
@@ -918,10 +933,10 @@ function render(st){
 function msg(t){$('msg').innerHTML=t;}
 var bangT=0;function bang(t,s){$('bangB').textContent=t;$('bangTxt').textContent=s;$('bang').classList.add('on');clearTimeout(bangT);bangT=setTimeout(function(){$('bang').classList.remove('on');},3000);}
 function placeBet(auto){if(!cur||cur.phase!=='bet'||locked&&locked.round===cur.round)return;var c=cost();if(!pref.picks.length||pref.bet<=0||c>bank)return;
-  bank-=c;locked={round:cur.round,key:cur.host+':'+cur.round,picks:pref.picks.slice(),bet:pref.bet,blast:pref.blast,cost:c};hud();
+  bank-=c;locked={round:cur.round,key:cur.host+':'+cur.round,picks:pref.picks.slice(),bet:pref.bet,blast:pref.blast,cost:c};hud();sharePicks();
   if(!auto)tone(660,.1,0,.06);msg((auto?'Repeat ticket: ':'')+'<b>'+locked.picks.length+' spots</b> locked in for draw '+cur.round+' \u00b7 '+money(c)+'. Good luck!');}
 $('bBet').onclick=function(){if(!cur)return;ac();
-  if(locked&&locked.round===cur.round){if(cur.phase!=='bet')return;bank+=locked.cost;msg('Ticket cancelled. '+money(locked.cost)+' back in your bankroll.');locked=null;if(pref.auto){pref.auto=false;savePref();}render(cur);return;}
+  if(locked&&locked.round===cur.round){if(cur.phase!=='bet')return;bank+=locked.cost;msg('Ticket cancelled. '+money(locked.cost)+' back in your bankroll.');locked=null;sharePicks();if(pref.auto){pref.auto=false;savePref();}render(cur);return;}
   placeBet(false);render(cur);};
 [].forEach.call($('chips').children,function(c){c.onclick=function(){ac();pref.bet=Math.round((pref.bet+(+c.getAttribute('data-v')))*100)/100;tone(880,.05,0,.05);savePref();if(cur)render(cur);};});
 $('bClr').onclick=function(){pref.bet=0;savePref();if(cur)render(cur);};
@@ -943,6 +958,9 @@ if(L){
   L.on('status',function(){setTimeout(decide,200);});L.on('host',function(){setTimeout(decide,100);});L.on('roster',function(){if(cur)render(cur);decide();});
   L.on('msg:state',function(st){onState(st,false);});
   L.on('msg:hello',function(d,from){if(MODE==='host')cast(from);});
+  L.on('msg:pick',function(d,from){if(!d||!Array.isArray(d.picks))return;var ps=d.picks.map(Number).filter(function(n){return n>=1&&n<=80;}).slice(0,10);
+    OTH[from]={id:from,name:String(d.name||'Guest').slice(0,16),picks:ps,round:d.round,color:colorFor(from)};if(cur)render(cur);});
+  L.on('roster',function(){if(locked&&cur&&locked.round===cur.round)setTimeout(function(){sharePicks();},400);});
   if(L.available())L.start();
 }
 setTimeout(function(){if(!H&&MODE==='local')startHost(0);},L&&L.available()?3500:50);
