@@ -1248,8 +1248,8 @@ root.style.setProperty('--ballsheet','url("'+BALLS_ART+'")');
 /* ================= geometry: world units = pixels of the 824x416 table art ================= */
 var ART_W=848,ART_H=416;
 /* per-skin table art: where to draw it so its cushion noses land on PF (anime: 1100x566 art, noses (75,82)-(1024,484)) */
-var SKIN_TBL={anime:[-2.67,-9.53,853.1,435.1]};
-var NEON_TBL=SKIN_TBL[document.documentElement.getAttribute('data-skin')||'']||null;
+var SKIN_TBL={anime:[-2.67,-9.53,853.1,435.1],beach:[-51.85,-25.91,944.7,488.5]};   /* beach: 1100x566 art, noses (125,92)-(982,450) */
+var NEON_TBL=SKIN_TBL[document.documentElement.getAttribute('data-season')||'']||SKIN_TBL[document.documentElement.getAttribute('data-skin')||'']||null;
 var PF={x0:55.5,y0:53.5,x1:791.5,y1:362.5};          /* cushion noses */
 var R=9,D2=2*R;
 var HEAD_X=230.5,FOOT={x:616.5,y:208},HEAD={x:165,y:208};
