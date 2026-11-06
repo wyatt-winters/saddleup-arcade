@@ -3,6 +3,221 @@
  "folder": "art/xmas/",
  "groups": [
   {
+   "group": "The Christmas deck: NEW art (see \"The deck\" section)",
+   "items": [
+    {
+     "name": "card_back",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9bce53a65ab2a2fc12.webp",
+     "deck": true
+    },
+    {
+     "name": "face_As",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8d36aa4a07e87555e2.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Ah",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada3736386d0dc764fd4.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Ad",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada03ee2a25c8e0a0299.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Ac",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad959dc70f82b62249ad.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Ks",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada0952d82bd47fc3b90.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Kh",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8c952d82bd47fc36f6.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Kd",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8e64f4028be3c2c034.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Kc",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad92c9d5b7168d29f915.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Qs",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9864f4028be3c2c278.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Qh",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad94c9d5b7168d29f985.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Qd",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad93ce53a65ab2a2fa2e.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Qc",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad89d542268bb4d41354.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Js",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad98ce53a65ab2a2fb5a.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Jh",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9464f4028be3c2c18f.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Jd",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9336aa4a07e87557a9.webp",
+     "deck": true
+    },
+    {
+     "name": "face_Jc",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8936aa4a07e8755515.webp",
+     "deck": true
+    },
+    {
+     "name": "suit_s",
+     "size": [
+      166,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9f736386d0dc764eda.webp",
+     "deck": true
+    },
+    {
+     "name": "suit_h",
+     "size": [
+      192,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8ec9d5b7168d29f7bd.webp",
+     "deck": true
+    },
+    {
+     "name": "suit_d",
+     "size": [
+      181,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8cd542268bb4d413c0.webp",
+     "deck": true
+    },
+    {
+     "name": "suit_c",
+     "size": [
+      182,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9109f888e023f07658.webp",
+     "deck": true
+    }
+   ]
+  },
+  {
    "group": "Rooms and backdrops",
    "items": [
     {
@@ -246,15 +461,6 @@
    "group": "Cards and chips",
    "items": [
     {
-     "name": "card_back",
-     "size": [
-      451,
-      640
-     ],
-     "transparent": true,
-     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9bce53a65ab2a2fc12.webp"
-    },
-    {
      "name": "chip_c5",
      "size": [
       253,
@@ -420,6 +626,42 @@
      ],
      "transparent": true,
      "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada009f888e023f07a00.webp"
+    },
+    {
+     "name": "rank_A",
+     "size": [
+      512,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9a09f888e023f078c4.webp"
+    },
+    {
+     "name": "rank_K",
+     "size": [
+      512,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada1736386d0dc764f54.webp"
+    },
+    {
+     "name": "rank_Q",
+     "size": [
+      455,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8a9dc70f82b622469a.webp"
+    },
+    {
+     "name": "rank_J",
+     "size": [
+      512,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9c3ee2a25c8e0a0199.webp"
     }
    ]
   },
