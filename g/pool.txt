@@ -104,6 +104,12 @@ html.fs .optslot{display:flex}
 .srow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#e2c27a;text-align:left}
 .seg{display:flex;background:rgba(15,23,42,.9);border:1px solid var(--edge2);border-radius:10px;padding:3px;gap:3px;flex:0 1 auto;min-width:0}
 .seg button{color:var(--muted);font-weight:700;font-size:13px;border-radius:7px;padding:0 10px;min-height:38px;border:1px solid transparent;white-space:nowrap;line-height:1.1;text-transform:none;letter-spacing:0}
+.stkbox{display:flex;gap:6px;flex:0 1 auto;min-width:0}
+.stkbox input{width:130px;min-width:0;flex:1 1 130px;min-height:38px;border-radius:10px;border:1px solid var(--edge2);background:rgba(15,23,42,.9);color:#f8fafc;font:700 14px Inter,system-ui,sans-serif;padding:0 10px}
+.stkbox input:focus{outline:2px solid #10b981;outline-offset:1px}
+.stkbox input.on{border-color:#10b981;box-shadow:0 0 0 1px #10b981 inset}
+.stkbox button{min-height:38px;padding:0 12px;border-radius:10px;border:1px solid var(--edge2);background:rgba(16,185,129,.14);color:#a7f3d0;font-weight:800;font-size:13px;white-space:nowrap}
+.stkbox button:disabled{opacity:.45}
 .seg button small{display:block;font-size:9.5px;font-weight:700;opacity:.8;letter-spacing:.06em;text-transform:uppercase}
 .seg button.on{background:rgba(16,185,129,.12);color:var(--green2);border-color:rgba(16,185,129,.4)}
 .seg button[disabled]{opacity:.35;cursor:not-allowed}
@@ -651,6 +657,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
             <div class="srow"><span>Game</span><div class="seg" id="optMode"><button type="button" data-v="8" class="on">8-Ball</button><button type="button" data-v="9">9-Ball</button></div></div>
             <div class="srow"><span>Opponent</span><div class="seg" id="optOpp"><button type="button" data-v="easy">Hank<small>Easy</small></button><button type="button" data-v="normal" class="on">Dusty<small>Normal</small></button><button type="button" data-v="hard">June<small>Hard</small></button></div></div>
             <div class="srow"><span>Stake</span><div class="seg" id="optStake"><button type="button" data-v="0" class="on">Fun</button><button type="button" data-v="10">$10</button><button type="button" data-v="25">$25</button><button type="button" data-v="100">$100</button><button type="button" data-v="500">$500</button></div></div>
+            <div class="srow stkc"><span>Or bet</span><div class="stkbox"><input id="stakeIn" type="text" inputmode="decimal" autocomplete="off" placeholder="Any amount" aria-label="Stake amount"><button type="button" id="stakeSet">Bet</button><button type="button" id="stakeAll">All in</button></div></div>
             <div class="lbox hide" id="lbox"></div>
             <button type="button" class="go" id="goBtn">Break</button>
             <button type="button" class="refill hide" id="refill">Refill bankroll to $1,000</button>
@@ -1932,7 +1939,8 @@ var toastT=0;
 function toast(t,foul){if(turbo)return;var el=$('toast');el.textContent=t;el.classList.toggle('foul',!!foul);el.classList.add('on');clearTimeout(toastT);toastT=setTimeout(function(){el.classList.remove('on');},2600);}
 function renderSetup(){
   [].forEach.call($('optStake').querySelectorAll('button'),function(b){b.disabled=+b.dataset.v>bank;});
-  if(opt.stake>bank){opt.stake=0;segSet('optStake','0');}
+  if(opt.stake>bank){opt.stake=0;segSet('optStake','0');$('stakeIn').value='';}
+  $('stakeIn').classList.toggle('on',opt.stake>0&&['10','25','100','500'].indexOf(String(opt.stake))<0);$('stakeAll').disabled=bank<1;
   var lb=liveOffer();
   $('goBtn').textContent=(opt.mode==='9'?'9-Ball':'8-Ball')+' vs '+OPP[opt.opp].name+(opt.stake?' \u00b7 '+money(opt.stake):'');
   $('goBtn').disabled=opt.stake>bank;
@@ -1945,7 +1953,13 @@ function segSet(id,v){[].forEach.call($(id).querySelectorAll('button'),function(
 function bindSeg(id,fn){$(id).addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.disabled)return;segSet(id,b.dataset.v);fn(b.dataset.v);});}
 bindSeg('optMode',function(v){opt.mode=v;renderSetup();});
 bindSeg('optOpp',function(v){opt.opp=v;var o=OPP[v];if(G.phase==='setup'){G.players[1]={name:o.name,kind:'bot',col:o.col,skill:v,key:o.key};hud();}renderSetup();});
-bindSeg('optStake',function(v){opt.stake=+v;renderSetup();});
+bindSeg('optStake',function(v){opt.stake=+v;$('stakeIn').value='';renderSetup();});
+function parseAmt(t){t=String(t||'').trim().toLowerCase().replace(/[$,\s]/g,'');var m=/^(\d*\.?\d+)([km]?)$/.exec(t);if(!m)return NaN;var v=parseFloat(m[1])*(m[2]==='k'?1e3:m[2]==='m'?1e6:1);return Math.floor(v);}
+function setCustom(v){if(!(v>0)){toast('Type an amount, like 2500');return;}if(v>bank){toast('You have '+money(bank)+'. Bet set to all in.');v=Math.floor(bank);}
+  opt.stake=v;var pre=['10','25','100','500'].indexOf(String(v))>=0;segSet('optStake',pre?String(v):'');$('stakeIn').value=pre?'':money(v);renderSetup();}
+$('stakeSet').addEventListener('click',function(){setCustom(parseAmt($('stakeIn').value));});
+$('stakeIn').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();setCustom(parseAmt($('stakeIn').value));}});
+$('stakeAll').addEventListener('click',function(){setCustom(Math.floor(bank));});
 bindSeg('optGuide',function(v){opt.guide=v;});
 bindSeg('optTalk',function(v){opt.talk=v==='1';});
 bindSeg('optSound',function(v){opt.sound=v==='1';});
@@ -2104,7 +2118,7 @@ function initLive(){
   L.on('host',function(h){if(h&&G.live&&busy()&&LV.peer)sendSync();});
   L.on('msg:lobby',function(d,from){if(!LV.peer||from!==LV.peer.id)return;LV.peerBusy=!!(d&&d.busy);renderSetup();});
   L.on('msg:invite',function(d,from){if(!d||!LV.peer||from!==LV.peer.id)return;if(busy()){L.send('decline',{gid:d.gid,busy:1},from);return;}
-    LV.inc={gid:String(d.gid).slice(0,12),mode:d.mode==='9'?'9':'8',stake:[0,10,25,100,500].indexOf(+d.stake)>=0?+d.stake:0};LV.out=null;SFX.turn();renderSetup();toast(safeName(LV.peer.name)+' challenges you');});
+    LV.inc={gid:String(d.gid).slice(0,12),mode:d.mode==='9'?'9':'8',stake:Math.min(1e12,Math.max(0,Math.floor(+d.stake)||0))};LV.out=null;SFX.turn();renderSetup();toast(safeName(LV.peer.name)+' challenges you');});
   L.on('msg:cancel',function(d){if(LV.inc&&d&&d.gid===LV.inc.gid){LV.inc=null;renderSetup();}});
   L.on('msg:decline',function(d){if(LV.out&&d&&d.gid===LV.out.gid){LV.out=null;toast(d.busy?'They are in a game right now':'Challenge declined');renderSetup();}});
   L.on('msg:accept',function(d,from){if(LV.out&&d&&d.gid===LV.out.gid&&L.isHost()&&LV.peer&&from===LV.peer.id){if(busy())return;var o=LV.out;startLive(o);}});
