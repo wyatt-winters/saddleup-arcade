@@ -57,8 +57,8 @@ h1 span{display:block;color:var(--green)}
 .ticket.T-map .hd b,.ticket.T-map .hd small,.ticket.T-map .lbl,.ticket.T-map .hint,.ticket.T-map .prizes{color:#3b1d06;text-shadow:none}
 
 /* high-roller vault */
-.T-vault{background:radial-gradient(120% 90% at 50% 0%,#3a3f4a 0%,#14171d 60%,#07080b 100%)}.T-vault::after{content:"";position:absolute;inset:6px;border-radius:12px;border:2px solid rgba(242,210,126,.55);pointer-events:none}
-.ticket.T-vault{background:radial-gradient(120% 80% at 50% 0%,#4a505c 0%,#1a1d24 55%,#08090c 100%)!important;box-shadow:0 20px 50px rgba(0,0,0,.7),inset 0 0 0 3px #c6a75e,inset 0 0 0 7px #2a2d34,inset 0 0 0 9px rgba(242,210,126,.5)!important;padding:22px 18px 20px!important}
+.T-vault{background:url(https://saddleup-arcade.vercel.app/art/ticket_vault.webp) center/cover,radial-gradient(120% 90% at 50% 0%,#3a3f4a 0%,#14171d 60%,#07080b 100%)}.T-vault::after{content:"";position:absolute;inset:6px;border-radius:12px;border:2px solid rgba(242,210,126,.55);pointer-events:none}
+.ticket.T-vault{background:url(https://saddleup-arcade.vercel.app/art/ticket_vault.webp) center/100% 100% no-repeat,radial-gradient(120% 80% at 50% 0%,#4a505c 0%,#1a1d24 55%,#08090c 100%)!important;box-shadow:0 20px 50px rgba(0,0,0,.7),inset 0 0 0 3px #c6a75e,inset 0 0 0 7px #2a2d34,inset 0 0 0 9px rgba(242,210,126,.5)!important;padding:22px 18px 20px!important}
 .ticket.T-vault .hd b{color:#fde68a;letter-spacing:.02em}
 .combo{display:flex;justify-content:center;gap:clamp(8px,3cqw,18px)}
 .combo .spot{width:min(96px,22cqw);aspect-ratio:1;border-radius:50%;font-size:min(46px,11cqw);background:radial-gradient(circle at 35% 30%,#fff7da,#e8c873 60%,#9a7a2e);box-shadow:0 0 0 4px #2a2d34,0 0 0 6px #c6a75e,0 6px 14px rgba(0,0,0,.6)}
@@ -71,8 +71,8 @@ h1 span{display:block;color:var(--green)}
 .vaultrow .vi{font-size:28px}.vaultrow .tx{flex:1;font-weight:800;font-size:14px}.vaultrow small{display:block;font-size:11px;color:#cbb07a;margin-top:2px}.vaultrow.got{border-color:rgba(52,211,153,.6)}
 .tk.v{background:linear-gradient(180deg,#fde68a,#9a7a2e);border-radius:6px;font-size:16px}
 /* spin to win */
-.T-spin{background:radial-gradient(110% 90% at 50% 10%,#7c1d6f 0%,#3b0a45 55%,#14041c 100%)}
-.ticket.T-spin{background:radial-gradient(120% 80% at 50% 0%,#9d2a7d 0%,#44104f 50%,#14041c 100%)!important;padding:20px 16px!important}
+.T-spin{background:url(https://saddleup-arcade.vercel.app/art/ticket_spin.webp) center/cover,radial-gradient(110% 90% at 50% 10%,#7c1d6f 0%,#3b0a45 55%,#14041c 100%)}
+.ticket.T-spin{background:url(https://saddleup-arcade.vercel.app/art/ticket_spin.webp) center/100% 100% no-repeat,radial-gradient(120% 80% at 50% 0%,#9d2a7d 0%,#44104f 50%,#14041c 100%)!important;padding:20px 16px!important}
 .ticket.T-spin .hd b{color:#fde68a}
 .swrap{display:grid;grid-template-columns:auto 1fr;gap:clamp(10px,3cqw,22px);align-items:center;max-width:620px;margin:0 auto}
 @container (max-width:460px){.swrap{grid-template-columns:1fr;justify-items:center}}

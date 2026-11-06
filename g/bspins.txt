@@ -365,7 +365,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   <h1>Spin the reels.<span>Daub the card.</span></h1>
   <p class="sub">A bingo card meets a slot reel. You get <b>10 spins</b>. Each spin turns 5 reels, one over each column, and any number that lands on your card gets daubed. Finish rows, columns and diagonals to climb the <b>pay ladder</b>.</p>
   <div id="hall">
-    <div class="rooms"><button type="button" data-to="bingo">&#x1f3b1; Bingo</button><button type="button" data-to="keno">&#x1f522; Keno Blast</button><button type="button" class="on">&#x1f3b0; Bingo Spins</button></div>
+    <div class="rooms"><button type="button" data-to="floor">&#x2190; Casino Floor</button><button type="button" data-to="bingo">&#x1f3b1; Bingo</button><button type="button" data-to="keno">&#x1f522; Keno Blast</button><button type="button" class="on">&#x1f3b0; Bingo Spins</button></div>
     <div class="sign">
       <div class="nm">Bingo Spins</div>
       <div class="chip2"><em>Bankroll</em><b class="g" id="sBank">$1,000</b></div>

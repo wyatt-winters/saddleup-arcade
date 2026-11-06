@@ -20,7 +20,7 @@ h1 span{display:block;color:var(--green)}
 .sub{margin:8px 0 16px;color:var(--muted);font-size:15px;line-height:1.6;max-width:720px}.sub b{color:var(--text)}
 .hide{display:none!important}
 #felt{position:relative;border-radius:22px;border:10px solid #4a2a14;box-shadow:inset 0 0 0 3px #c6a75e,0 18px 50px rgba(0,0,0,.45);overflow:hidden;min-height:600px;
-  background:radial-gradient(ellipse at 40% 40%,#2f5a3a,#16301e 70%,#0c1c11);display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,360px);gap:14px;padding:14px;align-items:start}
+  background:linear-gradient(rgba(8,20,12,.35),rgba(8,20,12,.6)),url(https://saddleup-arcade.vercel.app/art/table_pdice.webp) center/cover,radial-gradient(ellipse at 40% 40%,#2f5a3a,#16301e 70%,#0c1c11);display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,360px);gap:14px;padding:14px;align-items:start}
 .stage{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}
 .turn{font:400 22px Rye,Georgia,serif;color:var(--gold2);text-align:center;text-shadow:0 2px 6px #000;min-height:28px}
 .tray{width:min(100%,520px);padding:18px 12px;border-radius:18px;background:radial-gradient(ellipse at 50% 40%,#5b3a1e,#3a220f);box-shadow:inset 0 0 0 4px #2a170a,inset 0 0 0 6px rgba(242,210,126,.35),inset 0 10px 30px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5)}

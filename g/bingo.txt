@@ -382,7 +382,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   <h1>Grab a card.<span>Daub your way to the pot.</span></h1>
   <p class="sub">Buy up to <b>4 cards</b> before the caller starts. Everyone in the hall plays the same balls, real players and the regulars alike. First to finish the pattern takes the <b>pot</b>; ties split it.</p>
   <div id="hall">
-    <div class="rooms"><button type="button" class="on">&#x1f3b1; Bingo</button><button type="button" data-to="keno">&#x1f522; Keno Blast</button><button type="button" data-to="bspins">&#x1f3b0; Bingo Spins</button></div>
+    <div class="rooms"><button type="button" data-to="floor">&#x2190; Casino Floor</button><button type="button" class="on">&#x1f3b1; Bingo</button><button type="button" data-to="keno">&#x1f522; Keno Blast</button><button type="button" data-to="bspins">&#x1f3b0; Bingo Spins</button></div>
     <div class="sign">
       <div class="nm">Saddle Up Bingo Hall</div>
       <div class="chip2"><em>Bankroll</em><b class="g" id="sBank">$1,000</b></div>

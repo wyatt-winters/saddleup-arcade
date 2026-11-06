@@ -365,7 +365,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   <h1>Pick your numbers.<span>Twenty balls. One blast.</span></h1>
   <p class="sub">Choose <b>1 to 10 numbers</b> from 80. The hall draws <b>20 balls</b> for everyone at once. The more of yours it hits, the bigger the pay. Turn on <b>Blast</b> to double your wager for a shot at a 2&#xd7; to 10&#xd7; multiplier.</p>
   <div id="hall">
-    <div class="rooms"><button type="button" data-to="bingo">&#x1f3b1; Bingo</button><button type="button" class="on">&#x1f522; Keno Blast</button><button type="button" data-to="bspins">&#x1f3b0; Bingo Spins</button></div>
+    <div class="rooms"><button type="button" data-to="floor">&#x2190; Casino Floor</button><button type="button" data-to="bingo">&#x1f3b1; Bingo</button><button type="button" class="on">&#x1f522; Keno Blast</button><button type="button" data-to="bspins">&#x1f3b0; Bingo Spins</button></div>
     <div class="sign">
       <div class="nm">Keno Blast</div>
       <div class="chip2"><em>Bankroll</em><b class="g" id="sBank">$1,000</b></div>
