@@ -1322,6 +1322,8 @@ var WH={cv:$('wc'),ctx:null,P:0,S:0,dpr:1,bowl:null,rotor:null,order:EU,N:37,ste
 WH.ctx=WH.cv.getContext('2d');
 /* skins whose wheel art has a turret drawn at an angle: keep the art's rim and track, draw the centre cone and turret in code */
 var ART_NOHUB={anime:1}[document.documentElement.getAttribute('data-skin')||'']||0;
+/* where the wheel sits inside each skin's wheel image (x1,y1,x2,y2 on its 988x987 canvas); the Christmas version keeps the same layout */
+var RWA_BOX={anime:[5,5,946,940],xmas:[5,5,946,940]};
 var RWA={img:new Image(),ok:false};RWA.img.onload=function(){RWA.ok=true;if(WH.P){buildBowl();buildRotor();WH.need=true;}};RWA.img.src='https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4003dc9d5b7168d177af1.webp';
 function cacheSize(){return Math.min(Math.round(WH.P*1.5),2000);}
 function wheelType(){WH.order=isAm()?AM:EU;WH.N=WH.order.length;WH.step=TAU/WH.N;WH.ball={phase:'none'};if(WH.P)buildRotor();WH.need=true;}
@@ -1332,7 +1334,9 @@ function ringS(x,r,w,col){x.beginPath();x.arc(0,0,r,0,TAU);x.lineWidth=w;x.strok
 function chromeRing(x,r,w){var g=x.createLinearGradient(-r,-r,r,r);g.addColorStop(0,'#f8fafc');g.addColorStop(.35,'#94a3b8');g.addColorStop(.55,'#e2e8f0');g.addColorStop(1,'#64748b');ringS(x,r,w,g);}
 function buildBowl(){
   var C=cacheSize(),c=document.createElement('canvas');c.width=c.height=C;var x=c.getContext('2d'),h=C/2,R=h*0.985;x.translate(h,h);
-  if(RWA.ok){x.drawImage(RWA.img,-R,-R,2*R,2*R);
+  if(RWA.ok){/* the painted wheel doesn't fill its image exactly: crop to the wheel's own edges so it shares the ring's centre */
+    var bx=RWA_BOX[document.documentElement.getAttribute('data-skin')||'']||null,iw=RWA.img.naturalWidth||RWA.img.width,ih=RWA.img.naturalHeight||RWA.img.height;
+    if(bx){var sx=bx[0]/988*iw,sy=bx[1]/987*ih,sw=(bx[2]-bx[0])/988*iw,sh=(bx[3]-bx[1])/987*ih;x.drawImage(RWA.img,sx,sy,sw,sh,-R,-R,2*R,2*R);}else x.drawImage(RWA.img,-R,-R,2*R,2*R);
     for(var k2=0;k2<8;k2++){var a2=k2*TAU/8+TAU/16,rx2=Math.sin(a2)*R*0.795,ry2=-Math.cos(a2)*R*0.795;x.save();x.translate(rx2,ry2);x.rotate(a2+(k2%2?Math.PI/2:0));
       var L2=R*0.045,W2=R*0.017,dg2=x.createLinearGradient(-W2,-L2,W2,L2);dg2.addColorStop(0,'#fff8e1');dg2.addColorStop(0.45,'#c6a75e');dg2.addColorStop(0.55,'#f2d27e');dg2.addColorStop(1,'#7a5d22');
       x.beginPath();x.moveTo(0,-L2);x.lineTo(W2,0);x.lineTo(0,L2);x.lineTo(-W2,0);x.closePath();x.fillStyle=dg2;x.fill();x.restore();}
