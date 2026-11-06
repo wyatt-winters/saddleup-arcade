@@ -430,6 +430,20 @@ html.fs .fsopt-btn{display:inline-flex}
 html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 </style>
 <script>
+/* a game you've switched away from goes quiet: every sound it makes is paused until you come back */
+(function(){if(window.__suMute)return;window.__suMute=1;var away=false,list=[];
+  ['AudioContext','webkitAudioContext'].forEach(function(nm){var O=window[nm];if(!O)return;
+    function W(a,b){var c=arguments.length>1?new O(a,b):arguments.length?new O(a):new O();list.push(c);if(away){try{c.suspend();}catch(e){}}return c;}
+    W.prototype=O.prototype;try{Object.setPrototypeOf(W,O);}catch(e){}window[nm]=W;});
+  function quiet(on){away=on;list.forEach(function(c){try{if(on){if(c.state==='running')c.suspend();}else if(c.state==='suspended')c.resume();}catch(e){}});
+    if(on){try{if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}[].forEach.call(document.querySelectorAll('audio,video'),function(m){try{if(!m.paused){m.pause();m.__suPaused=1;}}catch(e){}});}
+    else [].forEach.call(document.querySelectorAll('audio,video'),function(m){if(m.__suPaused){m.__suPaused=0;try{m.play();}catch(e){}}});}
+  var off=false,ph=false;function apply(){var q=off||ph;if(q!==away||q)quiet(q);}
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='visible'){off=d.on===false;apply();}});
+  document.addEventListener('visibilitychange',function(){ph=document.hidden;apply();});
+  window.__suQuiet=function(){return away;};})();
+<\u002fscript>
+<script>
 (function(){
   var root=document.documentElement,btn=null,drawer=null,body=null,shade=null,host=null;
   var ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>';
@@ -616,7 +630,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 (function(){
   var LIST=/*SKINLIST*/[]/*SKINLIST*/;
   if(LIST.length<2)return;
-  var cur=document.documentElement.getAttribute('data-skin')||'western';
+  var cur=document.documentElement.getAttribute('data-season')||document.documentElement.getAttribute('data-skin')||'western';
   function btns(){return LIST.map(function(k){return '<button type="button" data-skin="'+k[0]+'"'+(cur===k[0]?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>'+k[1]+'</button>';}).join('');}
   function wire(root){[].forEach.call(root.querySelectorAll('button[data-skin]'),function(b){b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();
     var v=b.getAttribute('data-skin');[].forEach.call(document.querySelectorAll('.su-skinseg button'),function(x){var on=x.getAttribute('data-skin')===v;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');});
