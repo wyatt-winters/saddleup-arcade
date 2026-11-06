@@ -1,5 +1,5 @@
 /* Saddle Up Arcade: offline support. The page is network-first (fresh updates), art is cache-first. */
-var V='arcade-5bbe508de5',ART='arcade-art-v3';
+var V='arcade-797b0ae554',ART='arcade-art-v4';
 self.addEventListener('install',function(e){self.skipWaiting();e.waitUntil(caches.open(V).then(function(c){return c.addAll(['./','index.html','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png']);}));});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k!==V&&k!==ART;}).map(function(k){return caches.delete(k);}));}).then(function(){return self.clients.claim();}));});
 self.addEventListener('fetch',function(e){

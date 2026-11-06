@@ -94,6 +94,9 @@ h1 span{display:block;color:var(--green)}
 .cell.wrong{background-image:url(https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4003536aa4a07e862ddad.webp)!important}.cell.wrong::after,.cell.wrong svg{display:none}
 .cell.open.n1{color:#1d4ed8!important}.cell.open.n2{color:#15803d!important}.cell.open.n3{color:#b91c1c!important}.cell.open.n4{color:#6d28d9!important}
 .cell.open.n5{color:#9a3412!important}.cell.open.n6{color:#0f766e!important}.cell.open.n7{color:#111827!important}.cell.open.n8{color:#57534e!important}
+html[data-season="beach"] .cell.open{text-shadow:0 0 2px #fff,0 0 2px #fff,0 0 3px rgba(255,255,255,.9)!important;font-weight:900}
+html[data-season="beach"] .cell.open.n1{color:#1d4ed8!important}
+
 .board{border-style:solid!important;border-width:20px!important;border-image:url(https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae40035d542268bb4c1d4d5.webp) 63 / 20px stretch!important;padding:4px!important;border-radius:0!important;background:#2a1a0e!important}
 
 /* ===== app layout: counters bar on top, board, Dig/Flag toolbar (below the board on phones) ===== */
