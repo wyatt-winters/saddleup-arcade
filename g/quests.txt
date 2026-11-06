@@ -52,15 +52,15 @@ h1 span{display:block;color:var(--green)}
 .empty{color:#94a3b8;font-size:14px;text-align:center;padding:30px 10px;line-height:1.6}
 .T-xw{background:#0f1d4a url(https://saddleup-arcade.vercel.app/art/ticket_xw.webp) center/cover}.T-ttt{background:#7c2d12 url(https://saddleup-arcade.vercel.app/art/ticket_ttt.webp) center/cover}.T-btd{background:#073b1c url(https://saddleup-arcade.vercel.app/art/ticket_btd.webp) center/cover}.T-map{background:#3b1d06 url(https://saddleup-arcade.vercel.app/art/ticket_map.webp) center/cover}.T-pkr{background:#2a0f4a url(https://saddleup-arcade.vercel.app/art/ticket_pkr.webp) center/cover}
 .tcard::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.55));z-index:0}.tcard>*{position:relative;z-index:1}.tcard .tr,.tcard .st{position:absolute;z-index:1}
-.ticket{background-size:100% 100%!important;padding:7% 8% 8%!important}.ticket.T-map{background:#e8d3a2!important;padding:16px!important}
+.ticket{background-size:100% 100%!important;padding:7% 5.5% 8%!important}.ticket.T-map{background:#e8d3a2!important;padding:16px!important}
 .ticket.T-xw{padding-top:calc(14% + 34px)!important;padding-bottom:calc(20% + 8px)!important}.ticket.T-xw .hd b{position:absolute;left:12%;right:12%;top:9.6%;transform:translateY(-50%);font-size:clamp(20px,5vw,30px);line-height:1}.ticket.T-xw .hd>small{margin-top:0}.ticket .hd b,.ticket .hd small{text-shadow:0 2px 4px rgba(0,0,0,.8)}.ticket.T-xw .hd b{color:#2a1606;text-shadow:0 1px 0 rgba(255,255,255,.4)}.ticket.T-xw .hd>small,.ticket.T-xw .hd .tier{margin-top:14px}
 .ticket.T-map .hd b,.ticket.T-map .hd small,.ticket.T-map .lbl,.ticket.T-map .hint,.ticket.T-map .prizes{color:#3b1d06;text-shadow:none}
 /* the ticket you're playing */
 .play{position:absolute;inset:0;z-index:30;background:rgba(5,8,16,.92);display:flex;flex-direction:column;align-items:center;overflow:auto;padding:14px 10px 18px}
-.ptop{width:min(560px,100%);display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ptop{width:min(720px,100%);display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .ptop .back{padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.08);font-weight:800;font-size:13px}
 .ptop .rv{margin-left:auto;padding:8px 12px;border-radius:10px;background:rgba(242,210,126,.16);color:var(--gold2);font-weight:800;font-size:13px}
-.ticket{position:relative;width:min(560px,100%);border-radius:18px;padding:16px;box-shadow:0 20px 50px rgba(0,0,0,.7),inset 0 0 0 3px rgba(255,255,255,.12);overflow:hidden}
+.ticket{position:relative;width:min(720px,100%);border-radius:18px;padding:16px;box-shadow:0 20px 50px rgba(0,0,0,.7),inset 0 0 0 3px rgba(255,255,255,.12);overflow:hidden}
 .ticket .hd{text-align:center;margin-bottom:10px}
 .ticket .hd b{display:block;font:400 30px Rye,Georgia,serif;line-height:1;text-shadow:0 3px 0 rgba(0,0,0,.35)}
 .ticket .hd small{display:block;font-size:12px;font-weight:700;opacity:.9;margin-top:4px}
@@ -80,24 +80,25 @@ h1 span{display:block;color:var(--green)}
 .word i.on{background:#fde68a;color:#7c2d12}
 .word.full i{background:#34d399;color:#04221a}
 .word em{font-style:normal;font-size:11px;font-weight:800;width:36px;text-align:right;opacity:.8}
-.letters{grid-template-columns:repeat(9,1fr)}.letters .spot{height:42px;font-size:19px}
-.xwg{display:grid;gap:2px;width:min(100%,420px);margin:0 auto;padding:6px;border-radius:8px;background:rgba(8,14,40,.55)}
+.letters{grid-template-columns:repeat(9,1fr)}.letters .spot{height:auto;aspect-ratio:1;font-size:clamp(15px,4.6cqw,28px)}
+.xwg{display:grid;gap:2px;width:min(100%,560px);margin:0 auto;padding:6px;border-radius:8px;background:rgba(8,14,40,.55)}
 .xwg i,.xwg b{display:flex;align-items:center;justify-content:center;aspect-ratio:1;border-radius:3px;font-style:normal;font-weight:900;font-size:clamp(11px,3.4vw,19px)}
 .xwg i{background:#7f93b3;color:#1b2742;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}.xwg i.on{background:#fde68a;color:#7c2d12}.xwg i.full{background:#34d399;color:#04221a}
-.ticket .prizes{background:rgba(5,8,20,.72);border-radius:10px;padding:6px 8px;margin:8px auto 0;max-width:440px}.ticket .result{background:rgba(5,8,20,.6);border-radius:10px;max-width:440px;margin-left:auto;margin-right:auto}.ticket .result:empty{background:none}
+.ticket .prizes{background:rgba(5,8,20,.72);border-radius:10px;padding:6px 8px;margin:8px auto 0;max-width:600px}.ticket .result{background:rgba(5,8,20,.6);border-radius:10px;max-width:600px;margin-left:auto;margin-right:auto}.ticket .result:empty{background:none}
 .xwc{text-align:center;font-size:13px;font-weight:700;margin-top:6px;text-shadow:0 1px 3px #000}.xwc b{color:#fde68a}
 /* three in a row */
-.board{grid-template-columns:repeat(3,1fr);max-width:300px;margin:0 auto}.board .spot{height:78px;font-size:34px}
+.board{grid-template-columns:repeat(3,1fr);width:min(100%,440px);margin:0 auto;gap:8px}.board .spot{height:auto;aspect-ratio:1;font-size:clamp(28px,10cqw,60px)}
 .board .spot.hit{background:#fde68a}.board .spot.line{background:#34d399}
-.called{grid-template-columns:repeat(6,1fr);max-width:420px;margin:0 auto}.called .spot{height:52px;font-size:26px}
+.called{grid-template-columns:repeat(6,1fr);width:100%;max-width:600px;margin:0 auto}.called .spot{height:auto;aspect-ratio:1;font-size:clamp(20px,7cqw,40px)}
 /* beat the dealer */
-.dealer{display:flex;justify-content:center}.dealer .spot{width:var(--dc);height:calc(var(--dc)*1.4);background:transparent;border-radius:calc(var(--dc)*.09);box-shadow:0 4px 10px rgba(0,0,0,.5);--dc:clamp(64px,19vw,92px)}
-.hands{display:flex;justify-content:center;gap:clamp(4px,1.4vw,10px);--hc:clamp(46px,14vw,76px)}.hands .spot{width:calc(var(--hc) + 8px);height:calc(var(--hc)*1.4 + 34px);flex:0 0 auto;flex-direction:column;justify-content:flex-start;gap:4px;padding-top:4px;background:rgba(253,246,227,.96);border-radius:10px}
+.dealer{display:flex;justify-content:center}.dealer .spot{width:var(--dc);height:calc(var(--dc)*1.4);background:transparent;border-radius:calc(var(--dc)*.09);box-shadow:0 4px 10px rgba(0,0,0,.5);--dc:min(130px,26cqw)}
+.hands{display:flex;justify-content:center;gap:clamp(4px,1.4vw,10px);--hc:min(112px,calc(100cqw/5 - 20px))}
+@container (max-width:520px){.hands{--hc:calc(100cqw/3 - 34px);flex-wrap:wrap;row-gap:10px}}.hands .spot{width:calc(var(--hc) + 8px);height:calc(var(--hc)*1.4 + 34px);flex:0 0 auto;flex-direction:column;justify-content:flex-start;gap:4px;padding-top:4px;background:rgba(253,246,227,.96);border-radius:10px}
 .hands .spot .pz{font-size:clamp(11px,3.2vw,14px);font-weight:900;color:#065f46;line-height:1}.hands .spot .cs{position:relative;display:block;width:var(--hc);height:calc(var(--hc)*1.4)}
 .hands .spot.won{box-shadow:0 0 0 3px #34d399,0 0 16px rgba(52,211,153,.55);background:#d1fae5}
 .hands .spot .card{--cw:var(--hc)}.dealer .spot .card{--cw:var(--dc)}
 /* treasure map */
-.mapwrap{position:relative;width:min(440px,100%);aspect-ratio:1;margin:0 auto;background:url(https://saddleup-arcade.vercel.app/art/ticket_map.webp) center/100% 100% no-repeat;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.45)}
+.mapwrap{position:relative;width:min(600px,100%);aspect-ratio:1;margin:0 auto;background:url(https://saddleup-arcade.vercel.app/art/ticket_map.webp) center/100% 100% no-repeat;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.45)}
 .map{position:absolute;left:25.2%;top:27.8%;width:49.5%;height:48.4%;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:0}
 .map button{height:auto;border-radius:6px;background:transparent;border:0;font-size:clamp(16px,4.6vw,28px);display:flex;align-items:center;justify-content:center;transition:transform .12s,background .12s}
 .map button:not(:disabled):hover{background:rgba(124,45,18,.22)}.map button:not(:disabled):hover::after{content:'\2715';color:#7c2d12;font-weight:900;font-size:.7em}
@@ -105,19 +106,19 @@ h1 span{display:block;color:var(--green)}
 .map button:disabled{cursor:default}
 .digs{display:flex;justify-content:center;gap:5px;margin-top:8px}.digs i{width:20px;height:20px;border-radius:50%;background:#fde68a;box-shadow:inset 0 -2px 0 rgba(0,0,0,.25)}.digs i.used{background:rgba(255,255,255,.15);box-shadow:none}
 /* poker */
-.pk{display:flex;justify-content:center;gap:clamp(5px,1.6vw,10px);--pc:clamp(50px,15vw,84px);padding:12px 8px;border-radius:14px;background:rgba(10,4,24,.55);box-shadow:inset 0 0 0 1px rgba(242,210,126,.35)}
+.pk{display:flex;justify-content:center;gap:clamp(5px,1.6vw,10px);--pc:min(124px,calc(100cqw/5 - 16px));padding:12px 8px;border-radius:14px;background:rgba(10,4,24,.55);box-shadow:inset 0 0 0 1px rgba(242,210,126,.35)}
 .pk .spot{width:var(--pc);height:calc(var(--pc)*1.4);flex:0 0 auto;background:transparent;border-radius:calc(var(--pc)*.09);overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.5)}.pk .spot .card{--cw:var(--pc)}
 .dealer .spot{position:relative}.dealer .spot .ix{position:absolute;left:3px;top:3px;z-index:2;padding:1px 5px 2px;border-radius:5px;background:rgba(253,246,227,.97);font:900 calc(var(--dc)*.22)/1 Inter,sans-serif;color:#1c1208;box-shadow:0 1px 3px rgba(0,0,0,.5)}.dealer .spot .ix.red{color:#b91c1c}
 .hands .spot .ix{position:absolute;left:2px;top:2px;z-index:2;padding:1px 4px 2px;border-radius:5px;background:rgba(253,246,227,.97);font:900 calc(var(--hc)*.24)/1 Inter,sans-serif;color:#1c1208;box-shadow:0 1px 3px rgba(0,0,0,.5)}.hands .spot .ix.red{color:#b91c1c}
 .pk .spot .ix{position:absolute;left:3px;top:3px;z-index:2;padding:1px 4px 2px;border-radius:5px;background:rgba(253,246,227,.95);font:900 calc(var(--pc)*.2)/1 Inter,sans-serif;color:#1c1208;box-shadow:0 1px 3px rgba(0,0,0,.5)}.pk .spot .ix.red{color:#b91c1c}
 .pk .spot.hl{box-shadow:0 0 0 3px #fde68a,0 0 18px rgba(253,230,138,.6)}
 .ticket.T-pkr{padding-top:calc(5% + 34px)!important;padding-bottom:calc(10% + 8px)!important}
-.paytab{display:grid;grid-template-columns:1fr auto;max-width:340px;margin:12px auto 0;padding:8px 10px;border-radius:12px;background:rgba(10,4,24,.72);border:1px solid rgba(242,210,126,.45);font-size:13px;font-weight:700}
+.paytab{display:grid;grid-template-columns:1fr auto;max-width:520px;margin:12px auto 0;padding:8px 10px;border-radius:12px;background:rgba(10,4,24,.72);border:1px solid rgba(242,210,126,.45);font-size:13px;font-weight:700}
 .paytab span{padding:4px 6px;border-bottom:1px dashed rgba(242,210,126,.16);color:#e9d5ff}.paytab span:nth-child(even){text-align:right;color:#fde68a;font-variant-numeric:tabular-nums}
 .paytab span:nth-last-child(-n+2){border-bottom:0}.paytab span.on{background:rgba(253,230,138,.9);color:#2a0f4a!important;border-bottom-color:transparent}.paytab span.on:nth-child(odd){border-radius:6px 0 0 6px}.paytab span.on:nth-child(even){border-radius:0 6px 6px 0}
 .prizes{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;font-size:11px;font-weight:800;opacity:.9}
 .prizes span.on{color:#6ee7b7}
-@media (max-width:520px){.map button{height:auto}.letters{grid-template-columns:repeat(6,1fr)}.letters .spot{height:36px;font-size:17px}.word i{width:26px;height:28px;font-size:15px}.board .spot{height:66px}.map button{height:52px}.called .spot{height:44px}}
+@media (max-width:520px){.map button{height:auto}.letters{grid-template-columns:repeat(6,1fr)}.word i{width:26px;height:28px;font-size:15px}}
 html.fs,html.fs body{height:100%;overflow:hidden}
 html.fs .wrap{max-width:none;height:100%;padding:8px 10px;display:flex;flex-direction:column}
 html.fs .wrap>.pill,html.fs .wrap>h1,html.fs .wrap>.sub{display:none}
@@ -1255,7 +1256,7 @@ function rname(r){return r===14?'Ace':r===13?'King':r===12?'Queen':r===11?'Jack'
 var CUR=null,SC=[];
 function openT(id){var tk=loadT(),t=tk.filter(function(x){return x.id===id;})[0];if(!t)return;CUR={t:t,o:gen(t),fin:t.done};SC=[];
   var T=TYPES[t.type],m=TIER[t.tier].mult,el=$('tix');el.className='ticket T-'+t.type;
-  el.innerHTML='<div class="hd"><b>'+T.name+'</b><small>'+T.ds+'</small><span class="tier">'+TIER[t.tier].name+' TICKET \u00b7 PRIZES \u00d7'+m+'</span></div><div id="tb"></div><div class="result" id="res"></div><div class="hint" id="hint"></div>';
+  el.innerHTML='<div class="hd"><b>'+T.name+'</b><small>'+T.ds+'</small><span class="tier">'+TIER[t.tier].name+' TICKET \u00b7 PRIZES \u00d7'+m+'</span></div><div id="tb" style="container-type:inline-size"></div><div class="result" id="res"></div><div class="hint" id="hint"></div>';
   $('play').classList.remove('hide');$('play').scrollTop=0;
   ({xw:drawXW,ttt:drawTTT,btd:drawBTD,map:drawMAP,pkr:drawPKR})[t.type](CUR.o,m,t.done);
   $('pRev').classList.toggle('hide',t.done||t.type==='map');

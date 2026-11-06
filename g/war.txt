@@ -618,7 +618,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
         <button class="big war" type="button" id="bWar">Go to War<small id="warSub">add $0</small></button>
         <button class="big sur" type="button" id="bSur">Surrender<small id="surSub">get $0 back</small></button>
       </div>
-      <div class="msg" id="msg">Tap <b>BET</b> on your seat to drop a chip, then Deal.</div>
+      <div class="msg" id="msg">Tap a chip to bet, then Deal.</div>
       <div class="lab">Last hands</div>
       <div class="hist" id="hist"></div>
     </div>
@@ -1215,7 +1215,7 @@ function ui(){
   $('betUI').classList.toggle('hide',!betting);
   $('choice').classList.toggle('hide',phase!=='tie');
   $('bDeal').classList.toggle('hide',phase==='tie');
-  if(MODE==='solo'){var rb=you.ante<MIN&&(phase==='bet'||phase==='done')&&canRebet();$('bDeal').disabled=busy||(you.ante<MIN&&!rb);$('bDeal').textContent=rb?'Rebet & Deal':'Deal';}
+  if(MODE==='solo'){$('bDeal').disabled=busy||(phase==='bet'&&you.ante<MIN);$('bDeal').textContent=phase==='done'&&you.ante<MIN?'New hand':'Deal';}
   else{var rd=LV.wanted();$('bDeal').disabled=busy||phase!=='bet'||you.ante<MIN||rd||myIdx()<0;$('bDeal').textContent=phase!=='bet'?'Next hand soon\u2026':rd?'Ready \u2713':'Ready';}
   if(phase==='bet'&&MODE!=='solo')LV.betsSoon();
   var free=bank-onT;
@@ -1233,12 +1233,12 @@ function addChip(t){if(phase==='done'&&MODE==='solo')resetTable();if(phase!=='be
   if(v<=0){msg('Not enough in your bankroll for another chip.');return;}you[t]+=v;sChip();ui();
   msg('Bet '+money(you.ante)+(you.tie?' \u00b7 Tie '+money(you.tie):'')+'. Tap <b>'+(MODE==='solo'?'Deal':'Ready')+'</b>.');}
 function setTarget(){}
-[].forEach.call(document.querySelectorAll('.chips .chip'),function(b){b.onclick=function(){chipV=+b.getAttribute('data-v');save();sChip();ui();
-  if(phase==='bet'&&!busy&&!you.ante)msg('Tap <b>BET</b> on your seat to drop a '+money(chipV)+' chip. <b>TIE</b> pays 10 to 1.');};});
+/* tapping a chip puts it straight on your bet; tap TIE on your seat to add the chip there instead */
+[].forEach.call(document.querySelectorAll('.chips .chip'),function(b){b.onclick=function(){chipV=+b.getAttribute('data-v');save();addChip('ante');};});
 $('bDbl').onclick=function(){if(phase==='done'&&MODE==='solo')resetTable();if(phase!=='bet'||busy)return;var tot=you.ante+you.tie;
   if(!tot){if(!last.ante||2*(last.ante+last.tie)>bank)return;you.ante=last.ante*2;you.tie=last.tie*2;}else{if(tot>bank-tot)return;you.ante*=2;you.tie*=2;}
   sChip();ui();msg('Doubled: bet '+money(you.ante)+(you.tie?' \u00b7 Tie '+money(you.tie):'')+'.');};
-$('bClear').onclick=function(){if(phase==='done'&&MODE==='solo')resetTable();if(phase!=='bet')return;you.ante=0;you.tie=0;ui();msg('Tap <b>BET</b> on your seat to drop a chip, then Deal.');};
+$('bClear').onclick=function(){if(phase==='done'&&MODE==='solo')resetTable();if(phase!=='bet')return;you.ante=0;you.tie=0;ui();msg('Tap a chip to bet, then Deal.');};
 $('bRebet').onclick=function(){if(phase==='done'&&MODE==='solo')resetTable();if(phase!=='bet')return;if(last.ante+last.tie>bank)return;you.ante=last.ante;you.tie=last.tie;sChip();ui();msg('Same bet as last hand. Tap <b>Deal</b>.');};
 function clearCards(){sweep();$('dRow').innerHTML='<div class="slot"></div>';SEL.forEach(function(d,i){cardsBox(i).innerHTML='<div class="slot"></div>';setTag(i,'');});}
 /* between hands: broke or lucky computer players get up and someone new sits down */
@@ -1248,7 +1248,7 @@ function turnover(){var ch=false;for(var i=0;i<NSEAT;i++){var s=seats[i];if(!s||
 function resetTable(){phase='bet';res('');if(MODE==='solo')turnover();clearCards();seats.forEach(function(s){if(s){s.raise=0;s.c=null;s.w=null;s.res=null;if(!s.me){s.ante=0;s.tie=0;}}});
   you.ante=0;you.tie=0;ui();
   if(MODE!=='solo'){msg('Place your bet and tap <b>Ready</b>. <b>Rebet</b> repeats your last bet.');return;}
-  if(!/sits down/.test($('msg').textContent))msg(canRebet()?'Place a new bet, or tap <b>Rebet &amp; Deal</b> to play your last bet again.':'Tap <b>BET</b> on your seat to drop a chip, then Deal.');}
+  if(!/sits down/.test($('msg').textContent))msg(canRebet()?'Tap a chip to bet, or <b>Rebet</b> to play your last bet again.':'Tap a chip to bet, then Deal.');}
 function canRebet(){return last.ante>=MIN&&last.ante+last.tie<=bank;}
 function shoePt(){var t=$('table').getBoundingClientRect(),e=$('shoe'),r=e&&e.offsetWidth?e.getBoundingClientRect():null;
   return r?{x:r.left+r.width/2,y:r.top+r.height*.35}:{x:t.right-30,y:t.top+30};}
@@ -1266,7 +1266,7 @@ function sweep(){var tb=$('table'),tr=tb.getBoundingClientRect(),cs=tb.querySele
 function flip(el){if(el){el.classList.remove('down');}}
 function wait(ms){return new Promise(function(r){setTimeout(r,ms);});}
 $('bDeal').onclick=function(){if(busy)return;if(MODE!=='solo'){if(phase==='bet'&&you.ante>=MIN)LV.ready();return;}
-  if(phase==='done')resetTable();if(phase!=='bet')return;if(you.ante<MIN){if(!canRebet())return;you.ante=last.ante;you.tie=last.tie;sChip();}deal();};
+  if(phase==='done'){var keep={a:you.ante,t:you.tie};resetTable();you.ante=keep.a;you.tie=keep.t;ui();if(you.ante<MIN){msg('Tap a chip to bet, then Deal. <b>Rebet</b> plays your last bet again.');return;}}if(phase!=='bet'||you.ante<MIN)return;deal();};
 var dc=null,dw=null,netMe=0;
 function active(){var a=[];seats.forEach(function(s,i){if(s&&s.ante>0)a.push(i);});return a;}
 function deal(){
@@ -1404,7 +1404,7 @@ var LV=(function(){
     msg('You joined a <b>live table</b>. Place your bet and tap <b>Ready</b> before the clock runs out.');}
   function leave(){stopHost();cur=null;want=false;$('clock').textContent='';
     seats=[newBot(),you,newBot(),newBot()];buildSeats();if(phase!=='bet'&&phase!=='done'){phase='done';}resetTable();
-    msg('Playing with computer players. Tap <b>BET</b> on your seat to drop a chip, then Deal.');}
+    msg('Playing with computer players. Tap a chip to bet, then Deal.');}
   /* ---- host engine ---- */
   function hdraw(){if(shoe.length<1)newShoe();return shoe.pop();}
   function stopHost(){clearInterval(hostT);hostT=0;H=null;}
@@ -1523,7 +1523,7 @@ var LV=(function(){
     info:function(){return {mode:MODE,round:myRound,dealtRound:dealtRound,phase:cur?cur.phase:null,status:L.status,roster:L.roster().length,host:H?{round:H.round,phase:H.phase}:null};}};
 })();
 buildSeats();
-msg('Pick a chip, then tap <b>BET</b> on your seat. <b>TIE</b> pays 10 to 1.');
+msg('Tap a chip to bet. Tap <b>TIE</b> on your seat to bet the tie (pays 10 to 1).');
 ui();LV.start();
 window.__war={get bank(){return bank;},get phase(){return phase;},rig:function(a){RIG=a.slice();},seats:function(){return seats;},stack:function(a){a.forEach(function(c,i){c.id='k'+i+Date.now();shoe.push(c);});},live:function(){return LV.info();},get my(){return {phase:phase,ante:you.ante,res:you.res,raise:you.raise};}};
 })();
