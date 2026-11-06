@@ -331,11 +331,15 @@ var SUQ=(function(){
       if(p.n[q.id]!==cur)ch++;});
     if(ch)write('su_qprog',p);return ch;}
   /* finishing a quest earns its ticket right away: no claim step. Returns the quests that just paid out. */
-  var TYPES=['xw','ttt','btd','map','pkr'];
+  var TYPES=['xw','ttt','btd','map','pkr','spin'];
   function autoClaim(){var st=status(),c=claims(),tk=read('su_tickets',[]),got=[];
     st.forEach(function(s){if(!s.done||c.c[s.q.id])return;c.c[s.q.id]=1;var seed=(Math.random()*4294967296)>>>0,tier=s.q.t==='h'?'g':s.q.t==='m'?'s':'b';
       tk.push({id:'t'+Date.now().toString(36)+(seed%1000)+got.length,tier:tier,type:TYPES[seed%TYPES.length],seed:seed,q:s.q.txt,t:Date.now(),done:false,prize:0});got.push({txt:s.q.txt,tier:tier});});
+    /* all 7 done today: one High-Roller Vault ticket on top */
+    if(st.length&&!c.vault&&st.every(function(s){return s.done&&c.c[s.q.id];})){c.vault=1;var vs=(Math.random()*4294967296)>>>0;
+      tk.push({id:'v'+Date.now().toString(36)+(vs%1000),tier:'v',type:'vault',seed:vs,q:'All 7 daily quests',t:Date.now(),done:false,prize:0});got.push({txt:'All 7 daily quests done',tier:'v'});}
     if(got.length){write('su_qclaim',c);write('su_tickets',tk.slice(-120));}return got;}
+  function vaultEarned(){return !!claims().vault;}
   function status(){var p=prog(),c=claims();return today().map(function(q){var n=p.n[q.id]||0;return {q:q,n:n,done:n>=q.goal,claimed:!!c.c[q.id]};});}
   /* the quests a game can move forward (rooms show the whole list) */
   function relevant(g){return status().filter(function(st){var q=st.q;if(g==='floor'||g==='parlor')return true;
@@ -343,7 +347,7 @@ var SUQ=(function(){
   function claimable(){return status().filter(function(s){return s.done&&!s.claimed;}).length;}
   function tickets(){return read('su_tickets',[]);}
   function unplayed(){return tickets().filter(function(t){return !t.done;}).length;}
-  return {Q:Q,BY:BY,autoClaim:autoClaim,relevant:relevant,today:today,record:record,status:status,claimable:claimable,claims:claims,tickets:tickets,unplayed:unplayed,read:read,write:write,dayKey:dayKey,rng:rng,shuf:shuf,CASINO:CASINO,PARLOR:PARLOR};
+  return {Q:Q,BY:BY,autoClaim:autoClaim,vaultEarned:vaultEarned,relevant:relevant,today:today,record:record,status:status,claimable:claimable,claims:claims,tickets:tickets,unplayed:unplayed,read:read,write:write,dayKey:dayKey,rng:rng,shuf:shuf,CASINO:CASINO,PARLOR:PARLOR};
 })();
 <\/script>
 <script>
@@ -352,7 +356,7 @@ var SUQ=(function(){
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'702acd14be'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'02c2bc201e'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}

@@ -678,7 +678,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     h+='<button type="button" class="suq-go'+(D.tickets>0?' alt':'')+'" data-a="q">All daily quests</button>';
     bx.innerHTML=h;bx.querySelector('.suq-x').onclick=close;[].forEach.call(bx.querySelectorAll('.suq-go'),function(b){b.onclick=function(){go(b.getAttribute('data-a'));};});}
   var toastT=0;function toast(d){var t=document.querySelector('.suq-toast');if(!t){t=document.createElement('div');t.className='suq-toast';document.body.appendChild(t);t.onclick=function(){t.classList.remove('on');go('t');};}
-    var nm=d.tier==='g'?'Gold':d.tier==='s'?'Silver':'Bronze';t.innerHTML='<i>\ud83c\udf9f\ufe0f</i><span><b>Quest complete!</b>'+esc(d.txt)+' \u00b7 '+nm+' ticket earned. Tap to scratch.</span>';
+    var nm=d.tier==='v'?'High-Roller Vault':d.tier==='g'?'Gold':d.tier==='s'?'Silver':'Bronze';t.innerHTML='<i>'+(d.tier==='v'?'\ud83d\udd10':'\ud83c\udf9f\ufe0f')+'</i><span><b>'+(d.tier==='v'?'Vault unlocked!':'Quest complete!')+'</b>'+esc(d.txt)+' \u00b7 '+nm+' ticket earned. Tap to scratch.</span>';
     requestAnimationFrame(function(){t.classList.add('on');});clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('on');},4200);}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='qdone'){if(document.body)toast(d);return;}if(d&&d.arcade==='qcount'){D=d;if(document.body)render();}else if(d&&d.arcade==='fs'){setTimeout(place,80);setTimeout(place,400);}});
   addEventListener('resize',function(){setTimeout(place,60);});

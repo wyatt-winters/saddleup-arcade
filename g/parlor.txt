@@ -473,7 +473,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     h+='<button type="button" class="suq-go'+(D.tickets>0?' alt':'')+'" data-a="q">All daily quests</button>';
     bx.innerHTML=h;bx.querySelector('.suq-x').onclick=close;[].forEach.call(bx.querySelectorAll('.suq-go'),function(b){b.onclick=function(){go(b.getAttribute('data-a'));};});}
   var toastT=0;function toast(d){var t=document.querySelector('.suq-toast');if(!t){t=document.createElement('div');t.className='suq-toast';document.body.appendChild(t);t.onclick=function(){t.classList.remove('on');go('t');};}
-    var nm=d.tier==='g'?'Gold':d.tier==='s'?'Silver':'Bronze';t.innerHTML='<i>\ud83c\udf9f\ufe0f</i><span><b>Quest complete!</b>'+esc(d.txt)+' \u00b7 '+nm+' ticket earned. Tap to scratch.</span>';
+    var nm=d.tier==='v'?'High-Roller Vault':d.tier==='g'?'Gold':d.tier==='s'?'Silver':'Bronze';t.innerHTML='<i>'+(d.tier==='v'?'\ud83d\udd10':'\ud83c\udf9f\ufe0f')+'</i><span><b>'+(d.tier==='v'?'Vault unlocked!':'Quest complete!')+'</b>'+esc(d.txt)+' \u00b7 '+nm+' ticket earned. Tap to scratch.</span>';
     requestAnimationFrame(function(){t.classList.add('on');});clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('on');},4200);}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='qdone'){if(document.body)toast(d);return;}if(d&&d.arcade==='qcount'){D=d;if(document.body)render();}else if(d&&d.arcade==='fs'){setTimeout(place,80);setTimeout(place,400);}});
   addEventListener('resize',function(){setTimeout(place,60);});
@@ -1785,11 +1785,15 @@ var SUQ=(function(){
       if(p.n[q.id]!==cur)ch++;});
     if(ch)write('su_qprog',p);return ch;}
   /* finishing a quest earns its ticket right away: no claim step. Returns the quests that just paid out. */
-  var TYPES=['xw','ttt','btd','map','pkr'];
+  var TYPES=['xw','ttt','btd','map','pkr','spin'];
   function autoClaim(){var st=status(),c=claims(),tk=read('su_tickets',[]),got=[];
     st.forEach(function(s){if(!s.done||c.c[s.q.id])return;c.c[s.q.id]=1;var seed=(Math.random()*4294967296)>>>0,tier=s.q.t==='h'?'g':s.q.t==='m'?'s':'b';
       tk.push({id:'t'+Date.now().toString(36)+(seed%1000)+got.length,tier:tier,type:TYPES[seed%TYPES.length],seed:seed,q:s.q.txt,t:Date.now(),done:false,prize:0});got.push({txt:s.q.txt,tier:tier});});
+    /* all 7 done today: one High-Roller Vault ticket on top */
+    if(st.length&&!c.vault&&st.every(function(s){return s.done&&c.c[s.q.id];})){c.vault=1;var vs=(Math.random()*4294967296)>>>0;
+      tk.push({id:'v'+Date.now().toString(36)+(vs%1000),tier:'v',type:'vault',seed:vs,q:'All 7 daily quests',t:Date.now(),done:false,prize:0});got.push({txt:'All 7 daily quests done',tier:'v'});}
     if(got.length){write('su_qclaim',c);write('su_tickets',tk.slice(-120));}return got;}
+  function vaultEarned(){return !!claims().vault;}
   function status(){var p=prog(),c=claims();return today().map(function(q){var n=p.n[q.id]||0;return {q:q,n:n,done:n>=q.goal,claimed:!!c.c[q.id]};});}
   /* the quests a game can move forward (rooms show the whole list) */
   function relevant(g){return status().filter(function(st){var q=st.q;if(g==='floor'||g==='parlor')return true;
@@ -1797,7 +1801,7 @@ var SUQ=(function(){
   function claimable(){return status().filter(function(s){return s.done&&!s.claimed;}).length;}
   function tickets(){return read('su_tickets',[]);}
   function unplayed(){return tickets().filter(function(t){return !t.done;}).length;}
-  return {Q:Q,BY:BY,autoClaim:autoClaim,relevant:relevant,today:today,record:record,status:status,claimable:claimable,claims:claims,tickets:tickets,unplayed:unplayed,read:read,write:write,dayKey:dayKey,rng:rng,shuf:shuf,CASINO:CASINO,PARLOR:PARLOR};
+  return {Q:Q,BY:BY,autoClaim:autoClaim,vaultEarned:vaultEarned,relevant:relevant,today:today,record:record,status:status,claimable:claimable,claims:claims,tickets:tickets,unplayed:unplayed,read:read,write:write,dayKey:dayKey,rng:rng,shuf:shuf,CASINO:CASINO,PARLOR:PARLOR};
 })();
 <\u002fscript>
 <script>
