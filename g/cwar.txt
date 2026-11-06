@@ -260,6 +260,8 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+  /* the shell can hand us full screen up front, so a game never flashes its small layout first */
+  if(window.__SUFS){var go=function(){set(true,window.__SUFS.vh);};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();}
 })();
 
 /* account + back-to-room in Options (the shell tells each game its room and who is signed in) */

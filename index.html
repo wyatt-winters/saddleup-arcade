@@ -399,7 +399,7 @@ var SUQ=(function(){
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'80da8c25c5'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'ecb93db4b2'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}
@@ -410,7 +410,8 @@ var SUQ=(function(){
     n.parentNode.removeChild(n);}
     return skinned(SRC[id],id);
   }
-  function getSrc(id,cb){var s=source(id);if(s!=null){cb(s);return;}
+  function withFs(s){if(!fsOn)return s;var tag='<script>window.__SUFS={vh:'+gameH()+'};document.documentElement.classList.add("fs");'+(innerWidth<760?'document.documentElement.classList.add("fsnarrow");':'')+'</'+'script>';return s.replace(/<head>/i,'<head>'+tag);}
+  function getSrc(id,cb0){var cb=function(x){cb0(withFs(x));};var s=source(id);if(s!=null){cb(s);return;}
     if(PEND[id]){PEND[id].push(cb);return;}PEND[id]=[cb];
     var tries=0;(function go(){fetch(GBASE+'g/'+id+'.txt?v='+GVER).then(function(r){if(!r.ok)throw 0;return r.text();}).then(function(t){SRC[id]=prepSrc(t);var l=PEND[id];delete PEND[id];l.forEach(function(f){f(skinned(SRC[id],id));});})
       .catch(function(){if(++tries<4)setTimeout(go,800*tries);else{var l=PEND[id];delete PEND[id];l.forEach(function(f){f('<!doctype html><html><body style="background:#0f172a;color:#cbd5e1;font:16px Inter,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center">Couldn\u2019t load '+(NAMES[id]||'this game')+'. Check your connection and tap it again.</body></html>');});}});})();}
@@ -843,6 +844,7 @@ var SUQ=(function(){
 
   /* the short GHL code fetches the arcade from the app host, so every update shows up without re-pasting */
   var remote=node.getAttribute('data-remote');
+  if(remote&&immOn()){imp(frame,'height','100vh');imp(frame,'background','#0f172a');}
   if(remote&&!node.textContent.replace(/\s+/g,'')){var tries=0;(function get(){fetch(remote,{cache:'no-cache'}).then(function(r){if(!r.ok)throw 0;return r.text();}).then(function(tx){node.textContent=tx;boot();}).catch(function(){if(++tries<5)setTimeout(get,1000*tries);});})();}
   else boot();
   function boot(){
@@ -856,7 +858,7 @@ var SUQ=(function(){
 
   imp(frame,'display','block'); imp(frame,'border','0'); imp(frame,'width','100%');
   imp(frame,'max-width','none'); imp(frame,'min-width','0'); imp(frame,'margin','0'); imp(frame,'padding','0');
-  imp(frame,'background','transparent'); imp(frame,'height','320px');
+  imp(frame,'background','#0f172a'); imp(frame,'height',immOn()?'100vh':'320px');
   frame.setAttribute('srcdoc',src);
   var lastImm=null;
   function postImm(force){var on=immOn();if(!force&&on===lastImm)return;lastImm=on;try{frame.contentWindow.postMessage({arcade:'immersive',on:on},'*');}catch(e){}if(on){curH=0;setH(0);}}

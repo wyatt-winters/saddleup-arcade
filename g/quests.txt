@@ -91,11 +91,11 @@ h1 span{display:block;color:var(--green)}
 .board .spot.hit{background:#fde68a}.board .spot.line{background:#34d399}
 .called{grid-template-columns:repeat(6,1fr);max-width:420px;margin:0 auto}.called .spot{height:52px;font-size:26px}
 /* beat the dealer */
-.dealer{display:flex;justify-content:center}.dealer .spot{width:96px;height:130px;background:transparent}
-.hands{grid-template-columns:repeat(5,1fr)}.hands .spot{height:150px;flex-direction:column;gap:6px;background:rgba(253,246,227,.95)}
-.hands .spot .pz{font-size:13px;font-weight:900;color:#065f46}
-.hands .spot.won{box-shadow:inset 0 0 0 3px #34d399}
-.hands .spot .card,.dealer .spot .card{--cw:60px}
+.dealer{display:flex;justify-content:center}.dealer .spot{width:var(--dc);height:calc(var(--dc)*1.4);background:transparent;border-radius:calc(var(--dc)*.09);box-shadow:0 4px 10px rgba(0,0,0,.5);--dc:clamp(64px,19vw,92px)}
+.hands{display:flex;justify-content:center;gap:clamp(4px,1.4vw,10px);--hc:clamp(46px,14vw,76px)}.hands .spot{width:calc(var(--hc) + 8px);height:calc(var(--hc)*1.4 + 34px);flex:0 0 auto;flex-direction:column;justify-content:flex-start;gap:4px;padding-top:4px;background:rgba(253,246,227,.96);border-radius:10px}
+.hands .spot .pz{font-size:clamp(11px,3.2vw,14px);font-weight:900;color:#065f46;line-height:1}.hands .spot .cs{position:relative;display:block;width:var(--hc);height:calc(var(--hc)*1.4)}
+.hands .spot.won{box-shadow:0 0 0 3px #34d399,0 0 16px rgba(52,211,153,.55);background:#d1fae5}
+.hands .spot .card{--cw:var(--hc)}.dealer .spot .card{--cw:var(--dc)}
 /* treasure map */
 .mapwrap{position:relative;width:min(440px,100%);aspect-ratio:1;margin:0 auto;background:url(https://saddleup-arcade.vercel.app/art/ticket_map.webp) center/100% 100% no-repeat;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.45)}
 .map{position:absolute;left:25.2%;top:27.8%;width:49.5%;height:48.4%;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:0}
@@ -107,6 +107,8 @@ h1 span{display:block;color:var(--green)}
 /* poker */
 .pk{display:flex;justify-content:center;gap:clamp(5px,1.6vw,10px);--pc:clamp(50px,15vw,84px);padding:12px 8px;border-radius:14px;background:rgba(10,4,24,.55);box-shadow:inset 0 0 0 1px rgba(242,210,126,.35)}
 .pk .spot{width:var(--pc);height:calc(var(--pc)*1.4);flex:0 0 auto;background:transparent;border-radius:calc(var(--pc)*.09);overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.5)}.pk .spot .card{--cw:var(--pc)}
+.dealer .spot{position:relative}.dealer .spot .ix{position:absolute;left:3px;top:3px;z-index:2;padding:1px 5px 2px;border-radius:5px;background:rgba(253,246,227,.97);font:900 calc(var(--dc)*.22)/1 Inter,sans-serif;color:#1c1208;box-shadow:0 1px 3px rgba(0,0,0,.5)}.dealer .spot .ix.red{color:#b91c1c}
+.hands .spot .ix{position:absolute;left:2px;top:2px;z-index:2;padding:1px 4px 2px;border-radius:5px;background:rgba(253,246,227,.97);font:900 calc(var(--hc)*.24)/1 Inter,sans-serif;color:#1c1208;box-shadow:0 1px 3px rgba(0,0,0,.5)}.hands .spot .ix.red{color:#b91c1c}
 .pk .spot .ix{position:absolute;left:3px;top:3px;z-index:2;padding:1px 4px 2px;border-radius:5px;background:rgba(253,246,227,.95);font:900 calc(var(--pc)*.2)/1 Inter,sans-serif;color:#1c1208;box-shadow:0 1px 3px rgba(0,0,0,.5)}.pk .spot .ix.red{color:#b91c1c}
 .pk .spot.hl{box-shadow:0 0 0 3px #fde68a,0 0 18px rgba(253,230,138,.6)}
 .ticket.T-pkr{padding-top:calc(5% + 34px)!important;padding-bottom:calc(10% + 8px)!important}
@@ -115,7 +117,7 @@ h1 span{display:block;color:var(--green)}
 .paytab span:nth-last-child(-n+2){border-bottom:0}.paytab span.on{background:rgba(253,230,138,.9);color:#2a0f4a!important;border-bottom-color:transparent}.paytab span.on:nth-child(odd){border-radius:6px 0 0 6px}.paytab span.on:nth-child(even){border-radius:0 6px 6px 0}
 .prizes{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;font-size:11px;font-weight:800;opacity:.9}
 .prizes span.on{color:#6ee7b7}
-@media (max-width:520px){.map button{height:auto}.letters{grid-template-columns:repeat(6,1fr)}.letters .spot{height:36px;font-size:17px}.word i{width:26px;height:28px;font-size:15px}.board .spot{height:66px}.hands .spot{height:126px}.hands .spot .card{--cw:48px}.map button{height:52px}.called .spot{height:44px}}
+@media (max-width:520px){.map button{height:auto}.letters{grid-template-columns:repeat(6,1fr)}.letters .spot{height:36px;font-size:17px}.word i{width:26px;height:28px;font-size:15px}.board .spot{height:66px}.map button{height:52px}.called .spot{height:44px}}
 html.fs,html.fs body{height:100%;overflow:hidden}
 html.fs .wrap{max-width:none;height:100%;padding:8px 10px;display:flex;flex-direction:column}
 html.fs .wrap>.pill,html.fs .wrap>h1,html.fs .wrap>.sub{display:none}
@@ -292,6 +294,8 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     try{window.dispatchEvent(new Event('resize'));}catch(e){}
   }
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+  /* the shell can hand us full screen up front, so a game never flashes its small layout first */
+  if(window.__SUFS){var go=function(){set(true,window.__SUFS.vh);};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();}
 })();
 
 /* account + back-to-room in Options (the shell tells each game its room and who is signed in) */
@@ -1179,7 +1183,7 @@ function scratch(el,onReveal){var cv=document.createElement('canvas');el.appendC
   function init(){if(ctx)return true;var r=el.getBoundingClientRect();if(!r.width)return false;w=Math.round(r.width);h=Math.round(r.height);cv.width=w;cv.height=h;ctx=cv.getContext('2d');
     var g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#cfd4da');g.addColorStop(.5,'#9aa3ad');g.addColorStop(1,'#d8dde2');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
     if(FOIL.complete&&FOIL.naturalWidth){ctx.drawImage(FOIL,0,0,Math.max(w,h),Math.max(w,h));}
-    ctx.fillStyle='rgba(60,60,70,.35)';ctx.font='900 '+Math.max(9,Math.min(14,h/4))+'px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(w>60?'SCRATCH':'\u2605',w/2,h/2);
+    ctx.fillStyle='rgba(60,60,70,.35)';ctx.font='900 '+Math.max(9,Math.min(14,h/4))+'px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(w>84?'SCRATCH':'\u2605',w/2,h/2);
     ctx.globalCompositeOperation='destination-out';return true;}
   function cleared(){var c=0;for(var i=0;i<cov.length;i++)c+=cov[i];return c/cov.length;}
   function reveal(){if(done)return;done=true;cv.classList.add('gone');setTimeout(function(){cv.remove();},400);onReveal&&onReveal();}
@@ -1299,7 +1303,9 @@ function drawTTT(o,m,old){var tb=$('tb');
 function drawBTD(o,m,old){var tb=$('tb');
   tb.innerHTML='<div class="lbl">Dealer\u2019s card</div><div class="dealer"><div class="spot" id="dl"></div></div><div class="lbl">Your hands</div><div class="grid hands" id="hs">'+
     o.hands.map(function(h,i){return '<div class="spot" data-i="'+i+'"><span class="cs"></span><span class="pz">'+money(h.p*m)+'</span></div>';}).join('')+'</div>';
-  $('dl').appendChild(card(o.dealer));tb.querySelectorAll('#hs .spot').forEach(function(sp,i){sp.querySelector('.cs').appendChild(card(o.hands[i].c));});
+  $('dl').appendChild(card(o.dealer));(function(cc){var ix=document.createElement('span');ix.className='ix'+(cc.s==='h'||cc.s==='d'?' red':'');ix.textContent=({14:'A',13:'K',12:'Q',11:'J'}[cc.r]||cc.r)+{s:'\u2660',h:'\u2665',d:'\u2666',c:'\u2663'}[cc.s];$('dl').appendChild(ix);})(o.dealer);tb.querySelectorAll('#hs .spot').forEach(function(sp,i){var cc=o.hands[i].c,cs=sp.querySelector('.cs');cs.appendChild(card(cc));
+    /* small cards can lose their corner rank: always show a clear index */
+    var ix=document.createElement('span');ix.className='ix'+(cc.s==='h'||cc.s==='d'?' red':'');ix.textContent=({14:'A',13:'K',12:'Q',11:'J'}[cc.r]||cc.r)+{s:'\u2660',h:'\u2665',d:'\u2666',c:'\u2663'}[cc.s];cs.appendChild(ix);});
   var dOpen=old,hOpen={};
   function upd(){tb.querySelectorAll('#hs .spot').forEach(function(sp,i){sp.classList.toggle('won',!!(dOpen&&(hOpen[i]||old)&&o.hands[i].win));});}
   if(!old){SC.push(scratch($('dl'),function(){dOpen=true;upd();end();}));tb.querySelectorAll('#hs .spot').forEach(function(sp,i){SC.push(scratch(sp,function(){hOpen[i]=1;upd();end();}));});}
