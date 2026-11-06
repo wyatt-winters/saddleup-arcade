@@ -295,11 +295,12 @@ html.fs #acTxt{display:none!important}
 </div>
 
 
+
 <script>/* ===== Daily quests: one shared list, the same 7 picks for everyone each day =====
    Progress is written by the arcade shell (it hears every game), claims and tickets by the Quests page. */
 var SUQ=(function(){
-  var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo'];
-  var PARLOR=['sol','spider','mines','gold','dominoes','boomtown','mjsol','mahjong','cwar'];
+  var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','plinko'];
+  var PARLOR=['sol','spider','mines','gold','dominoes','boomtown','mjsol','mahjong','cwar','checkers','pdice','liars','trail','wrangler'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
   var Q=[
@@ -399,11 +400,11 @@ var SUQ=(function(){
 <\/script>
 <script>
 (function(){
-  var NAMES={floor:'Casino Floor',parlor:'Game Parlor',wheel:'Lucky Spur Wheel',crash:'Runaway Express',derby:'Dusty Trail Derby',dominoes:'Dominoes',cwar:'Classic War',boomtown:'Boomtown Tycoon',mjsol:'Mahjong Solitaire',mahjong:'Mahjong',pool:'Pool',backgammon:'Backgammon',mines:'Minesweeper',bj:'Blackjack',holdem:"Texas Hold'em",bacc:'Baccarat',war:'Casino War',bingo:'Bingo Hall',quests:'Quests & Tickets',craps:'Craps',roul:'Roulette',slots:'Saddle Up Stampede',sol:'Solitaire',spider:'Spider Solitaire',gold:'Gold Rush'};
+  var NAMES={keno:'Keno Blast',bspins:'Bingo Spins',floor:'Casino Floor',parlor:'Game Parlor',wheel:'Lucky Spur Wheel',crash:'Runaway Express',derby:'Dusty Trail Derby',dominoes:'Dominoes',cwar:'Classic War',boomtown:'Boomtown Tycoon',mjsol:'Mahjong Solitaire',mahjong:'Mahjong',pool:'Pool',backgammon:'Backgammon',mines:'Minesweeper',bj:'Blackjack',holdem:"Texas Hold'em",bacc:'Baccarat',war:'Casino War',bingo:'Bingo Hall',quests:'Quests & Tickets',craps:'Craps',roul:'Roulette',slots:'Saddle Up Stampede',sol:'Solitaire',spider:'Spider Solitaire',gold:'Gold Rush'};
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'02c2bc201e'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'d7e54b54f2'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}
@@ -542,7 +543,7 @@ var SUQ=(function(){
     document.getElementById('casLbl').textContent=nm;document.getElementById('casLblS').textContent=nm;cbtn.title=on?'Casino: '+NAMES[id]:'Casino games';}
   function post(f,msg){try{f.contentWindow.postMessage(msg,'*');}catch(e){}}
   /* phones in full screen: no menu; a small tab goes back to the room the game belongs to */
-  var HASNAV={};
+  var HASNAV={},HALL={bingo:1,keno:1,bspins:1};
   window.addEventListener('message',function(e){var d=e.data;if(!d)return;for(var k in frames){if(frames[k].contentWindow===e.source){
     if(d.arcade==='hasNav'){HASNAV[k]=1;if(k===active)navTab(k);}
     else if(d.arcade==='nav'&&d.to&&NAMES[d.to]){show(d.to,true);if(d.to==='quests'&&d.tab){var qf=frames.quests;setTimeout(function(){if(frames.quests)post(frames.quests,{arcade:'openTickets',tab:d.tab});},qf?60:900);}}
@@ -562,7 +563,7 @@ var SUQ=(function(){
   document.getElementById('qTop').addEventListener('click',function(){show('quests',true);});
   setInterval(qCount,4000);window.addEventListener('storage',function(e){if(/^su_(qprog|qclaim|tickets)$/.test(e.key||''))qCount();});
   window.addEventListener('message',function(e){var d=e.data;if(d&&(d.arcade==='questsChanged'||d.arcade==='hasNav'||d.arcade==='qask'))setTimeout(qCount,50);});
-  function navTab(id){var b=document.getElementById('backTab');if(!b)return;var room=id==='floor'||id==='parlor'||!!HASNAV[id];b.classList.toggle('off',room);
+  function navTab(id){var b=document.getElementById('backTab');if(!b)return;var room=id==='floor'||id==='parlor'||!!HASNAV[id]||!!HALL[id];b.classList.toggle('off',room);
     if(!room){var to=PAR[id]?'parlor':'floor';b.setAttribute('data-to',to);b.querySelector('span').textContent=to==='parlor'?'Game Parlor':'Casino Floor';b.setAttribute('aria-label','Back to the '+(to==='parlor'?'Game Parlor':'Casino Floor'));}}
   document.getElementById('backTab').addEventListener('click',function(){show(this.getAttribute('data-to')||'floor',true);});
   function show(id,focus){
@@ -572,7 +573,7 @@ var SUQ=(function(){
     Array.prototype.forEach.call(document.querySelectorAll('.tab'),function(t){
       var on=t.getAttribute('data-g')===id;t.classList.toggle('on',on);t.setAttribute('aria-selected',on?'true':'false');t.tabIndex=on?0:-1;});
     active=id;try{localStorage.setItem('su_arcade_tab',id);}catch(e){}navTab(id);if(id!==prev)questEv(id,'open',1);try{qCount();}catch(e){}
-    casinoLabel(id);parlorLabel(id);if(cmenu.classList.contains('open'))openMenu(false);if(pmenu.classList.contains('open'))openP(false);if(typeof menu==='function'&&root.classList.contains('menuopen'))menu(false);
+    casinoLabel(id);parlorLabel(id);var hb=document.getElementById('tab-bingo');if(hb&&HALL[id])hb.classList.add('on');if(cmenu.classList.contains('open'))openMenu(false);if(pmenu.classList.contains('open'))openP(false);if(typeof menu==='function'&&root.classList.contains('menuopen'))menu(false);
     if(focus){var tryFocus=function(){try{f.contentWindow.focus();}catch(e){}};tryFocus();f.addEventListener('load',tryFocus,{once:true});}
   }
   Array.prototype.forEach.call(document.querySelectorAll('.tab'),function(t){

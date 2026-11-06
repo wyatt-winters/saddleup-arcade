@@ -1705,8 +1705,8 @@ window.__parlor_dbg={stations:function(){var o={};for(var k in TB){var T=TB[k];o
 <script>/* ===== Daily quests: one shared list, the same 7 picks for everyone each day =====
    Progress is written by the arcade shell (it hears every game), claims and tickets by the Quests page. */
 var SUQ=(function(){
-  var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo'];
-  var PARLOR=['sol','spider','mines','gold','dominoes','boomtown','mjsol','mahjong','cwar'];
+  var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','plinko'];
+  var PARLOR=['sol','spider','mines','gold','dominoes','boomtown','mjsol','mahjong','cwar','checkers','pdice','liars','trail','wrangler'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
   var Q=[
