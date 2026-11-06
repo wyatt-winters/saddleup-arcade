@@ -182,7 +182,7 @@ html.fs #acTxt{display:none!important}
 .ac-tabs button{background:none;border:0;border-radius:8px;color:#94a3b8;font:700 13px Inter,system-ui,sans-serif;padding:8px;cursor:pointer}
 .ac-tabs button.on{background:rgba(242,210,126,.16);color:#f2d27e}
 .ac-hint{font-size:11.5px;color:#94a3b8;margin-top:7px;min-height:15px}
-</style>
+#rebuyBox{position:fixed;inset:0;z-index:9000;display:none;align-items:center;justify-content:center;background:rgba(5,8,16,.6);backdrop-filter:blur(2px);padding:16px}#rebuyBox.on{display:flex}#rebuyBox .rb-card{width:min(360px,100%);text-align:center;padding:20px 18px;border-radius:18px;background:linear-gradient(180deg,#2a1608,#140a04);border:2px solid #c6a75e;box-shadow:0 20px 60px rgba(0,0,0,.7);color:#f8fafc;font-family:Inter,system-ui,sans-serif}#rebuyBox .rb-ic{font-size:40px}#rebuyBox b{display:block;font:400 24px Rye,Georgia,serif;color:#f2d27e;margin:4px 0}#rebuyBox p{font-size:13px;color:#cbd5e1;line-height:1.5;margin:6px 0 14px}#rebuyBox button{width:100%;min-height:48px;border:0;border-radius:12px;font:900 17px Inter,sans-serif;color:#04221a;background:linear-gradient(180deg,#6ee7b7,#34d399 45%,#059669);box-shadow:0 5px 0 #065f46;cursor:pointer}#rebuyBox .rb-later{min-height:36px;margin-top:10px;background:transparent;box-shadow:none;color:#94a3b8;font-size:13px;font-weight:700}#rebuyBox small{display:block;margin-top:6px;font-size:11px;color:#64748b}</style>
 </head>
 <body>
 <div class="wrap">
@@ -375,7 +375,7 @@ var SUQ=(function(){
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'ddc6674396'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'093105e2d3'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}
@@ -537,6 +537,23 @@ var SUQ=(function(){
   function navTab(id){var b=document.getElementById('backTab');if(!b)return;var room=id==='floor'||id==='parlor'||(!!HASNAV[id]&&!HALL[id]);b.classList.toggle('off',room);
     if(!room){var to=PAR[id]?'parlor':'floor';b.setAttribute('data-to',to);b.querySelector('span').textContent=to==='parlor'?'Game Parlor':'Casino Floor';b.setAttribute('aria-label','Back to the '+(to==='parlor'?'Game Parlor':'Casino Floor'));}}
   document.getElementById('backTab').addEventListener('click',function(){show(this.getAttribute('data-to')||'floor',true);});
+  /* ===== one rebuy for the whole bankroll: when the shared pool is empty, any money game can refill it ===== */
+  /* games with their own rebuy screen (bj, holdem, bacc, craps, roul, slots, crash, derby) handle it themselves */
+  var RB_GAMES={floor:1,war:1,wheel:1,pool:1,backgammon:1,bingo:1,keno:1,bspins:1,vpoker:1,plinko:1,quests:0},RB_START=1000;
+  function rbRead(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');return v&&typeof v.amt==='number'?v.amt:null;}catch(e){return null;}}
+  var rbEl=null,rbHid=0;
+  function rbBox(){if(rbEl)return rbEl;rbEl=document.createElement('div');rbEl.id='rebuyBox';
+    rbEl.innerHTML='<div class="rb-card"><div class="rb-ic">💰</div><b>You’re out of chips</b><p>Your bankroll is shared by every casino game. Rebuy to refill it to <span id="rbAmt"></span> and keep playing anywhere.</p><button type="button" id="rbGo">Rebuy $1,000</button><button type="button" id="rbLater" class="rb-later">Not now</button><small id="rbN"></small></div>';
+    document.body.appendChild(rbEl);
+    rbEl.querySelector('#rbGo').onclick=rebuy;rbEl.querySelector('#rbLater').onclick=function(){rbHid=Date.now();rbEl.classList.remove('on');};return rbEl;}
+  function rebuy(){var w=rbRead()||0,top=Math.max(RB_START,Math.round(w*100)/100);
+    try{localStorage.setItem('su_casino_wallet',JSON.stringify({amt:top,t:Date.now()}));var n=(+localStorage.getItem('su_rebuys')||0)+1;localStorage.setItem('su_rebuys',n);}catch(e){}
+    for(var k in frames)post(frames[k],{arcade:'visible',on:k===active});if(rbEl)rbEl.classList.remove('on');}
+  function rbCheck(){var w=rbRead();if(w===null||!RB_GAMES[active])return rbEl&&rbEl.classList.remove('on');
+    if(w<5&&Date.now()-rbHid>45000){var b=rbBox();b.querySelector('#rbAmt').textContent='$'+RB_START.toLocaleString();var n=0;try{n=+localStorage.getItem('su_rebuys')||0;}catch(e){}b.querySelector('#rbN').textContent=n?'Rebuys so far: '+n:'';b.classList.add('on');}
+    else if(w>=5&&rbEl)rbEl.classList.remove('on');}
+  setInterval(rbCheck,1500);addEventListener('storage',function(e){if(e.key==='su_casino_wallet')setTimeout(rbCheck,50);});
+  window.addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='rebuy')rebuy();});
   function show(id,focus){
     if(!NAMES[id])id='floor';
     var f=ensure(id),prev=active;

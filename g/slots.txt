@@ -1877,7 +1877,9 @@ var Live=(function(){
         var d=b-last;
         if(Math.abs(d)>0.004){w=(w===null?b-d:w)+d;wwrite(w);last=b;
           /* daily quests: money going onto the table is a bet, money coming back is a payout */
-          try{if(parent!==window)parent.postMessage({arcade:'quest',ev:d<0?'bet':'pay',n:Math.abs(d)},'*');}catch(x){}}
+          /* going from broke to a fresh stack is a rebuy, not a payout */
+          var rebuy=d>=500&&last<5;
+          try{if(parent!==window&&!rebuy)parent.postMessage({arcade:'quest',ev:d<0?'bet':'pay',n:Math.abs(d)},'*');}catch(x){}}
         if(w!==null&&Math.abs(w-b)>0.004&&o.idle()){o.set(w);last=w;}
       }catch(e){}
     }
