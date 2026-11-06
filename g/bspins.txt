@@ -80,6 +80,7 @@ html.fs .wrap>.pill,html.fs .wrap>h1,html.fs .wrap>.sub,html.fs .rules{display:n
 html.fs #hall{flex:1;min-height:0;overflow:auto;padding-top:46px;align-content:start}
 html.fs.fsnarrow #hall{grid-template-columns:1fr;gap:8px;padding:44px 8px 8px}
 html.fs.fsnarrow .sign{gap:6px;padding:8px}html.fs.fsnarrow .sign .nm{font-size:18px}html.fs.fsnarrow .chip2 b{font-size:13px}
+html.has-bs_daub .card .c.d{background:url(https://saddleup-arcade.vercel.app/art/bs_daub.webp) center/82% no-repeat,#fff!important;color:#fff;text-shadow:0 1px 2px #000}.reel .artimg{width:78%;height:78%;object-fit:contain}
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>.chip.c5,.fchip.c5{background:url(https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae40019c9d5b7168d176fe7.webp) center/100% 100% no-repeat!important;border:0!important;outline:0!important}
 .chip.c25,.fchip.c25{background:url(https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4001936aa4a07e862d320.webp) center/100% 100% no-repeat!important;border:0!important;outline:0!important}
@@ -792,7 +793,19 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 
 <\u002fscript>
 <script>
+/* ===== game-piece art: each piece checks whether its image exists, and only then replaces the drawn look =====
+   ART.probe([...names]) adds class "has-<name>" to <html> once an image loads; ART.img(name, fallbackHTML) gives an <img> if it loaded. */
+var ART=(function(){var B='https://saddleup-arcade.vercel.app/art/',ok={},cbs=[];
+  function probe(list){list.forEach(function(n){if(ok[n]!=null)return;ok[n]=0;var i=new Image();i.onload=function(){ok[n]=1;document.documentElement.classList.add('has-'+n);cbs.forEach(function(f){try{f(n);}catch(e){}});};i.onerror=function(){ok[n]=-1;};i.src=B+n+'.webp';});}
+  function has(n){return ok[n]===1;}
+  function url(n){return B+n+'.webp';}
+  function img(n,fb,cls){return n&&has(n)?'<img class="'+(cls||'artimg')+'" alt="" draggable="false" src="'+B+n+'.webp">':fb;}
+  return {probe:probe,has:has,img:img,url:url,on:function(f){cbs.push(f);}};})();
+
+<\u002fscript>
+<script>
 (function(){'use strict';
+try{ART.probe(["bs_joker", "bs_superjoker", "bs_coin", "bs_rattler", "bs_daub"]);}catch(e){}
 var $=function(i){return document.getElementById(i);};
 function money(n){n=Math.round(n*100)/100;var s=Math.abs(n),t=(s%1?s.toFixed(2):String(s)).replace(/\B(?=(\d{3})+(?!\d))/g,',');return (n<0?'-$':'$')+t;}
 function q(ev,n){try{if(window.suQ)suQ(ev,n);}catch(e){}}
@@ -841,10 +854,10 @@ function spin(){if(!G||busy||G.jok.length||G.left<=0)return;ac();busy=true;G.lef
   render();
   res.forEach(function(r,c){setTimeout(function(){var el=rs[c];el.className='reel';
     if(r.t==='num'){el.textContent=r.n;var i=-1;for(var k=0;k<5;k++)if(G.card[k*5+c]===r.n)i=k*5+c;if(i>=0&&!G.d[i]){G.d[i]=true;el.classList.add('hit');tone(784,.12,0,.07);q('daub',1);render();$('grid').children[i].classList.add('pop');}}
-    else if(r.t==='J'){el.textContent='\u2b50';el.classList.add('j');G.jok.push({col:c});tone(988,.14,0,.07);}
-    else if(r.t==='S'){el.textContent='\u{1f31f}';el.classList.add('s');G.jok.push({any:true});tone(1175,.2,0,.08);}
-    else if(r.t==='C'){el.textContent='\u{1fa99}';el.classList.add('coin');var w=Math.round(G.bet*COIN*100)/100;G.won+=w;bank+=w;tone(1319,.1,0,.07);tone(1568,.12,.06,.07);}
-    else{el.textContent='\u{1f40d}';el.classList.add('x');tone(150,.2,0,.05,'sawtooth');}
+    else if(r.t==='J'){el.innerHTML=ART.img('bs_joker','\u2b50');el.classList.add('j');G.jok.push({col:c});tone(988,.14,0,.07);}
+    else if(r.t==='S'){el.innerHTML=ART.img('bs_superjoker','\u{1f31f}');el.classList.add('s');G.jok.push({any:true});tone(1175,.2,0,.08);}
+    else if(r.t==='C'){el.innerHTML=ART.img('bs_coin','\u{1fa99}');el.classList.add('coin');var w=Math.round(G.bet*COIN*100)/100;G.won+=w;bank+=w;tone(1319,.1,0,.07);tone(1568,.12,.06,.07);}
+    else{el.innerHTML=ART.img('bs_rattler','\u{1f40d}');el.classList.add('x');tone(150,.2,0,.05,'sawtooth');}
     if(c===4){clearInterval(iv);busy=false;
       /* a joker with nothing left to daub in its column is lost */
       G.jok=G.jok.filter(function(p){for(var i=0;i<25;i++)if(!G.d[i]&&(p.any||p.col===i%5))return true;return false;});

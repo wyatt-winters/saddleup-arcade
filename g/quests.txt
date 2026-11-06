@@ -256,6 +256,7 @@ html.fs .play{padding-top:48px}
 .suban span{position:absolute;left:0;right:0;top:86%;text-align:center;font:800 clamp(14px,3.6vw,22px) Inter,system-ui,sans-serif;color:#fff;text-shadow:0 2px 6px #000,0 0 12px rgba(0,0,0,.8)}
 @media (prefers-reduced-motion:reduce){.suban{transition:opacity .2s}}
 
+.symimg{width:1.25em;height:1.25em;object-fit:contain;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}html.has-vt_dial .combo .spot{background:url(https://saddleup-arcade.vercel.app/art/vt_dial.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-vt_box .boxes .spot:not(.won){background:url(https://saddleup-arcade.vercel.app/art/vt_box.webp) center/100% 100% no-repeat!important;box-shadow:none!important;color:#fde68a;text-shadow:0 1px 3px #000}
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
 html.fs,html.fs body{height:100%;overflow:hidden!important}
@@ -1064,11 +1065,11 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
    Progress is written by the arcade shell (it hears every game), claims and tickets by the Quests page. */
 var SUQ=(function(){
   var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','plinko'];
-  var PARLOR=['sol','spider','mines','gold','dominoes','boomtown','mjsol','mahjong','cwar','checkers','pdice','liars','trail','wrangler'];
+  var PARLOR=['sol','spider','mines','gold','dominoes','boomtown','mjsol','mahjong','cwar','chess','checkers','pdice','liars','trail','wrangler'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
   /* quests added later join the rotation from NEWDAY, so a day's picks never change mid-day */
-  var NEWDAY=Math.floor(Date.UTC(2026,10,6)/864e5);
+  var NEWDAY=Math.floor(Date.UTC(2026,10,6)/864e5),NEWDAY2=Math.floor(Date.UTC(2026,10,7)/864e5);
   var Q=[
     ['bj1','e','Play a hand of Blackjack','bj','bet',1],
     ['rl1','e','Place a bet at Roulette','roul','bet',1],
@@ -1135,7 +1136,10 @@ var SUQ=(function(){
     ['ck3','h','Win a game of Checkers','checkers','win',1,0,0,NEWDAY],
     ['pd3','h','Win a game of Prospector\u2019s Dice','pdice','win',1,0,0,NEWDAY],
     ['ld3','h','Win a game of Liar\u2019s Dice','liars','win',1,0,0,NEWDAY],
-    ['pk3','h','Collect $5,000 at Gold Strike Plinko','plinko','pay',5000,1,0,NEWDAY]
+    ['pk3','h','Collect $5,000 at Gold Strike Plinko','plinko','pay',5000,1,0,NEWDAY],
+    ['cs1','e','Sit down for a game of Chess','chess','open',1,0,0,NEWDAY2],
+    ['cs2','m','Finish a game of Chess','chess','over',1,0,0,NEWDAY2],
+    ['cs3','h','Win a game of Chess','chess','win',1,0,0,NEWDAY2]
   ].map(function(a){return {id:a[0],t:a[1],txt:a[2],g:a[3],ev:a[4],goal:a[5],amt:!!a[6],distinct:!!a[7],from:a[8]||0};});
   var BY={};Q.forEach(function(q){BY[q.id]=q;});
   var PER={e:3,m:3,h:1};
@@ -1182,7 +1186,20 @@ var SUQ=(function(){
 
 <\u002fscript>
 <script>
+/* ===== game-piece art: each piece checks whether its image exists, and only then replaces the drawn look =====
+   ART.probe([...names]) adds class "has-<name>" to <html> once an image loads; ART.img(name, fallbackHTML) gives an <img> if it loaded. */
+var ART=(function(){var B='https://saddleup-arcade.vercel.app/art/',ok={},cbs=[];
+  function probe(list){list.forEach(function(n){if(ok[n]!=null)return;ok[n]=0;var i=new Image();i.onload=function(){ok[n]=1;document.documentElement.classList.add('has-'+n);cbs.forEach(function(f){try{f(n);}catch(e){}});};i.onerror=function(){ok[n]=-1;};i.src=B+n+'.webp';});}
+  function has(n){return ok[n]===1;}
+  function url(n){return B+n+'.webp';}
+  function img(n,fb,cls){return n&&has(n)?'<img class="'+(cls||'artimg')+'" alt="" draggable="false" src="'+B+n+'.webp">':fb;}
+  return {probe:probe,has:has,img:img,url:url,on:function(f){cbs.push(f);}};})();
+
+<\u002fscript>
+<script>
 (function(){'use strict';
+var SYMN={"\u2b50": "sym_star", "\u{1f40e}": "sym_horse", "\u{1f335}": "sym_cactus", "\u{1f920}": "sym_cowboy", "\u{1f462}": "sym_boot", "\u{1f52b}": "sym_revolver", "\u{1f4b0}": "sym_bag", "\u{1f37a}": "sym_beer", "\u{1f985}": "sym_eagle", "\u{1f402}": "sym_bull", "\u{1f6e1}\ufe0f": "sym_shield", "\u{1f3b2}": "sym_dice", "\u{1f48e}": "sym_diamond", "\u{1f451}": "sym_crown", "\u{1fa99}": "sym_coin", "\u{1f511}": "sym_key", "\u{1f943}": "sym_whiskey", "\u{1f3a9}": "sym_tophat"};function SYM(e){return ART.img(SYMN[e],e,'symimg');}
+try{ART.probe(Object.keys(SYMN).map(function(k){return SYMN[k];}).concat(['vt_dial','vt_box']));}catch(e){}
 var $=function(i){return document.getElementById(i);};
 function money(n){n=Math.round(n);return '$'+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 /* ---------- bankroll ---------- */
@@ -1379,8 +1396,8 @@ function drawXW(o,m,old){var tb=$('tb'),X=o.grid,N=X.N,cells={};
   upd();$('hint').textContent=old?'':'Every letter you scratch lights up in the puzzle. Light up every letter of a word to complete it. 3 or more words wins.';}
 /* Three in a Row */
 function drawTTT(o,m,old){var tb=$('tb');
-  tb.innerHTML='<div class="lbl">Called brands</div><div class="grid called" id="cl">'+o.called.map(function(s){return '<div class="spot">'+s+'</div>';}).join('')+'</div>'+
-    '<div class="lbl">Your board</div><div class="grid board" id="bd">'+o.board.map(function(s,i){return '<div class="spot" data-i="'+i+'">'+s+'</div>';}).join('')+'</div>'+prizeList(o.pay,m,function(i){return i+(i>3?'+ lines':i>1?' lines':' line');});
+  tb.innerHTML='<div class="lbl">Called brands</div><div class="grid called" id="cl">'+o.called.map(function(s){return '<div class="spot">'+SYM(s)+'</div>';}).join('')+'</div>'+
+    '<div class="lbl">Your board</div><div class="grid board" id="bd">'+o.board.map(function(s,i){return '<div class="spot" data-i="'+i+'">'+SYM(s)+'</div>';}).join('')+'</div>'+prizeList(o.pay,m,function(i){return i+(i>3?'+ lines':i>1?' lines':' line');});
   var cOpen={},bOpen={};
   function upd(){var cells=tb.querySelectorAll('#bd .spot'),lines=0;
     [].forEach.call(cells,function(c,i){c.classList.toggle('hit',!!((bOpen[i]||old)&&o.called.some(function(s,k){return (cOpen[k]||old)&&s===o.board[i];})));c.classList.remove('line');});
@@ -1427,8 +1444,8 @@ function drawPKR(o,m,old){var tb=$('tb');
   if(old)hl();else $('hint').textContent='Scratch all five cards to see your hand.';}
 /* High-Roller Vault */
 function drawVAULT(o,m,old){var tb=$('tb');
-  tb.innerHTML='<div class="lbl">The combination</div><div class="combo" id="cb">'+o.combo.map(function(c){return '<div class="spot">'+c+'</div>';}).join('')+'</div>'+
-    '<div class="lbl">Deposit boxes</div><div class="grid boxes" id="bx">'+o.boxes.map(function(b){return '<div class="spot"><span class="sy">'+b.s+'</span><span class="pz">'+money(b.p*m)+'</span></div>';}).join('')+'</div>';
+  tb.innerHTML='<div class="lbl">The combination</div><div class="combo" id="cb">'+o.combo.map(function(c){return '<div class="spot">'+SYM(c)+'</div>';}).join('')+'</div>'+
+    '<div class="lbl">Deposit boxes</div><div class="grid boxes" id="bx">'+o.boxes.map(function(b){return '<div class="spot"><span class="sy">'+SYM(b.s)+'</span><span class="pz">'+money(b.p*m)+'</span></div>';}).join('')+'</div>';
   var cOpen={},bOpen={};
   function upd(){var tot=0;tb.querySelectorAll('#bx .spot').forEach(function(sp,i){var b=o.boxes[i],w=b.win&&(old||bOpen[i])&&(old||o.combo.some(function(c,k){return cOpen[k]&&c===b.s;}));sp.classList.toggle('won',!!w);if(w)tot+=b.p;});
     $('hint').textContent=old?'':tot?'Opened so far: '+money(tot*m):'Any box showing a combination symbol pays the prize in it.';}

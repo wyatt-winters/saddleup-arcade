@@ -70,6 +70,7 @@ html.fs,html.fs body{height:100%;overflow:hidden}
 html.fs .wrap{max-width:none;height:100%;padding:8px 10px;display:flex;flex-direction:column}
 html.fs .wrap>.pill,html.fs .wrap>h1,html.fs .wrap>.sub,html.fs .rules{display:none}
 html.fs #felt{flex:1;min-height:0;overflow:auto;padding-top:46px}
+html.has-tile_wood .t:not(.on){background:url(https://saddleup-arcade.vercel.app/art/tile_wood.webp) center/100% 100% no-repeat!important;box-shadow:0 5px 8px rgba(0,0,0,.35)!important}
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
 html.fs,html.fs body{height:100%;overflow:hidden!important}
@@ -784,7 +785,19 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 
 <\u002fscript>
 <script>
+/* ===== game-piece art: each piece checks whether its image exists, and only then replaces the drawn look =====
+   ART.probe([...names]) adds class "has-<name>" to <html> once an image loads; ART.img(name, fallbackHTML) gives an <img> if it loaded. */
+var ART=(function(){var B='https://saddleup-arcade.vercel.app/art/',ok={},cbs=[];
+  function probe(list){list.forEach(function(n){if(ok[n]!=null)return;ok[n]=0;var i=new Image();i.onload=function(){ok[n]=1;document.documentElement.classList.add('has-'+n);cbs.forEach(function(f){try{f(n);}catch(e){}});};i.onerror=function(){ok[n]=-1;};i.src=B+n+'.webp';});}
+  function has(n){return ok[n]===1;}
+  function url(n){return B+n+'.webp';}
+  function img(n,fb,cls){return n&&has(n)?'<img class="'+(cls||'artimg')+'" alt="" draggable="false" src="'+B+n+'.webp">':fb;}
+  return {probe:probe,has:has,img:img,url:url,on:function(f){cbs.push(f);}};})();
+
+<\u002fscript>
+<script>
 (function(){'use strict';
+try{ART.probe(["tile_wood"]);}catch(e){}
 var $=function(i){return document.getElementById(i);};
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function q(ev,n){try{if(window.suQ)suQ(ev,n);}catch(e){}}
