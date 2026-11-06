@@ -163,7 +163,20 @@ html.fs .tab img.gi{width:26px;height:26px}
 .skinsw button:hover{color:#f8fafc}
 .skinsw button[aria-pressed="true"]{color:#f2d27e;background:rgba(242,210,126,.12);border-color:rgba(242,210,126,.4)}
 .skinsw button[data-skin="neon"][aria-pressed="true"]{color:#5ef2ff;background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.5);text-shadow:0 0 8px rgba(34,211,238,.7)}
-.cmenu .cskin{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:2px 10px 6px;font:700 11px Inter,system-ui,sans-serif;color:#94a3b8;letter-spacing:.06em;text-transform:uppercase}
+.cmenu{max-height:calc(100vh - var(--cmt,64px) - 10px);overflow-y:auto;overscroll-behavior:contain}
+.thmenu{min-width:240px}
+.thmenu .cskin{display:block;padding:2px 4px 4px}
+.thmenu .cskin[hidden]{display:none}
+.thmenu .skinsw{display:flex;flex-direction:column;gap:6px;padding:0;border:0;background:none;width:100%}
+.thmenu .skinsw button{display:flex;align-items:center;gap:10px;width:100%;padding:6px 12px 6px 6px;min-height:52px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(255,255,255,.03);color:#e2e8f0;font-size:14px;text-align:left}
+.thmenu .skinsw button img{width:40px;height:40px;flex:0 0 40px;border-radius:8px;object-fit:cover;display:block;background:#1e293b}
+.thmenu .thnote{margin:8px 4px 2px;font:500 11.5px Inter,system-ui,sans-serif;color:#94a3b8}
+.thbtn[hidden]{display:none!important}
+.thbtn .thi{width:20px;height:20px;border-radius:5px;object-fit:cover;display:block;flex:0 0 20px}
+.thbtn .caret{width:14px;height:14px;transition:transform .2s}
+.thbtn[aria-expanded="true"] .caret{transform:rotate(180deg)}
+.thmenu .skinsw button[aria-pressed="true"]{color:#f2d27e;background:rgba(242,210,126,.1);border-color:rgba(242,210,126,.55);box-shadow:0 0 0 1px rgba(242,210,126,.25) inset}
+.thmenu .skinsw button[aria-pressed="true"]::after{content:"";width:7px;height:7px;border-radius:50%;background:#34d399;margin-left:auto;flex:0 0 7px}
 /* neon shell chrome */
 html[data-skin="neon"],html[data-skin="neon"] body{background:#060a1c}
 html[data-skin="neon"] .tabs,html[data-skin="neon"] .cmenu{background:#070c22;border-color:rgba(34,211,238,.28)}
@@ -246,8 +259,10 @@ html.fs #acTxt{display:none!important}
     </div>
     <button class="fsbtn acbtn" id="acBtn" type="button" aria-haspopup="dialog"><span class="acf" id="acFace">👤</span><span id="acTxt">Save wallet</span></button>
     <button class="fsbtn" id="fsBtn" type="button" title="Full screen (F11 also works on desktop)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span id="fsTxt">Full screen</span></button>
+    <button class="fsbtn thbtn" id="thBtn" type="button" aria-haspopup="menu" aria-expanded="false" title="Change the theme" hidden><img class="thi" id="thImg" alt=""><span>Theme</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
     </div>
   </div>
+  <div class="cmenu thmenu" id="thmenu" role="menu" aria-label="Theme"><div class="chead">Theme</div><div class="cskin" id="cskin" hidden><div class="skinsw" role="group" aria-label="Theme"></div><p class="thnote">Changes the art in every room and game.</p></div></div>
   <div class="cmenu" id="pmenu" role="menu" aria-label="Game Parlor games"><div class="chead">Game Parlor</div>
       <button class="tab" role="menuitem" type="button" data-g="parlor" id="tab-parlor" title="Game Parlor room"><img class="gi" alt="" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20x%3D%226%22%20y%3D%2210%22%20width%3D%2252%22%20height%3D%2248%22%20rx%3D%224%22%20fill%3D%22%235b3a22%22%20stroke%3D%22%23c6a75e%22%20stroke-width%3D%223%22/%3E%3Crect%20x%3D%2214%22%20y%3D%2226%22%20width%3D%2236%22%20height%3D%2232%22%20rx%3D%2216%22%20fill%3D%22%231a0f08%22/%3E%3Cpath%20d%3D%22M32%2054c-8%200-11-6-8-12%201%204%204%205%205%202-1-5%203-9%206-12-1%205%204%207%205%2011%201%203%200%206-1%208%203-1%204-4%204-6%202%206-3%209-11%209z%22%20fill%3D%22%23f59e0b%22/%3E%3Cpath%20d%3D%22M32%2054c-4%200-5-3-4-6%201%202%203%202%203%200%200-3%202-5%204-6-1%203%203%204%202%208-1%203-3%204-5%204z%22%20fill%3D%22%23fde68a%22/%3E%3Crect%20x%3D%224%22%20y%3D%228%22%20width%3D%2256%22%20height%3D%227%22%20rx%3D%222%22%20fill%3D%22%23c6a75e%22/%3E%3C/svg%3E"><span class="lg">Game Parlor</span><span class="sm">Parlor</span></button>
       <button class="tab" role="menuitem" type="button" data-g="mines" id="tab-mines"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4002cd542268bb4c1d1f1.webp"><span class="lg">Minesweeper</span><span class="sm">Mines</span></button>
@@ -260,7 +275,7 @@ html.fs #acTxt{display:none!important}
       <button class="tab" role="menuitem" type="button" data-g="spider" id="tab-spider"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4002d36aa4a07e862daf1.webp"><span class="lg">Spider</span><span class="sm">Spider</span></button>
       <button class="tab" role="menuitem" type="button" data-g="gold" id="tab-gold"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4002b736386d0dc63dce5.webp"><span class="lg">Gold Rush</span><span class="sm">Gold Rush</span></button>
   </div>
-  <div class="cmenu" id="cmenu" role="menu" aria-label="Casino games"><div class="chead">Casino</div><div class="cskin" id="cskin" hidden><span>Art</span><div class="skinsw" role="group" aria-label="Art style"></div></div>
+  <div class="cmenu" id="cmenu" role="menu" aria-label="Casino games"><div class="chead">Casino</div>
       <button class="tab" role="menuitem" type="button" data-g="floor" id="tab-floor" title="Casino Floor"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4002bd542268bb4c1d1b1.webp"><span class="lg">Casino Floor</span><span class="sm">Floor</span></button>
       <button class="tab" role="menuitem" type="button" data-g="bj" id="tab-bj"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4002b736386d0dc63dcc5.webp"><span class="lg">Blackjack</span><span class="sm">Blackjack</span></button>
       <button class="tab" role="menuitem" type="button" data-g="holdem" id="tab-holdem"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4002c36aa4a07e862da67.webp"><span class="lg">Hold'em</span><span class="sm">Hold'em</span></button>
@@ -509,10 +524,17 @@ var SUQ=(function(){
   }
   function skinName(v){return v==='western'?'Western':(ONLY_SKIN&&v===ONLY_SKIN&&SEASONAL.length)?'Classic':(SKINS[v]&&SKINS[v].name)||v;}
   (function(){var box=document.getElementById('cskin');if(!box||SKIN_IDS.length<2)return;box.hidden=false;
-    box.querySelector('.skinsw').innerHTML=SKIN_IDS.map(function(id){return '<button type="button" data-skin="'+id+'" title="'+skinName(id)+' art" aria-pressed="false">'+skinName(id)+'</button>';}).join('');})();
+    document.getElementById('thBtn').hidden=false;var fl=document.getElementById('tab-floor'),fi=fl&&fl.querySelector('img'),w0=fi?(fi.getAttribute('data-w')||fi.getAttribute('src')):'';
+    function prev(id){var K=SKINS[id],B=K&&K.base&&SKINS[K.base],m={},P,i;
+      if(B){P=B.pairs||[];for(i=0;i<P.length;i++)if(P[i][0]===w0)m.b=P[i][1];}
+      P=(K&&K.pairs)||[];for(i=0;i<P.length;i++){if(P[i][0]===(m.b||w0))m.k=P[i][1];if(P[i][0]===w0&&!m.k)m.k=P[i][1];}
+      return m.k||m.b||(K&&K.icons&&K.icons.floor)||(B&&B.icons&&B.icons.floor)||w0;}
+    box.querySelector('.skinsw').innerHTML=SKIN_IDS.map(function(id){return '<button type="button" data-skin="'+id+'" title="'+skinName(id)+' theme" aria-pressed="false"><img alt="" data-p="'+prev(id)+'" src="'+prev(id)+'"><span>'+skinName(id)+'</span></button>';}).join('');})();
   function skinUI(){
     document.documentElement.setAttribute('data-skin',skin);
-    Array.prototype.forEach.call(document.querySelectorAll('.skinsw button'),function(b){b.setAttribute('aria-pressed',b.getAttribute('data-skin')===skin?'true':'false');});
+    Array.prototype.forEach.call(document.querySelectorAll('.skinsw button'),function(b){var on=b.getAttribute('data-skin')===skin;b.setAttribute('aria-pressed',on?'true':'false');
+      var bi=b.querySelector('img[data-p]');if(bi&&bi.getAttribute('src')!==bi.getAttribute('data-p'))bi.setAttribute('src',bi.getAttribute('data-p'));
+      if(on){var ti=document.getElementById('thImg');if(ti&&bi)ti.setAttribute('src',bi.getAttribute('data-p'));}});
     skinIcons();
   }
   /* loading screen while a skin's images preload (themed for the skin being switched to) */
@@ -548,7 +570,15 @@ var SUQ=(function(){
       f.addEventListener('load',function(){setTimeout(done,250);},{once:true});getSrc(active,function(s2){f.setAttribute('srcdoc',s2);});});
   }
   Array.prototype.forEach.call(document.querySelectorAll('.cskin .skinsw button'),function(b){
-    b.addEventListener('click',function(e){e.stopPropagation();setSkin(b.getAttribute('data-skin'));});});
+    b.addEventListener('click',function(e){e.stopPropagation();thOpen(false);setSkin(b.getAttribute('data-skin'));});});
+  var thBtn=document.getElementById('thBtn'),thMenu=document.getElementById('thmenu');
+  function thPlace(){var r=thBtn.getBoundingClientRect(),w=Math.max(240,thMenu.offsetWidth),left=Math.min(Math.max(8,r.right-w),innerWidth-w-8);thMenu.style.left=left+'px';thMenu.style.top=Math.round(r.bottom+6)+'px';thMenu.style.setProperty('--cmt',Math.round(r.bottom+6)+'px');}
+  function thOpen(on){thMenu.classList.toggle('open',on);thBtn.setAttribute('aria-expanded',on?'true':'false');if(on){thPlace();var c=thMenu.querySelector('[aria-pressed="true"]')||thMenu.querySelector('button');if(c)setTimeout(function(){try{c.focus();}catch(e){}},20);}}
+  thBtn.addEventListener('click',function(e){e.stopPropagation();thOpen(!thMenu.classList.contains('open'));});
+  document.addEventListener('click',function(e){if(thMenu.classList.contains('open')&&!thMenu.contains(e.target)&&!thBtn.contains(e.target))thOpen(false);});
+  addEventListener('keydown',function(e){if(e.key==='Escape'&&thMenu.classList.contains('open')){thOpen(false);thBtn.focus();}});
+  addEventListener('resize',function(){if(thMenu.classList.contains('open'))thPlace();});
+  addEventListener('scroll',function(){if(thMenu.classList.contains('open'))thPlace();},true);
   /* a game's own Options panel asks for a skin */
   window.addEventListener('message',function(e){var d=e.data;if(!d||d.arcade!=='setSkin')return;for(var k in frames){if(frames[k].contentWindow===e.source){setSkin(d.skin);return;}}});
   window.__skin={get:function(){return skin;},set:setSkin,busy:function(){return busySkin;},list:function(){return SKIN_IDS.slice();}};
@@ -556,7 +586,7 @@ var SUQ=(function(){
 
   /* ---------- casino dropdown ---------- */
   var CAS={plinko:1,vpoker:1,keno:0,floor:1,wheel:1,crash:1,derby:1,pool:1,backgammon:1,bj:1,holdem:1,bacc:1,war:1,craps:1,roul:1,slots:1},cbtn=document.getElementById('tab-casino'),cmenu=document.getElementById('cmenu');
-  function placeMenu(){var r=cbtn.getBoundingClientRect(),w=Math.max(220,cmenu.offsetWidth);var left=Math.min(Math.max(8,r.left),innerWidth-w-8);cmenu.style.left=left+'px';cmenu.style.top=Math.round(r.bottom+6)+'px';}
+  function placeMenu(){var r=cbtn.getBoundingClientRect(),w=Math.max(220,cmenu.offsetWidth);var left=Math.min(Math.max(8,r.left),innerWidth-w-8);cmenu.style.left=left+'px';cmenu.style.top=Math.round(r.bottom+6)+'px';cmenu.style.setProperty('--cmt',Math.round(r.bottom+6)+'px');}
   function walletTxt(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');if(v&&typeof v.amt==='number'){var n=Math.round(v.amt*100)/100;return 'Casino \u00b7 $'+(n%1?n.toFixed(2):String(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',')+' bankroll';}}catch(e){}return 'Casino';}
   function openMenu(on){if(on)cmenu.querySelector('.chead').textContent=walletTxt();cmenu.classList.toggle('open',on);cbtn.setAttribute('aria-expanded',on?'true':'false');if(on){placeMenu();var c=cmenu.querySelector('.tab.on')||cmenu.querySelector('.tab');if(c)setTimeout(function(){try{c.focus();}catch(e){}},20);}}
   cbtn.addEventListener('click',function(e){e.stopPropagation();openMenu(!cmenu.classList.contains('open'));});
