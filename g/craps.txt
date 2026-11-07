@@ -872,7 +872,7 @@ var Live=(function(){
     }
     function dupeOf(){var st=ch?ch.presenceState():{},hit=null;
       for(var k in st){(st[k]||[]).forEach(function(m){if(!m||m.id!==self.me.id||!m.sid||m.sid===SID)return;
-        var j=+m.joined||0;if(j<joined||(j===joined&&m.sid<SID))hit=m;});}return hit;}
+        var j=+m.joined||0;if(j>joined||(j===joined&&m.sid>SID))hit=m;   /* the newest screen (the one being used) keeps the seat */});}return hit;}
     function sync(){
       if(!ch)return;
       if(dupeOf()){stopped=true;hiddenPaused=false;clearTimeout(retryT);var wasH=hostFlag;hostFlag=false;leave();setStatus('off');if(wasH)emit('host',false);emit('roster',[]);emit('dupe');dupeNote();return;}
@@ -889,7 +889,7 @@ var Live=(function(){
     function dupeNote(){try{var n=document.getElementById('su-dupe');if(!n){n=document.createElement('div');n.id='su-dupe';
         n.style.cssText='position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:99999;max-width:min(92vw,420px);background:rgba(10,15,28,.97);border:1px solid rgba(242,210,126,.6);border-radius:12px;padding:10px 14px;color:#e2e8f0;font:600 13px/1.4 Inter,system-ui,sans-serif;box-shadow:0 12px 30px rgba(0,0,0,.55);text-align:center';
         document.body.appendChild(n);}
-      n.innerHTML='<b style="color:#f2d27e">You&rsquo;re already at this table</b><br>Your account is sitting here on another device, so this one is playing alone.';
+      n.innerHTML='<b style="color:#f2d27e">Playing on your other screen</b><br>Your account just joined this table from another device or tab, so this one stepped aside. Reload here to take the seat back.';
       n.style.display='block';clearTimeout(n.__t);n.__t=setTimeout(function(){n.style.display='none';},7000);}catch(e){}}
     function leave(){clearInterval(hbT);clearInterval(syncT);heard={};var c=ch;ch=null;list=[];if(c){try{return Promise.resolve(c.unsubscribe());}catch(e){}}return Promise.resolve();}
     function join(t){

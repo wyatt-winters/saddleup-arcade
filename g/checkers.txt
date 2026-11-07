@@ -483,7 +483,7 @@ var Live=(function(){
     }
     function dupeOf(){var st=ch?ch.presenceState():{},hit=null;
       for(var k in st){(st[k]||[]).forEach(function(m){if(!m||m.id!==self.me.id||!m.sid||m.sid===SID)return;
-        var j=+m.joined||0;if(j<joined||(j===joined&&m.sid<SID))hit=m;});}return hit;}
+        var j=+m.joined||0;if(j>joined||(j===joined&&m.sid>SID))hit=m;   /* the newest screen (the one being used) keeps the seat */});}return hit;}
     function sync(){
       if(!ch)return;
       if(dupeOf()){stopped=true;hiddenPaused=false;clearTimeout(retryT);var wasH=hostFlag;hostFlag=false;leave();setStatus('off');if(wasH)emit('host',false);emit('roster',[]);emit('dupe');dupeNote();return;}
@@ -500,7 +500,7 @@ var Live=(function(){
     function dupeNote(){try{var n=document.getElementById('su-dupe');if(!n){n=document.createElement('div');n.id='su-dupe';
         n.style.cssText='position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:99999;max-width:min(92vw,420px);background:rgba(10,15,28,.97);border:1px solid rgba(242,210,126,.6);border-radius:12px;padding:10px 14px;color:#e2e8f0;font:600 13px/1.4 Inter,system-ui,sans-serif;box-shadow:0 12px 30px rgba(0,0,0,.55);text-align:center';
         document.body.appendChild(n);}
-      n.innerHTML='<b style="color:#f2d27e">You&rsquo;re already at this table</b><br>Your account is sitting here on another device, so this one is playing alone.';
+      n.innerHTML='<b style="color:#f2d27e">Playing on your other screen</b><br>Your account just joined this table from another device or tab, so this one stepped aside. Reload here to take the seat back.';
       n.style.display='block';clearTimeout(n.__t);n.__t=setTimeout(function(){n.style.display='none';},7000);}catch(e){}}
     function leave(){clearInterval(hbT);clearInterval(syncT);heard={};var c=ch;ch=null;list=[];if(c){try{return Promise.resolve(c.unsubscribe());}catch(e){}}return Promise.resolve();}
     function join(t){
@@ -796,7 +796,7 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
    o = {gid, me:0|1, names:[a,b], opts}  \u00b7 whoever invites is player 0 */
 var Duel=(function(){
   function create(cfg){
-    var L=null,peer=null,myStat='idle',avail=false,live=false,pending=null,gid=null;
+    var L=null,peer=null,myStat='idle',avail=false,live=false,pending=null,gid=null,dup=false;
     try{L=Live.create({game:cfg.game,maxSeats:2});avail=L.available();}catch(e){}
     function others(){return L?L.roster().filter(function(p){return !p.isMe;}):[];}
     function hi(to){if(L)L.send('hi',{st:myStat,name:L.me.name},to);}
@@ -805,7 +805,8 @@ var Duel=(function(){
     function begin(o){gid=o.gid;myStat='online';hi();cfg.onStart(o);}
     if(L){
       try{if(cfg.chatEl)Live.chat(L,cfg.chatEl,{local:function(){return false;}});}catch(e){}
-      L.on('status',function(s){live=s==='live';setTimeout(ref,50);});
+      L.on('status',function(s){live=s==='live';if(live)dup=false;setTimeout(ref,50);});
+      L.on('dupe',function(){dup=true;setTimeout(ref,50);});
       L.on('roster',function(){var o=others()[0];if(!o)peer=null;else if(!peer||peer.id!==o.id)peer={id:o.id,st:'idle'};hi();ref();
         if(gid&&!o){var g=gid;gid=null;myStat='idle';try{cfg.onLeft&&cfg.onLeft(g);}catch(e){}}});
       L.on('msg:hi',function(d,from){peer={id:from,st:d&&d.st||'idle'};ref();});
@@ -830,13 +831,13 @@ var Duel=(function(){
       done:function(){gid=null;myStat='idle';hi();},
       solo:function(on){myStat=on?'solo':'idle';hi();},
       other:other,
-      info:function(){return {avail:avail,live:live,online:!!gid,stat:myStat};},
+      info:function(){return {avail:avail,live:live,online:!!gid,stat:myStat,dup:dup};},
       me:function(){return L?L.me:{id:'me',name:'You'};},
       start:function(){if(L&&avail)L.start();}
     };
   }
   /* the line under the lobby: who's here */
-  function lobbyText(D,what){var st=D.info(),o=D.other();return !st.avail?'Online play is offline right now':!st.live?'Connecting to the parlor\u2026':o?(o.free?o.name+' is in the parlor and ready for '+what+'.':o.name+' is in a game right now.'):'Nobody else is here yet. Anyone who opens this game joins you.';}
+  function lobbyText(D,what){var st=D.info(),o=D.other();return !st.avail?'Online play is offline right now':st.dup?'Your account is playing online on another screen. Reload this page to play online here.':!st.live?'Connecting to the parlor\u2026':o?(o.free?o.name+' is in the parlor and ready for '+what+'.':o.name+' is in a game right now.'):'Nobody else is here yet. Anyone who opens this game joins you.';}
   return {create:create,lobbyText:lobbyText};
 })();
 
