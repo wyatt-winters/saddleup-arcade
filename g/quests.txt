@@ -307,8 +307,14 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 (function(){if(window.__suMute)return;window.__suMute=1;var away=false,list=[];
   ['AudioContext','webkitAudioContext'].forEach(function(nm){var O=window[nm];if(!O)return;
     function W(a,b){var c=arguments.length>1?new O(a,b):arguments.length?new O(a):new O();list.push(c);if(away){try{c.suspend();}catch(e){}}return c;}
-    W.prototype=O.prototype;try{Object.setPrototypeOf(W,O);}catch(e){}window[nm]=W;});
-  function quiet(on){away=on;list.forEach(function(c){try{if(on){if(c.state==='running')c.suspend();}else if(c.state==='suspended')c.resume();}catch(e){}});
+    W.prototype=O.prototype;try{Object.setPrototypeOf(W,O);}catch(e){}window[nm]=W;
+    /* a game that wakes its sound before each beep can't undo the pause while you're away */
+    try{var R=O.prototype.resume;if(R&&!O.prototype.__suR){O.prototype.__suR=1;O.prototype.resume=function(){if(away)return Promise.resolve();return R.apply(this,arguments);};}}catch(e){}});
+  /* the bingo caller (and any spoken line) stays silent while the game is in the background */
+  try{if(window.speechSynthesis){var SP=speechSynthesis.speak.bind(speechSynthesis);speechSynthesis.speak=function(u){if(away)return;return SP(u);};}}catch(e){}
+  /* plain <audio> started while away is stopped straight away */
+  try{var AP=HTMLMediaElement.prototype.play;HTMLMediaElement.prototype.play=function(){if(away){this.__suPaused=1;return Promise.resolve();}return AP.apply(this,arguments);};}catch(e){}
+  function quiet(on){away=false;if(on)away=true;list.forEach(function(c){try{if(on){if(c.state==='running')c.suspend();}else if(c.state==='suspended')c.resume();}catch(e){}});away=on;
     if(on){try{if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}[].forEach.call(document.querySelectorAll('audio,video'),function(m){try{if(!m.paused){m.pause();m.__suPaused=1;}}catch(e){}});}
     else [].forEach.call(document.querySelectorAll('audio,video'),function(m){if(m.__suPaused){m.__suPaused=0;try{m.play();}catch(e){}}});}
   var off=false,ph=false;function apply(){var q=off||ph;if(q!==away||q)quiet(q);}
