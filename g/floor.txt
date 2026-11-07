@@ -1856,7 +1856,13 @@ function showPatron(p){if(!p||!p.art||!p.art.f)return;pSel=p;select(null);var a=
   document.getElementById('pSt').innerHTML='<b>'+esc(where)+'</b>'+(p.kind==='dealer'||p.staff?'':' &middot; Bankroll '+money(p.bank||0));
   var gb=document.getElementById('pGo');if(!T&&p.dealT){for(var kk in TB)if(TB[kk].dealer===p)T=TB[kk];}gb.classList.toggle('hide',!T||!!T.kind.soon);gb.onclick=function(){hidePatron();if(T)go(T);};
   pcard.classList.add('on');}
-(function(){var _sp=showPatron;showPatron=function(p){_sp(p);setTimeout(function(){try{var c=document.getElementById('pcard');if(!c.classList.contains('on'))return;
+(function(){var _sp=showPatron,curK=null;
+  function keyOf(p){if(!p||!p.art)return null;if(p.key&&(PAT[p.key]||STAFF[p.key]))return p.key;var k=Object.keys(PAT).filter(function(x){return PAT[x]===p.art;})[0]||Object.keys(STAFF).filter(function(x){return STAFF[x]===p.art;})[0];return k||null;}
+  var gb=document.getElementById('pGo');if(gb)gb.addEventListener('click',function(){if(curK)try{parent.postMessage({arcade:'cardBonus',who:curK},'*');}catch(e){}});
+  var cb=document.createElement('button');cb.type='button';cb.className='go go2';cb.id='pCards';cb.textContent='Their trading card';
+  var pf=document.getElementById('pFind');if(pf&&pf.parentNode)pf.parentNode.insertBefore(cb,pf.nextSibling);
+  cb.addEventListener('click',function(){if(curK)try{parent.postMessage({arcade:'openCards',who:curK},'*');}catch(e){}});
+  showPatron=function(p){_sp(p);curK=keyOf(p);setTimeout(function(){try{var c=document.getElementById('pcard');if(!c.classList.contains('on'))return;
   /* the card can sit below the bottom of a phone screen: scroll the outermost page we can reach so the whole card is in view */
   var r=c.getBoundingClientRect(),top=r.top,w=window,last=window;
   try{while(w.frameElement){top+=w.frameElement.getBoundingClientRect().top;last=w.parent;w=w.parent;}}catch(_){}
