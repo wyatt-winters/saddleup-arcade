@@ -79,6 +79,12 @@ html.fs .wrap{max-width:none;height:100%;padding:8px 10px;display:flex;flex-dire
 html.fs .wrap>.pill,html.fs .wrap>h1,html.fs .wrap>.sub,html.fs .rules{display:none}
 html.fs #hall{flex:1;min-height:0;overflow:auto;padding-top:46px;align-content:start}
 html.fs.fsnarrow #hall{grid-template-columns:1fr;gap:8px;padding:44px 8px 8px}
+/* wide screens: everything fits, no scrolling: the board stretches to the height that's left */
+html.fs:not(.fsnarrow) #hall{overflow:hidden;grid-template-rows:auto auto minmax(0,1fr);align-content:stretch}
+html.fs:not(.fsnarrow) .stage{display:flex;flex-direction:column;min-height:0;gap:10px}
+html.fs:not(.fsnarrow) .stage .board{flex:1 1 0;min-height:0;grid-template-rows:repeat(8,minmax(0,1fr))}
+html.fs:not(.fsnarrow) .stage .board button{aspect-ratio:auto;height:100%;min-height:0;font-size:clamp(13px,min(1.5vw,3.2vh),22px)}
+html.fs:not(.fsnarrow) .panel{min-height:0;overflow-y:auto;overscroll-behavior:contain}
 html.fs.fsnarrow .sign{gap:6px;padding:8px}html.fs.fsnarrow .sign .nm{font-size:18px}html.fs.fsnarrow .chip2 b{font-size:13px}
 html.has-keno_ball .kball:not(.empty){background:url(https://saddleup-arcade.vercel.app/art/keno_ball.webp) center/contain no-repeat!important;box-shadow:none!important;color:#1c1208;text-shadow:0 1px 0 #fff}
 .board button.op{box-shadow:inset 0 -3px 0 rgba(0,0,0,.18),inset 0 0 0 2px rgba(244,114,182,.0)}
