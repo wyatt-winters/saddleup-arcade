@@ -67,7 +67,7 @@ html.fs .wrap{max-width:none;height:100%;padding:8px 10px;display:flex;flex-dire
 html.fs .wrap>.pill,html.fs .wrap>h1,html.fs .wrap>.sub,html.fs .rules{display:none}
 html.fs #felt{flex:1;min-height:0;overflow:auto;padding-top:46px}
 @media (orientation:landscape) and (max-height:500px){html.fs .board{width:calc(var(--fsvh,100vh) - 150px)}}
-.sq{position:relative}.sq .pc{position:relative;width:88%;height:88%;border-radius:0;background:none!important;box-shadow:none!important;display:flex;align-items:center;justify-content:center;transition:transform .12s}
+.sq{position:relative}.sq .pc{position:relative;width:94%;height:94%;border-radius:0;background:none!important;box-shadow:none!important;display:flex;align-items:center;justify-content:center;transition:transform .12s}
 .sq .pc::after{display:none}
 .pc.cp{background:none!important;box-shadow:none!important;border-radius:0!important}.pc.cp::after{display:none!important}.pc img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 2px rgba(0,0,0,.55))}.pc i{font-style:normal;line-height:1;font-size:min(11cqw,72px)}.pc.art i{display:none}.pc:not(.art) img{display:none}
 .pc.cw i{color:#fdf6e3;-webkit-text-stroke:1.2px #3b2414;text-shadow:0 3px 2px rgba(0,0,0,.5)}.pc.cb i{color:#1c1208;-webkit-text-stroke:1px #c6a75e;text-shadow:0 3px 2px rgba(0,0,0,.5)}
@@ -80,6 +80,9 @@ html.fs #felt{flex:1;min-height:0;overflow:auto;padding-top:46px}
 .sq .rk,.sq .fl{position:absolute;font:800 10px Inter,sans-serif;opacity:.6;pointer-events:none}.sq .rk{left:3px;top:2px}.sq .fl{right:3px;bottom:1px}.sq.l .rk,.sq.l .fl{color:#5a3a1e}.sq.d .rk,.sq.d .fl{color:#f1dfb8}
 .stage{position:relative}.promo{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5)}.promo .pbox{padding:14px;border-radius:14px;background:#1c0f07;border:2px solid #c6a75e;text-align:center}.promo b{display:block;font:400 20px Rye,Georgia,serif;color:#f2d27e;margin-bottom:8px}
 .promo button{width:64px;height:64px;margin:0 3px;border-radius:10px;background:#f1dfb8}.promo button .pc{width:100%;height:100%}.promo button .pc i{font-size:46px}
+
+/* desktop: the board grows to fill the height between the two name bars */
+@media (min-width:900px){.board,.stage>.plate{width:min(100%,1000px,calc(var(--fsvh,100vh) - 215px))}.stage>.plate{max-width:none;box-sizing:border-box}.stage{width:100%}}
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
 html.fs,html.fs body{height:100%;overflow:hidden!important}
