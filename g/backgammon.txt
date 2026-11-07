@@ -613,7 +613,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
 (function(){
-  var LIST=/*SKINLIST*/[["anime", "Classic"], ["xmas", "Christmas"], ["beach", "Beach"]]/*SKINLIST*/;
+  var LIST=/*SKINLIST*/[["anime", "Classic"], ["xmas", "Christmas"], ["beach", "Beach"], ["comic", "Comic"]]/*SKINLIST*/;
   if(LIST.length<2)return;
   var cur=document.documentElement.getAttribute('data-season')||document.documentElement.getAttribute('data-skin')||'western';
   function btns(){return LIST.map(function(k){return '<button type="button" data-skin="'+k[0]+'"'+(cur===k[0]?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>'+k[1]+'</button>';}).join('');}
@@ -1290,6 +1290,8 @@ var SKIN_ART={
     trayX:952,trayW:70,trayTop:[78,262],trayBot:[278,460],cubeX:42,cubeY:[130,270,410],halfL:[82,462],halfR:[542,888],cd:46,cap:4,cube:38,die:40}};
 SKIN_ART.beach={L:1100,A:596,colL:165,colR:610,pw:59.6,pwR:54,y0:100,y1:470,barX:540,barW:56,
     trayX:960,trayW:66,trayTop:[104,262],trayBot:[306,466],cubeX:100,cubeY:[150,285,420],halfL:[140,495],halfR:[585,905],cd:46,cap:4,cube:38,die:40};
+SKIN_ART.comic={L:1100,A:596,colL:160,colR:600,pw:59,pwR:57.4,y0:84,y1:484,barX:537,barW:50,
+    trayX:975,trayW:60,trayTop:[92,268],trayBot:[302,478],cubeX:70,cubeY:[150,290,430],halfL:[120,500],halfR:[575,925],cd:46,cap:4,cube:38,die:40};
 (function(){var se=document.documentElement.getAttribute('data-season')||'',sk=document.documentElement.getAttribute('data-skin')||'';
   if(SKIN_ART[se])ART=SKIN_ART[se];else if(SKIN_ART[sk])ART=SKIN_ART[sk];})();
 ART.mid=(ART.y0+ART.y1)/2;
