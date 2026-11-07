@@ -1,0 +1,3413 @@
+{
+ "skin": "wasteland",
+ "folder": "art/wasteland/",
+ "groups": [
+  {
+   "group": "Rooms and backgrounds",
+   "items": [
+    {
+     "name": "bg_board",
+     "size": [
+      1100,
+      596
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8e3ee2a25c8e09fe0a.webp"
+    },
+    {
+     "name": "bg_casino",
+     "size": [
+      1280,
+      720
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8bd542268bb4d41390.webp"
+    },
+    {
+     "name": "bg_mine",
+     "size": [
+      1280,
+      720
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad953ee2a25c8e09fff7.webp"
+    },
+    {
+     "name": "bg_quickdraw",
+     "size": [
+      1280,
+      720
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8964f4028be3c2bed6.webp"
+    },
+    {
+     "name": "bg_rodeo",
+     "size": [
+      1280,
+      720
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9bc9d5b7168d29fb83.webp"
+    },
+    {
+     "name": "bg_trail",
+     "size": [
+      1200,
+      1400
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/bg_trail.webp"
+    },
+    {
+     "name": "bg_wrangler",
+     "size": [
+      1600,
+      1100
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/bg_wrangler.webp"
+    },
+    {
+     "name": "bingo_door",
+     "size": [
+      700,
+      626
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/bingo_door.webp"
+    },
+    {
+     "name": "bingo_hall",
+     "size": [
+      1920,
+      1080
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/bingo_hall.webp"
+    },
+    {
+     "name": "bingo_hall_tall",
+     "size": [
+      1080,
+      1920
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/bingo_hall_tall.webp"
+    },
+    {
+     "name": "crash_bg",
+     "size": [
+      1280,
+      720
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4d66d952d82bd4701a6c4.webp"
+    },
+    {
+     "name": "derby_track_bg",
+     "size": [
+      2560,
+      343
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4f90109f888e023fa8c15.webp"
+    },
+    {
+     "name": "floor_bg",
+     "size": [
+      1600,
+      1000
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad91736386d0dc764b8c.webp"
+    },
+    {
+     "name": "floor_tall",
+     "size": [
+      900,
+      1640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8ece53a65ab2a2f926.webp"
+    },
+    {
+     "name": "plinko_mine",
+     "size": [
+      1600,
+      1200
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/plinko_mine.webp"
+    },
+    {
+     "name": "quests_board",
+     "size": [
+      1280,
+      720
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/quests_board.webp"
+    }
+   ]
+  },
+  {
+   "group": "Game Parlor room",
+   "items": [
+    {
+     "name": "pl_armchair",
+     "size": [
+      240,
+      184
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_bookshelf",
+     "size": [
+      512,
+      256
+     ],
+     "transparent": false,
+     "current": null
+    },
+    {
+     "name": "pl_boomtown",
+     "size": [
+      660,
+      584
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_chair",
+     "size": [
+      152,
+      112
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_coffee",
+     "size": [
+      320,
+      200
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_dominoes",
+     "size": [
+      600,
+      524
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_door",
+     "size": [
+      264,
+      608
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_fireplace",
+     "size": [
+      600,
+      340
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_floor",
+     "size": [
+      512,
+      512
+     ],
+     "transparent": false,
+     "current": null
+    },
+    {
+     "name": "pl_gold",
+     "size": [
+      700,
+      372
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_lamp",
+     "size": [
+      176,
+      176
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_mahjong",
+     "size": [
+      600,
+      544
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_mines",
+     "size": [
+      560,
+      424
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_mjsol",
+     "size": [
+      384,
+      340
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_piano",
+     "size": [
+      480,
+      360
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_plant",
+     "size": [
+      288,
+      288
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_rug",
+     "size": [
+      1072,
+      860
+     ],
+     "transparent": false,
+     "current": null
+    },
+    {
+     "name": "pl_rug_oval",
+     "size": [
+      880,
+      640
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_rug_tall",
+     "size": [
+      1232,
+      536
+     ],
+     "transparent": false,
+     "current": null
+    },
+    {
+     "name": "pl_sol",
+     "size": [
+      740,
+      464
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_spider",
+     "size": [
+      780,
+      480
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_stool",
+     "size": [
+      104,
+      104
+     ],
+     "transparent": true,
+     "current": null
+    },
+    {
+     "name": "pl_wall",
+     "size": [
+      1024,
+      256
+     ],
+     "transparent": false,
+     "current": null
+    }
+   ]
+  },
+  {
+   "group": "Tables, felts, wheels and cabinets",
+   "items": [
+    {
+     "name": "cab_vpoker",
+     "size": [
+      1600,
+      1200
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/cab_vpoker.webp"
+    },
+    {
+     "name": "cabinet",
+     "size": [
+      769,
+      1100
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8b36aa4a07e875558f.webp"
+    },
+    {
+     "name": "felt_baccarat",
+     "size": [
+      1100,
+      659
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad94d542268bb4d41534.webp"
+    },
+    {
+     "name": "felt_blackjack",
+     "size": [
+      1100,
+      590
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad94d542268bb4d41554.webp"
+    },
+    {
+     "name": "felt_craps",
+     "size": [
+      1100,
+      501
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9264f4028be3c2c110.webp"
+    },
+    {
+     "name": "felt_craps_tall",
+     "size": [
+      535,
+      1100
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad93736386d0dc764bf0.webp"
+    },
+    {
+     "name": "felt_holdem",
+     "size": [
+      1100,
+      548
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada2736386d0dc764f73.webp"
+    },
+    {
+     "name": "felt_holdem_tall",
+     "size": [
+      556,
+      1100
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada0c9d5b7168d29fc7f.webp"
+    },
+    {
+     "name": "felt_roul_tall",
+     "size": [
+      537,
+      1100
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/xmas/ref/felt_roul_tall.webp"
+    },
+    {
+     "name": "felt_roulette",
+     "size": [
+      1100,
+      597
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/xmas/ref/felt_roulette.webp"
+    },
+    {
+     "name": "felt_solitaire",
+     "size": [
+      1200,
+      746
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9f36aa4a07e8755a1d.webp"
+    },
+    {
+     "name": "felt_war",
+     "size": [
+      1500,
+      1000
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/felt_war.webp"
+    },
+    {
+     "name": "holdem_dealer_button",
+     "size": [
+      501,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8bd542268bb4d413a0.webp"
+    },
+    {
+     "name": "pool_balls_sheet",
+     "size": [
+      2048,
+      128
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8a09f888e023f0749a.webp"
+    },
+    {
+     "name": "pool_cue",
+     "size": [
+      512,
+      43
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad89c9d5b7168d29f67b.webp"
+    },
+    {
+     "name": "pool_table",
+     "size": [
+      1100,
+      566
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9a64f4028be3c2c2f8.webp"
+    },
+    {
+     "name": "roulette_wheel",
+     "size": [
+      988,
+      987
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9ace53a65ab2a2fbd6.webp"
+    },
+    {
+     "name": "table_bacc",
+     "size": [
+      957,
+      867
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad98c9d5b7168d29fac1.webp"
+    },
+    {
+     "name": "table_bj",
+     "size": [
+      1004,
+      861
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8cc9d5b7168d29f74b.webp"
+    },
+    {
+     "name": "table_checkers",
+     "size": [
+      1600,
+      1100
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/table_checkers.webp"
+    },
+    {
+     "name": "table_chess",
+     "size": [
+      1600,
+      1100
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/table_chess.webp"
+    },
+    {
+     "name": "table_craps",
+     "size": [
+      1100,
+      552
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9836aa4a07e8755911.webp"
+    },
+    {
+     "name": "table_crash",
+     "size": [
+      700,
+      580
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4d66dd542268bb4d98405.webp"
+    },
+    {
+     "name": "table_cwar",
+     "size": [
+      600,
+      819
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/table_cwar.webp"
+    },
+    {
+     "name": "table_derby",
+     "size": [
+      700,
+      545
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4f901c9d5b7168d341c29.webp"
+    },
+    {
+     "name": "table_holdem",
+     "size": [
+      987,
+      901
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8f3ee2a25c8e09fe6a.webp"
+    },
+    {
+     "name": "table_liars",
+     "size": [
+      1600,
+      1100
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/table_liars.webp"
+    },
+    {
+     "name": "table_pdice",
+     "size": [
+      1600,
+      1100
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/table_pdice.webp"
+    },
+    {
+     "name": "table_pin",
+     "size": [
+      1100,
+      628
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9d952d82bd47fc3ab0.webp"
+    },
+    {
+     "name": "table_roul",
+     "size": [
+      1100,
+      559
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8b952d82bd47fc36b6.webp"
+    },
+    {
+     "name": "table_slots",
+     "size": [
+      1023,
+      663
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8b64f4028be3c2bf54.webp"
+    },
+    {
+     "name": "war_table",
+     "size": [
+      1349,
+      728
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/war_table.webp"
+    },
+    {
+     "name": "wheel_hub",
+     "size": [
+      507,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8a09f888e023f074a6.webp"
+    },
+    {
+     "name": "wheel_icon",
+     "size": [
+      190,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad91952d82bd47fc37e2.webp"
+    },
+    {
+     "name": "wheel_pointer",
+     "size": [
+      127,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada2952d82bd47fc3c35.webp"
+    },
+    {
+     "name": "wheel_rim",
+     "size": [
+      1024,
+      1018
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9b736386d0dc764de9.webp"
+    },
+    {
+     "name": "wheel_stand",
+     "size": [
+      366,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada136aa4a07e8755aa9.webp"
+    }
+   ]
+  },
+  {
+   "group": "The deck",
+   "items": [
+    {
+     "name": "card_back",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9bce53a65ab2a2fc12.webp"
+    },
+    {
+     "name": "face_Ac",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad959dc70f82b62249ad.webp"
+    },
+    {
+     "name": "face_Ad",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada03ee2a25c8e0a0299.webp"
+    },
+    {
+     "name": "face_Ah",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada3736386d0dc764fd4.webp"
+    },
+    {
+     "name": "face_As",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8d36aa4a07e87555e2.webp"
+    },
+    {
+     "name": "face_Jc",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8936aa4a07e8755515.webp"
+    },
+    {
+     "name": "face_Jd",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9336aa4a07e87557a9.webp"
+    },
+    {
+     "name": "face_Jh",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9464f4028be3c2c18f.webp"
+    },
+    {
+     "name": "face_Js",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad98ce53a65ab2a2fb5a.webp"
+    },
+    {
+     "name": "face_Kc",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad92c9d5b7168d29f915.webp"
+    },
+    {
+     "name": "face_Kd",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8e64f4028be3c2c034.webp"
+    },
+    {
+     "name": "face_Kh",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8c952d82bd47fc36f6.webp"
+    },
+    {
+     "name": "face_Ks",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada0952d82bd47fc3b90.webp"
+    },
+    {
+     "name": "face_Qc",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad89d542268bb4d41354.webp"
+    },
+    {
+     "name": "face_Qd",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad93ce53a65ab2a2fa2e.webp"
+    },
+    {
+     "name": "face_Qh",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad94c9d5b7168d29f985.webp"
+    },
+    {
+     "name": "face_Qs",
+     "size": [
+      451,
+      640
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9864f4028be3c2c278.webp"
+    },
+    {
+     "name": "rank_A",
+     "size": [
+      512,
+      512
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9a09f888e023f078c4.webp"
+    },
+    {
+     "name": "rank_J",
+     "size": [
+      512,
+      512
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9c3ee2a25c8e0a0199.webp"
+    },
+    {
+     "name": "rank_K",
+     "size": [
+      512,
+      512
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada1736386d0dc764f54.webp"
+    },
+    {
+     "name": "rank_Q",
+     "size": [
+      455,
+      512
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8a9dc70f82b622469a.webp"
+    },
+    {
+     "name": "suit_c",
+     "size": [
+      182,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9109f888e023f07658.webp"
+    },
+    {
+     "name": "suit_d",
+     "size": [
+      181,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8cd542268bb4d413c0.webp"
+    },
+    {
+     "name": "suit_h",
+     "size": [
+      192,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8ec9d5b7168d29f7bd.webp"
+    },
+    {
+     "name": "suit_s",
+     "size": [
+      166,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9f736386d0dc764eda.webp"
+    }
+   ]
+  },
+  {
+   "group": "People (faces and top-down figures)",
+   "items": [
+    {
+     "name": "abe_top",
+     "size": [
+      252,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8a36aa4a07e8755529.webp"
+    },
+    {
+     "name": "ada_top",
+     "size": [
+      182,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada064f4028be3c2c444.webp"
+    },
+    {
+     "name": "amos_top",
+     "size": [
+      300,
+      288
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad94736386d0dc764c30.webp"
+    },
+    {
+     "name": "beau_face",
+     "size": [
+      348,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9b9dc70f82b6224b34.webp"
+    },
+    {
+     "name": "beau_top",
+     "size": [
+      286,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad979dc70f82b6224a2c.webp"
+    },
+    {
+     "name": "bianca_face",
+     "size": [
+      348,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad91952d82bd47fc3816.webp"
+    },
+    {
+     "name": "bianca_top",
+     "size": [
+      214,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad99736386d0dc764d8a.webp"
+    },
+    {
+     "name": "boone_top",
+     "size": [
+      297,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8d9dc70f82b622476a.webp"
+    },
+    {
+     "name": "cass_face",
+     "size": [
+      330,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad97d542268bb4d41618.webp"
+    },
+    {
+     "name": "cass_top",
+     "size": [
+      240,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad98c9d5b7168d29fad1.webp"
+    },
+    {
+     "name": "clem_face",
+     "size": [
+      374,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad899dc70f82b622467a.webp"
+    },
+    {
+     "name": "clem_top",
+     "size": [
+      300,
+      264
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad91c9d5b7168d29f8a9.webp"
+    },
+    {
+     "name": "daisy_face",
+     "size": [
+      377,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad90c9d5b7168d29f82f.webp"
+    },
+    {
+     "name": "daisy_top",
+     "size": [
+      233,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad913ee2a25c8e09ff12.webp"
+    },
+    {
+     "name": "duke_face",
+     "size": [
+      367,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9064f4028be3c2c094.webp"
+    },
+    {
+     "name": "duke_top",
+     "size": [
+      278,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9ad542268bb4d41674.webp"
+    },
+    {
+     "name": "dusty_face",
+     "size": [
+      384,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad90ce53a65ab2a2f9b6.webp"
+    },
+    {
+     "name": "dusty_top",
+     "size": [
+      272,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad939dc70f82b6224910.webp"
+    },
+    {
+     "name": "earl_face",
+     "size": [
+      353,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad95736386d0dc764c60.webp"
+    },
+    {
+     "name": "earl_top",
+     "size": [
+      300,
+      230
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9736aa4a07e87558f2.webp"
+    },
+    {
+     "name": "etta_top",
+     "size": [
+      276,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8936aa4a07e87554f8.webp"
+    },
+    {
+     "name": "frankie_top",
+     "size": [
+      255,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad95736386d0dc764c92.webp"
+    },
+    {
+     "name": "gus_top",
+     "size": [
+      231,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9ec9d5b7168d29fc23.webp"
+    },
+    {
+     "name": "hank_face",
+     "size": [
+      373,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8cc9d5b7168d29f727.webp"
+    },
+    {
+     "name": "hank_top",
+     "size": [
+      250,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9ece53a65ab2a2fcba.webp"
+    },
+    {
+     "name": "hattie_top",
+     "size": [
+      249,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8bce53a65ab2a2f8d2.webp"
+    },
+    {
+     "name": "ivy_face",
+     "size": [
+      335,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad94952d82bd47fc38da.webp"
+    },
+    {
+     "name": "ivy_top",
+     "size": [
+      236,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada136aa4a07e8755ab5.webp"
+    },
+    {
+     "name": "jesse_face",
+     "size": [
+      355,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad88952d82bd47fc3652.webp"
+    },
+    {
+     "name": "jesse_top",
+     "size": [
+      242,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad93952d82bd47fc3876.webp"
+    },
+    {
+     "name": "jolene_top",
+     "size": [
+      222,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad993ee2a25c8e0a010d.webp"
+    },
+    {
+     "name": "june_face",
+     "size": [
+      367,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9cc9d5b7168d29fbb3.webp"
+    },
+    {
+     "name": "june_top",
+     "size": [
+      262,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9a64f4028be3c2c2e8.webp"
+    },
+    {
+     "name": "lacey_face",
+     "size": [
+      343,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9e64f4028be3c2c3e9.webp"
+    },
+    {
+     "name": "lacey_top",
+     "size": [
+      213,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad95c9d5b7168d29f9c9.webp"
+    },
+    {
+     "name": "lou_face",
+     "size": [
+      369,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9309f888e023f076df.webp"
+    },
+    {
+     "name": "lou_top",
+     "size": [
+      282,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9f09f888e023f079d1.webp"
+    },
+    {
+     "name": "lyle_top",
+     "size": [
+      242,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9c9dc70f82b6224b68.webp"
+    },
+    {
+     "name": "mabel_face",
+     "size": [
+      334,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad969dc70f82b62249e0.webp"
+    },
+    {
+     "name": "mabel_top",
+     "size": [
+      300,
+      282
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9e36aa4a07e8755a04.webp"
+    },
+    {
+     "name": "marisol_face",
+     "size": [
+      340,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8d736386d0dc764b02.webp"
+    },
+    {
+     "name": "marisol_top",
+     "size": [
+      206,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8b36aa4a07e8755567.webp"
+    },
+    {
+     "name": "nell_top",
+     "size": [
+      283,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9f36aa4a07e8755a3d.webp"
+    },
+    {
+     "name": "opal_face",
+     "size": [
+      306,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada209f888e023f07a41.webp"
+    },
+    {
+     "name": "opal_top",
+     "size": [
+      253,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad96d542268bb4d415e2.webp"
+    },
+    {
+     "name": "otis_top",
+     "size": [
+      225,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9e64f4028be3c2c3dc.webp"
+    },
+    {
+     "name": "pearl_face",
+     "size": [
+      333,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad883ee2a25c8e09fd0a.webp"
+    },
+    {
+     "name": "pearl_top",
+     "size": [
+      300,
+      297
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9d64f4028be3c2c3b5.webp"
+    },
+    {
+     "name": "pete_face",
+     "size": [
+      371,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada2c9d5b7168d29fd13.webp"
+    },
+    {
+     "name": "pete_top",
+     "size": [
+      300,
+      234
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada036aa4a07e8755a74.webp"
+    },
+    {
+     "name": "rosa_face",
+     "size": [
+      346,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9936aa4a07e875593a.webp"
+    },
+    {
+     "name": "rosa_top",
+     "size": [
+      226,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada364f4028be3c2c4d5.webp"
+    },
+    {
+     "name": "ruby_top",
+     "size": [
+      216,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad97d542268bb4d41624.webp"
+    },
+    {
+     "name": "rusty_face",
+     "size": [
+      370,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8a64f4028be3c2bef6.webp"
+    },
+    {
+     "name": "rusty_top",
+     "size": [
+      278,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9c9dc70f82b6224b73.webp"
+    },
+    {
+     "name": "slim_face",
+     "size": [
+      337,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8e64f4028be3c2c023.webp"
+    },
+    {
+     "name": "slim_top",
+     "size": [
+      271,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9109f888e023f07673.webp"
+    },
+    {
+     "name": "tex_face",
+     "size": [
+      365,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9f36aa4a07e8755a4e.webp"
+    },
+    {
+     "name": "tex_top",
+     "size": [
+      300,
+      276
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8f64f4028be3c2c050.webp"
+    },
+    {
+     "name": "vera_face",
+     "size": [
+      293,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad993ee2a25c8e0a0101.webp"
+    },
+    {
+     "name": "vera_top",
+     "size": [
+      300,
+      258
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad92ce53a65ab2a2fa1a.webp"
+    },
+    {
+     "name": "virgil_top",
+     "size": [
+      268,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada2d542268bb4d4177a.webp"
+    },
+    {
+     "name": "walt_face",
+     "size": [
+      368,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8a3ee2a25c8e09fd4e.webp"
+    },
+    {
+     "name": "walt_top",
+     "size": [
+      300,
+      276
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad94ce53a65ab2a2fa6a.webp"
+    },
+    {
+     "name": "wes_face",
+     "size": [
+      367,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad98736386d0dc764d69.webp"
+    },
+    {
+     "name": "wes_top",
+     "size": [
+      250,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9d09f888e023f07938.webp"
+    },
+    {
+     "name": "you_face",
+     "size": [
+      390,
+      440
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8836aa4a07e87554a4.webp"
+    },
+    {
+     "name": "you_top",
+     "size": [
+      271,
+      300
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8d3ee2a25c8e09fdde.webp"
+    }
+   ]
+  },
+  {
+   "group": "Chips, jackpots and wins",
+   "items": [
+    {
+     "name": "chip_c100",
+     "size": [
+      254,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad90ce53a65ab2a2f9a2.webp"
+    },
+    {
+     "name": "chip_c1k",
+     "size": [
+      252,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8c736386d0dc764a80.webp"
+    },
+    {
+     "name": "chip_c25",
+     "size": [
+      250,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9d736386d0dc764e62.webp"
+    },
+    {
+     "name": "chip_c5",
+     "size": [
+      253,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8c64f4028be3c2bfa8.webp"
+    },
+    {
+     "name": "chip_c500",
+     "size": [
+      253,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad929dc70f82b62248aa.webp"
+    },
+    {
+     "name": "chip_c5k",
+     "size": [
+      253,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8a3ee2a25c8e09fd5e.webp"
+    },
+    {
+     "name": "jackpot_badge",
+     "size": [
+      495,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada009f888e023f07a00.webp"
+    },
+    {
+     "name": "jp_grand",
+     "size": [
+      253,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad973ee2a25c8e0a007b.webp"
+    },
+    {
+     "name": "jp_major",
+     "size": [
+      251,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9036aa4a07e87556eb.webp"
+    },
+    {
+     "name": "jp_mini",
+     "size": [
+      255,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9c736386d0dc764e3a.webp"
+    },
+    {
+     "name": "jp_minor",
+     "size": [
+      254,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad89952d82bd47fc3662.webp"
+    },
+    {
+     "name": "jpbadge",
+     "size": [
+      498,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada2736386d0dc764fa7.webp"
+    },
+    {
+     "name": "win_banner",
+     "size": [
+      512,
+      230
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9b64f4028be3c2c34e.webp"
+    },
+    {
+     "name": "win_big",
+     "size": [
+      504,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9dd542268bb4d416d6.webp"
+    },
+    {
+     "name": "win_epic",
+     "size": [
+      507,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9e64f4028be3c2c3c4.webp"
+    },
+    {
+     "name": "win_mega",
+     "size": [
+      508,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad92c9d5b7168d29f8ed.webp"
+    }
+   ]
+  },
+  {
+   "group": "Slot and ticket symbols",
+   "items": [
+    {
+     "name": "sym_bag",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_bag.webp"
+    },
+    {
+     "name": "sym_beer",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_beer.webp"
+    },
+    {
+     "name": "sym_boot",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_boot.webp"
+    },
+    {
+     "name": "sym_bull",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_bull.webp"
+    },
+    {
+     "name": "sym_cactus",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_cactus.webp"
+    },
+    {
+     "name": "sym_coin",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_coin.webp"
+    },
+    {
+     "name": "sym_cowboy",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_cowboy.webp"
+    },
+    {
+     "name": "sym_crown",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_crown.webp"
+    },
+    {
+     "name": "sym_diamond",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_diamond.webp"
+    },
+    {
+     "name": "sym_dice",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_dice.webp"
+    },
+    {
+     "name": "sym_eagle",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_eagle.webp"
+    },
+    {
+     "name": "sym_elec",
+     "size": [
+      405,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9f64f4028be3c2c414.webp"
+    },
+    {
+     "name": "sym_horse",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_horse.webp"
+    },
+    {
+     "name": "sym_hvac",
+     "size": [
+      458,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8f36aa4a07e87556bb.webp"
+    },
+    {
+     "name": "sym_key",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_key.webp"
+    },
+    {
+     "name": "sym_plumb",
+     "size": [
+      464,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8ec9d5b7168d29f7d5.webp"
+    },
+    {
+     "name": "sym_revolver",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_revolver.webp"
+    },
+    {
+     "name": "sym_roof",
+     "size": [
+      457,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9264f4028be3c2c0f2.webp"
+    },
+    {
+     "name": "sym_scatter",
+     "size": [
+      441,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9ec9d5b7168d29fc53.webp"
+    },
+    {
+     "name": "sym_shield",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_shield.webp"
+    },
+    {
+     "name": "sym_star",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_star.webp"
+    },
+    {
+     "name": "sym_tophat",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_tophat.webp"
+    },
+    {
+     "name": "sym_whiskey",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/sym_whiskey.webp"
+    },
+    {
+     "name": "sym_wild",
+     "size": [
+      511,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad949dc70f82b6224954.webp"
+    }
+   ]
+  },
+  {
+   "group": "Scratch tickets",
+   "items": [
+    {
+     "name": "scratch_foil",
+     "size": [
+      512,
+      512
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/scratch_foil.webp"
+    },
+    {
+     "name": "ticket_btd",
+     "size": [
+      700,
+      1050
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/ticket_btd.webp"
+    },
+    {
+     "name": "ticket_map",
+     "size": [
+      800,
+      800
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/ticket_map.webp"
+    },
+    {
+     "name": "ticket_pkr",
+     "size": [
+      700,
+      1050
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/ticket_pkr.webp"
+    },
+    {
+     "name": "ticket_spin",
+     "size": [
+      900,
+      1200
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/ticket_spin.webp"
+    },
+    {
+     "name": "ticket_ttt",
+     "size": [
+      700,
+      1050
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/ticket_ttt.webp"
+    },
+    {
+     "name": "ticket_vault",
+     "size": [
+      900,
+      1200
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/ticket_vault.webp"
+    },
+    {
+     "name": "ticket_xw",
+     "size": [
+      700,
+      1050
+     ],
+     "transparent": false,
+     "current": "https://saddleup-arcade.vercel.app/art/ticket_xw.webp"
+    },
+    {
+     "name": "tk_bronze",
+     "size": [
+      240,
+      145
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/tk_bronze.webp"
+    },
+    {
+     "name": "tk_gold",
+     "size": [
+      240,
+      147
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/tk_gold.webp"
+    },
+    {
+     "name": "tk_silver",
+     "size": [
+      240,
+      145
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/tk_silver.webp"
+    },
+    {
+     "name": "vt_box",
+     "size": [
+      256,
+      192
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/vt_box.webp"
+    },
+    {
+     "name": "vt_dial",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/vt_dial.webp"
+    }
+   ]
+  },
+  {
+   "group": "Game pieces and effects",
+   "items": [
+    {
+     "name": "alchemy_bench",
+     "size": [
+      1200,
+      746
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8fd542268bb4d41442.webp"
+    },
+    {
+     "name": "bandit",
+     "size": [
+      507,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad90d542268bb4d414ac.webp"
+    },
+    {
+     "name": "bingo_cage",
+     "size": [
+      500,
+      622
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/bingo_cage.webp"
+    },
+    {
+     "name": "bingo_caller",
+     "size": [
+      600,
+      666
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/bingo_caller.webp"
+    },
+    {
+     "name": "board_2048",
+     "size": [
+      927,
+      918
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9109f888e023f07668.webp"
+    },
+    {
+     "name": "box",
+     "size": [
+      500,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9d64f4028be3c2c3a4.webp"
+    },
+    {
+     "name": "bs_coin",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/bs_coin.webp"
+    },
+    {
+     "name": "bs_daub",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/bs_daub.webp"
+    },
+    {
+     "name": "bs_joker",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/bs_joker.webp"
+    },
+    {
+     "name": "bs_rattler",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/bs_rattler.webp"
+    },
+    {
+     "name": "bs_superjoker",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/bs_superjoker.webp"
+    },
+    {
+     "name": "bullethole",
+     "size": [
+      492,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9ec9d5b7168d29fc47.webp"
+    },
+    {
+     "name": "checker_dark",
+     "size": [
+      255,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8bce53a65ab2a2f8c6.webp"
+    },
+    {
+     "name": "checker_light",
+     "size": [
+      253,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9a736386d0dc764da6.webp"
+    },
+    {
+     "name": "ck_black",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ck_black.webp"
+    },
+    {
+     "name": "ck_black_king",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ck_black_king.webp"
+    },
+    {
+     "name": "ck_red",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ck_red.webp"
+    },
+    {
+     "name": "ck_red_king",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ck_red_king.webp"
+    },
+    {
+     "name": "claim_frame",
+     "size": [
+      1100,
+      843
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9a3ee2a25c8e0a0125.webp"
+    },
+    {
+     "name": "claim_locked",
+     "size": [
+      800,
+      588
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9fce53a65ab2a2fd72.webp"
+    },
+    {
+     "name": "col_badge",
+     "size": [
+      501,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9ece53a65ab2a2fcf2.webp"
+    },
+    {
+     "name": "col_boot",
+     "size": [
+      431,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada1736386d0dc764f27.webp"
+    },
+    {
+     "name": "col_lantern",
+     "size": [
+      404,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8d9dc70f82b6224732.webp"
+    },
+    {
+     "name": "crash_fx",
+     "size": [
+      511,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4d66dd542268bb4d983ff.webp"
+    },
+    {
+     "name": "crash_train",
+     "size": [
+      700,
+      476
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4d66d36aa4a07e87aca56.webp"
+    },
+    {
+     "name": "cs_bB",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/cs_bB.webp"
+    },
+    {
+     "name": "cs_bK",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/cs_bK.webp"
+    },
+    {
+     "name": "cs_bN",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/cs_bN.webp"
+    },
+    {
+     "name": "cs_bP",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/cs_bP.webp"
+    },
+    {
+     "name": "cs_bQ",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/cs_bQ.webp"
+    },
+    {
+     "name": "cs_bR",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/cs_bR.webp"
+    },
+    {
+     "name": "cs_wB",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/cs_wB.webp"
+    },
+    {
+     "name": "cs_wK",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/cs_wK.webp"
+    },
+    {
+     "name": "cs_wN",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/cs_wN.webp"
+    },
+    {
+     "name": "cs_wP",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/cs_wP.webp"
+    },
+    {
+     "name": "cs_wQ",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/cs_wQ.webp"
+    },
+    {
+     "name": "cs_wR",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/cs_wR.webp"
+    },
+    {
+     "name": "cube",
+     "size": [
+      497,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9c952d82bd47fc3a6c.webp"
+    },
+    {
+     "name": "derby_dirt",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4f9013ee2a25c8e14159a.webp"
+    },
+    {
+     "name": "derby_gate",
+     "size": [
+      434,
+      800
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4f9023ee2a25c8e1415b6.webp"
+    },
+    {
+     "name": "derby_horses",
+     "size": [
+      2700,
+      307
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4f90109f888e023fa8c0f.webp"
+    },
+    {
+     "name": "derby_silks",
+     "size": [
+      2700,
+      307
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4f902736386d0dc806843.webp"
+    },
+    {
+     "name": "derby_trophy",
+     "size": [
+      386,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4f901d542268bb4de2772.webp"
+    },
+    {
+     "name": "dice_d1",
+     "size": [
+      255,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9f3ee2a25c8e0a0255.webp"
+    },
+    {
+     "name": "dice_d2",
+     "size": [
+      251,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8a3ee2a25c8e09fd6e.webp"
+    },
+    {
+     "name": "dice_d3",
+     "size": [
+      254,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8d36aa4a07e87555d7.webp"
+    },
+    {
+     "name": "dice_d4",
+     "size": [
+      252,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9009f888e023f07618.webp"
+    },
+    {
+     "name": "dice_d5",
+     "size": [
+      251,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9509f888e023f0776c.webp"
+    },
+    {
+     "name": "dice_d6",
+     "size": [
+      251,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9736aa4a07e87558dd.webp"
+    },
+    {
+     "name": "die_1",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/die_1.webp"
+    },
+    {
+     "name": "die_2",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/die_2.webp"
+    },
+    {
+     "name": "die_3",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/die_3.webp"
+    },
+    {
+     "name": "die_4",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/die_4.webp"
+    },
+    {
+     "name": "die_5",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/die_5.webp"
+    },
+    {
+     "name": "die_6",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/die_6.webp"
+    },
+    {
+     "name": "dynamite",
+     "size": [
+      408,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9909f888e023f07842.webp"
+    },
+    {
+     "name": "frenzy_title",
+     "size": [
+      1100,
+      447
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad953ee2a25c8e0a004f.webp"
+    },
+    {
+     "name": "fx_lasso",
+     "size": [
+      512,
+      481
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8cce53a65ab2a2f8ea.webp"
+    },
+    {
+     "name": "fx_prospector",
+     "size": [
+      512,
+      501
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9b952d82bd47fc3a38.webp"
+    },
+    {
+     "name": "goldrush_bomb",
+     "size": [
+      214,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad99c9d5b7168d29fb0b.webp"
+    },
+    {
+     "name": "goldrush_cauldron",
+     "size": [
+      256,
+      252
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada1d542268bb4d4176a.webp"
+    },
+    {
+     "name": "goldrush_s0",
+     "size": [
+      252,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8f9dc70f82b62247f0.webp"
+    },
+    {
+     "name": "goldrush_s1",
+     "size": [
+      241,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad88ce53a65ab2a2f810.webp"
+    },
+    {
+     "name": "goldrush_s2",
+     "size": [
+      243,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada0d542268bb4d41742.webp"
+    },
+    {
+     "name": "goldrush_s3",
+     "size": [
+      250,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9d36aa4a07e87559c1.webp"
+    },
+    {
+     "name": "goldrush_s4",
+     "size": [
+      241,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad99c9d5b7168d29fb16.webp"
+    },
+    {
+     "name": "goldrush_s5",
+     "size": [
+      236,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad98952d82bd47fc399e.webp"
+    },
+    {
+     "name": "goldrush_wild",
+     "size": [
+      249,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada3952d82bd47fc3c6c.webp"
+    },
+    {
+     "name": "horseshoe",
+     "size": [
+      512,
+      504
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8ece53a65ab2a2f93a.webp"
+    },
+    {
+     "name": "keno_ball",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/keno_ball.webp"
+    },
+    {
+     "name": "ld_cup",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ld_cup.webp"
+    },
+    {
+     "name": "locomotive",
+     "size": [
+      512,
+      510
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada0c9d5b7168d29fc8f.webp"
+    },
+    {
+     "name": "meter_flag",
+     "size": [
+      473,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8dd542268bb4d413ec.webp"
+    },
+    {
+     "name": "meter_horse",
+     "size": [
+      512,
+      470
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad95ce53a65ab2a2faca.webp"
+    },
+    {
+     "name": "mg_bottle",
+     "size": [
+      380,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad90c9d5b7168d29f855.webp"
+    },
+    {
+     "name": "mg_bottle_break",
+     "size": [
+      512,
+      506
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9fce53a65ab2a2fd0f.webp"
+    },
+    {
+     "name": "mg_bronco",
+     "size": [
+      462,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada1952d82bd47fc3bcc.webp"
+    },
+    {
+     "name": "mg_cart",
+     "size": [
+      512,
+      502
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8c9dc70f82b62246ff.webp"
+    },
+    {
+     "name": "mines_boom",
+     "size": [
+      251,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9c736386d0dc764e0e.webp"
+    },
+    {
+     "name": "mines_covered",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad93d542268bb4d414f0.webp"
+    },
+    {
+     "name": "mines_flag",
+     "size": [
+      203,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad88d542268bb4d41314.webp"
+    },
+    {
+     "name": "mines_frame",
+     "size": [
+      1002,
+      998
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9cce53a65ab2a2fc26.webp"
+    },
+    {
+     "name": "mines_mine",
+     "size": [
+      229,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada2736386d0dc764f90.webp"
+    },
+    {
+     "name": "mines_open",
+     "size": [
+      256,
+      255
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada23ee2a25c8e0a02ed.webp"
+    },
+    {
+     "name": "mines_wrong",
+     "size": [
+      230,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad97d542268bb4d41604.webp"
+    },
+    {
+     "name": "nug1",
+     "size": [
+      471,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad97952d82bd47fc3992.webp"
+    },
+    {
+     "name": "nug2",
+     "size": [
+      512,
+      335
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad93736386d0dc764bfc.webp"
+    },
+    {
+     "name": "nug3",
+     "size": [
+      512,
+      478
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad92ce53a65ab2a2fa06.webp"
+    },
+    {
+     "name": "pan",
+     "size": [
+      512,
+      455
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad96c9d5b7168d29fa2d.webp"
+    },
+    {
+     "name": "pinball_backglass",
+     "size": [
+      1099,
+      839
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad96c9d5b7168d29fa61.webp"
+    },
+    {
+     "name": "pinball_barrel",
+     "size": [
+      503,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9536aa4a07e8755880.webp"
+    },
+    {
+     "name": "pinball_flipper",
+     "size": [
+      512,
+      165
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad94736386d0dc764c24.webp"
+    },
+    {
+     "name": "pinball_frame",
+     "size": [
+      550,
+      1100
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9d09f888e023f07960.webp"
+    },
+    {
+     "name": "pinball_playfield",
+     "size": [
+      600,
+      1075
+     ],
+     "transparent": false,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8f09f888e023f07580.webp"
+    },
+    {
+     "name": "pinball_saucer",
+     "size": [
+      506,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8fd542268bb4d41428.webp"
+    },
+    {
+     "name": "pinball_sling",
+     "size": [
+      512,
+      504
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad953ee2a25c8e0a0007.webp"
+    },
+    {
+     "name": "pinball_target",
+     "size": [
+      497,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada19dc70f82b6224c64.webp"
+    },
+    {
+     "name": "pl_dynamite",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/pl_dynamite.webp"
+    },
+    {
+     "name": "pl_nugget",
+     "size": [
+      128,
+      128
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/pl_nugget.webp"
+    },
+    {
+     "name": "strongbox",
+     "size": [
+      512,
+      437
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8d736386d0dc764ace.webp"
+    },
+    {
+     "name": "tile_t1024",
+     "size": [
+      253,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad93c9d5b7168d29f935.webp"
+    },
+    {
+     "name": "tile_t128",
+     "size": [
+      253,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9b952d82bd47fc3a44.webp"
+    },
+    {
+     "name": "tile_t16",
+     "size": [
+      250,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8a09f888e023f074ce.webp"
+    },
+    {
+     "name": "tile_t2",
+     "size": [
+      253,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad993ee2a25c8e0a00f5.webp"
+    },
+    {
+     "name": "tile_t2048",
+     "size": [
+      254,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad88ce53a65ab2a2f81b.webp"
+    },
+    {
+     "name": "tile_t256",
+     "size": [
+      253,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9c952d82bd47fc3a5c.webp"
+    },
+    {
+     "name": "tile_t32",
+     "size": [
+      250,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad98736386d0dc764d42.webp"
+    },
+    {
+     "name": "tile_t4",
+     "size": [
+      253,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada2952d82bd47fc3c4c.webp"
+    },
+    {
+     "name": "tile_t512",
+     "size": [
+      255,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad99c9d5b7168d29fb27.webp"
+    },
+    {
+     "name": "tile_t64",
+     "size": [
+      249,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad99d542268bb4d41668.webp"
+    },
+    {
+     "name": "tile_t8",
+     "size": [
+      250,
+      256
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada0952d82bd47fc3b80.webp"
+    },
+    {
+     "name": "tile_wood",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/tile_wood.webp"
+    },
+    {
+     "name": "tok_badge",
+     "size": [
+      192,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8e736386d0dc764b0e.webp"
+    },
+    {
+     "name": "tok_boot",
+     "size": [
+      189,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8f36aa4a07e8755693.webp"
+    },
+    {
+     "name": "tok_lantern",
+     "size": [
+      190,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad979dc70f82b6224a44.webp"
+    },
+    {
+     "name": "wanted_blank",
+     "size": [
+      382,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad90d542268bb4d4148c.webp"
+    },
+    {
+     "name": "wanted_burning",
+     "size": [
+      380,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9b9dc70f82b6224b0a.webp"
+    },
+    {
+     "name": "wanted_burning_collected",
+     "size": [
+      375,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada309f888e023f07a69.webp"
+    },
+    {
+     "name": "wanted_collected",
+     "size": [
+      375,
+      512
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9dc9d5b7168d29fbe7.webp"
+    }
+   ]
+  },
+  {
+   "group": "Menu icons",
+   "items": [
+    {
+     "name": "ic_alch",
+     "size": [
+      179,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad96ce53a65ab2a2fb16.webp"
+    },
+    {
+     "name": "ic_bacc",
+     "size": [
+      192,
+      188
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9009f888e023f075e1.webp"
+    },
+    {
+     "name": "ic_backgammon",
+     "size": [
+      192,
+      190
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada19dc70f82b6224c7c.webp"
+    },
+    {
+     "name": "ic_bingo",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ic_bingo.webp"
+    },
+    {
+     "name": "ic_bj",
+     "size": [
+      192,
+      183
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8c736386d0dc764aac.webp"
+    },
+    {
+     "name": "ic_checkers",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ic_checkers.webp"
+    },
+    {
+     "name": "ic_chess",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ic_chess.webp"
+    },
+    {
+     "name": "ic_craps",
+     "size": [
+      192,
+      191
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad96d542268bb4d415d2.webp"
+    },
+    {
+     "name": "ic_crash",
+     "size": [
+      188,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4d66d952d82bd4701a6c3.webp"
+    },
+    {
+     "name": "ic_cwar",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ic_cwar.webp"
+    },
+    {
+     "name": "ic_derby",
+     "size": [
+      192,
+      186
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4f901c9d5b7168d341c2a.webp"
+    },
+    {
+     "name": "ic_floor",
+     "size": [
+      178,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8ad542268bb4d4137c.webp"
+    },
+    {
+     "name": "ic_g2048",
+     "size": [
+      190,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9a9dc70f82b6224ad6.webp"
+    },
+    {
+     "name": "ic_gold",
+     "size": [
+      192,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8e9dc70f82b622477a.webp"
+    },
+    {
+     "name": "ic_holdem",
+     "size": [
+      178,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad989dc70f82b6224a70.webp"
+    },
+    {
+     "name": "ic_liars",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ic_liars.webp"
+    },
+    {
+     "name": "ic_mines",
+     "size": [
+      179,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad96d542268bb4d415c0.webp"
+    },
+    {
+     "name": "ic_parlor",
+     "size": [
+      192,
+      189
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada0ce53a65ab2a2fd92.webp"
+    },
+    {
+     "name": "ic_pdice",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ic_pdice.webp"
+    },
+    {
+     "name": "ic_pinball",
+     "size": [
+      192,
+      188
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad929dc70f82b62248ce.webp"
+    },
+    {
+     "name": "ic_plinko",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ic_plinko.webp"
+    },
+    {
+     "name": "ic_pool",
+     "size": [
+      192,
+      190
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9636aa4a07e87558cd.webp"
+    },
+    {
+     "name": "ic_quests",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ic_quests.webp"
+    },
+    {
+     "name": "ic_roul",
+     "size": [
+      192,
+      191
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9bd542268bb4d41692.webp"
+    },
+    {
+     "name": "ic_slots",
+     "size": [
+      177,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad89d542268bb4d4132c.webp"
+    },
+    {
+     "name": "ic_sol",
+     "size": [
+      192,
+      178
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9209f888e023f076a4.webp"
+    },
+    {
+     "name": "ic_spider",
+     "size": [
+      192,
+      182
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada29dc70f82b6224c98.webp"
+    },
+    {
+     "name": "ic_trail",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ic_trail.webp"
+    },
+    {
+     "name": "ic_vpoker",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ic_vpoker.webp"
+    },
+    {
+     "name": "ic_war",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ic_war.webp"
+    },
+    {
+     "name": "ic_wheel",
+     "size": [
+      182,
+      192
+     ],
+     "transparent": true,
+     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9e09f888e023f07998.webp"
+    },
+    {
+     "name": "ic_wrangler",
+     "size": [
+      256,
+      256
+     ],
+     "transparent": true,
+     "current": "https://saddleup-arcade.vercel.app/art/ic_wrangler.webp"
+    }
+   ]
+  }
+ ]
+}

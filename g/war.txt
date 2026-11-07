@@ -294,19 +294,19 @@ html.fs.fsnarrow .stat.st2{display:none}html.fs.fsnarrow .chip{width:38px;height
 @media (prefers-reduced-motion:reduce){.suban{transition:opacity .2s}}
 
 /* ---- Beach deck: the court art has no painted corners, so the card shows its own rank/suit badge; art fills edge to edge under a thin gold frame ---- */
-:is(html[data-season="beach"],html[data-season="comic"]) .card.hasart .art{background:#f6e7c8}
-:is(html[data-season="beach"],html[data-season="comic"]) .card.hasart .art img{transform:scale(1.02)}
-:is(html[data-season="beach"],html[data-season="comic"]) .card.hasart .art::after{content:"";position:absolute;inset:2.5%;border:1.5px solid rgba(242,210,126,.95);border-radius:calc(var(--cw)*.065);box-shadow:inset 0 0 0 1px rgba(15,23,42,.25),0 0 0 1px rgba(15,23,42,.2);pointer-events:none}
-:is(html[data-season="beach"],html[data-season="comic"]) .card.hasart .tl,:is(html[data-season="beach"],html[data-season="comic"]) .card.hasart .br{display:flex;filter:none;color:#b91c1c;background:rgba(255,251,240,.95);border:1.5px solid #c6a75e;border-radius:calc(var(--cw)*.06);padding:calc(var(--cw)*.025) calc(var(--cw)*.03) calc(var(--cw)*.03);box-shadow:0 1px 3px rgba(0,0,0,.45);z-index:3}
-:is(html[data-season="beach"],html[data-season="comic"]) .card.blk.hasart .tl,:is(html[data-season="beach"],html[data-season="comic"]) .card.blk.hasart .br{color:#0f172a}
-:is(html[data-season="beach"],html[data-season="comic"]) .card.hasart .tl{left:5%;top:4%}
-:is(html[data-season="beach"],html[data-season="comic"]) .card.hasart .br{right:5%;bottom:4%}
-:is(html[data-season="beach"],html[data-season="comic"]) .card.hasart .rk{font-size:calc(var(--cw)*.17)}
-:is(html[data-season="beach"],html[data-season="comic"]) .card.hasart .cs{width:calc(var(--cw)*.12);height:calc(var(--cw)*.12)}
-:is(html[data-season="beach"],html[data-season="comic"]) .small .card.hasart .br{display:none}
-:is(html[data-season="beach"],html[data-season="comic"]) .small .card.hasart .tl{flex-direction:row;gap:1px;left:auto;right:5%;top:3%;padding:calc(var(--cw)*.02) calc(var(--cw)*.03)}
-:is(html[data-season="beach"],html[data-season="comic"]) .small .card.hasart .rk{font-size:calc(var(--cw)*.2)}
-:is(html[data-season="beach"],html[data-season="comic"]) .small .card.hasart .cs{width:calc(var(--cw)*.15);height:calc(var(--cw)*.15)}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .art{background:#f6e7c8}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .art img{transform:scale(1.02)}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .art::after{content:"";position:absolute;inset:2.5%;border:1.5px solid rgba(242,210,126,.95);border-radius:calc(var(--cw)*.065);box-shadow:inset 0 0 0 1px rgba(15,23,42,.25),0 0 0 1px rgba(15,23,42,.2);pointer-events:none}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .tl,:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .br{display:flex;filter:none;color:#b91c1c;background:rgba(255,251,240,.95);border:1.5px solid #c6a75e;border-radius:calc(var(--cw)*.06);padding:calc(var(--cw)*.025) calc(var(--cw)*.03) calc(var(--cw)*.03);box-shadow:0 1px 3px rgba(0,0,0,.45);z-index:3}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.blk.hasart .tl,:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.blk.hasart .br{color:#0f172a}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .tl{left:5%;top:4%}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .br{right:5%;bottom:4%}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .rk{font-size:calc(var(--cw)*.17)}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .cs{width:calc(var(--cw)*.12);height:calc(var(--cw)*.12)}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .small .card.hasart .br{display:none}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .small .card.hasart .tl{flex-direction:row;gap:1px;left:auto;right:5%;top:3%;padding:calc(var(--cw)*.02) calc(var(--cw)*.03)}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .small .card.hasart .rk{font-size:calc(var(--cw)*.2)}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .small .card.hasart .cs{width:calc(var(--cw)*.15);height:calc(var(--cw)*.15)}
 
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>.chip.c5,.fchip.c5{background:url(https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae40019c9d5b7168d176fe7.webp) center/100% 100% no-repeat!important;border:0!important;outline:0!important}
