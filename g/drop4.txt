@@ -254,11 +254,17 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',addAcct);else addAcct();
 })();
 
+/* big numbers in the stat boxes (a $88,404.27 bankroll) shrink to fit instead of being cut off */
+(function(){function fit(){[].forEach.call(document.querySelectorAll('.stat .v,.stat b,.chip2 b'),function(v){if(!v.offsetParent)return;
+    if(v.__t!==v.textContent){v.__t=v.textContent;v.style.fontSize='';}var f=parseFloat(getComputedStyle(v).fontSize),n=0;
+    while(v.scrollWidth>v.clientWidth+1&&f>10&&n<14){f-=1;v.style.fontSize=f+'px';n++;}});}
+  setInterval(fit,800);addEventListener('resize',function(){[].forEach.call(document.querySelectorAll('.stat .v,.stat b,.chip2 b'),function(v){v.__t=null;});fit();});})();
+
 /* quest tracker: a pill in every game shows the quests it can move forward; another pill shows tickets waiting */
 (function(){
   if(window.parent===window)return;
   var st=document.createElement('style');st.textContent=
-   '.suq-pills{position:fixed;top:10px;right:12px;z-index:2147482990;display:flex;gap:6px;pointer-events:none;transition:right .2s}'+
+   '.suq-pills{position:fixed;left:6px;top:30%;z-index:2147482990;display:flex;flex-direction:column;align-items:flex-start;gap:6px;pointer-events:none;touch-action:none}'+'.suq-pills.drag{opacity:.85}.suq-pills.drag .suq-pill{cursor:grabbing;box-shadow:0 10px 26px rgba(0,0,0,.6)}'+'.suq-pill .grip{width:8px;height:14px;flex:0 0 auto;opacity:.55;background:radial-gradient(circle,currentColor 1.2px,transparent 1.6px) 0 0/4px 4.6px}'+
    '.suq-pill{pointer-events:auto;display:inline-flex;align-items:center;gap:6px;font:800 12px Inter,system-ui,sans-serif;color:#fde68a;background:rgba(15,23,42,.86);border:1px solid rgba(242,210,126,.55);border-radius:100px;padding:6px 11px 6px 9px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);white-space:nowrap}'+
    '.suq-pill:hover{border-color:#fde68a}.suq-pill svg{width:14px;height:14px;flex:0 0 auto}.suq-pill b{color:#fff}.suq-pill.done{border-color:#34d399;color:#6ee7b7;animation:suqpulse 1.6s ease-in-out infinite}'+
    '.suq-pill.tk{color:#1a1206;background:linear-gradient(180deg,#fde68a,#e2b54a);border-color:#fff3c4;animation:suqglow 1.8s ease-in-out infinite}.suq-pill.tk b{color:#1a1206}'+
@@ -267,7 +273,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
    '.suq-toast.on{opacity:1;transform:translate(-50%,0)}.suq-toast b{display:block;color:#fde68a;font:400 16px Rye,Georgia,serif}.suq-toast i{font-style:normal;font-size:26px}'+
    '.suq-pill .bar{width:34px;height:5px;border-radius:5px;background:rgba(255,255,255,.15);overflow:hidden}.suq-pill .bar i{display:block;height:100%;background:#34d399}'+
    '@keyframes suqpulse{50%{box-shadow:0 0 0 4px rgba(52,211,153,.25),0 4px 14px rgba(0,0,0,.45)}}'+
-   '.suq-pop{position:fixed;inset:0;z-index:2147482995;display:flex;align-items:flex-start;justify-content:flex-end;padding:52px 12px 12px;background:rgba(2,6,23,.35)}'+
+   '.suq-pop{position:fixed;inset:0;z-index:2147482995;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(2,6,23,.35)}'+
    '.suq-box{width:min(360px,100%);max-height:calc(100% - 10px);overflow:auto;background:linear-gradient(180deg,rgba(36,18,10,.98),rgba(18,10,6,.98));border:2px solid #c6a75e;border-radius:16px;padding:12px;box-shadow:0 20px 50px rgba(0,0,0,.6);font-family:Inter,system-ui,sans-serif;color:#f8fafc}'+
    '.suq-h{display:flex;align-items:center;gap:8px;margin-bottom:8px}.suq-h b{font:400 20px Rye,Georgia,serif;color:#f2d27e;flex:1}.suq-x{background:rgba(255,255,255,.08);border:0;color:#fff;border-radius:8px;width:30px;height:30px;font-size:18px;cursor:pointer}'+
    '.suq-q{padding:9px 10px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid rgba(242,210,126,.16);margin-bottom:6px;font-size:13px;font-weight:700;line-height:1.3}'+
@@ -282,15 +288,28 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function fmt(q){var m=function(v){return '$'+Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');};return q.amt?m(q.n)+' / '+m(q.goal):q.n+' / '+q.goal;}
   function go(tab){close();try{parent.postMessage({arcade:'nav',to:'quests',tab:tab},'*');}catch(e){}}
-  function place(){if(!wrap)return;var o=document.querySelector('.fsopt-btn.floating'),r=12;if(o&&o.offsetParent!==null){var b=o.getBoundingClientRect();if(b.width&&b.top<60)r=Math.max(12,innerWidth-b.left+8);}wrap.style.right=r+'px';}
+  /* the button can be dragged anywhere; the spot is kept (as a share of the screen) for every game */
+  function rdPos(){try{var p=JSON.parse(localStorage.getItem('su_qpos')||'null');if(p&&typeof p.x==='number')return p;}catch(e){}return null;}
+  function VH(){var h=innerHeight;try{var w=window;while(w.parent&&w.parent!==w){w=w.parent;if(w.innerHeight)h=Math.min(h,w.innerHeight);}}catch(e){}return h;}   /* a tall phone page: use the visible screen height */
+  function place(){if(!wrap)return;var p=rdPos()||{x:0,y:0.3},vh=VH();
+    var w=wrap.offsetWidth||120,h=wrap.offsetHeight||34,x=p.x?Math.max(4,Math.min(innerWidth-w-4,p.x*innerWidth)):6,y=Math.max(4,Math.min(vh-h-4,p.y*vh));wrap.style.left=x+'px';wrap.style.top=y+'px';}
+  var dragged=false;
+  function drag(){var sx,sy,ox,oy,on=false,id=null;
+    wrap.addEventListener('pointerdown',function(e){if(e.button>0)return;id=e.pointerId;var r=wrap.getBoundingClientRect();sx=e.clientX;sy=e.clientY;ox=r.left;oy=r.top;on=false;dragged=false;});
+    addEventListener('pointermove',function(e){if(id!==e.pointerId)return;var dx=e.clientX-sx,dy=e.clientY-sy;if(!on&&Math.abs(dx)+Math.abs(dy)<8)return;
+      if(!on){on=true;dragged=true;wrap.classList.add('drag');try{wrap.setPointerCapture(id);}catch(_){}}
+      var w=wrap.offsetWidth,h=wrap.offsetHeight;wrap.style.left=Math.max(4,Math.min(innerWidth-w-4,ox+dx))+'px';wrap.style.top=Math.max(4,Math.min(innerHeight-h-4,oy+dy))+'px';e.preventDefault();},{passive:false});
+    function up(e){if(id!==e.pointerId)return;id=null;if(on){wrap.classList.remove('drag');var r=wrap.getBoundingClientRect();
+        try{localStorage.setItem('su_qpos',JSON.stringify({x:r.left/innerWidth,y:r.top/VH()}));}catch(_){}}on=false;setTimeout(function(){dragged=false;},50);}
+    addEventListener('pointerup',up);addEventListener('pointercancel',up);}
   function render(){
     if(!D||D.self){if(wrap)wrap.remove();wrap=null;return;}
-    if(!wrap){wrap=document.createElement('div');wrap.className='suq-pills';document.body.appendChild(wrap);}
+    if(!wrap){wrap=document.createElement('div');wrap.className='suq-pills';wrap.title='Drag to move';document.body.appendChild(wrap);drag();}
     var L=(D.list||[]).filter(function(x){return !x.claimed;}),h='';
     if(L.length){var done=L.filter(function(x){return x.done;}).length;var best=L.filter(function(x){return !x.done;}).sort(function(a,b){return b.n/b.goal-a.n/a.goal;})[0],pct=best?Math.round(100*best.n/best.goal):100;
-      h+='<button type="button" class="suq-pill'+(D.tickets>0?' hastk':'')+'" data-a="q" title="Quest tracker">'+IQ+(done&&done===L.length?'<span>All done!</span>':'<span><b>'+L.length+'</b> quest'+(L.length>1?'s':'')+'</span><span class="bar"><i style="width:'+pct+'%"></i></span>')+'</button>';}
+      h+='<button type="button" class="suq-pill'+(D.tickets>0?' hastk':'')+'" data-a="q" title="Quest tracker (drag to move)"><span class="grip"></span>'+IQ+(done&&done===L.length?'<span>All done!</span>':'<span><b>'+L.length+'</b> quest'+(L.length>1?'s':'')+'</span><span class="bar"><i style="width:'+pct+'%"></i></span>')+'</button>';}
     if(D.tickets>0)h+='<button type="button" class="suq-pill tk" data-a="t" title="Your scratch-off tickets">'+IT+'<span><b>'+D.tickets+'</b> to scratch</span></button>';
-    wrap.innerHTML=h;[].forEach.call(wrap.querySelectorAll('button'),function(b){b.onclick=function(e){e.preventDefault();e.stopPropagation();if(b.getAttribute('data-a')==='t')go('t');else open();};});
+    wrap.innerHTML=h;[].forEach.call(wrap.querySelectorAll('button'),function(b){b.onclick=function(e){e.preventDefault();e.stopPropagation();if(dragged)return;if(b.getAttribute('data-a')==='t')go('t');else open();};});
     place();if(pop)fill();}
   function open(){if(pop)return close();pop=document.createElement('div');pop.className='suq-pop';pop.innerHTML='<div class="suq-box"></div>';
     pop.addEventListener('click',function(e){if(e.target===pop)close();});document.body.appendChild(pop);fill();}
@@ -307,6 +326,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='qdone'){if(document.body)toast(d);return;}if(d&&d.arcade==='qcount'){D=d;if(document.body)render();}else if(d&&d.arcade==='fs'){setTimeout(place,80);setTimeout(place,400);}});
   addEventListener('resize',function(){setTimeout(place,60);});
   addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  addEventListener('storage',function(e){if(e.key==='su_qpos')place();});
 })();
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */

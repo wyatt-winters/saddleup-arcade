@@ -79,7 +79,7 @@ html.fs .wrap{padding-bottom:0}
 /* the bar now has just two dropdowns (Game Parlor, Casino): always show their names */
 html.fs .tabs .ctab,.tabs .ctab{font-size:14px!important;gap:8px!important;padding:8px 14px!important}
 html.fs .tabs .ctab .lg,.tabs .ctab .lg{display:inline!important}html.fs .tabs .ctab .sm,.tabs .ctab .sm{display:none!important}
-@media (max-width:560px){.tabs{grid-template-columns:repeat(4,1fr)!important}.tabs .ctab{justify-content:center!important;font-size:13px!important;padding:9px 6px!important}
+@media (max-width:560px){.tabs{grid-template-columns:repeat(5,1fr)!important}.tabs .ctab{justify-content:center!important;font-size:13px!important;padding:9px 6px!important}
   .tabs .ctab .lg{display:none!important}.tabs .ctab .sm{display:inline!important}html.fs .tabs .ctab .lg{display:none!important}html.fs .tabs .ctab .sm{display:inline!important}}
 html .cmenu .tab .lg,html.fs .cmenu .tab .lg{display:inline!important}html .cmenu .tab .sm,html.fs .cmenu .tab .sm{display:none!important}
 .cmenu .tab.on{background:rgba(16,185,129,.1);color:#34d399;border-color:rgba(16,185,129,.32)}
@@ -195,7 +195,10 @@ html.fs #acTxt{display:none!important}
 .ac-tabs button{background:none;border:0;border-radius:8px;color:#94a3b8;font:700 13px Inter,system-ui,sans-serif;padding:8px;cursor:pointer}
 .ac-tabs button.on{background:rgba(242,210,126,.16);color:#f2d27e}
 .ac-hint{font-size:11.5px;color:#94a3b8;margin-top:7px;min-height:15px}
-#rebuyBox{position:fixed;inset:0;z-index:9000;display:none;align-items:center;justify-content:center;background:rgba(5,8,16,.6);backdrop-filter:blur(2px);padding:16px}#rebuyBox.on{display:flex}#rebuyBox .rb-card{width:min(360px,100%);text-align:center;padding:20px 18px;border-radius:18px;background:linear-gradient(180deg,#2a1608,#140a04);border:2px solid #c6a75e;box-shadow:0 20px 60px rgba(0,0,0,.7);color:#f8fafc;font-family:Inter,system-ui,sans-serif}#rebuyBox .rb-ic{font-size:40px}#rebuyBox b{display:block;font:400 24px Rye,Georgia,serif;color:#f2d27e;margin:4px 0}#rebuyBox p{font-size:13px;color:#cbd5e1;line-height:1.5;margin:6px 0 14px}#rebuyBox button{width:100%;min-height:48px;border:0;border-radius:12px;font:900 17px Inter,sans-serif;color:#04221a;background:linear-gradient(180deg,#6ee7b7,#34d399 45%,#059669);box-shadow:0 5px 0 #065f46;cursor:pointer}#rebuyBox .rb-later{min-height:36px;margin-top:10px;background:transparent;box-shadow:none;color:#94a3b8;font-size:13px;font-weight:700}#rebuyBox small{display:block;margin-top:6px;font-size:11px;color:#64748b}</style>
+#rebuyBox{position:fixed;inset:0;z-index:9000;display:none;align-items:center;justify-content:center;background:rgba(5,8,16,.6);backdrop-filter:blur(2px);padding:16px}#rebuyBox.on{display:flex}#rebuyBox .rb-card{width:min(360px,100%);text-align:center;padding:20px 18px;border-radius:18px;background:linear-gradient(180deg,#2a1608,#140a04);border:2px solid #c6a75e;box-shadow:0 20px 60px rgba(0,0,0,.7);color:#f8fafc;font-family:Inter,system-ui,sans-serif}#rebuyBox .rb-ic{font-size:40px}#rebuyBox b{display:block;font:400 24px Rye,Georgia,serif;color:#f2d27e;margin:4px 0}#rebuyBox p{font-size:13px;color:#cbd5e1;line-height:1.5;margin:6px 0 14px}#rebuyBox button{width:100%;min-height:48px;border:0;border-radius:12px;font:900 17px Inter,sans-serif;color:#04221a;background:linear-gradient(180deg,#6ee7b7,#34d399 45%,#059669);box-shadow:0 5px 0 #065f46;cursor:pointer}#rebuyBox .rb-later{min-height:36px;margin-top:10px;background:transparent;box-shadow:none;color:#94a3b8;font-size:13px;font-weight:700}#rebuyBox small{display:block;margin-top:6px;font-size:11px;color:#64748b}
+@media (max-width:430px){.fsbtn{padding-left:9px!important;padding-right:9px!important;gap:5px!important;font-size:13px!important}.thbtn .caret{display:none}}
+@media (max-width:430px){.tabs .ctab{font-size:12px!important;padding:8px 2px!important;gap:4px!important}.tabs .ctab img.gi{width:20px!important;height:20px!important}.tabs .ctab .caret{display:none!important}}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -587,7 +590,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'2c99e64351'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'0d6a6db6f2'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}
