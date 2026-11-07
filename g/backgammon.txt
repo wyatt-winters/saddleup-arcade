@@ -1288,7 +1288,10 @@ var SKIN_ART={
     trayX:987,trayW:60,trayTop:[70,266],trayBot:[306,500],cubeX:36,cubeY:[130,288,446],halfL:[92,450],halfR:[557,914],cd:48,cap:4,cube:40,die:40},
   anime:{L:1100,A:596,colL:116,colR:573,pw:60.4,pwR:56,y0:75,y1:464,barX:508,barW:52,
     trayX:952,trayW:70,trayTop:[78,262],trayBot:[278,460],cubeX:42,cubeY:[130,270,410],halfL:[82,462],halfR:[542,888],cd:46,cap:4,cube:38,die:40}};
-if(SKIN_ART[document.documentElement.getAttribute('data-skin')||''])ART=SKIN_ART[document.documentElement.getAttribute('data-skin')];
+SKIN_ART.beach={L:1100,A:596,colL:165,colR:610,pw:59.6,pwR:54,y0:100,y1:470,barX:540,barW:56,
+    trayX:960,trayW:66,trayTop:[104,262],trayBot:[306,466],cubeX:100,cubeY:[150,285,420],halfL:[140,495],halfR:[585,905],cd:46,cap:4,cube:38,die:40};
+(function(){var se=document.documentElement.getAttribute('data-season')||'',sk=document.documentElement.getAttribute('data-skin')||'';
+  if(SKIN_ART[se])ART=SKIN_ART[se];else if(SKIN_ART[sk])ART=SKIN_ART[sk];})();
 ART.mid=(ART.y0+ART.y1)/2;
 var G=null;
 function geo(rot){var g=Object.assign({},ART);g.rot=!!rot;g.W=rot?g.A:g.L;g.H=rot?g.L:g.A;g.mid=(g.y0+g.y1)/2;return g;}
