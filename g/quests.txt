@@ -1100,11 +1100,11 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
    Progress is written by the arcade shell (it hears every game), claims and tickets by the Quests page. */
 var SUQ=(function(){
   var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','plinko'];
-  var PARLOR=['sol','spider','mines','gold','dominoes','boomtown','mjsol','mahjong','cwar','chess','checkers','pdice','liars','trail','wrangler'];
+  var PARLOR=['sol','spider','mines','gold','dominoes','boomtown','mjsol','mahjong','cwar','chess','checkers','pdice','liars','trail','wrangler','ironclads','sudoku','drop4'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
   /* quests added later join the rotation from NEWDAY, so a day's picks never change mid-day */
-  var NEWDAY=Math.floor(Date.UTC(2026,10,6)/864e5),NEWDAY2=Math.floor(Date.UTC(2026,10,7)/864e5);
+  var NEWDAY=Math.floor(Date.UTC(2026,10,6)/864e5),NEWDAY2=Math.floor(Date.UTC(2026,10,7)/864e5),NEWDAY3=Math.floor(Date.UTC(2026,10,8)/864e5);
   var Q=[
     ['bj1','e','Play a hand of Blackjack','bj','bet',1],
     ['rl1','e','Place a bet at Roulette','roul','bet',1],
@@ -1174,7 +1174,16 @@ var SUQ=(function(){
     ['pk3','h','Collect $5,000 at Gold Strike Plinko','plinko','pay',5000,1,0,NEWDAY],
     ['cs1','e','Sit down for a game of Chess','chess','open',1,0,0,NEWDAY2],
     ['cs2','m','Finish a game of Chess','chess','over',1,0,0,NEWDAY2],
-    ['cs3','h','Win a game of Chess','chess','win',1,0,0,NEWDAY2]
+    ['cs3','h','Win a game of Chess','chess','win',1,0,0,NEWDAY2],
+    ['ir1','e','Sit down for a game of Ironclads','ironclads','open',1,0,0,NEWDAY3],
+    ['su1','e','Open today\u2019s Sudoku','sudoku','open',1,0,0,NEWDAY3],
+    ['d41','e','Sit down for a game of Drop Four','drop4','open',1,0,0,NEWDAY3],
+    ['ir2','m','Finish a game of Ironclads','ironclads','over',1,0,0,NEWDAY3],
+    ['su2','m','Solve a Sudoku','sudoku','win',1,0,0,NEWDAY3],
+    ['d42','m','Finish 2 games of Drop Four','drop4','over',2,0,0,NEWDAY3],
+    ['ir3','h','Sink a whole fleet at Ironclads','ironclads','win',1,0,0,NEWDAY3],
+    ['su3','h','Solve 2 Sudoku puzzles','sudoku','win',2,0,0,NEWDAY3],
+    ['d43','h','Win a game of Drop Four','drop4','win',1,0,0,NEWDAY3]
   ].map(function(a){return {id:a[0],t:a[1],txt:a[2],g:a[3],ev:a[4],goal:a[5],amt:!!a[6],distinct:!!a[7],from:a[8]||0};});
   var BY={};Q.forEach(function(q){BY[q.id]=q;});
   var PER={e:3,m:3,h:1};

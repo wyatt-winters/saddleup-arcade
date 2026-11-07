@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sudoku</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Rye&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--text:#f8fafc;--muted:#94a3b8;--green:#10b981;--green2:#34d399;--gold:#c6a75e;--gold2:#f2d27e}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:980px;margin:0 auto;padding:24px 16px 28px}
+button{font:inherit;cursor:pointer;border:0;margin:0;-webkit-appearance:none;appearance:none;color:inherit}
+.pill{display:inline-flex;align-items:center;gap:8px;background:rgba(16,185,129,.14);color:var(--green);border:1px solid rgba(16,185,129,.28);border-radius:100px;padding:6px 14px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+h1{margin:12px 0 4px;font-weight:900;font-size:clamp(30px,5.4vw,46px);line-height:1.02;letter-spacing:-.035em}
+h1 span{display:block;color:var(--green)}
+.sub{margin:8px 0 16px;color:var(--muted);font-size:15px;line-height:1.6;max-width:700px}.sub b{color:var(--text)}
+.hide{display:none!important}
+#felt{position:relative;border-radius:22px;border:10px solid #4a2a14;box-shadow:inset 0 0 0 3px #c6a75e,0 18px 50px rgba(0,0,0,.45);overflow:hidden;min-height:560px;
+  background:linear-gradient(rgba(20,10,4,.45),rgba(20,10,4,.65)),url(https://saddleup-arcade.vercel.app/art/table_sudoku.webp) center/cover,radial-gradient(ellipse at 50% 40%,#3b2414,#1c0f07 75%);display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:14px;padding:14px;align-items:start}
+.stage{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
+.plate{display:flex;align-items:center;gap:10px;width:min(100%,560px);padding:6px 10px;border-radius:12px;background:rgba(0,0,0,.4);border:1px solid rgba(242,210,126,.2)}
+.plate .pc{width:22px;height:22px;border-radius:50%;flex:0 0 auto}
+.plate b{font-size:14px;font-weight:800;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.plate em{font-style:normal;font-size:12px;font-weight:800;color:#cbb07a}
+.plate.turn{border-color:#34d399;box-shadow:0 0 0 1px #34d399,0 0 14px rgba(52,211,153,.35)}
+
+.sud{position:relative;width:min(100%,540px,calc(var(--fsvh,100vh) - 300px));min-width:260px;aspect-ratio:1;display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr);
+  background:#3b2414;border:6px solid #3b2414;border-radius:10px;box-shadow:inset 0 0 0 2px #c6a75e,0 10px 30px rgba(0,0,0,.55);gap:1px;container-type:inline-size}
+.sud .k{position:relative;display:flex;align-items:center;justify-content:center;background:#f5ecd6;color:#1e3a8a;font-weight:700;font-size:6.2cqw;cursor:pointer;user-select:none;min-width:0;min-height:0}
+.sud .k.g{color:#1c1208;font-weight:900}
+.sud .k.c3{margin-right:2px}.sud .k.r3{margin-bottom:2px}
+.sud .k.zone{background:#eadcb6}.sud .k.same{background:#d8c28a}.sud .k.sel{background:#93c5fd!important}
+.sud .k.bad{color:#dc2626!important;background:#fecaca}
+.sud .k.ok{animation:ok .5s}@keyframes ok{50%{background:#bbf7d0}}
+.sud .k .nt{position:absolute;inset:4%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);font-size:2.2cqw;font-weight:700;color:#475569;line-height:1}
+.sud .k .nt span{display:flex;align-items:center;justify-content:center}
+html.has-su_paper .sud .k{background-image:url(https://saddleup-arcade.vercel.app/art/su_paper.webp);background-size:cover}
+.pad{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;width:min(100%,540px)}
+.pad button{min-height:46px;border-radius:10px;background:#f5ecd6;color:#1c1208;font-size:20px;font-weight:900;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18);position:relative}
+.pad button i{position:absolute;right:4px;bottom:2px;font-size:9px;font-style:normal;color:#78716c;font-weight:700}
+.pad button.done{opacity:.35}
+.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;width:min(100%,540px)}
+.tools button{min-height:40px;border-radius:10px;background:rgba(0,0,0,.45);color:#e2e8f0;font-size:12px;font-weight:800;border:1px solid rgba(255,255,255,.22)}
+.tools button.on{background:rgba(52,211,153,.2);color:#6ee7b7;border-color:rgba(52,211,153,.6)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.stats div{background:rgba(0,0,0,.35);border-radius:10px;padding:6px 8px;text-align:center}
+.stats em{display:block;font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#cbb07a}
+.stats b{font-size:17px}
+.dayb{font-size:12px;color:#cbd5e1;line-height:1.5}.dayb b{color:#fde68a}
+@media (min-width:900px){.sud,.pad,.tools{width:min(100%,640px,calc(var(--fsvh,100vh) - 280px))}}
+.side{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:16px;background:rgba(8,6,4,.72);border:1px solid rgba(242,210,126,.25)}
+.side .t{font:400 20px Rye,Georgia,serif;color:var(--gold2)}
+.msg{font-size:13px;color:#e2e8f0;line-height:1.45;min-height:38px}.msg b{color:#fde68a}
+.b2{padding:10px 14px;border-radius:10px;background:rgba(0,0,0,.45);color:#e2e8f0;font-size:13px;font-weight:800;border:1px solid rgba(255,255,255,.25)}
+.caps{display:flex;gap:8px;font-size:12px;color:#cbd5e1}.caps b{color:#fff}
+.rec{font-size:12px;color:#cbd5e1}.rec b{color:#fde68a}
+.sheet{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:rgba(5,8,16,.72);backdrop-filter:blur(2px);padding:14px}
+.sheet .box{width:min(440px,100%);max-height:100%;overflow:auto;background:linear-gradient(180deg,rgba(36,18,10,.97),rgba(18,10,6,.97));border:2px solid #c6a75e;border-radius:18px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.sheet h2{margin:0 0 4px;font:400 26px Rye,Georgia,serif;color:var(--gold2);text-align:center}
+.sheet p{margin:0 0 12px;text-align:center;color:#cbd5e1;font-size:13px;line-height:1.5}
+.lab{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#cbb07a;margin:12px 0 6px}
+.seg{display:grid;gap:6px}.seg.c2{grid-template-columns:1fr 1fr}.seg.c3{grid-template-columns:1fr 1fr 1fr}
+.seg button{padding:10px 6px;border-radius:10px;background:rgba(255,255,255,.06);color:#cbd5e1;font-size:13px;font-weight:800;line-height:1.2}
+.seg button small{display:block;font-size:10px;font-weight:600;color:#94a3b8;margin-top:2px}
+.seg button.on{background:rgba(52,211,153,.18);color:#6ee7b7;box-shadow:inset 0 0 0 1px rgba(52,211,153,.6)}
+.seg button:disabled{opacity:.4;cursor:not-allowed}
+.go{width:100%;margin-top:16px;min-height:52px;border-radius:14px;font-weight:900;font-size:18px;color:#04221a;background:linear-gradient(180deg,#6ee7b7,#34d399 45%,#059669);box-shadow:0 6px 0 #065f46,0 12px 26px rgba(0,0,0,.45)}
+.go:disabled{filter:grayscale(.8) brightness(.7);cursor:not-allowed}
+.online{display:flex;align-items:center;gap:8px;font-size:12px;color:#cbd5e1;background:rgba(0,0,0,.3);border:1px solid rgba(242,210,126,.18);border-radius:10px;padding:8px 10px;margin-top:10px}
+.ldot{width:9px;height:9px;border-radius:50%;background:#64748b;flex:0 0 auto}.ldot.on{background:#34d399;box-shadow:0 0 8px #34d399}.ldot.wait{background:#fbbf24}
+.big{text-align:center;font:400 34px Rye,Georgia,serif;color:#fff;margin:4px 0}
+.rules{color:var(--muted);font-size:13px;line-height:1.6;margin-top:14px}.rules b{color:var(--text)}
+@media (max-width:760px){#felt{grid-template-columns:1fr;padding:8px;border-width:7px}.side{order:2}}
+html.fs,html.fs body{height:100%;overflow:hidden}
+html.fs .wrap{max-width:none;height:100%;padding:8px 10px;display:flex;flex-direction:column}
+html.fs .wrap>.pill,html.fs .wrap>h1,html.fs .wrap>.sub,html.fs .rules{display:none}
+html.fs #felt{flex:1;min-height:0;overflow:auto;padding-top:46px}
+@media (orientation:landscape) and (max-height:500px){html.fs .board{width:calc(var(--fsvh,100vh) - 150px)}}
+</style>
+<style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
+html.fs,html.fs body{height:100%;overflow:hidden!important}
+html.fs .wrap{max-width:none!important;padding:8px 12px 8px!important}
+html.fs h1,html.fs .sub,html.fs .wrap>.pill,html.fs [data-fs-hide],html.fsshort [data-short-hide]{display:none!important}
+.su-skin{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:10px 0;padding:10px 12px;border-radius:12px;background:rgba(15,23,42,.6);border:1px solid rgba(148,163,184,.18);font:700 11px Inter,system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;box-sizing:border-box}
+.su-skin .su-skinseg{display:inline-flex;gap:3px;padding:3px;border-radius:10px;background:rgba(0,0,0,.25);border:1px solid rgba(148,163,184,.2)}
+.su-skin .su-skinseg button{font:700 13px Inter,system-ui,sans-serif;letter-spacing:0;text-transform:none;color:#cbd5e1;background:transparent;border:1px solid transparent;border-radius:8px;padding:8px 14px;min-height:40px;cursor:pointer;-webkit-appearance:none;appearance:none;margin:0}
+.su-skin .su-skinseg button.on{color:#f2d27e;background:rgba(242,210,126,.12);border-color:rgba(242,210,126,.45)}
+html[data-skin="neon"] .su-skinseg button.on{color:#5ef2ff;background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.5)}
+html[data-skin="anime"] .su-skinseg button.on{color:#fbcfe8;background:rgba(244,114,182,.14);border-color:rgba(244,114,182,.5)}
+.fsopt-btn{display:none;align-items:center;gap:7px;font:600 13px Inter,system-ui,sans-serif;color:#f8fafc;background:rgba(15,23,42,.82);
+  border:1px solid rgba(255,255,255,.35);border-radius:8px;padding:8px 12px;cursor:pointer;-webkit-appearance:none;appearance:none;margin:0;white-space:nowrap;z-index:60}
+.fsopt-btn:hover{border-color:#10b981;color:#34d399}
+.fsopt-btn svg{width:15px;height:15px}
+html.fs .fsopt-btn{display:inline-flex}
+.fsopt-btn.floating{position:fixed;top:10px;right:12px}
+.fsopt-shade{position:fixed;inset:0;background:rgba(8,12,24,.55);z-index:3000;opacity:0;pointer-events:none;transition:opacity .2s}
+.fsopt-drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,94vw);z-index:3001;background:#0f172a;border-left:1px solid rgba(198,167,94,.22);
+  box-shadow:-20px 0 50px rgba(0,0,0,.45);transform:translateX(102%);transition:transform .25s cubic-bezier(.2,.8,.3,1);display:flex;flex-direction:column}
+.fsopt-open .fsopt-shade{opacity:1;pointer-events:auto}
+.fsopt-open .fsopt-drawer{transform:none}
+.fsopt-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(198,167,94,.18);font:800 15px Inter,system-ui,sans-serif;color:#f8fafc}
+.fsopt-head button{font:600 13px Inter,system-ui,sans-serif;color:#94a3b8;background:transparent;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:6px 10px;cursor:pointer}
+.fsopt-body{padding:14px 16px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:12px}
+.fsopt-body>*{margin:0!important;max-width:none!important;width:auto!important}
+.fsopt-body .below,.fsopt-body .cols{grid-template-columns:1fr!important}
+.fsopt-body .side{display:flex!important;flex-direction:column;gap:12px}
+html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
+</style>
+<script>
+/* a game you've switched away from goes quiet: every sound it makes is paused until you come back */
+(function(){if(window.__suMute)return;window.__suMute=1;var away=false,list=[];
+  ['AudioContext','webkitAudioContext'].forEach(function(nm){var O=window[nm];if(!O)return;
+    function W(a,b){var c=arguments.length>1?new O(a,b):arguments.length?new O(a):new O();list.push(c);if(away){try{c.suspend();}catch(e){}}return c;}
+    W.prototype=O.prototype;try{Object.setPrototypeOf(W,O);}catch(e){}window[nm]=W;
+    /* a game that wakes its sound before each beep can't undo the pause while you're away */
+    try{var R=O.prototype.resume;if(R&&!O.prototype.__suR){O.prototype.__suR=1;O.prototype.resume=function(){if(away)return Promise.resolve();return R.apply(this,arguments);};}}catch(e){}});
+  /* the bingo caller (and any spoken line) stays silent while the game is in the background */
+  try{if(window.speechSynthesis){var SP=speechSynthesis.speak.bind(speechSynthesis);speechSynthesis.speak=function(u){if(away)return;return SP(u);};}}catch(e){}
+  /* plain <audio> started while away is stopped straight away */
+  try{var AP=HTMLMediaElement.prototype.play;HTMLMediaElement.prototype.play=function(){if(away){this.__suPaused=1;return Promise.resolve();}return AP.apply(this,arguments);};}catch(e){}
+  function quiet(on){away=false;if(on)away=true;list.forEach(function(c){try{if(on){if(c.state==='running')c.suspend();}else if(c.state==='suspended')c.resume();}catch(e){}});away=on;
+    if(on){try{if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}[].forEach.call(document.querySelectorAll('audio,video'),function(m){try{if(!m.paused){m.pause();m.__suPaused=1;}}catch(e){}});}
+    else [].forEach.call(document.querySelectorAll('audio,video'),function(m){if(m.__suPaused){m.__suPaused=0;try{m.play();}catch(e){}}});}
+  var off=false,ph=false;function apply(){var q=off||ph;if(q!==away||q)quiet(q);}
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='visible'){off=d.on===false;apply();}});
+  document.addEventListener('visibilitychange',function(){ph=document.hidden;apply();});
+  window.__suQuiet=function(){return away;};})();
+<\u002fscript>
+<script>
+(function(){
+  var root=document.documentElement,btn=null,drawer=null,body=null,shade=null,host=null;
+  var ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>';
+  function build(){
+    if(btn)return;
+    btn=document.createElement('button');btn.type='button';btn.className='fsopt-btn';btn.innerHTML=ICON+'Options';
+    shade=document.createElement('div');shade.className='fsopt-shade';
+    drawer=document.createElement('div');drawer.className='fsopt-drawer';drawer.setAttribute('role','dialog');drawer.setAttribute('aria-label','Options');
+    drawer.innerHTML='<div class="fsopt-head"><span>Options</span><button type="button">Close</button></div><div class="fsopt-body"></div>';
+    body=drawer.querySelector('.fsopt-body');
+    btn.addEventListener('click',function(){root.classList.toggle('fsopt-open');});
+    shade.addEventListener('click',close);drawer.querySelector('.fsopt-head button').addEventListener('click',close);
+    addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+    document.body.appendChild(shade);document.body.appendChild(drawer);
+  }
+  function close(){root.classList.remove('fsopt-open');}
+  function park(el){if(!el.__ph){var ph=document.createElement('span');ph.style.display='none';el.parentNode.insertBefore(ph,el);el.__ph=ph;}}
+  function unpark(el){if(el.__ph&&el.__ph.parentNode){el.__ph.parentNode.insertBefore(el,el.__ph);el.__ph.parentNode.removeChild(el.__ph);}el.__ph=null;}
+  function narrow(){return innerWidth<760||(window.__fsvh||innerHeight)<520;}
+  function move(on){
+    build();
+    var opts=[].slice.call(document.querySelectorAll('[data-opt],[data-opt-narrow]'));
+    var huds=[].slice.call(document.querySelectorAll('[data-hud]'));
+    if(on){
+      opts.forEach(function(el){if(el.hasAttribute('data-opt-narrow')&&!el.hasAttribute('data-opt')&&!narrow())return;park(el);body.appendChild(el);});
+      huds.forEach(function(el){var t=document.querySelector(el.getAttribute('data-hud'));if(!t)return;park(el);t.appendChild(el);el.classList.add('hud');});
+      host=document.querySelector('[data-optbtn]');
+      if(host){btn.classList.remove('floating');host.appendChild(btn);}else{btn.classList.add('floating');document.body.appendChild(btn);}
+    } else {
+      close();
+      huds.forEach(function(el){unpark(el);el.classList.remove('hud');});
+      opts.slice().reverse().forEach(unpark);
+    }
+  }
+  var cur=false,lastN=null;
+  function set(on,vh){
+    if(vh){window.__fsvh=vh;root.style.setProperty('--fsvh',vh+'px');}
+    root.classList.toggle('fsshort',!!on&&(window.__fsvh||innerHeight)<520);root.classList.toggle('fsnarrow',!!on&&innerWidth<760);
+    var nn=narrow();
+    if(!!on!==cur){cur=!!on;root.classList.toggle('fs',cur);move(cur);lastN=nn;}
+    else if(cur&&nn!==lastN){move(false);root.classList.add('fs');move(true);lastN=nn;}
+    try{window.dispatchEvent(new Event('resize'));}catch(e){}
+  }
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='fs')set(d.on,d.vh);});
+  /* the shell can hand us full screen up front, so a game never flashes its small layout first */
+  if(window.__SUFS){var go=function(){set(true,window.__SUFS.vh);};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();}
+})();
+
+/* account + back-to-room in Options (the shell tells each game its room and who is signed in) */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent='.su-acct{display:flex!important;align-items:center;justify-content:space-between;gap:10px}.su-acct>span{font-size:13px;color:#cbd5e1}.su-acctb{font:700 13px Inter,system-ui,sans-serif;color:#1f1606;background:linear-gradient(180deg,#f8e2a0,#e2bd62);border:0;border-radius:8px;padding:8px 13px;cursor:pointer;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.su-acctb.in{background:rgba(16,185,129,.16);color:#34d399;border:1px solid rgba(16,185,129,.5)}'+
+    '.su-nav{display:block!important}.su-navb{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;font:800 14px Inter,system-ui,sans-serif;color:#f2d27e;background:rgba(242,210,126,.1);border:1px solid rgba(242,210,126,.5);border-radius:10px;padding:11px 12px;cursor:pointer}.su-navb svg{width:15px;height:15px}'+
+    '.su-q{display:block!important}.su-qb{position:relative}.su-qb i{position:absolute;right:10px;top:50%;transform:translateY(-50%);min-width:20px;height:20px;border-radius:10px;background:#ef4444;color:#fff;font:900 11px/20px Inter,system-ui,sans-serif;font-style:normal;padding:0 6px;display:none}.su-qb i.on{display:block}'+
+    '.su-optbox{display:flex!important;flex-direction:column!important;gap:10px;padding:12px 14px;border:1px solid rgba(198,167,94,.22);border-radius:12px;background:rgba(15,23,42,.6)}';
+  document.head.appendChild(st);
+  var who={in:false,name:''},room=null;
+  function paint(){var b=document.querySelector('.su-acctb');if(!b)return;b.textContent=who.in?'✔ '+(who.name||'Signed in'):'Sign in / Save wallet';b.classList.toggle('in',who.in);}
+  /* where our rows live: inside a normal settings panel (it has a heading), otherwise in our own little box at the top of Options */
+  function host(){
+    var ex=document.querySelector('.su-host');if(ex)return ex;
+    var p=document.querySelector('.panel[data-opt]'),h=p&&p.querySelector('h4');
+    if(p&&h&&h.parentNode===p){p.classList.add('su-host');p.__after=h;return p;}
+    var first=document.querySelector('[data-opt]');if(!first)return null;
+    var box=document.createElement('div');box.className='su-optbox su-host';box.setAttribute('data-opt','');
+    var bd=document.querySelector('.fsopt-body');
+    if(document.documentElement.classList.contains('fs')&&bd&&first.parentNode===bd)bd.insertBefore(box,bd.firstChild);else first.parentNode.insertBefore(box,first);
+    return box;
+  }
+  function put(row,top){var h=host();if(!h)return false;var a=h.__after;
+    if(top){if(a)h.insertBefore(row,a.nextSibling);else h.insertBefore(row,h.firstChild);}
+    else{var nav=h.querySelector('.su-nav');var ref=nav?nav.nextSibling:(a?a.nextSibling:h.firstChild);h.insertBefore(row,ref);}return true;}
+  /* daily quests can be opened from the Options of every game */
+  var qn=0;
+  function qpaint(){var i=document.querySelector('.su-qb i');if(!i)return;i.textContent=qn>9?'9+':String(qn);i.classList.toggle('on',qn>0);}
+  function addQ(){if(document.querySelector('.su-q'))return;var r=document.createElement('div');r.className='row su-q';
+    r.innerHTML='<button type="button" class="su-navb su-qb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h10l3 3v15H6z"/><path d="M9 9h7M9 13h7M9 17h4"/></svg>Daily Quests &amp; Tickets<i></i></button>';
+    if(!put(r,true))return;
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'nav',to:'quests'},'*');}catch(x){}});qpaint();}
+  try{parent.postMessage({arcade:'qask'},'*');}catch(x){}setTimeout(function(){try{parent.postMessage({arcade:'qask'},'*');}catch(x){}},1500);
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='qcount'){qn=+d.n||0;if(d.self){var q=document.querySelector('.su-q');if(q)q.remove();return;}addQ();qpaint();}});
+  function addAcct(){
+    if(document.querySelector('.su-acct'))return;
+    var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
+    if(!put(r,false))return;
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'account'},'*');}catch(x){}});
+    paint();
+  }
+  function addNav(){
+    if(!room||document.querySelector('.su-nav'))return;
+    var nm=room==='parlor'?'Game Parlor':'Casino Floor',r=document.createElement('div');r.className='row su-nav';
+    r.innerHTML='<button type="button" class="su-navb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back to the '+nm+'</button>';
+    if(!put(r,true))return;
+    r.querySelector('button').addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'nav',to:room},'*');}catch(x){}});
+    try{parent.postMessage({arcade:'hasNav'},'*');}catch(x){}
+  }
+  addEventListener('message',function(e){var d=e.data;if(!d)return;
+    if(d.arcade==='acct'){who={in:!!d.in,name:String(d.name||'').slice(0,18)};paint();}
+    else if(d.arcade==='room'&&d.to){room=d.to;addNav();}});
+  /* finished a game: next to "Play again / New game" on the end screen, offer the way back to the room */
+  var EXTRA='.su-endback{display:inline-flex;align-items:center;justify-content:center;gap:6px;font:800 14px Inter,system-ui,sans-serif;color:#f2d27e;background:rgba(15,23,42,.6);border:1px solid rgba(242,210,126,.55);border-radius:10px;padding:10px 14px;cursor:pointer;margin:6px 4px 0}.su-endback svg{width:14px;height:14px}';
+  st.textContent+=EXTRA;
+  var END_SEL='#againBtn,#ovBtn,[data-act="again"]',END_TXT=/^\s*(play again|deal again|new game|try again|next level|rematch)/i,OVL=/(^|[\s_-])(ov|overlay|sheet|modal|win|over|result|done|end)([\s_-]|$)/i;
+  function endBtns(){var out=[].slice.call(document.querySelectorAll(END_SEL));
+    [].forEach.call(document.querySelectorAll('button'),function(b){if(out.indexOf(b)>=0||!END_TXT.test(b.textContent||''))return;
+      for(var el=b.parentNode,k=0;el&&el!==document.body&&k<6;el=el.parentNode,k++){if(OVL.test((el.id||'')+' '+(typeof el.className==='string'?el.className:''))){out.push(b);return;}}});
+    return out;}
+  var endT=0;
+  function addEnd(){endT=0;endTrack();if(!room)return;var nm=room==='parlor'?'Game Parlor':'Casino Floor';
+    endBtns().forEach(function(b){if(!b.offsetParent||b.classList.contains('su-endback'))return;var par=b.parentNode;if(!par||par.querySelector('.su-endback'))return;
+      var x=document.createElement('button');x.type='button';x.className='su-endback';
+      x.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back to the '+nm;
+      x.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();try{parent.postMessage({arcade:'nav',to:room},'*');}catch(e){}});
+      par.insertBefore(x,b.nextSibling);});}
+  function soon(){if(!endT)endT=setTimeout(addEnd,350);}
+  /* daily quests: a finished game (its end screen appeared) counts as "over", and a winning one also as "win" */
+  window.suQ=function(ev,n){try{parent.postMessage({arcade:'quest',ev:ev,n:n==null?1:n},'*');}catch(x){}};
+  function endTrack(){try{endBtns().forEach(function(b){var vis=!!b.offsetParent;if(vis&&!b._suq){b._suq=1;var box=b.parentNode;
+      for(var k=0;k<5&&box&&box!==document.body;k++){if(OVL.test((box.id||'')+' '+(typeof box.className==='string'?box.className:'')))break;box=box.parentNode;}
+      var tx=((box&&box.textContent)||'').slice(0,500);window.suQ('over');
+      if(/\byou win\b|\byou won\b|you’re the winner|\bsolved\b|\bcleared\b|\bvictory\b|\bmahjong!/i.test(tx)&&!/\byou lose\b|\byou lost\b/i.test(tx))window.suQ('win');}
+    else if(!vis)b._suq=0;});}catch(x){}}
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='room'&&d.to){soon();
+    try{new MutationObserver(soon).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style','hidden']});}catch(x){}}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',addAcct);else addAcct();
+})();
+
+/* quest tracker: a pill in every game shows the quests it can move forward; another pill shows tickets waiting */
+(function(){
+  if(window.parent===window)return;
+  var st=document.createElement('style');st.textContent=
+   '.suq-pills{position:fixed;top:10px;right:12px;z-index:2147482990;display:flex;gap:6px;pointer-events:none;transition:right .2s}'+
+   '.suq-pill{pointer-events:auto;display:inline-flex;align-items:center;gap:6px;font:800 12px Inter,system-ui,sans-serif;color:#fde68a;background:rgba(15,23,42,.86);border:1px solid rgba(242,210,126,.55);border-radius:100px;padding:6px 11px 6px 9px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);white-space:nowrap}'+
+   '.suq-pill:hover{border-color:#fde68a}.suq-pill svg{width:14px;height:14px;flex:0 0 auto}.suq-pill b{color:#fff}.suq-pill.done{border-color:#34d399;color:#6ee7b7;animation:suqpulse 1.6s ease-in-out infinite}'+
+   '.suq-pill.tk{color:#1a1206;background:linear-gradient(180deg,#fde68a,#e2b54a);border-color:#fff3c4;animation:suqglow 1.8s ease-in-out infinite}.suq-pill.tk b{color:#1a1206}'+
+   '.suq-pill.hastk{border-color:#fde68a;box-shadow:0 0 0 2px rgba(253,230,138,.35),0 4px 14px rgba(0,0,0,.45)}@keyframes suqglow{50%{box-shadow:0 0 0 4px rgba(253,230,138,.35),0 0 18px rgba(253,230,138,.55)}}'+
+   '.suq-toast{position:fixed;left:50%;top:58px;transform:translate(-50%,-20px);opacity:0;z-index:2147482999;display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:14px;background:linear-gradient(180deg,rgba(36,18,10,.97),rgba(18,10,6,.97));border:2px solid #f2d27e;box-shadow:0 12px 30px rgba(0,0,0,.6);font:700 13px Inter,system-ui,sans-serif;color:#fff;transition:opacity .3s,transform .4s cubic-bezier(.2,1.4,.3,1);pointer-events:auto;cursor:pointer;max-width:92vw}'+
+   '.suq-toast.on{opacity:1;transform:translate(-50%,0)}.suq-toast b{display:block;color:#fde68a;font:400 16px Rye,Georgia,serif}.suq-toast i{font-style:normal;font-size:26px}'+
+   '.suq-pill .bar{width:34px;height:5px;border-radius:5px;background:rgba(255,255,255,.15);overflow:hidden}.suq-pill .bar i{display:block;height:100%;background:#34d399}'+
+   '@keyframes suqpulse{50%{box-shadow:0 0 0 4px rgba(52,211,153,.25),0 4px 14px rgba(0,0,0,.45)}}'+
+   '.suq-pop{position:fixed;inset:0;z-index:2147482995;display:flex;align-items:flex-start;justify-content:flex-end;padding:52px 12px 12px;background:rgba(2,6,23,.35)}'+
+   '.suq-box{width:min(360px,100%);max-height:calc(100% - 10px);overflow:auto;background:linear-gradient(180deg,rgba(36,18,10,.98),rgba(18,10,6,.98));border:2px solid #c6a75e;border-radius:16px;padding:12px;box-shadow:0 20px 50px rgba(0,0,0,.6);font-family:Inter,system-ui,sans-serif;color:#f8fafc}'+
+   '.suq-h{display:flex;align-items:center;gap:8px;margin-bottom:8px}.suq-h b{font:400 20px Rye,Georgia,serif;color:#f2d27e;flex:1}.suq-x{background:rgba(255,255,255,.08);border:0;color:#fff;border-radius:8px;width:30px;height:30px;font-size:18px;cursor:pointer}'+
+   '.suq-q{padding:9px 10px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid rgba(242,210,126,.16);margin-bottom:6px;font-size:13px;font-weight:700;line-height:1.3}'+
+   '.suq-q small{display:block;font-size:11px;color:#cbb07a;margin-top:2px}.suq-q .bar{height:6px;border-radius:6px;background:rgba(255,255,255,.08);margin-top:6px;overflow:hidden}.suq-q .bar i{display:block;height:100%;background:linear-gradient(90deg,#059669,#34d399)}'+
+   '.suq-q.done{border-color:rgba(52,211,153,.55);background:rgba(16,185,129,.1)}.suq-q.cl{opacity:.55}'+
+   '.suq-none{font-size:13px;color:#cbd5e1;padding:8px 2px 10px;line-height:1.45}'+
+   '.suq-go{display:block;width:100%;margin-top:8px;padding:11px;border:0;border-radius:12px;font:900 14px Inter,system-ui,sans-serif;cursor:pointer;color:#1a1206;background:linear-gradient(180deg,#fde68a,#c6a75e)}.suq-go.alt{background:rgba(242,210,126,.12);color:#f2d27e;border:1px solid rgba(242,210,126,.5)}';
+  document.head.appendChild(st);
+  var D=null,wrap=null,pop=null;
+  var IQ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h10l3 3v15H6z"/><path d="M9 9h7M9 13h7M9 17h4"/></svg>',
+      IT='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 0 4v5h18v-5a2 2 0 0 0 0-4V3H3z"/><path d="M12 5v2M12 10v2M12 15v1"/></svg>';
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function fmt(q){var m=function(v){return '$'+Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');};return q.amt?m(q.n)+' / '+m(q.goal):q.n+' / '+q.goal;}
+  function go(tab){close();try{parent.postMessage({arcade:'nav',to:'quests',tab:tab},'*');}catch(e){}}
+  function place(){if(!wrap)return;var o=document.querySelector('.fsopt-btn.floating'),r=12;if(o&&o.offsetParent!==null){var b=o.getBoundingClientRect();if(b.width&&b.top<60)r=Math.max(12,innerWidth-b.left+8);}wrap.style.right=r+'px';}
+  function render(){
+    if(!D||D.self){if(wrap)wrap.remove();wrap=null;return;}
+    if(!wrap){wrap=document.createElement('div');wrap.className='suq-pills';document.body.appendChild(wrap);}
+    var L=(D.list||[]).filter(function(x){return !x.claimed;}),h='';
+    if(L.length){var done=L.filter(function(x){return x.done;}).length;var best=L.filter(function(x){return !x.done;}).sort(function(a,b){return b.n/b.goal-a.n/a.goal;})[0],pct=best?Math.round(100*best.n/best.goal):100;
+      h+='<button type="button" class="suq-pill'+(D.tickets>0?' hastk':'')+'" data-a="q" title="Quest tracker">'+IQ+(done&&done===L.length?'<span>All done!</span>':'<span><b>'+L.length+'</b> quest'+(L.length>1?'s':'')+'</span><span class="bar"><i style="width:'+pct+'%"></i></span>')+'</button>';}
+    if(D.tickets>0)h+='<button type="button" class="suq-pill tk" data-a="t" title="Your scratch-off tickets">'+IT+'<span><b>'+D.tickets+'</b> to scratch</span></button>';
+    wrap.innerHTML=h;[].forEach.call(wrap.querySelectorAll('button'),function(b){b.onclick=function(e){e.preventDefault();e.stopPropagation();if(b.getAttribute('data-a')==='t')go('t');else open();};});
+    place();if(pop)fill();}
+  function open(){if(pop)return close();pop=document.createElement('div');pop.className='suq-pop';pop.innerHTML='<div class="suq-box"></div>';
+    pop.addEventListener('click',function(e){if(e.target===pop)close();});document.body.appendChild(pop);fill();}
+  function close(){if(pop){pop.remove();pop=null;}}
+  function fill(){var bx=pop&&pop.querySelector('.suq-box');if(!bx)return;var L=D.list||[],h='<div class="suq-h"><b>'+(D.room?'Today’s quests':'Quests for this game')+'</b><button type="button" class="suq-x" aria-label="Close">&times;</button></div>';
+    if(!L.length)h+='<div class="suq-none">None of today’s quests count here. Open the quest list to see where they are.</div>';
+    L.forEach(function(q){var pct=Math.min(100,100*q.n/q.goal);h+='<div class="suq-q'+(q.done?' done':'')+(q.claimed?' cl':'')+'">'+esc(q.txt)+'<small>'+(q.t==='e'?'Bronze':q.t==='m'?'Silver':'Gold')+' ticket · '+(q.claimed?'done \u2713 ticket earned':q.done?'done!':fmt(q))+'</small><div class="bar"><i style="width:'+pct+'%"></i></div></div>';});
+    if(D.tickets>0)h+='<button type="button" class="suq-go" data-a="t">Scratch my tickets ('+D.tickets+')</button>';
+    h+='<button type="button" class="suq-go'+(D.tickets>0?' alt':'')+'" data-a="q">All daily quests</button>';
+    bx.innerHTML=h;bx.querySelector('.suq-x').onclick=close;[].forEach.call(bx.querySelectorAll('.suq-go'),function(b){b.onclick=function(){go(b.getAttribute('data-a'));};});}
+  var toastT=0;function toast(d){var t=document.querySelector('.suq-toast');if(!t){t=document.createElement('div');t.className='suq-toast';document.body.appendChild(t);t.onclick=function(){t.classList.remove('on');go('t');};}
+    var nm=d.tier==='v'?'High-Roller Vault':d.tier==='g'?'Gold':d.tier==='s'?'Silver':'Bronze';t.innerHTML='<i>'+(d.tier==='v'?'\ud83d\udd10':'\ud83c\udf9f\ufe0f')+'</i><span><b>'+(d.tier==='v'?'Vault unlocked!':'Quest complete!')+'</b>'+esc(d.txt)+' \u00b7 '+nm+' ticket earned. Tap to scratch.</span>';
+    requestAnimationFrame(function(){t.classList.add('on');});clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('on');},4200);}
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='qdone'){if(document.body)toast(d);return;}if(d&&d.arcade==='qcount'){D=d;if(document.body)render();}else if(d&&d.arcade==='fs'){setTimeout(place,80);setTimeout(place,400);}});
+  addEventListener('resize',function(){setTimeout(place,60);});
+  addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+})();
+
+/* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
+(function(){
+  var LIST=/*SKINLIST*/[["anime", "Classic"], ["xmas", "Christmas"], ["beach", "Beach"]]/*SKINLIST*/;
+  if(LIST.length<2)return;
+  var cur=document.documentElement.getAttribute('data-season')||document.documentElement.getAttribute('data-skin')||'western';
+  function btns(){return LIST.map(function(k){return '<button type="button" data-skin="'+k[0]+'"'+(cur===k[0]?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>'+k[1]+'</button>';}).join('');}
+  function wire(root){[].forEach.call(root.querySelectorAll('button[data-skin]'),function(b){b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();
+    var v=b.getAttribute('data-skin');[].forEach.call(document.querySelectorAll('.su-skinseg button'),function(x){var on=x.getAttribute('data-skin')===v;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');});
+    if(v!==cur){try{parent.postMessage({arcade:'setSkin',skin:v},'*');}catch(err){}}});});}
+  function add(){
+    if(document.querySelector('.su-skinseg'))return;
+    var mo=document.getElementById('optMotion'),row=mo&&mo.closest('.row');
+    if(row){var r=document.createElement('div');r.className='row';r.innerHTML='<span>Art</span><div class="seg su-skinseg" role="group" aria-label="Art style">'+btns()+'</div>';row.parentNode.insertBefore(r,row.nextSibling);wire(r);return;}
+    var el=document.createElement('div');el.className='su-skin';
+    el.innerHTML='<span>Art style</span><div class="su-skinseg" role="group" aria-label="Art style">'+btns()+'</div>';
+    var all=[].filter.call(document.querySelectorAll('[data-opt]'),function(x){return !(x.parentNode&&x.parentNode.closest&&x.parentNode.closest('[data-opt]'));}),last=all[all.length-1];
+    if(last&&last.parentNode)last.parentNode.insertBefore(el,last.nextSibling);else (document.querySelector('.wrap')||document.body).appendChild(el);
+    wire(el);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
+  /* full screen moves the options into the drawer: keep the art switch at the top of it */
+  var ph=null;
+  addEventListener('message',function(e){var d=e.data;if(!d||d.arcade!=='fs')return;setTimeout(function(){var el=document.querySelector('.su-skin'),bd=document.querySelector('.fsopt-body');if(!el)return;
+    if(document.documentElement.classList.contains('fs')&&bd){if(!ph){ph=document.createElement('span');ph.style.display='none';el.parentNode.insertBefore(ph,el);}if(bd.firstChild!==el)bd.insertBefore(el,bd.firstChild);}
+    else if(ph&&ph.parentNode){ph.parentNode.insertBefore(el,ph);ph.parentNode.removeChild(ph);ph=null;}},0);});
+})();
+
+/* remember each game's option buttons (difficulty, speed, draw mode...) on this device */
+(function(){
+  var KEY='su_arcade_'+(document.title||'game').toLowerCase().replace(/[^a-z0-9]+/g,'_');
+  function read(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){return {};}}
+  function write(o){try{localStorage.setItem(KEY,JSON.stringify(o));}catch(e){}}
+  function btns(s){return [].slice.call(s.children).filter(function(x){return x.tagName==='BUTTON';});}
+  function snap(){if(window.__ownSettings)return;var o=read();o.segs=o.segs||{};
+    [].forEach.call(document.querySelectorAll('.seg[id]'),function(s){var i=btns(s).findIndex(function(x){return x.classList.contains('on');});if(i>=0)o.segs[s.id]=i;});write(o);}
+  document.addEventListener('click',function(e){if(e.isTrusted&&e.target.closest&&e.target.closest('.seg[id] button'))setTimeout(snap,0);},true);
+  addEventListener('load',function(){setTimeout(function(){if(window.__ownSettings)return;var o=read();if(!o.segs)return;
+    for(var id in o.segs){var s=document.getElementById(id);if(!s)continue;var bt=btns(s)[o.segs[id]];if(bt&&!bt.classList.contains('on'))bt.click();}},0);});
+})();
+<\u002fscript>
+<script>
+/* desktop: the mouse wheel never scrolls the page behind the arcade. A wheel turn is only passed on when the pointer
+   is over something inside the game that can still scroll that way (a list, the chat, a drawer). */
+(function(){
+  if(window.__wheelLock)return;window.__wheelLock=1;
+  try{if(matchMedia('(pointer:coarse)').matches)return;}catch(e){}
+  function canScroll(el,dy,dx){
+    for(;el&&el.nodeType===1;el=el.parentNode){
+      var cs=getComputedStyle(el),oy=cs.overflowY,ox=cs.overflowX,root=el===document.scrollingElement;
+      if(Math.abs(dy)>=Math.abs(dx)){
+        if((root||oy==='auto'||oy==='scroll')&&el.scrollHeight>el.clientHeight+1&&(root?getComputedStyle(document.body).overflowY!=='hidden'&&cs.overflowY!=='hidden':true)){
+          if(dy<0&&el.scrollTop>0)return true;if(dy>0&&el.scrollTop+el.clientHeight<el.scrollHeight-1)return true;}
+      }else if((ox==='auto'||ox==='scroll')&&el.scrollWidth>el.clientWidth+1){
+        if(dx<0&&el.scrollLeft>0)return true;if(dx>0&&el.scrollLeft+el.clientWidth<el.scrollWidth-1)return true;}
+    }
+    return false;}
+  addEventListener('wheel',function(e){if(e.ctrlKey)return;if(!canScroll(e.target,e.deltaY,e.deltaX))e.preventDefault();},{passive:false});
+})();
+<\u002fscript></head>
+<body>
+<div class="wrap">
+  <span class="pill"><i></i>Arcade &#xb7; Game Parlor</span>
+  <h1>Nine by nine.<span>Sudoku in the parlor.</span></h1>
+  <p class="sub">Fill every row, column and box with the numbers <b>1 to 9</b>. There's one <b>daily puzzle</b> everyone shares, plus as many practice puzzles as you like at three levels.</p>
+  <div id="felt">
+    <div class="stage">
+      <div class="sud" id="sud"></div>
+      <div class="pad" id="pad"></div>
+      <div class="tools"><button type="button" id="tNotes">Notes: off</button><button type="button" id="tErase">Erase</button><button type="button" id="tUndo">Undo</button><button type="button" id="tHint">Hint</button></div>
+    </div>
+    <div class="side">
+      <div class="t" id="title">Sudoku</div>
+      <div class="stats"><div><em>Time</em><b id="sTime">0:00</b></div><div><em>Mistakes</em><b id="sMis">0</b></div><div><em>Hints</em><b id="sHint">0</b></div></div>
+      <div class="msg" id="msg"></div>
+      <div class="dayb" id="dayb"></div>
+      <button class="b2" type="button" id="bDaily">Today's puzzle</button>
+      <button class="b2" type="button" id="bNew">New practice puzzle</button>
+      <div class="rec" id="rec"></div>
+    </div>
+    <div class="sheet hide" id="sheet">
+      <div class="box">
+        <div id="setup">
+          <h2>Practice puzzle</h2>
+          <p>A fresh puzzle with exactly one answer.</p>
+          <div class="lab">Level</div>
+          <div class="seg c3" id="optLvl"><button type="button" data-v="1">Easy<small>warm up</small></button><button type="button" data-v="2" class="on">Medium<small>steady</small></button><button type="button" data-v="3">Hard<small>sharp</small></button></div>
+          <button class="go" type="button" id="bStart">Start</button>
+          <button class="b2" type="button" id="bCancel" style="width:100%;margin-top:8px">Back</button>
+        </div>
+        <div id="over" class="hide">
+          <h2 id="ovTitle">Solved!</h2>
+          <p id="ovSub"></p>
+          <button class="go" type="button" id="againBtn">New practice puzzle</button>
+          <button class="b2" type="button" id="ovClose" style="width:100%;margin-top:8px">Look at the board</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="rules"><b>How to play:</b> tap a square, then tap a number (or type 1 to 9). Every row, every column and every 3 by 3 box must end up with each number exactly once. <b>Notes</b> lets you pencil in small candidates. A wrong number shows red and counts as a mistake. <b>Hint</b> fills in one square. Arrow keys move, Backspace erases, N turns notes on and off. The daily puzzle is the same for everyone and changes at midnight; finishing it keeps your streak going.</p>
+</div>
+<script>
+/* ===== game-piece art: each piece checks whether its image exists, and only then replaces the drawn look =====
+   ART.probe([...names]) adds class "has-<name>" to <html> once an image loads; ART.img(name, fallbackHTML) gives an <img> if it loaded. */
+var ART=(function(){var B='https://saddleup-arcade.vercel.app/art/',ok={},cbs=[],U={"bg_trail":"https://saddleup-arcade.vercel.app/art/bg_trail.webp","bg_wrangler":"https://saddleup-arcade.vercel.app/art/bg_wrangler.webp","bingo_cage":"https://saddleup-arcade.vercel.app/art/bingo_cage.webp","bingo_caller":"https://saddleup-arcade.vercel.app/art/bingo_caller.webp","bingo_door":"https://saddleup-arcade.vercel.app/art/bingo_door.webp","bingo_hall":"https://saddleup-arcade.vercel.app/art/bingo_hall.webp","bingo_hall_tall":"https://saddleup-arcade.vercel.app/art/bingo_hall_tall.webp","bs_coin":"https://saddleup-arcade.vercel.app/art/bs_coin.webp","bs_daub":"https://saddleup-arcade.vercel.app/art/bs_daub.webp","bs_joker":"https://saddleup-arcade.vercel.app/art/bs_joker.webp","bs_rattler":"https://saddleup-arcade.vercel.app/art/bs_rattler.webp","bs_superjoker":"https://saddleup-arcade.vercel.app/art/bs_superjoker.webp","cab_vpoker":"https://saddleup-arcade.vercel.app/art/cab_vpoker.webp","ck_black":"https://saddleup-arcade.vercel.app/art/ck_black.webp","ck_black_king":"https://saddleup-arcade.vercel.app/art/ck_black_king.webp","ck_red":"https://saddleup-arcade.vercel.app/art/ck_red.webp","ck_red_king":"https://saddleup-arcade.vercel.app/art/ck_red_king.webp","cs_bB":"https://saddleup-arcade.vercel.app/art/cs_bB.webp","cs_bK":"https://saddleup-arcade.vercel.app/art/cs_bK.webp","cs_bN":"https://saddleup-arcade.vercel.app/art/cs_bN.webp","cs_bP":"https://saddleup-arcade.vercel.app/art/cs_bP.webp","cs_bQ":"https://saddleup-arcade.vercel.app/art/cs_bQ.webp","cs_bR":"https://saddleup-arcade.vercel.app/art/cs_bR.webp","cs_wB":"https://saddleup-arcade.vercel.app/art/cs_wB.webp","cs_wK":"https://saddleup-arcade.vercel.app/art/cs_wK.webp","cs_wN":"https://saddleup-arcade.vercel.app/art/cs_wN.webp","cs_wP":"https://saddleup-arcade.vercel.app/art/cs_wP.webp","cs_wQ":"https://saddleup-arcade.vercel.app/art/cs_wQ.webp","cs_wR":"https://saddleup-arcade.vercel.app/art/cs_wR.webp","die_1":"https://saddleup-arcade.vercel.app/art/die_1.webp","die_2":"https://saddleup-arcade.vercel.app/art/die_2.webp","die_3":"https://saddleup-arcade.vercel.app/art/die_3.webp","die_4":"https://saddleup-arcade.vercel.app/art/die_4.webp","die_5":"https://saddleup-arcade.vercel.app/art/die_5.webp","die_6":"https://saddleup-arcade.vercel.app/art/die_6.webp","felt_war":"https://saddleup-arcade.vercel.app/art/felt_war.webp","ic_bingo":"https://saddleup-arcade.vercel.app/art/ic_bingo.webp","ic_checkers":"https://saddleup-arcade.vercel.app/art/ic_checkers.webp","ic_chess":"https://saddleup-arcade.vercel.app/art/ic_chess.webp","ic_cwar":"https://saddleup-arcade.vercel.app/art/ic_cwar.webp","ic_liars":"https://saddleup-arcade.vercel.app/art/ic_liars.webp","ic_pdice":"https://saddleup-arcade.vercel.app/art/ic_pdice.webp","ic_plinko":"https://saddleup-arcade.vercel.app/art/ic_plinko.webp","ic_quests":"https://saddleup-arcade.vercel.app/art/ic_quests.webp","ic_trail":"https://saddleup-arcade.vercel.app/art/ic_trail.webp","ic_vpoker":"https://saddleup-arcade.vercel.app/art/ic_vpoker.webp","ic_war":"https://saddleup-arcade.vercel.app/art/ic_war.webp","ic_wrangler":"https://saddleup-arcade.vercel.app/art/ic_wrangler.webp","keno_ball":"https://saddleup-arcade.vercel.app/art/keno_ball.webp","ld_cup":"https://saddleup-arcade.vercel.app/art/ld_cup.webp","pl_armchair":"https://saddleup-arcade.vercel.app/art/pl_armchair.webp","pl_bookshelf":"https://saddleup-arcade.vercel.app/art/pl_bookshelf.webp","pl_boomtown":"https://saddleup-arcade.vercel.app/art/pl_boomtown.webp","pl_chair":"https://saddleup-arcade.vercel.app/art/pl_chair.webp","pl_coffee":"https://saddleup-arcade.vercel.app/art/pl_coffee.webp","pl_dominoes":"https://saddleup-arcade.vercel.app/art/pl_dominoes.webp","pl_door":"https://saddleup-arcade.vercel.app/art/pl_door.webp","pl_dynamite":"https://saddleup-arcade.vercel.app/art/pl_dynamite.webp","pl_fireplace":"https://saddleup-arcade.vercel.app/art/pl_fireplace.webp","pl_floor":"https://saddleup-arcade.vercel.app/art/pl_floor.webp","pl_gold":"https://saddleup-arcade.vercel.app/art/pl_gold.webp","pl_lamp":"https://saddleup-arcade.vercel.app/art/pl_lamp.webp","pl_mahjong":"https://saddleup-arcade.vercel.app/art/pl_mahjong.webp","pl_mines":"https://saddleup-arcade.vercel.app/art/pl_mines.webp","pl_mjsol":"https://saddleup-arcade.vercel.app/art/pl_mjsol.webp","pl_nugget":"https://saddleup-arcade.vercel.app/art/pl_nugget.webp","pl_piano":"https://saddleup-arcade.vercel.app/art/pl_piano.webp","pl_plant":"https://saddleup-arcade.vercel.app/art/pl_plant.webp","pl_rug":"https://saddleup-arcade.vercel.app/art/pl_rug.webp","pl_rug_oval":"https://saddleup-arcade.vercel.app/art/pl_rug_oval.webp","pl_rug_tall":"https://saddleup-arcade.vercel.app/art/pl_rug_tall.webp","pl_sol":"https://saddleup-arcade.vercel.app/art/pl_sol.webp","pl_spider":"https://saddleup-arcade.vercel.app/art/pl_spider.webp","pl_stool":"https://saddleup-arcade.vercel.app/art/pl_stool.webp","pl_wall":"https://saddleup-arcade.vercel.app/art/pl_wall.webp","plinko_mine":"https://saddleup-arcade.vercel.app/art/plinko_mine.webp","quests_board":"https://saddleup-arcade.vercel.app/art/quests_board.webp","scratch_foil":"https://saddleup-arcade.vercel.app/art/scratch_foil.webp","sym_bag":"https://saddleup-arcade.vercel.app/art/sym_bag.webp","sym_beer":"https://saddleup-arcade.vercel.app/art/sym_beer.webp","sym_boot":"https://saddleup-arcade.vercel.app/art/sym_boot.webp","sym_bull":"https://saddleup-arcade.vercel.app/art/sym_bull.webp","sym_cactus":"https://saddleup-arcade.vercel.app/art/sym_cactus.webp","sym_coin":"https://saddleup-arcade.vercel.app/art/sym_coin.webp","sym_cowboy":"https://saddleup-arcade.vercel.app/art/sym_cowboy.webp","sym_crown":"https://saddleup-arcade.vercel.app/art/sym_crown.webp","sym_diamond":"https://saddleup-arcade.vercel.app/art/sym_diamond.webp","sym_dice":"https://saddleup-arcade.vercel.app/art/sym_dice.webp","sym_eagle":"https://saddleup-arcade.vercel.app/art/sym_eagle.webp","sym_horse":"https://saddleup-arcade.vercel.app/art/sym_horse.webp","sym_key":"https://saddleup-arcade.vercel.app/art/sym_key.webp","sym_revolver":"https://saddleup-arcade.vercel.app/art/sym_revolver.webp","sym_shield":"https://saddleup-arcade.vercel.app/art/sym_shield.webp","sym_star":"https://saddleup-arcade.vercel.app/art/sym_star.webp","sym_tophat":"https://saddleup-arcade.vercel.app/art/sym_tophat.webp","sym_whiskey":"https://saddleup-arcade.vercel.app/art/sym_whiskey.webp","table_checkers":"https://saddleup-arcade.vercel.app/art/table_checkers.webp","table_chess":"https://saddleup-arcade.vercel.app/art/table_chess.webp","table_cwar":"https://saddleup-arcade.vercel.app/art/table_cwar.webp","table_liars":"https://saddleup-arcade.vercel.app/art/table_liars.webp","table_pdice":"https://saddleup-arcade.vercel.app/art/table_pdice.webp","ticket_btd":"https://saddleup-arcade.vercel.app/art/ticket_btd.webp","ticket_map":"https://saddleup-arcade.vercel.app/art/ticket_map.webp","ticket_pkr":"https://saddleup-arcade.vercel.app/art/ticket_pkr.webp","ticket_spin":"https://saddleup-arcade.vercel.app/art/ticket_spin.webp","ticket_ttt":"https://saddleup-arcade.vercel.app/art/ticket_ttt.webp","ticket_vault":"https://saddleup-arcade.vercel.app/art/ticket_vault.webp","ticket_xw":"https://saddleup-arcade.vercel.app/art/ticket_xw.webp","tile_wood":"https://saddleup-arcade.vercel.app/art/tile_wood.webp","tk_bronze":"https://saddleup-arcade.vercel.app/art/tk_bronze.webp","tk_gold":"https://saddleup-arcade.vercel.app/art/tk_gold.webp","tk_silver":"https://saddleup-arcade.vercel.app/art/tk_silver.webp","vt_box":"https://saddleup-arcade.vercel.app/art/vt_box.webp","vt_dial":"https://saddleup-arcade.vercel.app/art/vt_dial.webp","war_table":"https://saddleup-arcade.vercel.app/art/war_table.webp"};
+  function probe(list){list.forEach(function(n){if(ok[n]!=null)return;ok[n]=0;var i=new Image();i.onload=function(){ok[n]=1;document.documentElement.classList.add('has-'+n);cbs.forEach(function(f){try{f(n);}catch(e){}});};i.onerror=function(){ok[n]=-1;};i.src=url(n);});}
+  function has(n){return ok[n]===1;}
+  function url(n){return U[n]||B+n+'.webp';}
+  function img(n,fb,cls){return n&&has(n)?'<img class="'+(cls||'artimg')+'" alt="" draggable="false" src="'+url(n)+'">':fb;}
+  return {probe:probe,has:has,img:img,url:url,on:function(f){cbs.push(f);}};})();
+
+<\u002fscript>
+<script>
+(function(){'use strict';
+try{ART.probe(["su_paper"]);}catch(e){}
+var $=function(i){return document.getElementById(i);};
+function q(ev,n){try{if(window.suQ)suQ(ev,n);}catch(e){}}
+function ls(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');localStorage.setItem(k,JSON.stringify(v));}catch(e){return null;}}
+var AC=null;function ac(){try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){}return AC;}
+function tone(f,d,delay,vol,type){var a=ac();if(!a)return;try{var o=a.createOscillator(),g=a.createGain(),t=a.currentTime+(delay||0);o.type=type||'triangle';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol||.05,t+.005);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05);}catch(e){}}
+/* ---------- puzzle maker: a seeded full grid, then squares removed while the answer stays unique ---------- */
+function rng(seed){var a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+var ROW=[],COL=[],BOX=[];for(var i=0;i<81;i++){ROW[i]=Math.floor(i/9);COL[i]=i%9;BOX[i]=Math.floor(ROW[i]/3)*3+Math.floor(COL[i]/3);}
+function solveCount(g,limit){var rm=new Array(9).fill(0),cm=new Array(9).fill(0),bm=new Array(9).fill(0),n=0;
+  for(var i=0;i<81;i++)if(g[i]){var b=1<<g[i];if((rm[ROW[i]]|cm[COL[i]]|bm[BOX[i]])&b)return 0;rm[ROW[i]]|=b;cm[COL[i]]|=b;bm[BOX[i]]|=b;}
+  var a=g.slice();
+  (function go(){if(n>=limit)return;var best=-1,bc=10,bmask=0;
+    for(var i=0;i<81;i++)if(!a[i]){var m=~(rm[ROW[i]]|cm[COL[i]]|bm[BOX[i]])&0x3FE,c=0,x=m;while(x){x&=x-1;c++;}if(c<bc){bc=c;best=i;bmask=m;if(c<=1)break;}}
+    if(best<0){n++;return;}if(!bc)return;
+    for(var d=1;d<=9&&n<limit;d++){var b=1<<d;if(!(bmask&b))continue;a[best]=d;rm[ROW[best]]|=b;cm[COL[best]]|=b;bm[BOX[best]]|=b;go();rm[ROW[best]]&=~b;cm[COL[best]]&=~b;bm[BOX[best]]&=~b;a[best]=0;}})();
+  return n;}
+function fullGrid(R){var g=new Array(81).fill(0);
+  (function go(i){if(i===81)return true;var d=[1,2,3,4,5,6,7,8,9];for(var k=8;k>0;k--){var j=Math.floor(R()*(k+1)),t=d[k];d[k]=d[j];d[j]=t;}
+    for(var x=0;x<9;x++){var v=d[x],ok=true;for(var y=0;y<81&&ok;y++)if(g[y]===v&&(ROW[y]===ROW[i]||COL[y]===COL[i]||BOX[y]===BOX[i]))ok=false;
+      if(ok){g[i]=v;if(go(i+1))return true;g[i]=0;}}return false;})(0);return g;}
+var GIVENS={1:38,2:30,3:25};
+function makePuzzle(seed,lvl){var R=rng(seed),sol=fullGrid(R),p=sol.slice(),order=[];for(var i=0;i<81;i++)order.push(i);
+  for(var k=80;k>0;k--){var j=Math.floor(R()*(k+1)),t=order[k];order[k]=order[j];order[j]=t;}
+  var left=81,target=GIVENS[lvl];
+  for(var o=0;o<81&&left>target;o++){var c=order[o],keep=p[c];p[c]=0;if(solveCount(p,2)!==1)p[c]=keep;else left--;}
+  return {puz:p,sol:sol};}
+/* ---------- state ---------- */
+function dayNum(d){d=d||new Date();return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);}
+var LVN={1:'Easy',2:'Medium',3:'Hard'};
+var S=null,sel=-1,notes=false,timer=0,setupLvl=2,stats=ls('su_sudoku_stats')||{solved:0,best:{},streak:0,lastDay:0,maxStreak:0};
+function key(){return S.daily?'su_sudoku_d'+S.day:'su_sudoku_p';}
+function save(){if(!S)return;ls(key(),{seed:S.seed,lvl:S.lvl,daily:S.daily,day:S.day,v:S.v,nt:S.nt.map(function(x){return x;}),t:S.t,mis:S.mis,hints:S.hints,done:S.done});}
+function load(o){var pz=makePuzzle(o.seed,o.lvl);S={seed:o.seed,lvl:o.lvl,daily:!!o.daily,day:o.day||0,puz:pz.puz,sol:pz.sol,v:o.v||pz.puz.slice(),nt:o.nt||new Array(81).fill(0),t:o.t||0,mis:o.mis||0,hints:o.hints||0,done:!!o.done,hist:[]};
+  sel=-1;render();say();if(!S.done)q('open');}
+function openDaily(){var d=dayNum(),sv=ls('su_sudoku_d'+d);if(sv)load(sv);else load({seed:d*7919+17,lvl:2,daily:true,day:d});}
+function openPractice(lvl){load({seed:(Math.random()*4294967296)>>>0,lvl:lvl});save();}
+/* ---------- drawing ---------- */
+function render(){if(!S)return;var h='',sv=sel>=0?S.v[sel]:0;
+  for(var i=0;i<81;i++){var v=S.v[i],g=!!S.puz[i],cls='k'+(g?' g':'')+(COL[i]===2||COL[i]===5?' c3':'')+(ROW[i]===2||ROW[i]===5?' r3':'');
+    if(sel>=0&&i!==sel&&(ROW[i]===ROW[sel]||COL[i]===COL[sel]||BOX[i]===BOX[sel]))cls+=' zone';
+    if(sv&&v===sv&&i!==sel)cls+=' same';if(i===sel)cls+=' sel';if(v&&!g&&v!==S.sol[i])cls+=' bad';
+    var inner=v?String(v):'';if(!v&&S.nt[i]){inner='<div class="nt">';for(var d=1;d<=9;d++)inner+='<span>'+((S.nt[i]>>d)&1?d:'')+'</span>';inner+='</div>';}
+    h+='<div class="'+cls+'" data-i="'+i+'">'+inner+'</div>';}
+  $('sud').innerHTML=h;[].forEach.call($('sud').children,function(c){c.onclick=function(){ac();sel=+c.getAttribute('data-i');render();};});
+  var cnt=new Array(10).fill(0);for(var j=0;j<81;j++)if(S.v[j]&&S.v[j]===S.sol[j])cnt[S.v[j]]++;
+  var p='';for(var n=1;n<=9;n++)p+='<button type="button" data-n="'+n+'"'+(cnt[n]>=9?' class="done"':'')+'>'+n+'<i>'+(9-cnt[n])+'</i></button>';$('pad').innerHTML=p;
+  [].forEach.call($('pad').children,function(b){b.onclick=function(){enter(+b.getAttribute('data-n'));};});
+  $('tNotes').textContent='Notes: '+(notes?'on':'off');$('tNotes').classList.toggle('on',notes);
+  $('sTime').textContent=fmt(S.t);$('sMis').textContent=S.mis;$('sHint').textContent=S.hints;
+  $('title').textContent=S.daily?'Daily puzzle':LVN[S.lvl]+' practice';
+  var d=dayNum(),ds=ls('su_sudoku_d'+d);$('dayb').innerHTML=ds&&ds.done?'Today\u2019s puzzle: <b>solved in '+fmt(ds.t)+'</b>.':'Today\u2019s puzzle: <b>not solved yet</b>.';
+  $('dayb').innerHTML+='<br>Daily streak: <b>'+(stats.lastDay>=d-1?stats.streak:0)+'</b> \u00b7 best '+stats.maxStreak;
+  $('bDaily').classList.toggle('hide',S.daily);
+  var b=stats.best||{};$('rec').innerHTML='Solved: <b>'+stats.solved+'</b> \u00b7 Best times: '+[1,2,3].map(function(l){return LVN[l]+' <b>'+(b[l]?fmt(b[l]):'\u2013')+'</b>';}).join(' \u00b7 ');}
+function fmt(t){t=Math.floor(t);return Math.floor(t/60)+':'+('0'+t%60).slice(-2);}
+function say(t){if(t){$('msg').innerHTML=t;return;}if(!S)return;$('msg').innerHTML=S.done?'<b>Solved!</b> Pick another puzzle any time.':sel<0?'Tap a square, then a number.':notes?'Notes are on: numbers go in small.':'Pick a number for the square.';}
+/* ---------- playing ---------- */
+function enter(n){if(!S||S.done||sel<0||S.puz[sel])return;ac();
+  if(notes){if(S.v[sel])return;S.hist.push([sel,S.v[sel],S.nt[sel]]);S.nt[sel]^=1<<n;tone(700,.03);save();render();return;}
+  if(S.v[sel]===n)return;S.hist.push([sel,S.v[sel],S.nt[sel]]);S.v[sel]=n;S.nt[sel]=0;
+  if(n!==S.sol[sel]){S.mis++;tone(180,.18,0,.06,'square');say('That number doesn\u2019t fit there.');}
+  else{tone(660,.06);/* clear that number from notes it now rules out */for(var i=0;i<81;i++)if(ROW[i]===ROW[sel]||COL[i]===COL[sel]||BOX[i]===BOX[sel])S.nt[i]&=~(1<<n);say();}
+  save();render();check();}
+function erase(){if(!S||S.done||sel<0||S.puz[sel])return;if(!S.v[sel]&&!S.nt[sel])return;S.hist.push([sel,S.v[sel],S.nt[sel]]);S.v[sel]=0;S.nt[sel]=0;save();render();}
+function undo(){if(!S||S.done||!S.hist.length)return;var h=S.hist.pop();S.v[h[0]]=h[1];S.nt[h[0]]=h[2];sel=h[0];save();render();}
+function hint(){if(!S||S.done)return;var i=sel>=0&&!S.puz[sel]&&S.v[sel]!==S.sol[sel]?sel:-1;
+  if(i<0){var open=[];for(var k=0;k<81;k++)if(S.v[k]!==S.sol[k])open.push(k);if(!open.length)return;i=open[Math.floor(Math.random()*open.length)];}
+  S.hist.push([i,S.v[i],S.nt[i]]);S.v[i]=S.sol[i];S.nt[i]=0;S.hints++;sel=i;tone(880,.08);save();render();check();}
+function check(){for(var i=0;i<81;i++)if(S.v[i]!==S.sol[i])return;S.done=true;save();
+  stats.solved++;stats.best=stats.best||{};if(!stats.best[S.lvl]||S.t<stats.best[S.lvl])stats.best[S.lvl]=Math.floor(S.t);
+  if(S.daily){if(stats.lastDay===S.day-1)stats.streak++;else if(stats.lastDay!==S.day)stats.streak=1;stats.lastDay=S.day;stats.maxStreak=Math.max(stats.maxStreak||0,stats.streak);}
+  ls('su_sudoku_stats',stats);q('win');q('over');
+  [].forEach.call($('sud').children,function(c,k){setTimeout(function(){c.classList.add('ok');},(ROW[k]+COL[k])*25);});
+  tone(523,.2);tone(659,.2,.12);tone(784,.3,.24);
+  $('ovTitle').textContent=S.daily?'Daily puzzle solved!':'Solved!';
+  $('ovSub').textContent=LVN[S.lvl]+' in '+fmt(S.t)+' with '+S.mis+' mistake'+(S.mis===1?'':'s')+' and '+S.hints+' hint'+(S.hints===1?'':'s')+'.'+(S.daily?' Daily streak: '+stats.streak+'.':'');
+  render();say();setTimeout(function(){showSheet('over');},900);}
+function showSheet(k){$('sheet').classList.remove('hide');$('setup').classList.toggle('hide',k!=='setup');$('over').classList.toggle('hide',k!=='over');
+  [].forEach.call($('optLvl').children,function(b){b.classList.toggle('on',+b.getAttribute('data-v')===setupLvl);});}
+function hideSheet(){$('sheet').classList.add('hide');}
+[].forEach.call($('optLvl').children,function(b){b.onclick=function(){setupLvl=+b.getAttribute('data-v');showSheet('setup');};});
+$('bStart').onclick=function(){hideSheet();say('Making a puzzle\u2026');setTimeout(function(){openPractice(setupLvl);},30);};
+$('bCancel').onclick=hideSheet;$('ovClose').onclick=hideSheet;$('againBtn').onclick=function(){showSheet('setup');};
+$('bNew').onclick=function(){showSheet('setup');};$('bDaily').onclick=function(){openDaily();};
+$('tNotes').onclick=function(){notes=!notes;render();say();};$('tErase').onclick=erase;$('tUndo').onclick=undo;$('tHint').onclick=hint;
+addEventListener('keydown',function(e){if(!S||!$('sheet').classList.contains('hide'))return;var k=e.key;
+  if(k>='1'&&k<='9'){enter(+k);e.preventDefault();return;}
+  if(k==='Backspace'||k==='Delete'||k==='0'){erase();e.preventDefault();return;}
+  if(k==='n'||k==='N'){notes=!notes;render();say();return;}
+  if(k==='z'&&(e.ctrlKey||e.metaKey)){undo();e.preventDefault();return;}
+  var mv={ArrowUp:-9,ArrowDown:9,ArrowLeft:-1,ArrowRight:1}[k];if(mv){e.preventDefault();if(sel<0)sel=40;else{var r=ROW[sel],c=COL[sel];if(mv===-9)r=(r+8)%9;if(mv===9)r=(r+1)%9;if(mv===-1)c=(c+8)%9;if(mv===1)c=(c+1)%9;sel=r*9+c;}render();say();}});
+/* the clock only runs while you're looking at the puzzle */
+setInterval(function(){if(!S||S.done||document.hidden||(window.__suQuiet&&__suQuiet()))return;S.t++;$('sTime').textContent=fmt(S.t);if(S.t%10===0)save();},1000);
+openDaily();
+window.__su={state:function(){return S?{daily:S.daily,lvl:S.lvl,done:S.done,mis:S.mis,hints:S.hints,filled:S.v.filter(Boolean).length,givens:S.puz.filter(Boolean).length,unique:solveCount(S.puz,2)}:null;},
+  solve:function(){S.v=S.sol.slice();save();render();check();},sol:function(){return S.sol.slice();},select:function(i){sel=i;render();},practice:function(l){openPractice(l||2);}};
+})();
+<\u002fscript>
+<script>
+(function(){
+  var last=0;
+  var sent=document.createElement('div');
+  sent.setAttribute('aria-hidden','true');
+  sent.style.cssText='height:0;margin:0;padding:0;border:0;clear:both';
+  function measure(){
+    if(!document.body) return 0;
+    if(sent.parentNode!==document.body) document.body.appendChild(sent);
+    var pb=parseFloat(getComputedStyle(document.body).paddingBottom)||0;
+    return Math.ceil(sent.getBoundingClientRect().bottom+(window.pageYOffset||0)+pb);
+  }
+  function post(){
+    var h=measure();
+    if(!h||Math.abs(h-last)<2) return;
+    last=h;
+    try{parent.postMessage({arcade:'h',h:h},'*');}catch(e){}
+  }
+  addEventListener('load',post); addEventListener('resize',post);
+  if(window.ResizeObserver){
+    try{ var ro=new ResizeObserver(post); ro.observe(document.body);
+         var w=document.querySelector('.wrap'); if(w) ro.observe(w); }catch(e){}
+  }
+  document.addEventListener('load',post,true);
+  addEventListener('message',function(e){if(e.data&&e.data.arcade==='visible'&&e.data.on){last=0;setTimeout(post,30);}});
+  setInterval(post,900); post();
+})();
+<\u002fscript>
+</body>
+</html>
