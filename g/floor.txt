@@ -341,7 +341,27 @@ html.fs .m-phone .topbar{top:22px}
 .m-desk.xw .regs{right:var(--mr)}
 .m-desk.xw .pcard,.m-desk.xw .hint{left:calc(var(--ml) + (100% - var(--ml) - var(--mr)) / 2)}
 .m-desk.xw .title{right:var(--mr)}
-.dk .qbd{background:#ef4444;color:#fff}</style>
+.dk .qbd{background:#ef4444;color:#fff}
+/* the regular's profile is a trading card: tall gold-framed card, full portrait on top, name banner, then the stats */
+.pcard,.m-phone .pcard,.m-land .pcard,.m-desk .pcard{top:50%!important;bottom:auto!important;width:min(300px,calc(100% - 24px))!important;max-height:calc(100% - 24px);
+  flex-direction:column;align-items:stretch;gap:0;padding:7px;overflow:hidden;border-radius:18px;
+  background:linear-gradient(160deg,#f2d27e,#8a6a2a 30%,#f8e7b0 52%,#7a5a20 78%,#e7c873);border:0;
+  box-shadow:0 0 0 1px rgba(0,0,0,.6),0 28px 70px rgba(0,0,0,.75);transform:translate(-50%,-46%) scale(.94)}
+.pcard.on{transform:translate(-50%,-50%) scale(1)!important}
+.pcard img,.m-land .pcard img{display:block;width:100%!important;max-width:none;height:auto;aspect-ratio:4/5;margin:0!important;object-fit:cover;object-position:50% 15%;
+  flex:0 0 auto;max-height:44vh;filter:none;border-radius:12px 12px 0 0;background:#0f172a;box-shadow:inset 0 0 0 2px rgba(0,0,0,.4)}
+.pcard .pb{position:relative;flex:1 1 auto;min-height:0;overflow-y:auto;padding:0 12px 12px;background:linear-gradient(180deg,#141c30,#0b1222);border-radius:0 0 12px 12px;text-align:center}
+.pcard h3{position:relative;z-index:2;margin:0 -12px;padding:7px 10px 6px;background:linear-gradient(180deg,#7f1d1d,#4c0f0f);border-top:2px solid #f2d27e;border-bottom:2px solid #f2d27e;
+  font-size:22px;color:#fde68a;text-shadow:0 2px 0 #000;letter-spacing:.02em}
+.pcard .pt{margin-top:8px}
+.pcard .pq{margin-top:6px}
+.pcard p{display:block!important;font-size:12px;margin-top:6px}
+.pcard .pf,.pcard .ps{text-align:left;background:rgba(255,255,255,.05);border:1px solid rgba(242,210,126,.18);border-radius:9px;padding:7px 9px;margin-top:8px}
+.pcard .go{display:flex;justify-content:center;width:100%;margin:10px 0 0}
+.pcard .go2{margin:6px 0 0}
+.pcard .x{position:absolute;right:12px;top:12px;z-index:3;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:18px;line-height:1;padding:0;border:1px solid rgba(242,210,126,.6)}
+@media (max-height:640px){.pcard img,.m-land .pcard img{aspect-ratio:16/10}}
+</style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
 html.fs,html.fs body{height:100%;overflow:hidden!important}
 html.fs .wrap{max-width:none!important;padding:8px 12px 8px!important}
@@ -1836,6 +1856,15 @@ function showPatron(p){if(!p||!p.art||!p.art.f)return;pSel=p;select(null);var a=
   document.getElementById('pSt').innerHTML='<b>'+esc(where)+'</b>'+(p.kind==='dealer'||p.staff?'':' &middot; Bankroll '+money(p.bank||0));
   var gb=document.getElementById('pGo');if(!T&&p.dealT){for(var kk in TB)if(TB[kk].dealer===p)T=TB[kk];}gb.classList.toggle('hide',!T||!!T.kind.soon);gb.onclick=function(){hidePatron();if(T)go(T);};
   pcard.classList.add('on');}
+(function(){var _sp=showPatron;showPatron=function(p){_sp(p);setTimeout(function(){try{var c=document.getElementById('pcard');if(!c.classList.contains('on'))return;
+  /* the card can sit below the bottom of a phone screen: scroll the outermost page we can reach so the whole card is in view */
+  var r=c.getBoundingClientRect(),top=r.top,w=window,last=window;
+  try{while(w.frameElement){top+=w.frameElement.getBoundingClientRect().top;last=w.parent;w=w.parent;}}catch(_){}
+  var vh=last.innerHeight;if(top>=0&&top+r.height<=vh)return;var dy=top-Math.max(8,(vh-r.height)/2);
+  var tried=false;try{var el=w===window?null:null;}catch(_){}
+  try{var se=last.document.scrollingElement;var before=se.scrollTop;se.scrollBy({top:dy,behavior:'smooth'});tried=true;
+    setTimeout(function(){if(Math.abs(se.scrollTop-before)<2){var f=window.frameElement;while(f){var ps=f.ownerDocument.defaultView;var a=f.parentElement;while(a){var cs=ps.getComputedStyle(a);if(/(auto|scroll)/.test(cs.overflowY)&&a.scrollHeight>a.clientHeight+2){a.scrollBy({top:dy,behavior:'smooth'});return;}a=a.parentElement;}f=ps.frameElement;}}},400);}catch(_){}
+  if(!tried)c.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}},280);};})();
 function hidePatron(){pSel=null;pcard.classList.remove('on');}
 document.getElementById('pX').addEventListener('click',hidePatron);
 
