@@ -272,6 +272,10 @@ html.fs .play{padding-top:48px}
 :is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .small .card.hasart .cs{width:calc(var(--cw)*.15);height:calc(var(--cw)*.15)}
 
 .symimg{width:1.25em;height:1.25em;object-fit:contain;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}html.has-vt_dial .combo .spot{background:url(https://saddleup-arcade.vercel.app/art/vt_dial.webp) center/contain no-repeat!important;box-shadow:none!important}html.has-vt_box .boxes .spot:not(.won){background:url(https://saddleup-arcade.vercel.app/art/vt_box.webp) center/100% 100% no-repeat!important;box-shadow:none!important;color:#fde68a;text-shadow:0 1px 3px #000}
+
+.q.go{cursor:pointer;transition:border-color .15s,background .15s}.q.go:hover{border-color:rgba(242,210,126,.6);background:rgba(242,210,126,.06)}
+.q.go .tx small::after{content:"  \00B7  Tap to play \203A";color:#34d399;font-weight:800}
+.q.go.claimed .tx small::after{content:none}
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
 html.fs,html.fs body{height:100%;overflow:hidden!important}
@@ -473,6 +477,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
    '.suq-box{width:min(360px,100%);max-height:calc(100% - 10px);overflow:auto;background:linear-gradient(180deg,rgba(36,18,10,.98),rgba(18,10,6,.98));border:2px solid #c6a75e;border-radius:16px;padding:12px;box-shadow:0 20px 50px rgba(0,0,0,.6);font-family:Inter,system-ui,sans-serif;color:#f8fafc}'+
    '.suq-h{display:flex;align-items:center;gap:8px;margin-bottom:8px}.suq-h b{font:400 20px Rye,Georgia,serif;color:#f2d27e;flex:1}.suq-x{background:rgba(255,255,255,.08);border:0;color:#fff;border-radius:8px;width:30px;height:30px;font-size:18px;cursor:pointer}'+
    '.suq-q{padding:9px 10px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid rgba(242,210,126,.16);margin-bottom:6px;font-size:13px;font-weight:700;line-height:1.3}'+
+   '.suq-q{cursor:pointer}.suq-q:hover{border-color:rgba(242,210,126,.55)}.suq-gp{float:right;font-style:normal;font-size:11px;font-weight:900;color:#34d399;margin-left:8px}'+
    '.suq-q small{display:block;font-size:11px;color:#cbb07a;margin-top:2px}.suq-q .bar{height:6px;border-radius:6px;background:rgba(255,255,255,.08);margin-top:6px;overflow:hidden}.suq-q .bar i{display:block;height:100%;background:linear-gradient(90deg,#059669,#34d399)}'+
    '.suq-q.done{border-color:rgba(52,211,153,.55);background:rgba(16,185,129,.1)}.suq-q.cl{opacity:.55}'+
    '.suq-none{font-size:13px;color:#cbd5e1;padding:8px 2px 10px;line-height:1.45}'+
@@ -512,10 +517,10 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   function close(){if(pop){pop.remove();pop=null;}}
   function fill(){var bx=pop&&pop.querySelector('.suq-box');if(!bx)return;var L=D.list||[],h='<div class="suq-h"><b>'+(D.room?'Today’s quests':'Quests for this game')+'</b><button type="button" class="suq-x" aria-label="Close">&times;</button></div>';
     if(!L.length)h+='<div class="suq-none">None of today’s quests count here. Open the quest list to see where they are.</div>';
-    L.forEach(function(q){var pct=Math.min(100,100*q.n/q.goal);h+='<div class="suq-q'+(q.done?' done':'')+(q.claimed?' cl':'')+'">'+esc(q.txt)+'<small>'+(q.t==='e'?'Bronze':q.t==='m'?'Silver':'Gold')+' ticket · '+(q.claimed?'done \u2713 ticket earned':q.done?'done!':fmt(q))+'</small><div class="bar"><i style="width:'+pct+'%"></i></div></div>';});
+    L.forEach(function(q){var pct=Math.min(100,100*q.n/q.goal);h+='<div class="suq-q'+(q.done?' done':'')+(q.claimed?' cl':'')+'" data-g="'+esc(q.g||'')+'" role="button" tabindex="0">'+esc(q.txt)+(D.room||q.g!==D.me?'<em class="suq-gp">Play \u203a</em>':'')+'<small>'+(q.t==='e'?'Bronze':q.t==='m'?'Silver':'Gold')+' ticket · '+(q.claimed?'done \u2713 ticket earned':q.done?'done!':fmt(q))+'</small><div class="bar"><i style="width:'+pct+'%"></i></div></div>';});
     if(D.tickets>0)h+='<button type="button" class="suq-go" data-a="t">Scratch my tickets ('+D.tickets+')</button>';
     h+='<button type="button" class="suq-go'+(D.tickets>0?' alt':'')+'" data-a="q">All daily quests</button>';
-    bx.innerHTML=h;bx.querySelector('.suq-x').onclick=close;[].forEach.call(bx.querySelectorAll('.suq-go'),function(b){b.onclick=function(){go(b.getAttribute('data-a'));};});}
+    bx.innerHTML=h;bx.querySelector('.suq-x').onclick=close;[].forEach.call(bx.querySelectorAll('.suq-q'),function(r){r.onclick=function(){var g=r.getAttribute('data-g');close();if(g)try{parent.postMessage({arcade:'questGo',g:g},'*');}catch(e){}};});[].forEach.call(bx.querySelectorAll('.suq-go'),function(b){b.onclick=function(){go(b.getAttribute('data-a'));};});}
   var toastT=0;function toast(d){var t=document.querySelector('.suq-toast');if(!t){t=document.createElement('div');t.className='suq-toast';document.body.appendChild(t);t.onclick=function(){t.classList.remove('on');go('t');};}
     var nm=d.tier==='v'?'High-Roller Vault':d.tier==='g'?'Gold':d.tier==='s'?'Silver':'Bronze';t.innerHTML='<i>'+(d.tier==='v'?'\ud83d\udd10':'\ud83c\udf9f\ufe0f')+'</i><span><b>'+(d.tier==='v'?'Vault unlocked!':'Quest complete!')+'</b>'+esc(d.txt)+' \u00b7 '+nm+' ticket earned. Tap to scratch.</span>';
     requestAnimationFrame(function(){t.classList.add('on');});clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('on');},4200);}
@@ -1298,12 +1303,13 @@ function saveT(a){SUQ.write('su_tickets',a.slice(-120));}
 function fmt(q,n){return q.amt?money(n)+' / '+money(q.goal):n+' / '+q.goal;}
 function renderQ(){var st=SUQ.status(),h='',done=0,cl=0;
   st.forEach(function(s){var q=s.q,tr=tierOf(q.t),pct=Math.min(100,100*s.n/q.goal);if(s.done)done++;if(s.claimed)cl++;
-    h+='<div class="q'+(s.done?' done':'')+(s.claimed?' claimed':'')+'"><span class="tk '+tr+'">'+TIER[tr].name.slice(0,1)+'</span>'+
+    h+='<div class="q go'+(s.done?' done':'')+(s.claimed?' claimed':'')+'" data-g="'+q.g+'" title="Go play"><span class="tk '+tr+'">'+TIER[tr].name.slice(0,1)+'</span>'+
       '<div class="tx">'+q.txt+'<small>'+(q.t==='e'?'Easy':q.t==='m'?'Medium':'Hard')+' \u00b7 '+TIER[tr].name.charAt(0)+TIER[tr].name.slice(1).toLowerCase()+' ticket \u00b7 '+fmt(q,s.n)+'</small><div class="bar"><i style="width:'+pct+'%"></i></div></div>'+
       '<button class="claim" type="button" data-q="'+q.id+'"'+(s.done&&!s.claimed?'':' disabled')+'>'+(s.claimed?'Ticket earned \u2713':s.done?'Earning\u2026':'In progress')+'</button></div>';});
   var vg=SUQ.vaultEarned();h+='<div class="vaultrow'+(vg?' got':'')+'"><span class="vi">\u{1f510}</span><div class="tx">Finish all '+st.length+' quests<small>Bonus: a High-Roller Vault ticket \u00b7 prizes \u00d725 \u00b7 '+done+' / '+st.length+'</small><div class="bar"><i style="width:'+(100*done/Math.max(1,st.length))+'%"></i></div></div><button class="claim" type="button" disabled>'+(vg?'Ticket earned \u2713':'Locked')+'</button></div>';
   $('qs').innerHTML=h;$('qsum').textContent=done+' of '+st.length+' done';
   [].forEach.call($('qs').querySelectorAll('.claim'),function(b){b.onclick=function(){claim(b.getAttribute('data-q'));};});
+  [].forEach.call($('qs').querySelectorAll('.q.go'),function(r){r.onclick=function(e){if(e.target.closest('.claim'))return;try{parent.postMessage({arcade:'questGo',g:r.getAttribute('data-g')},'*');}catch(_){}};});
   badges();}
 function claim(id){var st=SUQ.status().filter(function(s){return s.q.id===id;})[0];if(!st||!st.done||st.claimed)return;
   var c=SUQ.claims();if(c.c[id])return;c.c[id]=1;SUQ.write('su_qclaim',c);

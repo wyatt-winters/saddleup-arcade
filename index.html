@@ -637,7 +637,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'0d6a6db6f2'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'766263e2c6'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}
@@ -812,7 +812,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   var HASNAV={},HALL={bingo:1,keno:1,bspins:1};
   window.addEventListener('message',function(e){var d=e.data;if(!d)return;for(var k in frames){if(frames[k].contentWindow===e.source){
     if(d.arcade==='hasNav'){HASNAV[k]=1;if(k===active)navTab(k);}
-    else if(d.arcade==='nav'&&d.to&&NAMES[d.to]){show(d.to,true);if(d.to==='quests'&&d.tab){var qf=frames.quests;setTimeout(function(){if(frames.quests)post(frames.quests,{arcade:'openTickets',tab:d.tab});},qf?60:900);}}
+    else if(d.arcade==='questGo'&&d.g){var tg=String(d.g);tg=tg==='parlor'?'parlor':(tg==='casino'||tg==='any'||!NAMES[tg])?'floor':tg;if(tg!==active)show(tg,true);return;}
+    if(d.arcade==='nav'&&d.to&&NAMES[d.to]){show(d.to,true);if(d.to==='quests'&&d.tab){var qf=frames.quests;setTimeout(function(){if(frames.quests)post(frames.quests,{arcade:'openTickets',tab:d.tab});},qf?60:900);}}
     else if(d.arcade==='quest'&&d.ev)questEv(k,String(d.ev),+d.n||1);return;}}});
   /* daily quests: every game reports what you do; the shell keeps the tally */
   var lastWin={};
@@ -824,8 +825,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   function qCount(){var n=0;try{n=SUQ.claimable()+SUQ.unplayed();}catch(e){}var b=document.getElementById('qTopBd');if(b){b.textContent=n>9?'9+':String(n);b.classList.toggle('on',n>0);}
     var qb=document.getElementById('qTop');if(qb){qb.classList.toggle('on',active==='quests');qb.setAttribute('aria-selected',active==='quests'?'true':'false');}
     var cl=0,up=0;try{cl=SUQ.claimable();up=SUQ.unplayed();}catch(e){}
-    for(var k in frames){var list=[];try{list=SUQ.relevant(k).map(function(x){return {t:x.q.t,txt:x.q.txt,n:x.n,goal:x.q.goal,amt:x.q.amt,done:x.done,claimed:x.claimed};});}catch(e){}
-      post(frames[k],{arcade:'qcount',n:n,claim:cl,tickets:up,list:list,room:k==='floor'||k==='parlor',self:k==='quests'});}}
+    for(var k in frames){var list=[];try{list=SUQ.relevant(k).map(function(x){return {g:x.q.g,t:x.q.t,txt:x.q.txt,n:x.n,goal:x.q.goal,amt:x.q.amt,done:x.done,claimed:x.claimed};});}catch(e){}
+      post(frames[k],{arcade:'qcount',n:n,claim:cl,tickets:up,list:list,room:k==='floor'||k==='parlor',self:k==='quests',me:k});}}
   document.getElementById('qTop').addEventListener('click',function(){show('quests',true);});
   setInterval(qCount,4000);window.addEventListener('storage',function(e){if(/^su_(qprog|qclaim|tickets)$/.test(e.key||''))qCount();});
   window.addEventListener('message',function(e){var d=e.data;if(d&&(d.arcade==='questsChanged'||d.arcade==='hasNav'||d.arcade==='qask'))setTimeout(qCount,50);});
