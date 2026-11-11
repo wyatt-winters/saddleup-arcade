@@ -167,6 +167,12 @@ html.fs .tab img.gi{width:26px;height:26px}
 .thmenu{min-width:240px}
 .thmenu .cskin{display:block;padding:2px 4px 4px}
 .thmenu .cskin[hidden]{display:none}
+.thmenu .skinsw button[hidden]{display:none}
+#secretok{position:fixed;inset:0;z-index:2147483600;display:flex;align-items:center;justify-content:center;background:rgba(5,3,10,.72);padding:16px}
+#secretok .sb{max-width:340px;width:100%;padding:22px 20px 18px;border-radius:16px;background:linear-gradient(160deg,#2a0b2e,#12060f);border:1px solid rgba(242,210,126,.5);box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(236,72,153,.25);color:#fce7f3;text-align:center;font:500 14px/1.45 Inter,system-ui,sans-serif}
+#secretok .st{font:800 19px Inter,system-ui,sans-serif;color:#f2d27e;margin:0 0 6px}
+#secretok .sr{display:flex;gap:10px;margin-top:16px}#secretok button{flex:1;min-height:44px;border-radius:10px;font:700 14px Inter,system-ui,sans-serif;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#e2e8f0}
+#secretok button.go{background:linear-gradient(180deg,#f472b6,#be185d);border-color:#f9a8d4;color:#fff}
 .thmenu .skinsw{display:flex;flex-direction:column;gap:6px;padding:0;border:0;background:none;width:100%}
 .thmenu .skinsw button{display:flex;align-items:center;gap:10px;width:100%;padding:6px 12px 6px 6px;min-height:52px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(255,255,255,.03);color:#e2e8f0;font-size:14px;text-align:left}
 .thmenu .skinsw button img{width:40px;height:40px;flex:0 0 40px;border-radius:8px;object-fit:cover;display:block;background:#1e293b}
@@ -678,7 +684,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   /* seasonal skins (Christmas) sit on top of the main look and can be switched on and off */
   var SEASONAL=Object.keys(SKINS).filter(function(k){return SKINS[k].base&&SKINS[k].base===ONLY_SKIN;});
   var SKIN_IDS=ONLY_SKIN?[ONLY_SKIN].concat(SEASONAL):['western'].concat(Object.keys(SKINS));
-  function okSkin(v){return ONLY_SKIN?SKIN_IDS.indexOf(v)>=0:(v==='western'||!!SKINS[v]);}
+  function secretOn(k){try{return localStorage.getItem('su_secret_'+k)==='1';}catch(e){return false;}}
+  function okSkin(v){if(SKINS[v]&&SKINS[v].hidden&&!secretOn(v))return false;return ONLY_SKIN?SKIN_IDS.indexOf(v)>=0:(v==='western'||!!SKINS[v]);}
   function inSeason(k,d){var s=SKINS[k]&&SKINS[k].season;if(!s)return false;d=d||new Date();var m=d.getMonth()+1,day=d.getDate(),a=s[0]*100+s[1],b=s[2]*100+s[3],t=m*100+day;return a<=b?(t>=a&&t<=b):(t>=a||t<=b);}
   function seasonKey(d){d=d||new Date();var on=SEASONAL.filter(function(k){return inSeason(k,d);})[0];return on?on+d.getFullYear():'off';}
   /* the season's skin turns on by itself; a choice you make sticks for the rest of that season */
@@ -686,7 +693,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     if(sv&&okSkin(sv.v)&&(sv.at===sk||(sk==='off'&&SKINS[sv.v]&&!SKINS[sv.v].season)))return sv.v;var on=SEASONAL.filter(function(k){return inSeason(k);})[0];return on||ONLY_SKIN;}
   var skin='western';
   try{var hs0=(window.parent.location.hash||window.location.hash||'').toLowerCase(),hit='';
-    SKIN_IDS.forEach(function(id){if(hs0.indexOf(id)>=0)hit=id;});
+    SKIN_IDS.forEach(function(id){if(hs0.indexOf(id)>=0&&okSkin(id))hit=id;});
     if(ONLY_SKIN)skin=hit&&SKIN_IDS.indexOf(hit)>=0&&hit!==ONLY_SKIN?hit:seasonPick();else if(hit)skin=hit;else{var sv=localStorage.getItem('su_arcade_skin');if(sv&&okSkin(sv))skin=sv;else if(sv)localStorage.removeItem('su_arcade_skin');}}catch(e){}
   function cur(){return SKINS[skin]||null;}
   /* a game's page in the chosen skin: every Western image URL is swapped for the skin's one */
@@ -726,7 +733,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       if(B){P=B.pairs||[];for(i=0;i<P.length;i++)if(P[i][0]===w0)m.b=P[i][1];}
       P=(K&&K.pairs)||[];for(i=0;i<P.length;i++){if(P[i][0]===(m.b||w0))m.k=P[i][1];if(P[i][0]===w0&&!m.k)m.k=P[i][1];}
       return m.k||m.b||(K&&K.icons&&K.icons.floor)||(B&&B.icons&&B.icons.floor)||w0;}
-    box.querySelector('.skinsw').innerHTML=SKIN_IDS.map(function(id){return '<button type="button" data-skin="'+id+'" title="'+skinName(id)+' theme" aria-pressed="false"><img alt="" data-p="'+prev(id)+'" src="'+prev(id)+'"><span>'+skinName(id)+'</span></button>';}).join('');})();
+    box.querySelector('.skinsw').innerHTML=SKIN_IDS.map(function(id){return '<button type="button" data-skin="'+id+'" title="'+skinName(id)+' theme" aria-pressed="false"'+(SKINS[id]&&SKINS[id].hidden&&!secretOn(id)?' hidden':'')+'><img alt="" data-p="'+prev(id)+'" src="'+prev(id)+'"><span>'+skinName(id)+'</span></button>';}).join('');})();
   function skinUI(){
     document.documentElement.setAttribute('data-skin',skin);
     Array.prototype.forEach.call(document.querySelectorAll('.skinsw button'),function(b){var on=b.getAttribute('data-skin')===skin;b.setAttribute('aria-pressed',on?'true':'false');
@@ -766,6 +773,22 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     loader(v,function(done){var f=frames[active];if(!f){done();return;}
       f.addEventListener('load',function(){setTimeout(done,250);},{once:true});getSrc(active,function(s2){f.setAttribute('srcdoc',s2);});});
   }
+  (function(){var hid=Object.keys(SKINS).filter(function(k){return SKINS[k].hidden&&SKIN_IDS.indexOf(k)>=0;});if(!hid.length)return;
+    function ask(k){if(secretOn(k)){setSkin(k);return;}if(document.getElementById('secretok'))return;
+      var d=document.createElement('div');d.id='secretok';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');
+      d.innerHTML='<div class="sb"><p class="st">\u2728 Secret theme found</p><p>You found the <b>'+skinName(k)+'</b> theme. It has glam pin-up art for adults only.</p><p>Are you 18 or older?</p><div class="sr"><button type="button" class="no">Not now</button><button type="button" class="go">I\u2019m 18+, unlock</button></div></div>';
+      document.body.appendChild(d);
+      d.querySelector('.no').onclick=function(){d.remove();};
+      d.querySelector('.go').onclick=function(){try{localStorage.setItem('su_secret_'+k,'1');}catch(e){}d.remove();
+        var b=document.querySelector('.skinsw button[data-skin="'+k+'"]');if(b)b.hidden=false;setSkin(k);};
+      (function(){var top=0,h=innerHeight;try{var w=window,off=0;while(w.parent&&w.parent!==w&&w.frameElement){off+=w.frameElement.getBoundingClientRect().top;w=w.parent;top=Math.max(top,-off);h=Math.min(h,w.innerHeight-Math.max(0,off));}}catch(e){}
+        if(top>0||h<innerHeight){d.style.alignItems='flex-start';d.querySelector('.sb').style.marginTop=Math.max(12,Math.round(top+(h-d.querySelector('.sb').offsetHeight)/2))+'px';}
+        try{d.querySelector('.sb').scrollIntoView({block:'center'});}catch(e){}})();
+      setTimeout(function(){var g=d.querySelector('.go');if(g)g.focus({preventScroll:true});},30);}
+    var hd=document.querySelector('#thmenu .chead'),n=0,t0=0;
+    if(hd)hd.addEventListener('click',function(e){e.stopPropagation();var t=Date.now();if(t-t0>3000)n=0;t0=t;n++;if(n>=7){n=0;thOpen(false);ask(hid[0]);}});
+    try{var hs=(window.parent.location.hash||window.location.hash||'').toLowerCase();hid.forEach(function(k){var c=SKINS[k].code||k;if(hs.indexOf(c)>=0&&!secretOn(k))setTimeout(function(){ask(k);},900);});}catch(e){}
+  })();
   Array.prototype.forEach.call(document.querySelectorAll('.cskin .skinsw button'),function(b){
     b.addEventListener('click',function(e){e.stopPropagation();thOpen(false);setSkin(b.getAttribute('data-skin'));});});
   var thBtn=document.getElementById('thBtn'),thMenu=document.getElementById('thmenu');
