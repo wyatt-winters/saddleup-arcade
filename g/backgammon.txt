@@ -296,19 +296,19 @@ kbd{font:inherit;font-size:10px;background:rgba(15,23,42,.35);border:1px solid r
 @media (prefers-reduced-motion:reduce){.suban{transition:opacity .2s}}
 
 /* ---- Beach deck: the court art has no painted corners, so the card shows its own rank/suit badge; art fills edge to edge under a thin gold frame ---- */
-:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .art{background:#f6e7c8}
-:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .art img{transform:scale(1.02)}
-:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .art::after{content:"";position:absolute;inset:2.5%;border:1.5px solid rgba(242,210,126,.95);border-radius:calc(var(--cw)*.065);box-shadow:inset 0 0 0 1px rgba(15,23,42,.25),0 0 0 1px rgba(15,23,42,.2);pointer-events:none}
-:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .tl,:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .br{display:flex;filter:none;color:#b91c1c;background:rgba(255,251,240,.95);border:1.5px solid #c6a75e;border-radius:calc(var(--cw)*.06);padding:calc(var(--cw)*.025) calc(var(--cw)*.03) calc(var(--cw)*.03);box-shadow:0 1px 3px rgba(0,0,0,.45);z-index:3}
-:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.blk.hasart .tl,:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.blk.hasart .br{color:#0f172a}
-:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .tl{left:5%;top:4%}
-:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .br{right:5%;bottom:4%}
-:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .rk{font-size:calc(var(--cw)*.17)}
-:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .card.hasart .cs{width:calc(var(--cw)*.12);height:calc(var(--cw)*.12)}
-:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .small .card.hasart .br{display:none}
-:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .small .card.hasart .tl{flex-direction:row;gap:1px;left:auto;right:5%;top:3%;padding:calc(var(--cw)*.02) calc(var(--cw)*.03)}
-:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .small .card.hasart .rk{font-size:calc(var(--cw)*.2)}
-:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"]) .small .card.hasart .cs{width:calc(var(--cw)*.15);height:calc(var(--cw)*.15)}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .card.hasart .art{background:#f6e7c8}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .card.hasart .art img{transform:scale(1.02)}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .card.hasart .art::after{content:"";position:absolute;inset:2.5%;border:1.5px solid rgba(242,210,126,.95);border-radius:calc(var(--cw)*.065);box-shadow:inset 0 0 0 1px rgba(15,23,42,.25),0 0 0 1px rgba(15,23,42,.2);pointer-events:none}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .card.hasart .tl,:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .card.hasart .br{display:flex;filter:none;color:#b91c1c;background:rgba(255,251,240,.95);border:1.5px solid #c6a75e;border-radius:calc(var(--cw)*.06);padding:calc(var(--cw)*.025) calc(var(--cw)*.03) calc(var(--cw)*.03);box-shadow:0 1px 3px rgba(0,0,0,.45);z-index:3}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .card.blk.hasart .tl,:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .card.blk.hasart .br{color:#0f172a}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .card.hasart .tl{left:5%;top:4%}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .card.hasart .br{right:5%;bottom:4%}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .card.hasart .rk{font-size:calc(var(--cw)*.17)}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .card.hasart .cs{width:calc(var(--cw)*.12);height:calc(var(--cw)*.12)}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .small .card.hasart .br{display:none}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .small .card.hasart .tl{flex-direction:row;gap:1px;left:auto;right:5%;top:3%;padding:calc(var(--cw)*.02) calc(var(--cw)*.03)}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .small .card.hasart .rk{font-size:calc(var(--cw)*.2)}
+:is(html[data-season="beach"],html[data-season="comic"],html[data-season="wasteland"],html[data-season="vegas"]) .small .card.hasart .cs{width:calc(var(--cw)*.15);height:calc(var(--cw)*.15)}
 
 
 @media (max-width:760px){
@@ -634,7 +634,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
 (function(){
-  var LIST=/*SKINLIST*/[["anime", "Classic"], ["xmas", "Christmas"], ["beach", "Beach"], ["comic", "Comic"]]/*SKINLIST*/;
+  var LIST=/*SKINLIST*/[["anime", "Classic"], ["xmas", "Christmas"], ["beach", "Beach"], ["comic", "Comic"], ["vegas", "Showgirl"]]/*SKINLIST*/;
   if(LIST.length<2)return;
   var cur=document.documentElement.getAttribute('data-season')||document.documentElement.getAttribute('data-skin')||'western';
   function btns(){return LIST.map(function(k){return '<button type="button" data-skin="'+k[0]+'"'+(cur===k[0]?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>'+k[1]+'</button>';}).join('');}
@@ -1316,6 +1316,8 @@ SKIN_ART.beach={L:1100,A:596,colL:165,colR:610,pw:59.6,pwR:54,y0:100,y1:470,barX
     trayX:960,trayW:66,trayTop:[104,262],trayBot:[306,466],cubeX:100,cubeY:[150,285,420],halfL:[140,495],halfR:[585,905],cd:46,cap:4,cube:38,die:40};
 SKIN_ART.comic={L:1100,A:596,colL:160,colR:600,pw:59,pwR:57.4,y0:84,y1:484,barX:537,barW:50,
     trayX:975,trayW:60,trayTop:[92,268],trayBot:[302,478],cubeX:70,cubeY:[150,290,430],halfL:[120,500],halfR:[575,925],cd:46,cap:4,cube:38,die:40};
+SKIN_ART.vegas={L:1100,A:596,colL:175,colR:604,pw:58.2,pwR:53.8,colLT:194,pwT:55.2,colRT:603,pwRT:52.2,y0:86,y1:476,barX:515,barW:50,
+    trayX:935,trayW:62,trayTop:[92,268],trayBot:[300,476],cubeX:74,cubeY:[150,290,430],halfL:[146,497],halfR:[577,893],cd:46,cap:4,cube:38,die:40};
 (function(){var se=document.documentElement.getAttribute('data-season')||'',sk=document.documentElement.getAttribute('data-skin')||'';
   if(SKIN_ART[se])ART=SKIN_ART[se];else if(SKIN_ART[sk])ART=SKIN_ART[sk];})();
 ART.mid=(ART.y0+ART.y1)/2;
@@ -1645,7 +1647,7 @@ function chk(g){if(g!==S.gen)throw ABORT;}
    ===================================================================== */
 var CK=[],STK=[0,1].map(function(){var a=[];for(var i=0;i<26;i++)a.push([]);return a;}),RECT=[],UI={sel:-1,dests:{},press:null,drag:null,lastTap:0,lastSrc:-1};
 function dispAbs(s,rel){return s===ME?rel:25-rel;}
-function colX(abs){var pr=ART.pwR||ART.pw;return abs<=6?ART.colR+(6-abs)*pr:abs<=12?ART.colL+(12-abs)*ART.pw:abs<=18?ART.colL+(abs-13)*ART.pw:ART.colR+(abs-19)*pr;}
+function colX(abs){var pr=ART.pwR||ART.pw;if(abs<=6)return ART.colR+(6-abs)*pr;if(abs<=12)return ART.colL+(12-abs)*ART.pw;/* top row can sit apart from the bottom on angled boards */var tl=ART.colLT!=null?ART.colLT:ART.colL,tw=ART.pwT||ART.pw,tr=ART.colRT!=null?ART.colRT:ART.colR,trw=ART.pwRT||pr;return abs<=18?tl+(abs-13)*tw:tr+(abs-19)*trw;}
 /* logical (unrotated) centre + size of checker j of n at a location */
 function slot(s,loc,j,n){
   var cd=ART.cd;
