@@ -121,7 +121,8 @@ html.fs .tab img.gi{width:26px;height:26px}
 .thmenu .cskin{display:block;padding:2px 4px 4px}
 .thmenu .cskin[hidden]{display:none}
 .thmenu .skinsw button[hidden]{display:none}
-#secretok{position:fixed;inset:0;z-index:2147483600;display:flex;align-items:center;justify-content:center;background:rgba(5,3,10,.72);padding:16px}
+#secretok{position:fixed;inset:0;z-index:2147483600;display:flex;align-items:center;justify-content:center;background:transparent;padding:16px;pointer-events:none}
+#secretok .sb{pointer-events:auto}
 #secretok .sb{max-width:340px;width:100%;padding:22px 20px 18px;border-radius:16px;background:linear-gradient(160deg,#2a0b2e,#12060f);border:1px solid rgba(242,210,126,.5);box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(236,72,153,.25);color:#fce7f3;text-align:center;font:500 14px/1.45 Inter,system-ui,sans-serif}
 #secretok .st{font:800 19px Inter,system-ui,sans-serif;color:#f2d27e;margin:0 0 6px}
 #secretok .sr{display:flex;gap:10px;margin-top:16px}#secretok button{flex:1;min-height:44px;border-radius:10px;font:700 14px Inter,system-ui,sans-serif;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#e2e8f0}
@@ -727,17 +728,14 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       f.addEventListener('load',function(){setTimeout(done,250);},{once:true});getSrc(active,function(s2){f.setAttribute('srcdoc',s2);});});
   }
   (function(){var hid=Object.keys(SKINS).filter(function(k){return SKINS[k].hidden&&SKIN_IDS.indexOf(k)>=0;});if(!hid.length)return;
-    function ask(k){if(secretOn(k)){setSkin(k);return;}if(document.getElementById('secretok'))return;
-      var d=document.createElement('div');d.id='secretok';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');
-      d.innerHTML='<div class="sb"><p class="st">\u2728 Secret theme found</p><p>You found the <b>'+skinName(k)+'</b> theme. It has glam pin-up art for adults only.</p><p>Are you 18 or older?</p><div class="sr"><button type="button" class="no">Not now</button><button type="button" class="go">I\u2019m 18+, unlock</button></div></div>';
-      document.body.appendChild(d);
-      d.querySelector('.no').onclick=function(){d.remove();};
-      d.querySelector('.go').onclick=function(){try{localStorage.setItem('su_secret_'+k,'1');}catch(e){}d.remove();
-        var b=document.querySelector('.skinsw button[data-skin="'+k+'"]');if(b)b.hidden=false;setSkin(k);};
+    function ask(k){if(secretOn(k)){setSkin(k);return;}
+      try{localStorage.setItem('su_secret_'+k,'1');}catch(e){}
+      var b=document.querySelector('.skinsw button[data-skin="'+k+'"]');if(b)b.hidden=false;setSkin(k);
+      var d=document.getElementById('secretok');if(d)d.remove();d=document.createElement('div');d.id='secretok';d.setAttribute('role','status');
+      d.innerHTML='<div class="sb"><p class="st">\u2728 Secret theme unlocked</p><p>'+skinName(k)+' is now in your theme menu.</p></div>';
+      document.body.appendChild(d);d.addEventListener('click',function(){d.remove();});setTimeout(function(){if(d.parentNode)d.remove();},2600);
       (function(){var top=0,h=innerHeight;try{var w=window,off=0;while(w.parent&&w.parent!==w&&w.frameElement){off+=w.frameElement.getBoundingClientRect().top;w=w.parent;top=Math.max(top,-off);h=Math.min(h,w.innerHeight-Math.max(0,off));}}catch(e){}
-        if(top>0||h<innerHeight){d.style.alignItems='flex-start';d.querySelector('.sb').style.marginTop=Math.max(12,Math.round(top+(h-d.querySelector('.sb').offsetHeight)/2))+'px';}
-        try{d.querySelector('.sb').scrollIntoView({block:'center'});}catch(e){}})();
-      setTimeout(function(){var g=d.querySelector('.go');if(g)g.focus({preventScroll:true});},30);}
+        if(top>0||h<innerHeight){d.style.alignItems='flex-start';d.querySelector('.sb').style.marginTop=Math.max(12,Math.round(top+(h-d.querySelector('.sb').offsetHeight)/2))+'px';}})();}
     var hd=document.querySelector('#thmenu .chead'),n=0,t0=0;
     if(hd)hd.addEventListener('click',function(e){e.stopPropagation();var t=Date.now();if(t-t0>3000)n=0;t0=t;n++;if(n>=7){n=0;thOpen(false);ask(hid[0]);}});
     try{var hs=(window.parent.location.hash||window.location.hash||'').toLowerCase();hid.forEach(function(k){var c=SKINS[k].code||k;if(hs.indexOf(c)>=0&&!secretOn(k))setTimeout(function(){ask(k);},900);});}catch(e){}
