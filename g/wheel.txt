@@ -1089,7 +1089,10 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 <script>
 (function(){'use strict';
 var $=function(i){return document.getElementById(i);};
-function money(n){n=Math.round(n);return (n<0?'-$':'$')+Math.abs(n).toLocaleString('en-US');}
+var UNITS=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']];
+function unitFmt(a,dig,sig){for(var i=0;i<UNITS.length;i++){if(a>=UNITS[i][0]){var x=a/UNITS[i][0],t=sig?Number(x.toPrecision(dig)):Math.floor(x*Math.pow(10,dig))/Math.pow(10,dig);if(t>=1000&&i>0)return unitFmt(UNITS[i-1][0],dig,sig);return String(t)+UNITS[i][1];}}return null;}
+/* a million and up shows as 26.896B / 1.5M so huge numbers stay readable */
+function money(n){n=Math.round(n);var a=Math.abs(n),u=a>=1e6?unitFmt(a,3,false):null;return (n<0?'-$':'$')+(u||a.toLocaleString('en-US'));}
 /* ---------- prizes ---------- */
 var SEG=[
  {t:'$500',v:500,w:8,c:'#8e1b1f'},{t:'$100',v:100,w:12,c:'#14224a'},{t:'$1,000',v:1000,w:5,c:'#8e1b1f'},{t:'$250',v:250,w:10,c:'#14224a'},
@@ -1118,7 +1121,7 @@ function oddsPaid(){var tw=0,be=0,up=0,big=0;SEG.forEach(function(x){var w=segW(
 var BASE_EV=(function(){var mw=0,mv=0;MYST.forEach(function(m){mw+=m[1];mv+=m[0]*m[1];});var me=mv/mw,tw=0,ev=0;SEG.forEach(function(x){tw+=x.w;ev+=(x.m?me:x.v)*x.w;});return ev/tw;})();
 function pmult(n){return 1;}
 function nice(v){var q=v<50?5:v<500?10:v<5000?50:v<50000?250:1000;return Math.max(5,Math.round(v/q)*q);}
-function short(v){return v>=1e6?'$'+(Math.round(v/1e5)/10)+'M':v>=1e4?'$'+Math.round(v/1000)+'K':money(v);}
+function short(v){return v>=999500?'$'+unitFmt(Math.max(v,1e6),3,true):v>=1e4?'$'+Math.round(v/1000)+'K':money(v);}
 load();
 /* ---------- bankroll ---------- */
 var bank=1000,spinning=false,away=false;
@@ -1202,7 +1205,7 @@ function ui(){
 }
 /* the slices keep showing what THIS spin pays until the reveal is over; then they switch to the next spin's prizes */
 var lastN=-1;function relabel(){if(spinning||st.n===lastN)return;lastN=st.n;var c=costOf(st.n);
-  SEG.forEach(function(x,i){if(!LBL[i]||x.m)return;var v=c?Math.round(c*PAIDX[x.v]):x.v;var t=(c&&PAIDX[x.v]===1)?'MONEY BACK':c?'+'+short(v-c):short(v);if(x.j){if(LBL2)LBL2.textContent=t;return;}LBL[i].textContent=t;LBL[i].setAttribute('font-size',t==='MONEY BACK'?20:t.length>6?26:t.length>5?30:36);});
+  SEG.forEach(function(x,i){if(!LBL[i]||x.m)return;var v=c?Math.round(c*PAIDX[x.v]):x.v;var t=(c&&PAIDX[x.v]===1)?'MONEY BACK':c?'+'+short(v-c):short(v);if(x.j){if(LBL2){LBL2.textContent=t;LBL2.setAttribute('font-size',t.length>7?17:t.length>6?19:t.length>5?21:24);}return;}LBL[i].textContent=t;LBL[i].setAttribute('font-size',t==='MONEY BACK'?20:t.length>6?26:t.length>5?30:36);});
   var pm=$('pmul');if(pm){if(!c)pm.textContent='Free spin: base prizes';else{var o=oddsPaid();pm.innerHTML='Worst case: your '+money(c)+' back<br>Win more than you paid: '+Math.round(o.up*100)+'% \u00b7 5\u00d7 or more: '+(o.big*100).toFixed(1)+'%';}}}
 function countdown(){var n=new Date(),m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1),s=Math.max(0,Math.floor((m-n)/1000));
   if(st.d!==today()){load();ui();}
