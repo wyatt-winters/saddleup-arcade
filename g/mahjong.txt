@@ -1443,7 +1443,7 @@ var SFX={
 };
 
 /* ---------- the regulars ---------- */
-var REG=[['Dusty','#c6a75e','By the book','book'],['June','#a78bfa','Math teacher','counter'],['Pearl','#f9a8d4','Church bingo champ','hunch'],['Walt','#a7f3d0','Accountant','book'],
+var REG=[['Kael','#5eead4'],['Brakk','#93a4c4'],['Dusty','#c6a75e','By the book','book'],['June','#a78bfa','Math teacher','counter'],['Pearl','#f9a8d4','Church bingo champ','hunch'],['Walt','#a7f3d0','Accountant','book'],
   ['Rosa','#f472b6','Hunch player','hunch'],['Beau','#fdba74','Superstitious','hunch'],['Rusty','#fb923c','Truck driver','never'],['Daisy','#fde047','Birthday girl','hunch'],
   ['Hank','#60a5fa','Plays it safe','never'],['Earl','#c4b5fd','Old timer','never'],['Mabel','#f0abfc','Bus trip regular','book'],['Clem','#86efac','Rancher','never'],
   ['Lou','#94a3b8','Quiet counter','counter'],['Cass','#67e8f9','Quiet one','counter'],['Wes','#fcd34d','MIT dropout','counter'],['Ivy','#bef264','Poker pro','counter'],

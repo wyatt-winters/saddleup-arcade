@@ -1398,7 +1398,7 @@ var SFX={
 /* =====================================================================
    Players: the arcade regulars
    ===================================================================== */
-var REG=[['Dusty','#c6a75e','By the book','book'],['June','#a78bfa','Math teacher','counter'],['Pearl','#f9a8d4','Sweet as pie','hunch'],['Walt','#a7f3d0','Old timer','never'],
+var REG=[['Kael','#5eead4'],['Brakk','#93a4c4'],['Dusty','#c6a75e','By the book','book'],['June','#a78bfa','Math teacher','counter'],['Pearl','#f9a8d4','Sweet as pie','hunch'],['Walt','#a7f3d0','Old timer','never'],
   ['Rosa','#f472b6','Hunch player','hunch'],['Beau','#fdba74','Smooth talker','whale'],['Rusty','#fb923c','Hothead','hunch'],['Daisy','#fde047','Sunny side up','hunch'],
   ['Hank','#60a5fa','Plays it safe','never'],['Earl','#c4b5fd','High roller','whale'],['Mabel','#f0abfc','Sharp eyes','book'],['Clem','#86efac','Farmhand','never'],
   ['Lou','#94a3b8','Quiet counter','counter'],['Cass','#67e8f9','Card shark','counter'],['Wes','#fcd34d','Big spender','whale'],['Ivy','#bef264','Wild card','hunch'],

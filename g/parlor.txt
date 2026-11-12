@@ -1087,7 +1087,7 @@ function hasLive(){return typeof Live!=='undefined'&&Live&&Live.me;}
 function myName(){try{return hasLive()?Live.me().name:'Partner';}catch(e){return 'Partner';}}
 
 /* ---------- people pool (same regulars as the Casino Floor) ---------- */
-var REG=[['Dusty','#c6a75e'],['June','#a78bfa'],['Pearl','#86efac'],['Walt','#7dd3fc'],['Rosa','#f472b6'],['Beau','#facc15'],['Rusty','#d97706'],['Daisy','#f9a8d4'],
+var REG=[['Kael','#5eead4'],['Brakk','#93a4c4'],['Dusty','#c6a75e'],['June','#a78bfa'],['Pearl','#86efac'],['Walt','#7dd3fc'],['Rosa','#f472b6'],['Beau','#facc15'],['Rusty','#d97706'],['Daisy','#f9a8d4'],
   ['Hank','#60a5fa'],['Earl','#94a3b8'],['Mabel','#c4b5fd'],['Clem','#a3e635'],['Lou','#fb923c'],['Cass','#2dd4bf'],['Wes','#38bdf8'],['Ivy','#4ade80'],
   ['Marisol','#f87171'],['Tex','#fdba74'],['Duke','#fcd34d'],['Bianca','#e879f9'],
   ['Gus','#fca5a5'],['Nell','#93c5fd'],['Otis','#fde68a'],['Ruby','#fb7185'],['Hattie','#d8b4fe'],['Abe','#bef264'],['Lyle','#67e8f9'],['Ada','#f0abfc'],
