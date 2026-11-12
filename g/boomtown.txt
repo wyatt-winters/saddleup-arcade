@@ -1437,8 +1437,10 @@ var Live=(function(){
   }
   /* ===== computer players answering the chat =====
      bots: [{id,name,key,col}]  ctx: {game, advice(), mood(key) -> 'up'|'down'|'even', say(bot,text)} */
+  /* chat auto-replies are switched off (2026-11-12): computer players no longer answer what people type */
+  var BANTER_ON=false;
   function banter(text,bots,ctx){
-    if(!bots||!bots.length)return;
+    if(!BANTER_ON||!bots||!bots.length)return;
     var t=' '+String(text||'').toLowerCase().replace(/[^a-z0-9' ]+/g,' ')+' ';
     function has(re){return re.test(t);}
     function pick(a){return a[Math.floor(Math.random()*a.length)];}
