@@ -1591,8 +1591,11 @@ var DEED_ART={"deed_assay_office": "https://assets.cdn.filesafe.space/iB2q5QJOsn
 
 var $=function(id){return document.getElementById(id);};
 var root=document.documentElement,felt=$('felt'),fin=$('fin'),boardEl=$('board');
-function money(n){n=Math.round(n);return (n<0?'-$':'$')+String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
-function smoney(n){n=Math.round(n);return (n<0?'-$':'+$')+String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+/* amounts of $1M and up show short (26.896B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.floor(n/U[i][0]*1000)/1000;t=String(x)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?/,t);}
+function money(a,b,c){return __suBig(money0(a,b,c),a);}
+function money0(n){n=Math.round(n);return (n<0?'-$':'$')+String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function smoney(a,b){return __suBig(smoney0(a,b),a);}
+function smoney0(n){n=Math.round(n);return (n<0?'-$':'+$')+String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 function rnd(n){try{var a=new Uint32Array(1),lim=Math.floor(4294967296/n)*n;do{crypto.getRandomValues(a);}while(a[0]>=lim);return a[0]%n;}catch(e){return Math.floor(Math.random()*n);}}
 function R(){return Math.random();}
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
@@ -2441,7 +2444,8 @@ function renderAll(){if(EXAM>=0)refreshExam();if(REV)renderReview();renderSpaces
 var STAKES=[25,100,250,500,1000],CHIPC={25:'c25',100:'c100',250:'c5',500:'c500',1000:'c1k'},CASHES=[1000,1500,2000];
 function stakeChips(){return STAKES.map(function(v){var dis=v>bank;return '<button type="button" class="chip '+CHIPC[v]+(opt.stake===v?' on':'')+'" data-stake="'+v+'"'+(dis?' disabled':'')+'>'+(v>=1000?'$1K':'$'+v)+'</button>';}).join('');}
 /* casino money: bankroll shows cents when a split leaves some */
-function cash2(n){n=Math.round(n*100)/100;var w=Math.floor(Math.abs(n)),c=Math.round((Math.abs(n)-w)*100);return (n<0?'-$':'$')+String(w).replace(/\B(?=(\d{3})+(?!\d))/g,',')+(c?'.'+('0'+c).slice(-2):'');}
+function cash2(a){return __suBig(cash2_0(a),a);}
+function cash2_0(n){n=Math.round(n*100)/100;var w=Math.floor(Math.abs(n)),c=Math.round((Math.abs(n)-w)*100);return (n<0?'-$':'$')+String(w).replace(/\B(?=(\d{3})+(?!\d))/g,',')+(c?'.'+('0'+c).slice(-2):'');}
 function potOf(g){return g&&g.stake?g.stake*g.n:0;}
 /* payout of the pot per seat: Classic = last tycoon standing takes it all; Quick = split by net-worth share (to the cent) */
 function payouts(g,final){var n=g.n,out=[],pot=potOf(g),i;for(i=0;i<n;i++)out.push(0);if(!pot)return out;

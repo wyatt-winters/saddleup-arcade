@@ -1270,7 +1270,9 @@ var ART=(function(){var B='https://saddleup-arcade.vercel.app/art/',ok={},cbs=[]
 var SYMN={"\u2b50": "sym_star", "\u{1f40e}": "sym_horse", "\u{1f335}": "sym_cactus", "\u{1f920}": "sym_cowboy", "\u{1f462}": "sym_boot", "\u{1f52b}": "sym_revolver", "\u{1f4b0}": "sym_bag", "\u{1f37a}": "sym_beer", "\u{1f985}": "sym_eagle", "\u{1f402}": "sym_bull", "\u{1f6e1}\ufe0f": "sym_shield", "\u{1f3b2}": "sym_dice", "\u{1f48e}": "sym_diamond", "\u{1f451}": "sym_crown", "\u{1fa99}": "sym_coin", "\u{1f511}": "sym_key", "\u{1f943}": "sym_whiskey", "\u{1f3a9}": "sym_tophat"};function SYM(e){return ART.img(SYMN[e],e,'symimg');}
 try{ART.probe(Object.keys(SYMN).map(function(k){return SYMN[k];}).concat(['vt_dial','vt_box']));}catch(e){}
 var $=function(i){return document.getElementById(i);};
-function money(n){n=Math.round(n);return '$'+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+/* amounts of $1M and up show short (26.896B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.floor(n/U[i][0]*1000)/1000;t=String(x)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?/,t);}
+function money(a,b,c){return __suBig(money0(a,b,c),a);}
+function money0(n){n=Math.round(n);return '$'+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 /* ---------- bankroll ---------- */
 var bank=1000;try{var wa=Live.walletAmount();if(typeof wa==='number'&&isFinite(wa))bank=wa;}catch(e){}
 var WL=null;try{WL=Live.wallet({get:function(){return bank;},set:function(x){bank=x;hud();},idle:function(){return !paying;},active:function(){return true;}});}catch(e){}

@@ -848,7 +848,9 @@ var ART=(function(){var B='https://saddleup-arcade.vercel.app/art/',ok={},cbs=[]
 (function(){'use strict';
 try{ART.probe(["bs_joker", "bs_superjoker", "bs_coin", "bs_rattler", "bs_daub"]);}catch(e){}
 var $=function(i){return document.getElementById(i);};
-function money(n){n=Math.round(n*100)/100;var s=Math.abs(n),t=(s%1?s.toFixed(2):String(s)).replace(/\B(?=(\d{3})+(?!\d))/g,',');return (n<0?'-$':'$')+t;}
+/* amounts of $1M and up show short (26.896B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.floor(n/U[i][0]*1000)/1000;t=String(x)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?/,t);}
+function money(a,b,c){return __suBig(money0(a,b,c),a);}
+function money0(n){n=Math.round(n*100)/100;var s=Math.abs(n),t=(s%1?s.toFixed(2):String(s)).replace(/\B(?=(\d{3})+(?!\d))/g,',');return (n<0?'-$':'$')+t;}
 function q(ev,n){try{if(window.suQ)suQ(ev,n);}catch(e){}}
 var AC=null;function ac(){try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){}return AC;}
 function tone(f,d,delay,vol,type){var a=ac();if(!a)return;try{var o=a.createOscillator(),g=a.createGain(),t=a.currentTime+(delay||0);o.type=type||'triangle';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol||.06,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05);}catch(e){}}

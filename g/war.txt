@@ -1194,8 +1194,11 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 <script>
 (function(){'use strict';
 var $=function(i){return document.getElementById(i);};
-function money(n){n=Math.round(n*100)/100;var s=Math.abs(n),t=(s%1?s.toFixed(2):String(s)).replace(/\B(?=(\d{3})+(?!\d))/g,',');return (n<0?'-$':'$')+t;}
-function short(n){var a=Math.abs(n);return (n<0?'-$':'$')+(a>=1e6?(Math.round(a/1e5)/10)+'M':a>=1e4?Math.round(a/1000)+'K':a>=1000?(Math.round(a/100)/10)+'K':Math.round(a));}
+/* amounts of $1M and up show short (26.896B) so huge bankrolls stay readable */function __suSig(n){n=Math.abs(+n);var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']];for(var i=0;i<U.length;i++)if(n>=U[i][0]){var t=Number((n/U[i][0]).toPrecision(3));if(t>=1000&&i>0)return String(Number((n/U[i-1][0]).toPrecision(3)))+U[i-1][1];return String(t)+U[i][1];}return String(Math.round(n));}
+function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.floor(n/U[i][0]*1000)/1000;t=String(x)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?/,t);}
+function money(a,b,c){return __suBig(money0(a,b,c),a);}
+function money0(n){n=Math.round(n*100)/100;var s=Math.abs(n),t=(s%1?s.toFixed(2):String(s)).replace(/\B(?=(\d{3})+(?!\d))/g,',');return (n<0?'-$':'$')+t;}
+function short(n){var a=Math.abs(n);return (n<0?'-$':'$')+(a>=1e6?__suSig(a):a>=1e4?Math.round(a/1000)+'K':a>=1000?(Math.round(a/100)/10)+'K':Math.round(a));}
 function rnd(n){return Math.floor(Math.random()*n);}function pick(a){return a[rnd(a.length)];}
 var MIN=5,MAXA=Infinity,MAXT=Infinity,NSEAT=4,MODE='solo',chipV=25,sess=0;
 /* ---------- bankroll (shared casino wallet) ---------- */

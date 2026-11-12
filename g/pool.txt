@@ -1258,7 +1258,9 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 'use strict';
 var $=function(id){return document.getElementById(id);};
 var root=document.documentElement,felt=$('felt'),stage=$('stage'),tbox=$('tbox'),cv=$('cv'),ctx=cv.getContext('2d');
-function money(v){v=Math.round(v*100)/100;return '$'+(v%1?v.toFixed(2):String(v)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+/* amounts of $1M and up show short (26.896B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.floor(n/U[i][0]*1000)/1000;t=String(x)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?/,t);}
+function money(a,b,c){return __suBig(money0(a,b,c),a);}
+function money0(v){v=Math.round(v*100)/100;return '$'+(v%1?v.toFixed(2):String(v)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function safeName(n){return String(n||'').replace(/[\u0000-\u001f<>]/g,'').replace(/\s+/g,' ').trim().slice(0,18);}
 function clamp(v,a,b){return v<a?a:v>b?b:v;}
@@ -1981,9 +1983,9 @@ function bindSeg(id,fn){$(id).addEventListener('click',function(e){var b=e.targe
 bindSeg('optMode',function(v){opt.mode=v;renderSetup();});
 bindSeg('optOpp',function(v){opt.opp=v;var o=OPP[v];if(G.phase==='setup'){G.players[1]={name:o.name,kind:'bot',col:o.col,skill:v,key:o.key};hud();}renderSetup();});
 bindSeg('optStake',function(v){opt.stake=+v;$('stakeIn').value='';renderSetup();});
-function parseAmt(t){t=String(t||'').trim().toLowerCase().replace(/[$,\s]/g,'');var m=/^(\d*\.?\d+)([km]?)$/.exec(t);if(!m)return NaN;var v=parseFloat(m[1])*(m[2]==='k'?1e3:m[2]==='m'?1e6:1);return Math.floor(v);}
+function parseAmt(t){t=String(t||'').trim().toLowerCase().replace(/[$,\s]/g,'');var m=/^(\d*\.?\d+)([kmbtq]?)$/.exec(t);if(!m)return NaN;var v=parseFloat(m[1])*({k:1e3,m:1e6,b:1e9,t:1e12,q:1e15}[m[2]]||1);return Math.floor(v);}
 function setCustom(v){if(!(v>0)){toast('Type an amount, like 2500');return;}if(v>bank){toast('You have '+money(bank)+'. Bet set to all in.');v=Math.floor(bank);}
-  opt.stake=v;var pre=['10','25','100','500'].indexOf(String(v))>=0;segSet('optStake',pre?String(v):'');$('stakeIn').value=pre?'':money(v);renderSetup();}
+  opt.stake=v;var pre=['10','25','100','500'].indexOf(String(v))>=0;segSet('optStake',pre?String(v):'');$('stakeIn').value=pre?'':money0(v);renderSetup();}
 $('stakeSet').addEventListener('click',function(){setCustom(parseAmt($('stakeIn').value));});
 $('stakeIn').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();setCustom(parseAmt($('stakeIn').value));}});
 $('stakeAll').addEventListener('click',function(){setCustom(Math.floor(bank));});

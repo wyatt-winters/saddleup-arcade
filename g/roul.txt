@@ -1213,9 +1213,13 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 var $=function(id){return document.getElementById(id);};
 var root=document.documentElement,felt=$('felt'),tarea=$('tarea'),fxl=$('fx'),chipl=$('chipl');
 function fmt(n){var s=Math.abs(n),i=Math.floor(s+1e-9),c=Math.round((s-i)*100);if(c===100){i++;c=0;}return String(i).replace(/\B(?=(\d{3})+(?!\d))/g,',')+(c?'.'+('0'+c).slice(-2):'');}
-function money(n){return (n<0?'\u2212$':'$')+fmt(n);}
-function smoney(n){return (n>0?'+$':n<0?'\u2212$':'$')+fmt(n);}
-function short(n){if(n>=1000)return (Math.round(n/100)/10)+'K';return String(Math.round(n*100)/100);}
+/* amounts of $1M and up show short (26.896B) so huge bankrolls stay readable */function __suSig(n){n=Math.abs(+n);var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']];for(var i=0;i<U.length;i++)if(n>=U[i][0]){var t=Number((n/U[i][0]).toPrecision(3));if(t>=1000&&i>0)return String(Number((n/U[i-1][0]).toPrecision(3)))+U[i-1][1];return String(t)+U[i][1];}return String(Math.round(n));}
+function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.floor(n/U[i][0]*1000)/1000;t=String(x)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?/,t);}
+function money(a,b,c){return __suBig(money0(a,b,c),a);}
+function money0(n){return (n<0?'\u2212$':'$')+fmt(n);}
+function smoney(a,b){return __suBig(smoney0(a,b),a);}
+function smoney0(n){return (n>0?'+$':n<0?'\u2212$':'$')+fmt(n);}
+function short(n){if(n>=1e6)return __suSig(n);if(n>=1000)return (Math.round(n/100)/10)+'K';return String(Math.round(n*100)/100);}
 function rnd(n){try{var a=new Uint32Array(1),lim=Math.floor(4294967296/n)*n;do{crypto.getRandomValues(a);}while(a[0]>=lim);return a[0]%n;}catch(e){return Math.floor(Math.random()*n);}}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
 function pick(a){return a[Math.floor(Math.random()*a.length)];}

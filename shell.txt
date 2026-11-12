@@ -596,7 +596,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'89a173ce7a'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'925e71223f'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}
@@ -911,7 +911,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     function setMeta(m){ls(META,JSON.stringify(m));}
     function snap(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('su_')===0&&!EXCL[k])o[k]=localStorage.getItem(k);}}catch(e){}return o;}
     function bank(o){try{var v=JSON.parse(o.su_casino_wallet||'null');if(v&&typeof v.amt==='number')return Math.max(0,Math.min(1e8,Math.round(v.amt*100)/100));}catch(e){}return null;}
-    function money(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+    /* amounts of $1M and up show short (26.896B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.floor(n/U[i][0]*1000)/1000;t=String(x)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?/,t);}
+function money(a,b,c){return __suBig(money0(a,b,c),a);}
+function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
     function nm(){return (ls('su_live_name')||'').slice(0,18);}
     function face(){var f=ls('su_live_face');return FACES.indexOf(f)>=0?f:FACES[0];}
     var $=function(s){return modal.querySelector(s);};

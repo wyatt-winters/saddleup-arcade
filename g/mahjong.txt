@@ -1389,8 +1389,11 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 
 var $=function(id){return document.getElementById(id);};
 var root=document.documentElement,felt=$('felt'),stage=$('stage');
-function money(n){n=Math.round(n);return (n<0?'-$':'$')+String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
-function smoney(n){n=Math.round(n);return (n<0?'-$':'+$')+String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+/* amounts of $1M and up show short (26.896B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.floor(n/U[i][0]*1000)/1000;t=String(x)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?/,t);}
+function money(a,b,c){return __suBig(money0(a,b,c),a);}
+function money0(n){n=Math.round(n);return (n<0?'-$':'$')+String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function smoney(a,b){return __suBig(smoney0(a,b),a);}
+function smoney0(n){n=Math.round(n);return (n<0?'-$':'+$')+String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 function rnd(n){try{var a=new Uint32Array(1),lim=Math.floor(4294967296/n)*n;do{crypto.getRandomValues(a);}while(a[0]>=lim);return a[0]%n;}catch(e){return Math.floor(Math.random()*n);}}
 function R(){return Math.random();}
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
