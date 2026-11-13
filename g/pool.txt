@@ -1691,10 +1691,13 @@ function draw(t){
   ctx.fillStyle='rgba(0,0,0,0.38)';
   for(var i=0;i<16;i++){var o=b[i];if(!o.on)continue;var sh=PORT?{x:-1.6,y:2.2}:{x:2.2,y:1.6};ctx.beginPath();ctx.ellipse(o.x+sh.x*0.9,o.y+sh.y*0.9,R*1.02,R*0.95,0,0,7);ctx.fill();}
   /* aim guide */
+  OWNX=-1;
   var shooterMe=G.phase==='aim'&&G.players[G.turn].kind==='me';
   if(showAim&&cue.on&&VIEW.show&&opt.guide!=='off'&&!(drag&&drag.mode==='place')){
     var pr=predict(cue.x,cue.y,VIEW.a,b),bad=false;
-    if(pr.ball!==null){var lg=legalTargets(G.turn);bad=lg.indexOf(pr.ball)<0&&!(G.mode==='8'&&G.open&&G.breakShot)&&G.mode!=='ct';}
+    if(pr.ball!==null){var lg=legalTargets(G.turn);bad=lg.indexOf(pr.ball)<0&&!(G.mode==='8'&&G.open&&G.breakShot)&&G.mode!=='ct';
+      /* cut-throat: mark the ball if it's one of the shooter's own */
+      if(G.mode==='ct'&&G.groups[G.turn]!=null&&ctSet(pr.ball)===G.groups[G.turn])OWNX=pr.ball;}
     var alpha=shooterMe?0.9:0.55,full=opt.guide==='full';
     ctx.lineWidth=lw(1.6);ctx.strokeStyle='rgba(255,255,255,'+alpha+')';ctx.shadowColor='rgba(0,0,0,0.75)';ctx.shadowBlur=4*DPR;
     var ex=pr.gx,ey=pr.gy;if(!full){var L0=Math.min(Math.hypot(ex-cue.x,ey-cue.y),160);ex=cue.x+Math.cos(VIEW.a)*L0;ey=cue.y+Math.sin(VIEW.a)*L0;}
@@ -1710,6 +1713,11 @@ function draw(t){
   /* balls */
   ctx.setTransform(1,0,0,1,0,0);
   for(i=0;i<16;i++){o=b[i];if(!o.on)continue;var spc=drawSprite(i),dp=toDev(o.x,o.y),hs=spc.width/2;ctx.drawImage(spc,dp.x-hs,dp.y-hs);}
+  if(OWNX>0&&b[OWNX].on){var xo=b[OWNX],xp=toDev(xo.x,xo.y),xr=R*SC*DPR*1.25;
+    ctx.lineCap='round';ctx.lineWidth=Math.max(4,xr*0.42);ctx.strokeStyle='rgba(0,0,0,0.6)';
+    ctx.beginPath();ctx.moveTo(xp.x-xr,xp.y-xr);ctx.lineTo(xp.x+xr,xp.y+xr);ctx.moveTo(xp.x+xr,xp.y-xr);ctx.lineTo(xp.x-xr,xp.y+xr);ctx.stroke();
+    ctx.lineWidth=Math.max(2.5,xr*0.26);ctx.strokeStyle="#ef4444";
+    ctx.beginPath();ctx.moveTo(xp.x-xr,xp.y-xr);ctx.lineTo(xp.x+xr,xp.y+xr);ctx.moveTo(xp.x+xr,xp.y-xr);ctx.lineTo(xp.x-xr,xp.y+xr);ctx.stroke();ctx.lineCap='butt';}
   var tn=now();
   SINKING=SINKING.filter(function(k){var f=(tn-k.t)/240;if(f>=1)return false;var x=k.x+(k.px-k.x)*f,y=k.y+(k.py-k.y)*f,spc=drawSprite(k.n),dp=toDev(x,y),sz=spc.width*(1-f*0.55);ctx.globalAlpha=1-f*0.8;ctx.drawImage(spc,dp.x-sz/2,dp.y-sz/2,sz,sz);ctx.globalAlpha=1;return true;});
   if(showAim&&needCall())drawCalls(tn);
@@ -1922,7 +1930,7 @@ function botTurn(){
     } else go(null);
   });
 }
-var BOT=null;
+var BOT=null,OWNX=-1;
 function animateOther(dt){
   if(BOT){var f=clamp((now()-BOT.t0)/650,0,1),e=f<0.5?2*f*f:1-Math.pow(-2*f+2,2)/2;var da=BOT.a-BOT.from;da=Math.atan2(Math.sin(da),Math.cos(da));VIEW.a=BOT.from+da*e;VIEW.p=vToPow(BOT.v)*clamp((now()-BOT.t0-500)/400,0,1);VIEW.show=true;}
   else if(LV.rem&&G.live&&G.players[G.turn].kind==='remote'){var r=LV.rem,da2=r.a-VIEW.a;da2=Math.atan2(Math.sin(da2),Math.cos(da2));VIEW.a+=da2*Math.min(1,dt*12);VIEW.p+=(r.p-VIEW.p)*Math.min(1,dt*12);VIEW.show=true;
