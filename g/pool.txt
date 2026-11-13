@@ -1447,6 +1447,7 @@ var bank=1000,turbo=false,AWAY=false,gen=0;
 var AIM={a:Math.PI,p:0,sx:0,sy:0};                 /* my aim, power and spin */
 var VIEW={a:Math.PI,p:0,show:false,stroke:0,who:-1}; /* what is drawn: shooter's cue */
 var SIMRUN=null,acc=0,SINKING=[];
+function amAuth(){return !!(G.live&&!G.watch&&LV.L&&(G.auth?G.auth===LV.L.me.id:LV.L.isHost()));}
 function now(){return (window.performance&&performance.now)?performance.now():Date.now();}
 function me(){return G.mySeat;}
 function opp(){return 1-G.mySeat;}
@@ -1784,7 +1785,7 @@ function finishRun(){
   resolveShot(S.ev);
 }
 function resolveShot(ev){
-  if(G.live&&LV.L&&(G.watch||!LV.L.isHost())&&!ev.forced){
+  if(G.live&&LV.L&&(G.watch||!amAuth())&&!ev.forced){
     /* the host decides; we only fall back to our own result if its verdict never arrives */
     G.phase='aim';G.waitSync=true;hud();var k=G.shotNo,g0=G.gid;clearTimeout(LV.wsT);
     LV.wsT=setTimeout(function(){if(G.waitSync&&G.shotNo===k&&G.gid===g0){G.waitSync=false;G.phase='run';ev.forced=true;resolveShot(ev);}},5000);return;}
@@ -1817,7 +1818,7 @@ function resolveShot(ev){
   afterResolve();
   nextTurn();
 }
-function afterResolve(){if(G.live&&!G.watch&&LV.L&&LV.L.isHost())sendSync();}
+function afterResolve(){if(amAuth())sendSync();}
 function who(seat){var p=G.players[seat];return p.kind==='me'?'You':p.name;}
 
 /* turn handling */
@@ -1944,7 +1945,7 @@ function talk(kind,seat,force){
 function startSolo(){
   var st=opt.stake;if(st>bank)return;
   gen++;var o=OPP[opt.opp];
-  G.mode=opt.mode;G.live=false;G.gid='';G.ids=null;G.mySeat=0;G.stake=st;G.settled=false;G.waitSync=false;
+  G.mode=opt.mode;G.live=false;G.auth='';G.bots=[];G.gid='';G.ids=null;G.mySeat=0;G.stake=st;G.settled=false;G.waitSync=false;
   G.players=[{name:'You',kind:'me',col:'#10b981'},{name:o.name,kind:'bot',col:o.col,skill:opt.opp,key:o.key}];
   if(G.mode==='ct'){var k2=CT_MATE[opt.opp],o2=OPP[k2];G.players.push({name:o2.name,kind:'bot',col:o2.col,skill:k2,key:o2.key});}
   G.callEight=opt.opp!=='easy';
@@ -1970,9 +1971,12 @@ function beginRack(balls,breaker){
 function pot(){return G.stake*G.players.length;}
 /* cut-throat: everyone rolls a die, high roll breaks, ties roll again */
 var DIE=['\u2680','\u2681','\u2682','\u2683','\u2684','\u2685'];
-function rollOff(done){
-  var N=G.players.length,ov=$('roll');
-  if(turbo){var t=[];for(var i=0;i<N;i++)t.push(1+Math.floor(Math.random()*6));var hi=Math.max.apply(null,t);done(t.indexOf(hi));return;}
+function makeRolls(N){var rounds=[],live=[];for(var i=0;i<N;i++)live.push(i);
+  for(var g=0;g<20;g++){var v={};live.forEach(function(k){v[k]=1+Math.floor(Math.random()*6);});rounds.push(v);var hi=Math.max.apply(null,live.map(function(k){return v[k];}));live=live.filter(function(k){return v[k]===hi;});if(live.length===1)break;}
+  return {rounds:rounds,winner:live[0]};}
+function rollOff(done,preset){
+  var N=G.players.length,ov=$('roll'),pr=preset||makeRolls(N),ri=0;
+  if(turbo){done(pr.winner);return;}
   G.phase='roll';hud();
   var live=[];for(var k=0;k<N;k++)live.push(k);
   ov.innerHTML='<div class="rbx"><div class="rt">Roll for the break</div><div class="rs">High roll breaks</div><div class="rrow">'+G.players.map(function(p,k){
@@ -1985,7 +1989,8 @@ function rollOff(done){
       var el=now()-t0;
       live.forEach(function(k){$('rd'+k).textContent=DIE[Math.floor(Math.random()*6)];});
       if(el<1100){later(70,tick);return;}
-      live.forEach(function(k){var v=1+Math.floor(Math.random()*6);vals[k]=v;$('rd'+k).textContent=DIE[v-1];$('rp'+k).classList.remove('spin');});
+      var R0=pr.rounds[Math.min(ri,pr.rounds.length-1)];ri++;
+      live.forEach(function(k){var v=+R0[k]||1;vals[k]=v;$('rd'+k).textContent=DIE[v-1];$('rp'+k).classList.remove('spin');});
       try{SFX.click(900);}catch(e){}
       var hi=Math.max.apply(null,live.map(function(k){return vals[k];})),top=live.filter(function(k){return vals[k]===hi;});
       live.forEach(function(k){$('rp'+k).classList.add(vals[k]===hi?'hi':'lo');});
@@ -2009,7 +2014,7 @@ function endGame(){
   if(G.watch)G.reason=G.reason.replace(/^You resigned$/,'Resigned');
   $('resW').textContent=G.reason?(mine?G.reason:G.reason.replace(/^Sank/,(G.players[w].kind==='me'?'You sank':wn+' sank')))+'.':'';
   var a=$('resA');a.textContent=G.watch?(G.stake?money(G.stake*2)+' pot':'For fun'):G.stake?(mine?'+'+money(pot()):'-'+money(G.stake)):(mine?'For fun':'');a.classList.toggle('neg',!mine&&!G.watch);
-  $('againBtn').textContent=G.watch?'Back to the table':G.live?'Rematch':'Play again';
+  $('againBtn').textContent=G.watch?'Back to the table':G.live&&G.mode==='ct'?'Back to the table':G.live?'Rematch':'Play again';
   later(turbo?0:1100,function(){if(G.phase==='over'){$('res').classList.remove('hide');}});
   liveLobby();
 }
@@ -2017,6 +2022,7 @@ function toSetup(){if(G.watch){stopWatch(true);}gen++;BOT=null;SIMRUN=null;G.pha
 function resign(){
   if(!busy())return;
   if(G.watch){stopWatch();return;}
+  if(G.live&&G.mode==='ct'){if(LV.L)LV.L.send('ctquit',{gid:G.gid});leaveCT();return;}
   var op=nextSeat(G.mySeat);
   if(isCT()){var bl=-1,bc=-1;for(var q=0;q<G.players.length;q++)if(q!==G.mySeat){var c=ctLeft(G.groups[q]);if(c>bc){bc=c;bl=q;}}op=bl;}
   if(G.live&&LV.L)LV.L.send('resign',{gid:G.gid});
@@ -2029,7 +2035,7 @@ function hud(){
   var three=G.players.length>2,seats=three?[G.mySeat,(G.mySeat+1)%3,(G.mySeat+2)%3]:[G.mySeat,1-G.mySeat];
   $('phud').classList.toggle('three',three);$('pc2').classList.toggle('hide',!three);
   seats.forEach(function(s,k){var p=G.players[s],pc=$('pc'+k);
-    $('nm'+k).textContent=p.kind==='me'&&!G.live?'You':p.name+(p.kind==='me'&&G.live?' (you)':'');
+    $('nm'+k).textContent=p.kind==='me'&&!G.live?'You':p.name+(p.kind==='me'&&G.live?' (you)':'')+(G.live&&p.reg?' (regular)':'');
     var av=$('av'+k);av.style.background=p.col||'#94a3b8';av.querySelector('span').textContent=(p.kind==='me'&&!G.live?'Y':(p.name||'?').charAt(0)).toUpperCase();
     pc.classList.toggle('turn',G.phase==='aim'||G.phase==='run'?G.turn===s:false);pc.classList.toggle('won',G.phase==='over'&&G.winner===s);
     var gl='',mbs='';
@@ -2061,7 +2067,7 @@ function hud(){
   if(G.mode==='9'&&G.phase!=='setup'){for(var m=1;m<=9;m++)rk+=mbHTML(m,(G.balls[m].on?'':'gone')+(m===lowest()&&busy()?' hot':''));$('rackL').textContent=lowest()&&busy()?'On the '+lowest():'Rack';}
   else{G.pocketOrder.forEach(function(n){rk+=mbHTML(n);});$('rackL').textContent='Pocketed';}
   $('rackB').innerHTML=rk;
-  $('newBtn').textContent=G.watch?'Stop watching':busy()?'Resign':'New game';$('newBtn').classList.toggle('warn',busy()&&resignArm);
+  $('newBtn').textContent=G.watch?'Stop watching':busy()?(G.live&&G.mode==='ct'?'Leave game':'Resign'):'New game';$('newBtn').classList.toggle('warn',busy()&&resignArm);
   $('pow').classList.toggle('dis',!isMyTurn());
   $('livechip').classList.toggle('hide',!G.live);
   renderCall();
@@ -2100,7 +2106,7 @@ function renderSetup(){try{renderWatch();}catch(e){}
 }
 function segSet(id,v){[].forEach.call($(id).querySelectorAll('button'),function(b){b.classList.toggle('on',b.dataset.v===v);});}
 function bindSeg(id,fn){$(id).addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.disabled)return;segSet(id,b.dataset.v);fn(b.dataset.v);});}
-bindSeg('optMode',function(v){opt.mode=v;renderSetup();});
+bindSeg('optMode',function(v){opt.mode=v;switchRoom(v==='ct'?'poolct':'pool');renderSetup();});
 bindSeg('optOpp',function(v){opt.opp=v;var o=OPP[v];if(G.phase==='setup'){G.players[1]={name:o.name,kind:'bot',col:o.col,skill:v,key:o.key};if(G.players[2]){var m2=OPP[CT_MATE[v]];G.players[2]={name:m2.name,kind:'bot',col:m2.col,skill:CT_MATE[v],key:m2.key};}hud();}renderSetup();});
 bindSeg('optStake',function(v){opt.stake=+v;$('stakeIn').value='';renderSetup();});
 function parseAmt(t){t=String(t||'').trim().toLowerCase().replace(/[$,\s]/g,'');var m=/^(\d*\.?\d+)([kmbtq]?)$/.exec(t);if(!m)return NaN;var v=parseFloat(m[1])*({k:1e3,m:1e6,b:1e9,t:1e12,q:1e15}[m[2]]||1);return Math.floor(v);}
@@ -2114,7 +2120,7 @@ bindSeg('optTalk',function(v){opt.talk=v==='1';});
 bindSeg('optSound',function(v){opt.sound=v==='1';});
 $('goBtn').addEventListener('click',function(){unlock();startSolo();});
 $('refill').addEventListener('click',function(){bank=1000;renderSetup();});
-$('againBtn').addEventListener('click',function(){if(G.watch){stopWatch();return;}if(G.live){$('res').classList.add('hide');toSetup();if(LV.peer)challenge();}else{$('res').classList.add('hide');opt.mode=G.mode;startSolo();}});
+$('againBtn').addEventListener('click',function(){if(G.watch){stopWatch();return;}if(G.live&&G.mode==='ct'){G.live=false;G.gid='';G.auth='';$('res').classList.add('hide');toSetup();if(LV.L)LV.L.send('lobby',{busy:false});return;}if(G.live){$('res').classList.add('hide');toSetup();if(LV.peer)challenge();}else{$('res').classList.add('hide');opt.mode=G.mode;startSolo();}});
 $('changeBtn').addEventListener('click',toSetup);
 function newGameBtn(){if(G.watch){stopWatch();return;}if(busy()){if(!resignArm){resignArm=true;toast('Tap again to resign this game'+(G.stake?' (you lose the stake)':''));clearTimeout(resignT);resignT=setTimeout(function(){resignArm=false;hud();},2500);hud();return;}resignArm=false;resign();return;}toSetup();}
 $('newBtn').addEventListener('click',newGameBtn);
@@ -2187,6 +2193,7 @@ function liveOn(){return LV.L&&LV.enabled&&LV.L.status==='live'&&!!LV.peer;}
 function gidNew(){return Math.random().toString(36).slice(2,9);}
 function liveLobby(to){if(LV.L&&LV.peer)LV.L.send('lobby',{busy:busy()},to||null);renderSetup();}
 function liveOffer(){
+  if(LV.ct){liveOfferCT();return;}
   var box=$('lbox');if(!liveOn()||G.phase!=='setup'&&G.phase!=='over'){box.classList.add('hide');return;}
   var pn=esc(safeName(LV.peer.name)),h='';
   if(LV.inc){var i=LV.inc;h='<b>'+pn+'</b> challenges you to '+(i.mode==='9'?'9-Ball':'8-Ball')+(i.stake?' for <b>'+money(i.stake)+'</b>':' for fun')+'.'+
@@ -2198,7 +2205,9 @@ function liveOffer(){
 $('lbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.disabled)return;var k=b.dataset.l;
   if(k==='ch')challenge();else if(k==='can'){if(LV.out)LV.L.send('cancel',{gid:LV.out.gid});LV.out=null;renderSetup();}
   else if(k==='dec'){if(LV.inc)LV.L.send('decline',{gid:LV.inc.gid});LV.inc=null;renderSetup();}
-  else if(k==='acc')acceptInv();});
+  else if(k==='acc')acceptInv();
+  else if(k==='cch')challengeCT();else if(k==='cacc')acceptCT();else if(k==='cdec')declineCT();
+  else if(k==='ccan'){if(LV.out)LV.L.send('ctcan',{gid:LV.out.gid});LV.out=null;renderSetup();}});
 function challenge(){if(!liveOn())return;LV.out={gid:gidNew(),mode:opt.mode==='ct'?'8':opt.mode,stake:Math.min(opt.stake,bank)};LV.inc=null;LV.L.send('invite',LV.out,LV.peer.id);renderSetup();}
 function acceptInv(){var i=LV.inc;if(!i||i.stake>bank)return;LV.inc=null;if(LV.L.isHost())startLive(i);else{LV.L.send('accept',{gid:i.gid},LV.peer.id);$('lbox').innerHTML='Starting\u2026';}}
 function startLive(cfg){
@@ -2209,7 +2218,7 @@ function startLive(cfg){
 function applyStart(p){
   var meId=LV.L.me.id,seat=p.ids.indexOf(meId);if(seat<0)return;
   gen++;LV.out=null;LV.inc=null;
-  G.live=true;G.gid=p.gid;G.ids=p.ids.slice();G.mySeat=seat;G.mode=p.mode;G.stake=+p.stake||0;G.settled=false;G.waitSync=false;
+  G.live=true;G.auth='';G.bots=[];G.gid=p.gid;G.ids=p.ids.slice();G.mySeat=seat;G.mode=p.mode;G.stake=+p.stake||0;G.settled=false;G.waitSync=false;
   G.players=[0,1].map(function(s){return {name:safeName(p.names[s])||'Guest',kind:s===seat?'me':'remote',col:s===seat?'#10b981':'#f472b6',id:p.ids[s]};});
   G.callEight=p.callEight!==false;
   if(G.stake>bank)G.stake=0;bank-=G.stake;
@@ -2218,17 +2227,18 @@ function applyStart(p){
   G.nextBreaker=1-p.breaker;
   beginRack(balls,p.breaker);
 }
-function snapshot(){return {callEight:G.callEight,call:G.call,gid:G.gid,k:G.shotNo,mode:G.mode,stake:G.stake,ids:G.ids,names:G.players.map(function(p){return p.name;}),
+function snapshot(){return {bots:G.bots||[],auth:G.auth||'',callEight:G.callEight,call:G.call,gid:G.gid,k:G.shotNo,mode:G.mode,stake:G.stake,ids:G.ids,names:G.players.map(function(p){return p.name;}),
   balls:G.balls.map(function(o){return [o.n,o.x,o.y,o.on?1:0];}),turn:G.turn,groups:G.groups,open:G.open,breakShot:G.breakShot,bih:G.bih,kitchen:G.kitchen,phase:G.phase,winner:G.winner,reason:G.reason,po:G.pocketOrder,clock:Math.max(0,G.clock-Date.now())};}
 function sendSync(to){if(LV.L&&G.live&&!G.watch)LV.L.send('sync',snapshot(),to||null);}
 function adoptSync(d){
   if(!d||!Array.isArray(d.balls))return;
-  if(d.gid!==G.gid){if(!Array.isArray(d.ids)||(!G.watch&&d.ids.indexOf(LV.L.me.id)<0)||(!G.watch&&d.phase==='over'))return;
+  if(d.gid!==G.gid){if(!Array.isArray(d.ids)||(!G.watch&&mySeatIn(d.ids,d.bots)<0)||(!G.watch&&d.phase==='over'))return;
     /* rejoining a game already in progress (stake was paid when it started), or starting to watch one */
-    gen++;G.live=true;G.gid=d.gid;G.ids=d.ids.slice();G.mySeat=G.watch?0:d.ids.indexOf(LV.L.me.id);G.mode=d.mode;G.stake=+d.stake||0;G.settled=G.watch;
-    G.players=[0,1].map(function(s){var mine=!G.watch&&s===G.mySeat;return {name:safeName(d.names[s])||'Guest',kind:mine?'me':'remote',col:mine?'#10b981':['#60a5fa','#f472b6'][s],id:d.ids[s]};});
+    gen++;G.live=true;G.gid=d.gid;G.ids=d.ids.slice();G.bots=(d.bots||[]).slice();G.auth=d.auth||'';G.mySeat=G.watch?0:mySeatIn(d.ids,d.bots);G.mode=d.mode;G.stake=+d.stake||0;G.settled=G.watch;
+    G.players=buildPlayers(d.names);
     $('setup').classList.add('hide');$('res').classList.add('hide');}
   else if(d.k<G.shotNo||(d.k===G.shotNo&&!G.waitSync&&G.phase!=='run'&&d.phase===G.phase&&d.turn===G.turn))return;
+  if(Array.isArray(d.ids)&&d.ids.length===G.players.length){G.ids=d.ids.slice();G.bots=(d.bots||[]).slice();G.auth=d.auth||'';G.players=buildPlayers(G.players.map(function(p){return p.name;}));}
   if(G.phase==='run'){SIMRUN=null;acc=0;}
   d.balls.forEach(function(a){var o=G.balls[a[0]];if(!o)return;o.x=+a[1];o.y=+a[2];o.on=!!a[3];o.vx=0;o.vy=0;});
   G.callEight=d.callEight!==false;G.shotNo=d.k;G.turn=d.turn;G.groups=d.groups.slice();G.open=!!d.open;G.breakShot=!!d.breakShot;G.bih=!!d.bih;G.kitchen=!!d.kitchen;G.pocketOrder=(d.po||[]).slice();
@@ -2236,6 +2246,12 @@ function adoptSync(d){
   if(d.phase==='over'){if(G.phase!=='over'){G.phase='over';G.winner=d.winner;G.reason=d.reason;endGame();}return;}
   G.phase='aim';nextTurn();G.clock=Date.now()+(+d.clock||60000);
 }
+/* seats: mine is the human seat with my id (a regular's seat carries the id of the player running it) */
+function mySeatIn(ids,bots){var me=LV.L?LV.L.me.id:'';bots=bots||[];for(var s=0;s<ids.length;s++)if(ids[s]===me&&bots.indexOf(s)<0)return s;return -1;}
+var SEATCOL=['#60a5fa','#f472b6','#f59e0b'];
+function buildPlayers(names){var me=LV.L?LV.L.me.id:'',bots=G.bots||[];
+  return G.ids.map(function(id,s){var bot=bots.indexOf(s)>=0,mine=!G.watch&&s===G.mySeat;
+    return {name:safeName(names[s])||'Guest',kind:mine?'me':(bot&&G.auth===me&&!G.watch)?'bot':'remote',col:mine?'#10b981':SEATCOL[s],id:id,skill:bot?'normal':undefined,key:bot?'hank':undefined,reg:bot};});}
 var lastAimSend=0,aimQ=0;
 function sendAim(){if(!G.live||!LV.L||!isMyTurn())return;var t=Date.now();if(t-lastAimSend<90){clearTimeout(aimQ);aimQ=setTimeout(sendAim,95);return;}lastAimSend=t;var c=G.balls[0];
   LV.L.send('aim',{gid:G.gid,k:G.shotNo,call:G.call,a:AIM.a,p:AIM.p,cx:G.bih?c.x:null,cy:G.bih?c.y:null});}
@@ -2247,26 +2263,45 @@ function peerLeft(){
 function renderLivePanel(){
   var L=LV.L,av=!!(L&&L.available()),st=!av?'na':!LV.enabled?'off':L.status;
   var lbl={na:'Not available here',off:'Offline',connecting:'Connecting\u2026',live:'Live',error:'Offline (could not connect)'}[st]||'Offline';
-  $('ldot').className='ldot '+(st==='live'?'live':st==='connecting'?'connecting':'');$('lstat').textContent=lbl;$('ltable').textContent=st==='live'?'Table '+L.table:'';
+  $('ldot').className='ldot '+(st==='live'?'live':st==='connecting'?'connecting':'');$('lstat').textContent=lbl;$('ltable').textContent=st==='live'?(LV.ct?'Cut-throat table ':'Table ')+L.table:'';
   var r=st==='live'?LV.roster:[];
-  $('lroster').innerHTML=r.length?r.map(function(x){return '<span>'+esc(safeName(x.name))+(x.isMe?' (you)':'')+'</span>';}).join('')+(r.length<2?'<i>Waiting for an opponent. Until then, the regulars are happy to play you.</i>':''):'<i>'+(st==='live'?'':'Turn this on to play other people on the site.')+'</i>';
+  $('lroster').innerHTML=r.length?r.map(function(x){return '<span>'+esc(safeName(x.name))+(x.isMe?' (you)':'')+'</span>';}).join('')+(r.length<2?'<i>'+(LV.ct?'Waiting for players at the cut-throat table. Until then, the regulars are happy to play you.':'Waiting for an opponent. Until then, the regulars are happy to play you.')+'</i>':''):'<i>'+(st==='live'?'':'Turn this on to play other people on the site.')+'</i>';
   var ni=$('lname');if(L&&document.activeElement!==ni)ni.value=L.me.name;ni.disabled=!av;$('optLive').classList.toggle('dis',!av);
 }
+/* the chat talks to whichever room we are in */
+var LP=(function(){var hs=[],o={on:function(k,f){hs.push([k,f]);if(LV.L)LV.L.on(k,f);return o;},send:function(a,b,c){return LV.L?LV.L.send(a,b,c):false;},
+  isHost:function(){return LV.L?LV.L.isHost():false;},roster:function(){return LV.L?LV.L.roster():[];},stop:function(){if(LV.L)LV.L.stop();},start:function(){if(LV.L)LV.L.start();},
+  available:function(){return LV.L?LV.L.available():false;},setName:function(n){if(LV.L)LV.L.setName(n);},_attach:function(L){hs.forEach(function(h){L.on(h[0],h[1]);});}};
+  ['status','table','me'].forEach(function(k){Object.defineProperty(o,k,{get:function(){return LV.L?LV.L[k]:(k==='me'?{id:'',name:''}:k==='status'?'off':1);}});});return o;})();
+var ROOMS={pool:2,poolct:3};
+function makeRoom(name){var L;try{L=Live.create({game:name,maxSeats:ROOMS[name]});}catch(e){return null;}
+  LV.L=L;LV.room=name;LV.ct=name==='poolct';LV.roster=[];LV.peer=null;LV.peers=[];LV.peerBusy=false;LV.busyIds={};LV.out=null;LV.inc=null;LV.gone={};
+  bindRoom(L,LV.ct);LP._attach(L);return L;}
+function switchRoom(name){if(!LV.L||LV.room===name||busy()||G.watch)return;var was=LV.L.status!=='off';try{LV.L.stop();}catch(e){}makeRoom(name);if(was&&LV.enabled)LV.L.start();renderLivePanel();renderSetup();}
 function initLive(){
-  if(typeof Live==='undefined')return;var L;try{L=Live.create({game:'pool',maxSeats:2});}catch(e){return;}LV.L=L;
-  try{LV.chat=Live.chat(L,felt,{local:function(){return !G.live&&G.players[1].kind==='bot';},localLabel:'Computer player',myName:function(){return 'You';},onMessage:onChat});}catch(e){}
+  if(typeof Live==='undefined')return;var L=makeRoom(opt.mode==='ct'?'poolct':'pool');if(!L)return;
+  try{LV.chat=Live.chat(LP,felt,{local:function(){return !G.live&&G.players[1].kind==='bot';},localLabel:'Computer player',myName:function(){return 'You';},onMessage:onChat});}catch(e){}
   setInterval(function(){try{if(LV.chat)LV.chat.refresh();}catch(e){}},1500);
+  $('lname').addEventListener('change',function(){var v=safeName(this.value);if(!v)return;this.value=v;LV.L.setName(v);renderLivePanel();});
+  bindSeg('optLive',function(v){LV.enabled=v==='1';if(LV.enabled){LV.L.start();feedOn();}else{if(G.live&&busy())resign();LV.L.stop();feedOff();}renderLivePanel();renderSetup();});
+  renderLivePanel();
+}
+function bindRoom(L,ct){
   L.on('status',function(){renderLivePanel();renderSetup();});
   L.on('roster',function(list){
+    if(ct){LV.roster=list||[];ctRoster(LV.roster.filter(function(x){return !x.isMe;}));renderLivePanel();renderSetup();return;}
     LV.roster=list||[];var others=LV.roster.filter(function(x){return !x.isMe;}),had=LV.peer;LV.peer=others[0]||null;
     if(had&&(!LV.peer||LV.peer.id!==had.id)){if(G.live&&!G.watch&&G.ids&&G.ids.indexOf(had.id)>=0)peerLeft();else{LV.out=null;LV.inc=null;}}
     if(LV.peer&&(!had||had.id!==LV.peer.id)){
       if(G.live&&G.ids&&G.ids.indexOf(LV.peer.id)>=0&&busy()){clearTimeout(LV.graceT);toast('Opponent is back');if(L.isHost())setTimeout(function(){sendSync(LV.peer&&LV.peer.id);},300);}
       liveLobby(LV.peer.id);}
     renderLivePanel();renderSetup();});
-  L.on('host',function(h){if(h&&G.live&&!G.watch&&busy()&&LV.peer)sendSync();});
-  /* someone wants to watch our game: the host sends them the table */
-  L.on('msg:watch',function(d,from){if(G.live&&!G.watch&&busy()&&L.isHost())sendSync(from);});
+  L.on('host',function(h){if(!ct&&h&&G.live&&!G.watch&&busy()&&LV.peer)sendSync();});
+  /* someone wants to watch our game: whoever runs it sends them the table */
+  L.on('msg:watch',function(d,from){if(busy()&&amAuth())sendSync(from);});
+  L.on('msg:aim',function(d,from){if(!G.watch)onAim(d,from);});
+  L.on('msg:shot',function(d,from){if(!G.watch)onShot(d,from);});
+  if(ct){bindCT(L);return;}
   L.on('msg:lobby',function(d,from){if(!LV.peer||from!==LV.peer.id)return;LV.peerBusy=!!(d&&d.busy);renderSetup();});
   L.on('msg:invite',function(d,from){if(!d||!LV.peer||from!==LV.peer.id)return;if(busy()){L.send('decline',{gid:d.gid,busy:1},from);return;}
     LV.inc={gid:String(d.gid).slice(0,12),mode:d.mode==='9'?'9':'8',stake:Math.min(1e12,Math.max(0,Math.floor(+d.stake)||0))};LV.out=null;SFX.turn();renderSetup();toast(safeName(LV.peer.name)+' challenges you');});
@@ -2274,13 +2309,92 @@ function initLive(){
   L.on('msg:decline',function(d){if(LV.out&&d&&d.gid===LV.out.gid){LV.out=null;toast(d.busy?'They are in a game right now':'Challenge declined');renderSetup();}});
   L.on('msg:accept',function(d,from){if(LV.out&&d&&d.gid===LV.out.gid&&L.isHost()&&LV.peer&&from===LV.peer.id){if(busy())return;var o=LV.out;startLive(o);}});
   L.on('msg:start',function(d,from){if(!d||!Array.isArray(d.ids)||!Array.isArray(d.balls))return;if(busy())return;if(d.ids[0]!==from)return;applyStart(d);});
-  L.on('msg:aim',function(d,from){if(!G.watch)onAim(d,from);});
-  L.on('msg:shot',function(d,from){if(!G.watch)onShot(d,from);});
   L.on('msg:sync',function(d,from){if(G.watch||!LV.peer||from!==LV.peer.id)return;if(L.isHost()&&G.gid===d.gid)return;adoptSync(d);});
   L.on('msg:resign',function(d,from){if(!d||!G.live||G.watch||d.gid!==G.gid||!busy())return;G.phase='over';G.winner=G.mySeat;G.reason=who(1-G.mySeat)+' resigned';endGame();});
-  $('lname').addEventListener('change',function(){var v=safeName(this.value);if(!v)return;this.value=v;L.setName(v);renderLivePanel();});
-  bindSeg('optLive',function(v){LV.enabled=v==='1';if(LV.enabled){L.start();feedOn();}else{if(G.live&&busy())resign();L.stop();feedOff();}renderLivePanel();renderSetup();});
-  renderLivePanel();
+}
+/* ================= the cut-throat table: three seats, any two or three people ================= */
+function bindCT(L){
+  L.on('msg:lobby',function(d,from){LV.busyIds[from]=!!(d&&d.busy);renderSetup();});
+  L.on('msg:ctinv',function(d,from){if(!d||!Array.isArray(d.ids)||d.ids[0]!==from||d.ids.indexOf(L.me.id)<1)return;
+    if(busy()||LV.out){L.send('ctdec',{gid:d.gid,busy:1});return;}
+    LV.inc={gid:String(d.gid).slice(0,12),from:from,ids:d.ids.slice(0,3),names:(d.names||[]).slice(0,3).map(safeName),bot:!!d.bot,stake:Math.min(1e12,Math.max(0,Math.floor(+d.stake)||0))};
+    SFX.turn();renderSetup();toast(LV.inc.names[0]+' invites you to Cut-throat');});
+  L.on('msg:ctacc',function(d,from){var o=LV.out;if(!o||!d||d.gid!==o.gid||o.ids.indexOf(from)<1)return;o.acc[from]=1;renderSetup();
+    if(o.ids.slice(1).every(function(id){return o.acc[id];}))startCT();});
+  L.on('msg:ctdec',function(d,from){
+    if(LV.out&&d&&d.gid===LV.out.gid){var nm=(LV.peers.filter(function(x){return x.id===from;})[0]||{}).name||'A player';L.send('ctcan',{gid:LV.out.gid});LV.out=null;toast(safeName(nm)+(d.busy?' is busy right now':' declined'));renderSetup();}});
+  L.on('msg:ctcan',function(d){if(LV.inc&&d&&d.gid===LV.inc.gid){LV.inc=null;LV.acc=null;toast('Game called off');renderSetup();}});
+  L.on('msg:ctstart',function(d,from){if(!d||d.auth!==from||d.mode!=='ct'||!Array.isArray(d.ids)||!Array.isArray(d.balls))return;if(busy()||LV.acc!==d.gid)return;applyStartCT(d);});
+  L.on('msg:sync',function(d,from){if(G.watch||!d||d.auth!==from)return;if(amAuth()&&G.gid===d.gid)return;
+    if(G.gid!==d.gid&&(!Array.isArray(d.ids)||mySeatIn(d.ids,d.bots)<0))return;adoptSync(d);});
+  L.on('msg:ctquit',function(d,from){if(d&&G.live&&G.mode==='ct'&&d.gid===G.gid)handleGone(from,true);});
+}
+function ctRoster(others){
+  LV.peers=others;LV.peer=others[0]||null;
+  var here={};others.forEach(function(x){here[x.id]=1;});if(LV.L)here[LV.L.me.id]=1;
+  if(LV.out&&LV.out.ids.some(function(id){return !here[id];})){LV.L.send('ctcan',{gid:LV.out.gid});LV.out=null;}
+  if(LV.inc&&!here[LV.inc.from])LV.inc=null;
+  if(G.live&&!G.watch&&G.mode==='ct'&&busy()&&G.ids){
+    G.ids.forEach(function(id,s){if((G.bots||[]).indexOf(s)>=0||id===LV.L.me.id)return;
+      if(here[id]){if(LV.gone[id]){clearTimeout(LV.gone[id]);delete LV.gone[id];toast(who(s)+' is back');if(amAuth())setTimeout(function(){sendSync(id);},300);}}
+      else if(!LV.gone[id]){toast(who(s)+' disconnected \u2026 waiting');LV.gone[id]=setTimeout(function(){delete LV.gone[id];handleGone(id,false);},15000);}});}
+  if(LV.L&&LV.L.status==='live')LV.L.send('lobby',{busy:busy()});
+}
+/* a player left: a regular takes their seat; if they were running the game, the next player takes over */
+function handleGone(X,quit){
+  if(!G.live||G.mode!=='ct'||G.phase==='over'||!G.ids)return;
+  var seats=[];G.ids.forEach(function(id,s){if(id===X)seats.push(s);});if(!seats.length)return;
+  var me=LV.L.me.id,here={};LV.roster.forEach(function(x){here[x.id]=1;});here[me]=1;
+  var na=G.auth;if(G.auth===X){na=null;for(var s=0;s<G.ids.length;s++){if((G.bots||[]).indexOf(s)<0&&G.ids[s]!==X&&here[G.ids[s]]){na=G.ids[s];break;}}}
+  if(!na)return;
+  var human=seats.filter(function(s){return (G.bots||[]).indexOf(s)<0;});
+  seats.forEach(function(s){G.ids[s]=na;if(G.bots.indexOf(s)<0)G.bots.push(s);});G.auth=na;
+  G.players=buildPlayers(G.players.map(function(p){return p.name;}));
+  if(human.length)toast(human.map(who).join(' and ')+(quit?' left':' dropped out')+' \u00b7 a regular took the seat');
+  hud();
+  if(na===me){G.waitSync=false;if(G.phase==='aim'){nextTurn();}sendSync();}
+}
+function leaveCT(){gen++;BOT=null;SIMRUN=null;G.live=false;G.gid='';G.auth='';G.ids=null;G.bots=[];G.phase='setup';
+  G.players=[{name:'You',kind:'me',col:'#10b981'},{name:OPP[opt.opp].name,kind:'bot',col:OPP[opt.opp].col,skill:opt.opp,key:OPP[opt.opp].key}];G.mySeat=0;
+  $('res').classList.add('hide');$('setup').classList.remove('hide');toast('You left the game. A regular took your seat.');renderSetup();hud();if(LV.L)LV.L.send('lobby',{busy:false});}
+function ctFree(){return LV.peers.filter(function(x){return !LV.busyIds[x.id];});}
+function challengeCT(){if(!LV.L||LV.L.status!=='live'||busy())return;var free=ctFree().slice(0,2);if(!free.length)return;
+  var me=LV.L.me,st=Math.min(opt.stake,bank);
+  LV.out={gid:gidNew(),stake:st,ids:[me.id].concat(free.map(function(x){return x.id;})),names:[safeName(me.name)].concat(free.map(function(x){return safeName(x.name);})),bot:free.length<2,acc:{}};
+  LV.inc=null;LV.L.send('ctinv',{gid:LV.out.gid,stake:st,ids:LV.out.ids,names:LV.out.names,bot:LV.out.bot});renderSetup();}
+function acceptCT(){var i=LV.inc;if(!i||i.stake>bank)return;LV.acc=i.gid;LV.L.send('ctacc',{gid:i.gid});i.sent=1;renderSetup();}
+function declineCT(){var i=LV.inc;if(!i)return;LV.L.send('ctdec',{gid:i.gid});LV.inc=null;renderSetup();}
+function startCT(){var o=LV.out;if(!o)return;LV.out=null;
+  var me=LV.L.me.id,ids=o.ids.slice(),names=o.names.slice(),bots=[];
+  if(ids.length<3){var m=OPP[CT_MATE[opt.opp]]||OPP.normal;ids.push(me);names.push(m.name);bots.push(ids.length-1);}
+  var p={gid:o.gid,mode:'ct',stake:o.stake,ids:ids,names:names,bots:bots,auth:me,groups:shuffle([0,1,2]),rolls:makeRolls(3),
+    balls:rackBalls('ct').map(function(b){return [b.n,b.x,b.y,b.on?1:0];})};
+  LV.L.send('ctstart',p);applyStartCT(p);}
+function applyStartCT(p){
+  gen++;var g0=gen;LV.out=null;LV.inc=null;LV.acc=null;
+  G.live=true;G.watch=false;G.gid=p.gid;G.ids=p.ids.slice();G.bots=(p.bots||[]).slice();G.auth=p.auth;G.mySeat=mySeatIn(G.ids,G.bots);if(G.mySeat<0)return;
+  G.mode='ct';G.stake=+p.stake||0;G.settled=false;G.waitSync=false;G.callEight=false;
+  G.players=buildPlayers(p.names);
+  if(G.stake>bank)G.stake=0;bank-=G.stake;renderBank();
+  var balls=[];for(var n=0;n<16;n++)balls.push({n:n,x:0,y:0,vx:0,vy:0,on:false});
+  p.balls.forEach(function(a){var o=balls[a[0]];if(o){o.x=+a[1];o.y=+a[2];o.on=!!a[3];}});
+  SIMRUN=null;SINKING=[];G.balls=balls;G.groups=p.groups.slice(0,3);G.ctKeep=true;G.lastOut=[];G.pocketOrder=[];resetRot();
+  $('setup').classList.add('hide');$('res').classList.add('hide');
+  rollOff(function(br){if(g0!==gen)return;beginRack(balls,br);},p.rolls);
+  if(LV.L)LV.L.send('lobby',{busy:true});
+}
+function liveOfferCT(){
+  var box=$('lbox');if(!LV.L||!LV.enabled||LV.L.status!=='live'||(G.phase!=='setup'&&G.phase!=='over')){box.classList.add('hide');return;}
+  var h='',free=ctFree();
+  if(LV.inc){var i=LV.inc,others=i.names.slice(1).filter(function(n,k){return i.ids[k+1]!==LV.L.me.id;});
+    h='<b>'+esc(i.names[0])+'</b> invites you'+(others.length?' and <b>'+others.map(esc).join('</b> and <b>')+'</b>':'')+' to Cut-throat'+(i.bot?' (a regular takes the third seat)':'')+(i.stake?' for <b>'+money(i.stake)+'</b>':' for fun')+'.'+
+      (i.sent?'<div class="row2">Waiting for everyone to accept\u2026</div>':'<div class="row2"><button type="button" data-l="cacc"'+(i.stake>bank?' disabled':'')+'>Accept</button><button type="button" class="alt" data-l="cdec">Decline</button></div>');}
+  else if(LV.out){var o=LV.out,wait=o.ids.slice(1).map(function(id,k){return esc(o.names[k+1])+(o.acc[id]?' \u2713':'');});
+    h='Waiting for '+wait.join(' and ')+' to accept\u2026<div class="row2"><button type="button" class="alt" data-l="ccan">Cancel</button></div>';}
+  else if(free.length>=2)h='<b>'+esc(safeName(free[0].name))+'</b> and <b>'+esc(safeName(free[1].name))+'</b> are at the cut-throat table.<div class="row2"><button type="button" data-l="cch"'+(opt.stake>bank?' disabled':'')+'>Start Cut-throat with both'+(opt.stake?' \u00b7 '+money(opt.stake):'')+'</button></div>';
+  else if(free.length===1)h='<b>'+esc(safeName(free[0].name))+'</b> is at the cut-throat table.<div class="row2"><button type="button" data-l="cch"'+(opt.stake>bank?' disabled':'')+'>Play '+esc(safeName(free[0].name))+' + '+OPP[CT_MATE[opt.opp]].name+' (regular)'+(opt.stake?' \u00b7 '+money(opt.stake):'')+'</button></div><div style="font-size:11px;margin-top:4px;color:#94a3b8">Or wait for a third player to sit down.</div>';
+  else h=LV.peers.length?'The others at the cut-throat table are in a game.':'You\u2019re at the <b>cut-throat table</b>. When others sit down you can start a three-way game here. Until then, play the regulars below.';
+  box.innerHTML=h;box.classList.remove('hide');
 }
 /* ================= spectators =================
    Players in a live game announce it on a shared feed every few seconds. Anyone on the setup screen
@@ -2289,33 +2403,33 @@ function initLive(){
 var W={feed:null,games:{},ch:null};
 function feedOn(){if(W.feed||typeof Live==='undefined'||!Live.listen||!LV.enabled)return;
   W.feed=Live.listen('arcade-pool-feed',function(type,d,from){
-    if(type==='game'&&d&&+d.t>0&&Array.isArray(d.names)){W.games[from]={t:+d.t,gid:String(d.gid||'').slice(0,12),names:d.names.slice(0,2).map(safeName),mode:d.mode==='9'?'9':'8',stake:Math.max(0,+d.stake||0),at:Date.now()};renderWatch();}
+    if(type==='game'&&d&&+d.t>0&&Array.isArray(d.names)){W.games[from]={t:+d.t,room:d.room==='poolct'?'poolct':'pool',gid:String(d.gid||'').slice(0,12),names:d.names.slice(0,3).map(safeName),mode:d.mode==='9'?'9':d.mode==='ct'?'ct':'8',stake:Math.max(0,+d.stake||0),at:Date.now()};renderWatch();}
     else if(type==='end'&&W.games[from]){delete W.games[from];renderWatch();}});}
 function feedOff(){if(W.feed){W.feed.stop();W.feed=null;}W.games={};renderWatch();}
 setInterval(function(){
   if(LV.enabled&&!W.feed)feedOn();
-  var mineLive=G.live&&!G.watch&&busy()&&LV.L&&LV.L.isHost();
-  if(W.feed&&mineLive)W.feed.send('game',{t:LV.L.table,gid:G.gid,names:G.players.map(function(p){return p.name;}),mode:G.mode,stake:G.stake});
+  var mineLive=busy()&&amAuth();
+  if(W.feed&&mineLive)W.feed.send('game',{t:LV.L.table,room:LV.room,gid:G.gid,names:G.players.map(function(p){return p.name;}),mode:G.mode,stake:G.stake});
   if(W.feed&&W.wasLive&&!mineLive)W.feed.send('end',{});W.wasLive=mineLive;
   var ch=false;for(var k in W.games)if(Date.now()-W.games[k].at>13000){delete W.games[k];ch=true;}if(ch)renderWatch();
 },4000);
 function renderWatch(){var el=$('wbox');if(!el)return;var list=[];for(var k in W.games){var g=W.games[k];if(G.watch&&g.gid===G.gid)continue;if(G.live&&!G.watch&&g.gid===G.gid)continue;list.push(g);}
   el.classList.toggle('hide',!list.length||G.phase!=='setup');if(!list.length){el.innerHTML='';return;}
-  el.innerHTML='<div class="wh">Live games now</div>'+list.map(function(g){return '<div class="wg"><span>'+esc(g.names[0])+' vs '+esc(g.names[1])+' <small>\u00b7 '+(g.mode==='9'?'9-Ball':'8-Ball')+(g.stake?' \u00b7 '+money(g.stake*2)+' pot':'')+'</small></span><button type="button" data-t="'+g.t+'" data-g="'+esc(g.gid)+'">Watch</button></div>';}).join('');}
-$('wbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;startWatch(+b.dataset.t,b.dataset.g);});
-function startWatch(t,gid){
+  el.innerHTML='<div class="wh">Live games now</div>'+list.map(function(g){return '<div class="wg"><span>'+g.names.map(esc).join(' vs ')+' <small>\u00b7 '+(g.mode==='9'?'9-Ball':g.mode==='ct'?'Cut-throat':'8-Ball')+(g.stake?' \u00b7 '+money(g.stake*g.names.length)+' pot':'')+'</small></span><button type="button" data-t="'+g.t+'" data-r="'+g.room+'" data-g="'+esc(g.gid)+'">Watch</button></div>';}).join('');}
+$('wbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;startWatch(+b.dataset.t,b.dataset.g,b.dataset.r);});
+function startWatch(t,gid,room){
   if(busy()||typeof Live==='undefined'||!Live.listen)return;
   stopWatch(true);gen++;BOT=null;SIMRUN=null;
   G.watch=true;G.live=false;G.gid='';G.ids=null;G.phase='setup';
   $('setup').classList.add('hide');$('res').classList.add('hide');toast('Joining the table to watch\u2026');
   var asked=0,tries=0;
-  W.ch=Live.listen('arcade-pool-t'+t,function(type,d,from){
+  W.ch=Live.listen('arcade-'+(room==='poolct'?'poolct':'pool')+'-t'+t,function(type,d,from){
     if(type==='_open'){W.ch.send('watch',{});asked=Date.now();return;}
     if(!G.watch)return;
-    if(type==='sync'){if(!d||!Array.isArray(d.ids)||d.ids.indexOf(from)<0)return;if(G.gid&&d.gid!==G.gid&&G.phase!=='over')return;adoptSync(d);hud();}
+    if(type==='sync'){if(!d||!Array.isArray(d.ids)||(d.ids.indexOf(from)<0&&d.auth!==from))return;if(G.gid&&d.gid!==G.gid&&G.phase!=='over')return;adoptSync(d);hud();}
     else if(type==='aim')onAim(d,from);
     else if(type==='shot')onShot(d,from);
-    else if(type==='resign'){if(!d||d.gid!==G.gid||!busy()||!G.ids)return;var ls=G.ids.indexOf(from);if(ls<0)return;G.phase='over';G.winner=1-ls;G.reason=who(ls)+' resigned';endGame();}
+    else if(type==='resign'){if(!d||d.gid!==G.gid||!busy()||!G.ids||G.mode==='ct')return;var ls=G.ids.indexOf(from);if(ls<0)return;G.phase='over';G.winner=1-ls;G.reason=who(ls)+' resigned';endGame();}
   });
   /* if the table never answers, ask again, then give up */
   (function retry(){setTimeout(function(){if(!G.watch||G.gid)return;if(++tries>3){toast('That game has ended');stopWatch();return;}if(W.ch)W.ch.send('watch',{});retry();},2500);})();
@@ -2333,8 +2447,8 @@ function onShot(d,from){if(!d||!G.live||d.gid!==G.gid||d.k!==G.shotNo||G.phase!=
   var cx=+d.cx,cy=+d.cy;if(!G.bih){cx=G.balls[0].x;cy=G.balls[0].y;}
   var cl2=Math.round(+d.call);fire({call:cl2>=0&&cl2<=5?cl2:-1,cx:cx,cy:cy,vx:+d.vx,vy:+d.vy,sx:clamp(+d.sx||0,-1,1),sy:clamp(+d.sy||0,-1,1)},true);}
 /* host enforces the live shot clock */
-setInterval(function(){if(G.live&&!G.watch&&G.phase==='aim'&&LV.L&&LV.L.isHost()&&G.clock&&Date.now()>G.clock&&!G.waitSync){
-  var s=G.turn;G.turn=1-s;G.bih=true;G.kitchen=false;G.shotNo++;toast('Shot clock: '+who(s)+' ran out of time',true);sendSync();nextTurn();}
+setInterval(function(){if(G.phase==='aim'&&amAuth()&&G.clock&&Date.now()>G.clock&&!G.waitSync&&G.players[G.turn].kind!=='bot'){
+  var s=G.turn;G.turn=nextSeat(s);G.bih=true;G.kitchen=false;G.shotNo++;toast('Shot clock: '+who(s)+' ran out of time',true);sendSync();nextTurn();}
   if(G.live&&G.phase==='aim')hud();},1000);
 function onChat(m,mine){
   if(!mine||!opt.talk||G.live||typeof Live==='undefined'||!Live.banter)return;var b=G.players[1];if(b.kind!=='bot')return;
@@ -2363,6 +2477,7 @@ window.__pool_dbg={
   geo:{PF:PF,R:R,POCKETS:POCKETS,HEAD_X:HEAD_X,FOOT:FOOT},
   simulate:function(shot){var r=simulate(G.balls,shot);return {ev:r.ev,balls:r.b.map(function(o){return [o.n,o.x,o.y,o.on];})};},
   live:function(){return {status:LV.L?LV.L.status:'none',host:LV.L?LV.L.isHost():false,peer:LV.peer?LV.peer.name:null,peerBusy:LV.peerBusy,inc:LV.inc,out:LV.out,me:LV.L?LV.L.me.name:''};},
+  ct:{challenge:function(){challengeCT();},accept:function(){acceptCT();},decline:function(){declineCT();},lv:function(){return {room:LV.room,peers:LV.peers.map(function(x){return x.name;}),inc:LV.inc,out:LV.out,auth:G.auth,bots:G.bots,ids:G.ids,table:LV.L?LV.L.table:0};},quit:function(){resign();}},
   challenge:function(o){if(o){opt.mode=o.mode||opt.mode;opt.stake=o.stake!=null?o.stake:opt.stake;}challenge();},accept:acceptInv,resign:resign,
   setName:function(n){if(LV.L)LV.L.setName(n);},
   rot:function(n){return ROT[n].slice();},
