@@ -41,6 +41,9 @@ kbd{font:700 10.5px Inter,system-ui,sans-serif;background:#0f172a;border:1px sol
 .pc{display:flex;align-items:center;gap:10px;min-width:0;flex:0 1 330px;padding:6px 14px 6px 6px;border-radius:40px;background:rgba(15,23,42,.84);
   border:1px solid var(--edge2);box-shadow:0 8px 20px rgba(0,0,0,.35);transition:border-color .2s,box-shadow .2s}
 .pc.r{flex-direction:row-reverse;padding:6px 6px 6px 14px;text-align:right}
+.pc.hide{display:none}
+.phud.three .pc{flex:0 1 250px}.phud.three .pc.out{opacity:.45}
+.felt.m-port .phud.three .pc .mbs{display:none}
 .pc.turn{border-color:rgba(16,185,129,.85);box-shadow:0 0 0 2px rgba(16,185,129,.3),0 0 24px rgba(16,185,129,.4)}
 .pc.won{border-color:var(--gold2);box-shadow:0 0 0 2px rgba(242,210,126,.4),0 0 28px rgba(242,210,126,.5)}
 .av{width:46px;height:46px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#0f172a;position:relative;
@@ -661,13 +664,14 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 <div class="wrap">
   <div class="pill"><i></i>Arcade &middot; Casino &middot; Pool</div>
   <h1>Saddle Up Pool. <span>Call your pocket, partner.</span></h1>
-  <p class="sub">Shoot <b>8-Ball</b> or <b>9-Ball</b> on a real-physics table against the saloon regulars, or against another visitor at a <b>live table</b>. Put up a stake from your casino bankroll and the winner takes the pot.</p>
+  <p class="sub">Shoot <b>8-Ball</b>, <b>9-Ball</b> or three-way <b>Cut-throat</b> on a real-physics table against the saloon regulars, or against another visitor at a <b>live table</b>. Put up a stake from your casino bankroll and the winner takes the pot.</p>
 
   <div class="felt" id="felt">
     <div class="stage" id="stage">
       <div class="phud" id="phud">
         <div class="pc" id="pc0"><div class="av" id="av0"><span>Y</span></div><div class="pi"><div class="nm" id="nm0">You</div><div class="gl" id="gl0">Open table</div><div class="mbs" id="mb0"></div></div></div>
         <div class="mid"><div class="mtag" id="mtag">8-Ball</div><div class="tmsg" id="tmsg">Rack 'em up</div></div>
+        <div class="pc r hide" id="pc2"><div class="av" id="av2"><span>H</span></div><div class="pi"><div class="nm" id="nm2">Hank</div><div class="gl" id="gl2"></div><div class="mbs" id="mb2"></div></div></div>
         <div class="pc r" id="pc1"><div class="av" id="av1"><span>D</span></div><div class="pi"><div class="nm" id="nm1">Dusty</div><div class="gl" id="gl1">Open table</div><div class="mbs" id="mb1"></div></div></div>
       </div>
       <div class="tbox pooltbl" id="tbox">
@@ -681,7 +685,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
           <div class="sheet">
             <b class="ttl">Rack 'em</b>
             <div class="sb">Bankroll <b id="setBank">$1,000</b></div>
-            <div class="srow"><span>Game</span><div class="seg" id="optMode"><button type="button" data-v="8" class="on">8-Ball</button><button type="button" data-v="9">9-Ball</button></div></div>
+            <div class="srow"><span>Game</span><div class="seg" id="optMode"><button type="button" data-v="8" class="on">8-Ball</button><button type="button" data-v="9">9-Ball</button><button type="button" data-v="ct">Cut-throat</button></div></div>
             <div class="srow"><span>Opponent</span><div class="seg" id="optOpp"><button type="button" data-v="easy">Hank<small>Easy</small></button><button type="button" data-v="normal" class="on">Dusty<small>Normal</small></button><button type="button" data-v="hard">June<small>Hard</small></button></div></div>
             <div class="srow"><span>Stake</span><div class="seg" id="optStake"><button type="button" data-v="0" class="on">Fun</button><button type="button" data-v="10">$10</button><button type="button" data-v="25">$25</button><button type="button" data-v="100">$100</button><button type="button" data-v="500">$500</button></div></div>
             <div class="srow stkc"><span>Or bet</span><div class="stkbox"><input id="stakeIn" type="text" inputmode="decimal" autocomplete="off" placeholder="Any amount" aria-label="Stake amount"><button type="button" id="stakeSet">Bet</button><button type="button" id="stakeAll">All in</button></div></div>
@@ -737,6 +741,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     <div class="panel">
       <h3>Rules</h3>
       <div class="keys"><b>8-Ball:</b> the table is open after the break. Your first legal pot picks solids or stripes. Clear your group, then call a pocket and sink the 8 there to win (the 8 in any other pocket loses; against Hank on Easy any pocket counts). Live games always call the 8. Sinking the 8 early, or scratching on it, loses the game.<br>
+      <b>Cut-throat:</b> three players. Each owns a set of balls: 1&#x2013;5, 6&#x2013;10 or 11&#x2013;15. Sink the other players&#x2019; balls and keep your own on the table. Pocket any ball and you shoot again. A foul brings back one ball for each opponent. When all your balls are down you&#x2019;re out; the last player with a ball left wins.<br>
       <b>9-Ball:</b> always hit the lowest numbered ball first. Combinations count; whoever legally sinks the 9 wins, even on the break.<br>
       <b>Fouls</b> (scratch, wrong ball first, no ball hit, no rail after contact) give your opponent ball in hand anywhere. A scratch on the break puts the cue ball behind the head string.</div>
     </div>
@@ -1405,6 +1410,7 @@ function rackBalls(mode){
 var OPP={easy:{name:'Hank',col:'#60a5fa',key:'hank',err:0.025,perr:0.15,think:1250,cand:24,pos:0.12},
          normal:{name:'Dusty',col:'#c6a75e',key:'dusty',err:0.018,perr:0.12,think:1100,cand:36,pos:0.3},
          hard:{name:'June',col:'#a78bfa',key:'june',err:0.0075,perr:0.06,think:900,cand:100,pos:0.8}};
+var CT_MATE={easy:'normal',normal:'easy',hard:'normal'};
 var opt={mode:'8',opp:'normal',stake:0,guide:'full',talk:true,sound:true};
 var G={mode:'8',phase:'setup',players:[{name:'You',kind:'me',col:'#10b981'},{name:'Dusty',kind:'bot',col:'#c6a75e',skill:'normal'}],
   balls:rackBalls('8'),turn:0,groups:[null,null],open:true,breakShot:true,bih:true,kitchen:true,shotNo:0,winner:-1,reason:'',pocketOrder:[],
@@ -1422,15 +1428,25 @@ function groupOf(n){return n>=1&&n<=7?'solids':n>=9&&n<=15?'stripes':n===8?'eigh
 function onTable(n){return G.balls[n].on;}
 function remainingOf(g,balls){balls=balls||G.balls;var c=0;balls.forEach(function(o){if(o.on&&groupOf(o.n)===g)c++;});return c;}
 function lowest(balls){balls=balls||G.balls;for(var n=1;n<=15;n++)if(balls[n].on)return n;return 0;}
+/* ---- cut-throat: three players own 1-5, 6-10 and 11-15 ---- */
+var CTR=[[1,5],[6,10],[11,15]];
+function isCT(st){return (st||G).mode==='ct';}
+function ctSet(n){return n>=1&&n<=5?0:n>=6&&n<=10?1:n>=11&&n<=15?2:-1;}
+function ctLeft(gi,balls){balls=balls||G.balls;if(gi==null||gi<0)return 0;var c=0;for(var n=CTR[gi][0];n<=CTR[gi][1];n++)if(balls[n].on)c++;return c;}
+function ctAlive(seat,balls,st){st=st||G;return ctLeft(st.groups[seat],balls)>0;}
+function nseat(){return G.players.length;}
+/* who shoots after seat: the next player still in */
+function nextSeat(seat,balls,st){var N=G.players.length;if(!isCT(st))return 1-seat;for(var k=1;k<=N;k++){var t=(seat+k)%N;if(ctAlive(t,balls,st))return t;}return seat;}
 function onEight(seat,balls){return G.mode==='8'&&!G.open&&G.groups[seat]&&remainingOf(G.groups[seat],balls)===0;}
 function legalTargets(seat,balls,st){
   balls=balls||G.balls;st=st||G;
   if(st.mode==='9'){var l=lowest(balls);return l?[l]:[];}
+  if(st.mode==='ct'){var mg=st.groups[seat],o=[],own=[];for(var c=1;c<=15;c++)if(balls[c].on)(ctSet(c)===mg?own:o).push(c);return o.length?o:own;}
   if(st.open){var a=[];for(var n=1;n<=15;n++)if(n!==8&&balls[n].on)a.push(n);return a;}
   var g=st.groups[seat],r=[];for(var m=1;m<=15;m++)if(balls[m].on&&groupOf(m)===g)r.push(m);
   return r.length?r:(balls[8].on?[8]:[]);
 }
-function preState(){return {call:G.call,callEight:G.callEight&&G.mode==='8',mode:G.mode,turn:G.turn,groups:G.groups.slice(),open:G.open,breakShot:G.breakShot,onEight:onEight(G.turn),lowest:lowest()};}
+function preState(){return {seats:G.players.length,call:G.call,callEight:G.callEight&&G.mode==='8',mode:G.mode,turn:G.turn,groups:G.groups.slice(),open:G.open,breakShot:G.breakShot,onEight:onEight(G.turn),lowest:lowest()};}
 
 /* ================= calling the 8 ================= */
 function needCall(seat){seat=seat==null?G.turn:seat;return G.callEight&&G.mode==='8'&&G.phase==='aim'&&!G.breakShot&&onEight(seat);}
@@ -1443,6 +1459,14 @@ function judge(pre,ev){
   var r={foul:false,reason:'',cont:false,win:-1,assign:null,respot:[],kitchen:false};
   var meS=pre.turn,op=1-meS,pk=ev.pocketed.slice(),scr=ev.scratch;
   function foul(t){if(!r.foul){r.foul=true;r.reason=t;}}
+  if(pre.mode==='ct'){
+    if(ev.first===null)foul('No ball hit');
+    if(!r.foul&&!pre.breakShot&&!pk.length&&!ev.railAfter)foul('No rail after contact');
+    if(scr){r.foul=true;r.reason='Scratch';}
+    r.cont=!r.foul&&pk.some(function(n){return n>0;});
+    if(r.foul)r.kitchen=pre.breakShot&&scr;
+    return r;
+  }
   if(pre.mode==='8'){
     var eight=pk.indexOf(8)>=0;
     if(ev.first===null)foul('No ball hit');
@@ -1641,7 +1665,7 @@ function draw(t){
   var shooterMe=G.phase==='aim'&&G.players[G.turn].kind==='me';
   if(showAim&&cue.on&&VIEW.show&&opt.guide!=='off'&&!(drag&&drag.mode==='place')){
     var pr=predict(cue.x,cue.y,VIEW.a,b),bad=false;
-    if(pr.ball!==null){var lg=legalTargets(G.turn);bad=lg.indexOf(pr.ball)<0&&!(G.mode==='8'&&G.open&&G.breakShot);}
+    if(pr.ball!==null){var lg=legalTargets(G.turn);bad=lg.indexOf(pr.ball)<0&&!(G.mode==='8'&&G.open&&G.breakShot)&&G.mode!=='ct';}
     var alpha=shooterMe?0.9:0.55,full=opt.guide==='full';
     ctx.lineWidth=lw(1.6);ctx.strokeStyle='rgba(255,255,255,'+alpha+')';ctx.shadowColor='rgba(0,0,0,0.75)';ctx.shadowBlur=4*DPR;
     var ex=pr.gx,ey=pr.gy;if(!full){var L0=Math.min(Math.hypot(ex-cue.x,ey-cue.y),160);ex=cue.x+Math.cos(VIEW.a)*L0;ey=cue.y+Math.sin(VIEW.a)*L0;}
@@ -1739,20 +1763,29 @@ function resolveShot(ev){
   var pre=G.pre,r=judge(pre,ev),sh=pre.turn,shooter=G.players[sh];
   G.lastEv={first:ev.first,pocketed:ev.pocketed.slice(),scratch:ev.scratch,railAfter:ev.railAfter};G.lastRes=r;
   r.respot.forEach(respot);
+  var revived=[];
+  if(isCT(pre)&&r.foul){for(var q=0;q<G.players.length;q++){if(q===sh)continue;var gi=G.groups[q];
+      for(var bn=CTR[gi][0];bn<=CTR[gi][1];bn++)if(!G.balls[bn].on){respot(bn);revived.push(bn);break;}}}
   G.breakShot=false;G.shotNo++;
+  if(isCT(pre)){var alive=[];for(var a2=0;a2<G.players.length;a2++)if(ctAlive(a2))alive.push(a2);
+    if(alive.length===1){G.phase='over';G.winner=alive[0];G.reason=alive[0]===sh?'Last one standing':'Last one with balls on the table';afterResolve();endGame();return;}
+    if(!r.foul&&!ctAlive(sh))r.cont=false;}
   if(r.win>=0){G.phase='over';G.winner=r.win;G.reason=r.reason;afterResolve();endGame();return;}
   if(r.assign){G.groups[sh]=r.assign;G.groups[1-sh]=r.assign==='solids'?'stripes':'solids';G.open=false;}
   var msg='';
   if(r.foul){
-    G.turn=1-sh;G.bih=true;G.kitchen=r.kitchen;
+    G.turn=nextSeat(sh);G.bih=true;G.kitchen=r.kitchen;
     var c=G.balls[0];if(!c.on){var p=nearestPlace(HEAD.x,HEAD.y,r.kitchen);c.on=true;c.x=p.x;c.y=p.y;SPR[0].lx=c.x;SPR[0].ly=c.y;}
     else if(r.kitchen&&c.x>HEAD_X){var p2=nearestPlace(HEAD.x,HEAD.y,true);c.x=p2.x;c.y=p2.y;}
-    toast('Foul: '+r.reason+'. '+(G.players[G.turn].kind==='me'?'Ball in hand':who(G.turn)+' has ball in hand'),true);SFX.foul();
+    toast('Foul: '+r.reason+'. '+(revived.length?revived.length+(revived.length>1?' balls':' ball')+' back on the table. ':'')+(G.players[G.turn].kind==='me'?'Ball in hand':who(G.turn)+' has ball in hand'),true);SFX.foul();
     talk(shooter.kind==='me'?'youFoul':'botFoul',sh);
   } else if(r.cont){
     if(r.assign)toast(who(sh)+(shooter.kind==='me'?' are ':' is ')+r.assign);
     talk(shooter.kind==='me'?'youGood':'botGood',sh);
-  } else {G.turn=1-sh;}
+    if(isCT(pre)){var out=[];for(var z=0;z<G.players.length;z++)if(z!==sh&&ctLeft(G.groups[z])===0&&G.lastOut.indexOf(z)<0){out.push(z);G.lastOut.push(z);}
+      if(out.length)toast(out.map(who).join(' and ')+(out.length>1||G.players[out[0]].kind==='me'?' are':' is')+' out!');}
+  } else {G.turn=nextSeat(sh);}
+  if(isCT(pre)&&!ctAlive(G.turn))G.turn=nextSeat(G.turn);
   afterResolve();
   nextTurn();
 }
@@ -1810,6 +1843,13 @@ function scoreResult(res,seat,skill,cd){
   var pre=preState();pre.turn=seat;pre.onEight=onEight(seat);if(cd){cd.callPk=cd.pk!=null?cd.pk:res.ev.eightPk;pre.call=cd.callPk;}var r=judge(pre,res.ev),P=OPP[skill];
   if(r.win===seat)return 1e5;if(r.win>=0)return -1e5;
   if(r.foul)return -2000-(res.ev.scratch?200:0);
+  if(pre.mode==='ct'){var mg=G.groups[seat],val=0,opps=[];
+    res.ev.pocketed.forEach(function(n){if(n>0)val+=ctSet(n)===mg?-700:420;});
+    for(var oq=0;oq<G.players.length;oq++)if(oq!==seat&&ctAlive(oq,res.b))opps.push(oq);
+    if(ctAlive(seat,res.b)&&!opps.length)return 1e5;
+    if(!ctAlive(seat,res.b))return -1e5;
+    if(r.cont)return 1000+val+P.pos*500*shotQuality(res.b,seat,G)+(P.pos?0:Math.random()*200);
+    return val-P.pos*400*shotQuality(res.b,nextSeat(seat,res.b),G)+(P.pos?0:Math.random()*100);}
   var st={mode:G.mode,open:G.open&&!r.assign,groups:G.groups.slice()};if(r.assign){st.groups[seat]=r.assign;st.groups[1-seat]=r.assign==='solids'?'stripes':'solids';}
   if(r.cont)return 1000+res.ev.pocketed.length*30+P.pos*500*shotQuality(res.b,seat,st)+(P.pos?0:Math.random()*200);
   return -P.pos*600*shotQuality(res.b,1-seat,st)+(P.pos?0:Math.random()*100);
@@ -1866,7 +1906,7 @@ var LINES={youGood:['Nice shot.','Well now, look at you.','Shoot, that was clean
   botWin:['Good game, partner.','Rack \u2019em again?','That\u2019s how we do it out here.'],botLose:['Well played. You earned it.','Tip of the hat.','I want a rematch.']};
 var lastTalk=0;
 function talk(kind,seat,force){
-  if(!opt.talk||turbo||G.live||!LV.chat)return;var bot=G.players[1];if(bot.kind!=='bot')return;
+  if(!opt.talk||turbo||G.live||!LV.chat)return;var bot=G.players[seat!=null&&G.players[seat]&&G.players[seat].kind==='bot'?seat:1];if(!bot||bot.kind!=='bot')return;
   if(!force&&(Math.random()>0.35||Date.now()-lastTalk<9000))return;lastTalk=Date.now();
   var a=LINES[kind];if(!a)return;var t=a[Math.floor(Math.random()*a.length)];
   setTimeout(function(){try{LV.chat.post('bot-'+bot.key,bot.name,t,bot.col);}catch(e){}},500+Math.random()*700);
@@ -1878,32 +1918,37 @@ function startSolo(){
   gen++;var o=OPP[opt.opp];
   G.mode=opt.mode;G.live=false;G.gid='';G.ids=null;G.mySeat=0;G.stake=st;G.settled=false;G.waitSync=false;
   G.players=[{name:'You',kind:'me',col:'#10b981'},{name:o.name,kind:'bot',col:o.col,skill:opt.opp,key:o.key}];
+  if(G.mode==='ct'){var k2=CT_MATE[opt.opp],o2=OPP[k2];G.players.push({name:o2.name,kind:'bot',col:o2.col,skill:k2,key:o2.key});}
   G.callEight=opt.opp!=='easy';
   bank-=st;
-  beginRack(rackBalls(G.mode),G.nextBreaker);G.nextBreaker=1-G.nextBreaker;
+  var N=G.players.length;G.nextBreaker=G.nextBreaker%N;
+  beginRack(rackBalls(G.mode),G.nextBreaker);G.nextBreaker=(G.nextBreaker+1)%N;
 }
 function beginRack(balls,breaker){
   SIMRUN=null;SINKING=[];
-  G.balls=balls;G.turn=breaker;G.groups=[null,null];G.open=true;G.breakShot=true;G.bih=true;G.kitchen=true;G.shotNo=0;G.winner=-1;G.reason='';G.pocketOrder=[];
+  G.balls=balls;G.turn=breaker;G.groups=[null,null];G.open=true;G.lastOut=[];
+  if(G.mode==='ct'){G.groups=shuffle([0,1,2]).slice(0,G.players.length);G.open=false;}G.breakShot=true;G.bih=true;G.kitchen=true;G.shotNo=0;G.winner=-1;G.reason='';G.pocketOrder=[];
   resetRot();
   $('setup').classList.add('hide');$('res').classList.add('hide');
   G.phase='aim';
   var c=G.balls[0];AIM.a=Math.atan2(FOOT.y-c.y,FOOT.x-c.x);
   renderBank();
-  toast((G.players[breaker].kind==='me'?'Your break':who(breaker)+' breaks')+(G.stake?' \u00b7 '+money(G.stake*2)+' pot':''));
+  if(G.mode==='ct'){var mgi=G.groups[G.mySeat];toast('Your balls: '+CTR[mgi][0]+'\u2013'+CTR[mgi][1]+' \u00b7 '+(G.players[breaker].kind==='me'?'your break':who(breaker)+' breaks')+(G.stake?' \u00b7 '+money(pot())+' pot':''));}
+  else toast((G.players[breaker].kind==='me'?'Your break':who(breaker)+' breaks')+(G.stake?' \u00b7 '+money(G.stake*2)+' pot':''));
   nextTurn();
 }
+function pot(){return G.stake*G.players.length;}
 function endGame(){
   var w=G.winner,mine=w===G.mySeat,pay=0;
   gen++;BOT=null;
-  if(!G.settled){G.settled=true;if(G.stake>0&&mine){pay=G.stake*2;bank+=pay;}}
+  if(!G.settled){G.settled=true;if(G.stake>0&&mine){pay=pot();bank+=pay;}}
   renderBank();hud();
-  if(mine){SFX.win();if(typeof suBanner==='function')suBanner(G.mode==='9'?'Nine down!':'Winner!',G.stake?'+'+money(G.stake*2):'Game won');talk('botLose',1,true);}
-  else{SFX.lose();talk('botWin',1,true);}
+  if(mine){SFX.win();if(typeof suBanner==='function')suBanner(G.mode==='9'?'Nine down!':G.mode==='ct'?'Last one standing!':'Winner!',G.stake?'+'+money(pot()):'Game won');talk('botLose',1,true);}
+  else{SFX.lose();talk('botWin',w>0?w:1,true);}
   var wn=who(w);
   $('resT').textContent=mine?'You win!':wn+' wins';
   $('resW').textContent=G.reason?(mine?G.reason:G.reason.replace(/^Sank/,(G.players[w].kind==='me'?'You sank':wn+' sank')))+'.':'';
-  var a=$('resA');a.textContent=G.stake?(mine?'+'+money(G.stake*2):'-'+money(G.stake)):(mine?'For fun':'');a.classList.toggle('neg',!mine);
+  var a=$('resA');a.textContent=G.stake?(mine?'+'+money(pot()):'-'+money(G.stake)):(mine?'For fun':'');a.classList.toggle('neg',!mine);
   $('againBtn').textContent=G.live?'Rematch':'Play again';
   later(turbo?0:1100,function(){if(G.phase==='over'){$('res').classList.remove('hide');}});
   liveLobby();
@@ -1911,7 +1956,8 @@ function endGame(){
 function toSetup(){gen++;BOT=null;SIMRUN=null;G.phase='setup';G.waitSync=false;$('res').classList.add('hide');$('setup').classList.remove('hide');renderSetup();hud();liveLobby();}
 function resign(){
   if(!busy())return;
-  var op=1-G.mySeat;
+  var op=nextSeat(G.mySeat);
+  if(isCT()){var bl=-1,bc=-1;for(var q=0;q<G.players.length;q++)if(q!==G.mySeat){var c=ctLeft(G.groups[q]);if(c>bc){bc=c;bl=q;}}op=bl;}
   if(G.live&&LV.L)LV.L.send('resign',{gid:G.gid});
   G.phase='over';G.winner=op;G.reason='You resigned';endGame();
 }
@@ -1919,13 +1965,17 @@ function resign(){
 /* ================= HUD ================= */
 function mbHTML(n,cls){return '<i class="mb'+(cls?' '+cls:'')+'" style="background-position:'+(n/15*100)+'% 0" title="'+n+'"></i>';}
 function hud(){
-  var seats=[G.mySeat,1-G.mySeat];
+  var three=G.players.length>2,seats=three?[G.mySeat,(G.mySeat+1)%3,(G.mySeat+2)%3]:[G.mySeat,1-G.mySeat];
+  $('phud').classList.toggle('three',three);$('pc2').classList.toggle('hide',!three);
   seats.forEach(function(s,k){var p=G.players[s],pc=$('pc'+k);
     $('nm'+k).textContent=p.kind==='me'&&!G.live?'You':p.name+(p.kind==='me'&&G.live?' (you)':'');
     var av=$('av'+k);av.style.background=p.col||'#94a3b8';av.querySelector('span').textContent=(p.kind==='me'&&!G.live?'Y':(p.name||'?').charAt(0)).toUpperCase();
     pc.classList.toggle('turn',G.phase==='aim'||G.phase==='run'?G.turn===s:false);pc.classList.toggle('won',G.phase==='over'&&G.winner===s);
     var gl='',mbs='';
     if(G.phase==='setup')gl=p.kind==='bot'?({easy:'Easy',normal:'Normal',hard:'Hard'}[p.skill]||'Regular'):p.kind==='remote'?'Live player':'Ready';
+    else if(G.mode==='ct'){var gi=G.groups[s],lf=ctLeft(gi);
+      gl='<b>'+CTR[gi][0]+'\u2013'+CTR[gi][1]+'</b> \u00b7 '+(lf?lf+' left':'Out');pc.classList.toggle('out',!lf);
+      for(var cn=CTR[gi][0];cn<=CTR[gi][1];cn++)mbs+=mbHTML(cn,G.balls[cn].on?'':'gone');}
     else if(G.mode==='8'){
       var g=G.groups[s];
       if(!g)gl=G.breakShot?'Break':'Open table';
@@ -1935,7 +1985,8 @@ function hud(){
     if(G.live&&busy()&&G.turn===s&&G.phase==='aim'){var secs=Math.max(0,Math.ceil((G.clock-Date.now())/1000));if(secs<=20)gl+='<span class="clk">'+secs+'s</span>';}
     $('gl'+k).innerHTML=gl;$('mb'+k).innerHTML=mbs;});
 
-  $('mtag').textContent=(G.mode==='9'?'9-Ball':'8-Ball')+(G.stake?' \u00b7 '+money(G.stake*2)+' pot':' \u00b7 for fun')+(G.live?' \u00b7 live':'');
+  [0,1,2].forEach(function(k){if(!seats[k]&&seats[k]!==0||G.mode!=='ct')$('pc'+k).classList.remove('out');});
+  $('mtag').textContent=(G.mode==='9'?'9-Ball':G.mode==='ct'?'Cut-throat':'8-Ball')+(G.stake?' \u00b7 '+money(G.stake*G.players.length)+' pot':' \u00b7 for fun')+(G.live?' \u00b7 live':'');
   var t='';
   if(G.phase==='setup')t='Rack \u2019em up';
   else if(G.phase==='over')t=(G.winner===G.mySeat?'You win':who(G.winner)+' wins');
@@ -1973,17 +2024,21 @@ function renderSetup(){
   if(opt.stake>bank){opt.stake=0;segSet('optStake','0');$('stakeIn').value='';}
   $('stakeIn').classList.toggle('on',opt.stake>0&&['10','25','100','500'].indexOf(String(opt.stake))<0);$('stakeAll').disabled=bank<1;
   var lb=liveOffer();
-  $('goBtn').textContent=(opt.mode==='9'?'9-Ball':'8-Ball')+' vs '+OPP[opt.opp].name+(opt.stake?' \u00b7 '+money(opt.stake):'');
+  var vs=OPP[opt.opp].name+(opt.mode==='ct'?' & '+OPP[CT_MATE[opt.opp]].name:'');
+  $('goBtn').textContent=(opt.mode==='9'?'9-Ball':opt.mode==='ct'?'Cut-throat':'8-Ball')+' vs '+vs+(opt.stake?' \u00b7 '+money(opt.stake):'');
+  if(G.phase==='setup'){var want=opt.mode==='ct'?3:2;if(G.players.length!==want){var o1=OPP[opt.opp];G.players=[G.players[0],{name:o1.name,kind:'bot',col:o1.col,skill:opt.opp,key:o1.key}];
+    if(want===3){var m2=OPP[CT_MATE[opt.opp]];G.players.push({name:m2.name,kind:'bot',col:m2.col,skill:CT_MATE[opt.opp],key:m2.key});}G.mode=opt.mode;G.groups=want===3?[0,1,2]:[null,null];hud();}}
   $('goBtn').disabled=opt.stake>bank;
   $('refill').classList.toggle('hide',bank>=10);
   var callTxt=opt.mode==='8'?(opt.opp==='easy'?'Call the 8: <b>off</b> vs Hank (any pocket wins). ':'Call the 8: <b>on</b>. Name the pocket before you shoot the 8. '):'';
-  $('setNote').innerHTML=callTxt+(opt.stake?'Your stake '+money(opt.stake)+' comes out of your bankroll. Win and the pot pays <b>'+money(opt.stake*2)+'</b>.':'Playing for fun. Pick a stake to put money on it.');
+  if(opt.mode==='ct')callTxt='Three players: you, '+vs+'. Last one with balls on the table wins. ';
+  $('setNote').innerHTML=callTxt+(opt.stake?'Your stake '+money(opt.stake)+' comes out of your bankroll. Win and the pot pays <b>'+money(opt.stake*(opt.mode==='ct'?3:2))+'</b>.':'Playing for fun. Pick a stake to put money on it.');
   renderBank();
 }
 function segSet(id,v){[].forEach.call($(id).querySelectorAll('button'),function(b){b.classList.toggle('on',b.dataset.v===v);});}
 function bindSeg(id,fn){$(id).addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.disabled)return;segSet(id,b.dataset.v);fn(b.dataset.v);});}
 bindSeg('optMode',function(v){opt.mode=v;renderSetup();});
-bindSeg('optOpp',function(v){opt.opp=v;var o=OPP[v];if(G.phase==='setup'){G.players[1]={name:o.name,kind:'bot',col:o.col,skill:v,key:o.key};hud();}renderSetup();});
+bindSeg('optOpp',function(v){opt.opp=v;var o=OPP[v];if(G.phase==='setup'){G.players[1]={name:o.name,kind:'bot',col:o.col,skill:v,key:o.key};if(G.players[2]){var m2=OPP[CT_MATE[v]];G.players[2]={name:m2.name,kind:'bot',col:m2.col,skill:CT_MATE[v],key:m2.key};}hud();}renderSetup();});
 bindSeg('optStake',function(v){opt.stake=+v;$('stakeIn').value='';renderSetup();});
 function parseAmt(t){t=String(t||'').trim().toLowerCase().replace(/[$,\s]/g,'');var m=/^(\d*\.?\d+)([kmbtq]?)$/.exec(t);if(!m)return NaN;var v=parseFloat(m[1])*({k:1e3,m:1e6,b:1e9,t:1e12,q:1e15}[m[2]]||1);return Math.floor(v);}
 function setCustom(v){if(!(v>0)){toast('Type an amount, like 2500');return;}if(v>bank){toast('You have '+money(bank)+'. Bet set to all in.');v=Math.floor(bank);}
@@ -2081,11 +2136,11 @@ $('lbox').addEventListener('click',function(e){var b=e.target.closest('button');
   if(k==='ch')challenge();else if(k==='can'){if(LV.out)LV.L.send('cancel',{gid:LV.out.gid});LV.out=null;renderSetup();}
   else if(k==='dec'){if(LV.inc)LV.L.send('decline',{gid:LV.inc.gid});LV.inc=null;renderSetup();}
   else if(k==='acc')acceptInv();});
-function challenge(){if(!liveOn())return;LV.out={gid:gidNew(),mode:opt.mode,stake:Math.min(opt.stake,bank)};LV.inc=null;LV.L.send('invite',LV.out,LV.peer.id);renderSetup();}
+function challenge(){if(!liveOn())return;LV.out={gid:gidNew(),mode:opt.mode==='ct'?'8':opt.mode,stake:Math.min(opt.stake,bank)};LV.inc=null;LV.L.send('invite',LV.out,LV.peer.id);renderSetup();}
 function acceptInv(){var i=LV.inc;if(!i||i.stake>bank)return;LV.inc=null;if(LV.L.isHost())startLive(i);else{LV.L.send('accept',{gid:i.gid},LV.peer.id);$('lbox').innerHTML='Starting\u2026';}}
 function startLive(cfg){
   if(!liveOn())return;var meId=LV.L.me.id,pe=LV.peer;
-  var p={gid:cfg.gid,mode:cfg.mode,stake:cfg.stake,ids:[meId,pe.id],names:[safeName(LV.L.me.name),safeName(pe.name)],callEight:true,breaker:G.nextBreaker,balls:rackBalls(cfg.mode).map(function(o){return [o.n,o.x,o.y,o.on?1:0];})};
+  var p={gid:cfg.gid,mode:cfg.mode,stake:cfg.stake,ids:[meId,pe.id],names:[safeName(LV.L.me.name),safeName(pe.name)],callEight:true,breaker:G.nextBreaker%2,balls:rackBalls(cfg.mode).map(function(o){return [o.n,o.x,o.y,o.on?1:0];})};
   LV.L.send('start',p,pe.id);applyStart(p);
 }
 function applyStart(p){
@@ -2179,6 +2234,7 @@ function onChat(m,mine){
 /* ================= test / debug hook ================= */
 function potAngle(n,pi){var o=G.balls[n],p=POCKETS[pi],c=G.balls[0],dx=p.ax-o.x,dy=p.ay-o.y,d=Math.hypot(dx,dy),gx=o.x-dx/d*D2,gy=o.y-dy/d*D2;return Math.atan2(gy-c.y,gx-c.x);}
 window.__pool_dbg={
+  _in:function(){return {G:G,planShot:planShot,cloneBalls:cloneBalls,fire:fire,nearestPlace:nearestPlace,HEAD:HEAD,SPR:SPR,ctLeft:ctLeft,bank:function(){return bank;}};},
   state:function(){return {call:G.call,callEight:G.callEight,needCall:needCall(),phase:G.phase,mode:G.mode,turn:G.turn,mySeat:G.mySeat,myTurn:isMyTurn(),groups:G.groups.slice(),open:G.open,breakShot:G.breakShot,bih:G.bih,kitchen:G.kitchen,shotNo:G.shotNo,
     winner:G.winner,reason:G.reason,stake:G.stake,bank:bank,live:G.live,gid:G.gid,waitSync:G.waitSync,players:G.players.map(function(p){return {name:p.name,kind:p.kind,skill:p.skill||null};}),
     balls:G.balls.map(function(o){return {n:o.n,x:Math.round(o.x*100)/100,y:Math.round(o.y*100)/100,on:o.on};}),pocketed:G.pocketOrder.slice(),last:G.lastEv||null,lastRes:G.lastRes||null,layout:{mode:MODE,scale:SC,w:cv.clientWidth,h:cv.clientHeight}};},
