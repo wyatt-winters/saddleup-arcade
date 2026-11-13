@@ -133,6 +133,13 @@ html.fs .optslot{display:flex}
 .snote{font-size:11.5px;color:var(--muted);margin:8px 0 0;line-height:1.45}
 .lbox{margin:8px 0 2px;padding:9px 10px;border-radius:12px;border:1px solid rgba(16,185,129,.45);background:rgba(16,185,129,.08);font-size:13px;color:#e2e8f0;text-align:left}
 .lbox b{color:var(--green2)}
+.wbox{margin:8px 0 2px;padding:9px 10px;border-radius:12px;border:1px solid rgba(242,210,126,.45);background:rgba(242,210,126,.07);font-size:13px;color:#e2e8f0;text-align:left}
+.wbox .wh{font-weight:800;color:#f2d27e;margin-bottom:6px;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.wbox .wg{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid rgba(255,255,255,.07)}.wbox .wg:first-of-type{border-top:0}
+.wbox .wg span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wbox .wg small{color:#94a3b8}
+.wbox .wg button{flex:0 0 auto;min-height:32px;padding:0 12px;border-radius:9px;border:1px solid rgba(242,210,126,.6);background:rgba(242,210,126,.14);color:#fde68a;font:700 12px Inter,system-ui,sans-serif;cursor:pointer}
+.wbar{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:25;display:flex;align-items:center;gap:10px;padding:6px 8px 6px 14px;border-radius:30px;background:rgba(15,23,42,.9);border:1px solid rgba(242,210,126,.5);color:#fde68a;font:700 13px Inter,system-ui,sans-serif}
+.wbar.hide{display:none}.wbar button{min-height:32px;padding:0 12px;border-radius:20px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#e2e8f0;font:700 12px Inter,system-ui,sans-serif;cursor:pointer}
 .lbox .row2{margin-top:8px}
 .lbox button{min-height:40px;border-radius:9px;font-weight:800;font-size:13px;background:#10b981;color:#022c22}
 .lbox button.alt{background:transparent;color:#cbd5e1;border:1px solid rgba(255,255,255,.3)}
@@ -688,6 +695,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
         <div class="tmsgp" id="tmsgp"></div>
         <button type="button" class="callp hide" id="callp"><b id="callT">Call your pocket for the 8</b><span id="callS">Tap a pocket</span></button>
         <div class="livechip hide" id="livechip">LIVE</div>
+        <div class="wbar hide" id="wbar"><span>&#128065; Watching</span><button type="button" id="wstop">Stop watching</button></div>
         <div class="spop hide" id="spop"><div class="big" id="spinBig"><i id="spinDot2"></i></div><p>Tap where the cue hits the ball</p><div class="row2"><button type="button" id="spinReset">Center</button><button type="button" id="spinDone">Done</button></div></div>
         <div class="ovl" id="setup">
           <div class="sheet">
@@ -698,6 +706,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
             <div class="srow"><span>Stake</span><div class="seg" id="optStake"><button type="button" data-v="0" class="on">Fun</button><button type="button" data-v="10">$10</button><button type="button" data-v="25">$25</button><button type="button" data-v="100">$100</button><button type="button" data-v="500">$500</button></div></div>
             <div class="srow stkc"><span>Or bet</span><div class="stkbox"><input id="stakeIn" type="text" inputmode="decimal" autocomplete="off" placeholder="Any amount" aria-label="Stake amount"><button type="button" id="stakeSet">Bet</button><button type="button" id="stakeAll">All in</button></div></div>
             <div class="lbox hide" id="lbox"></div>
+            <div class="wbox hide" id="wbox"></div>
             <button type="button" class="go" id="goBtn">Break</button>
             <button type="button" class="refill hide" id="refill">Refill bankroll to $1,000</button>
             <p class="snote" id="setNote">Winner takes the pot: 2&times; the stake.</p>
@@ -1218,6 +1227,17 @@ var Live=(function(){
       ctx.say(b,String(line).replace(/\{n\}/g,b.name),900+i*1300+Math.random()*700);});
   }
 
+  /* ---------- listen-only channel: hear and send table messages without taking a seat (spectators, game feeds) ---------- */
+  function listen(name,onMsg){
+    var ch=null,stopped=false,useBC=window.__LIVE_TRANSPORT==='bc',lid=me().id,ok=!!LIVE_CFG||useBC;
+    if(ok){var mk=useBC?Promise.resolve(bcChannel(name,'l'+uid())):getClient().then(function(c){return c.channel(name,{config:{broadcast:{self:false,ack:false}}});});
+      mk.then(function(c){if(stopped){try{c.unsubscribe();}catch(e){}return;}
+        c.on('broadcast',{event:'m'},function(e){var d=e&&e.payload;if(!d||d.from===lid||d.type==='hb')return;if(d.to&&d.to!==lid)return;try{onMsg(d.type,d.payload,d.from);}catch(er){console.error(er);}});
+        c.subscribe(function(st){if(st==='SUBSCRIBED'){ch=c;try{onMsg('_open',null,null);}catch(er){}}});}).catch(function(e){console.warn('listen:',e&&e.message);});}
+    return {available:ok,send:function(type,payload,to){if(!ch)return false;try{ch.send({type:'broadcast',event:'m',payload:{type:type,from:lid,to:to||null,payload:payload}});}catch(e){return false;}return true;},
+      stop:function(){stopped=true;var c=ch;ch=null;if(c){try{c.unsubscribe();}catch(e){}}}};
+  }
+
   /* ---------- floor watcher: read who is seated at live tables without taking a seat ---------- */
   function watch(names,cb){
     var chans={},stopped=true,useBC=window.__LIVE_TRANSPORT==='bc',wid='w'+uid(),pr=0;
@@ -1234,7 +1254,7 @@ var Live=(function(){
     function stop(){stopped=true;clearInterval(pr);for(var n in chans){try{chans[n].unsubscribe();}catch(e){}}chans={};emit();}
     return {start:start,stop:stop,available:function(){return !!LIVE_CFG||useBC;}};
   }
-  return {create:create,me:me,chat:chat,banter:banter,wallet:wallet,walletAmount:wread,watch:watch};
+  return {create:create,me:me,chat:chat,banter:banter,wallet:wallet,walletAmount:wread,watch:watch,listen:listen};
 })();
 
 /* bot faces: swap the letter avatars at every table for the regulars' portraits */
@@ -1764,7 +1784,7 @@ function finishRun(){
   resolveShot(S.ev);
 }
 function resolveShot(ev){
-  if(G.live&&LV.L&&!LV.L.isHost()&&!ev.forced){
+  if(G.live&&LV.L&&(G.watch||!LV.L.isHost())&&!ev.forced){
     /* the host decides; we only fall back to our own result if its verdict never arrives */
     G.phase='aim';G.waitSync=true;hud();var k=G.shotNo,g0=G.gid;clearTimeout(LV.wsT);
     LV.wsT=setTimeout(function(){if(G.waitSync&&G.shotNo===k&&G.gid===g0){G.waitSync=false;G.phase='run';ev.forced=true;resolveShot(ev);}},5000);return;}
@@ -1797,7 +1817,7 @@ function resolveShot(ev){
   afterResolve();
   nextTurn();
 }
-function afterResolve(){if(G.live&&LV.L&&LV.L.isHost())sendSync();}
+function afterResolve(){if(G.live&&!G.watch&&LV.L&&LV.L.isHost())sendSync();}
 function who(seat){var p=G.players[seat];return p.kind==='me'?'You':p.name;}
 
 /* turn handling */
@@ -1977,23 +1997,26 @@ function rollOff(done){
   later(400,round);
 }
 function endGame(){
-  var w=G.winner,mine=w===G.mySeat,pay=0;
+  var w=G.winner,mine=!G.watch&&w===G.mySeat,pay=0;
   gen++;BOT=null;
   if(!G.settled){G.settled=true;if(G.stake>0&&mine){pay=pot();bank+=pay;}}
   renderBank();hud();
   if(mine){SFX.win();if(typeof suBanner==='function')suBanner(G.mode==='9'?'Nine down!':G.mode==='ct'?'Last one standing!':'Winner!',G.stake?'+'+money(pot()):'Game won');talk('botLose',1,true);}
+  else if(G.watch){SFX.turn();}
   else{SFX.lose();talk('botWin',w>0?w:1,true);}
   var wn=who(w);
   $('resT').textContent=mine?'You win!':wn+' wins';
+  if(G.watch)G.reason=G.reason.replace(/^You resigned$/,'Resigned');
   $('resW').textContent=G.reason?(mine?G.reason:G.reason.replace(/^Sank/,(G.players[w].kind==='me'?'You sank':wn+' sank')))+'.':'';
-  var a=$('resA');a.textContent=G.stake?(mine?'+'+money(pot()):'-'+money(G.stake)):(mine?'For fun':'');a.classList.toggle('neg',!mine);
-  $('againBtn').textContent=G.live?'Rematch':'Play again';
+  var a=$('resA');a.textContent=G.watch?(G.stake?money(G.stake*2)+' pot':'For fun'):G.stake?(mine?'+'+money(pot()):'-'+money(G.stake)):(mine?'For fun':'');a.classList.toggle('neg',!mine&&!G.watch);
+  $('againBtn').textContent=G.watch?'Back to the table':G.live?'Rematch':'Play again';
   later(turbo?0:1100,function(){if(G.phase==='over'){$('res').classList.remove('hide');}});
   liveLobby();
 }
-function toSetup(){gen++;BOT=null;SIMRUN=null;G.phase='setup';$('roll').classList.add('hide');G.waitSync=false;$('res').classList.add('hide');$('setup').classList.remove('hide');renderSetup();hud();liveLobby();}
+function toSetup(){if(G.watch){stopWatch(true);}gen++;BOT=null;SIMRUN=null;G.phase='setup';$('roll').classList.add('hide');G.waitSync=false;$('res').classList.add('hide');$('setup').classList.remove('hide');renderSetup();hud();liveLobby();}
 function resign(){
   if(!busy())return;
+  if(G.watch){stopWatch();return;}
   var op=nextSeat(G.mySeat);
   if(isCT()){var bl=-1,bc=-1;for(var q=0;q<G.players.length;q++)if(q!==G.mySeat){var c=ctLeft(G.groups[q]);if(c>bc){bc=c;bl=q;}}op=bl;}
   if(G.live&&LV.L)LV.L.send('resign',{gid:G.gid});
@@ -2024,7 +2047,8 @@ function hud(){
     $('gl'+k).innerHTML=gl;$('mb'+k).innerHTML=mbs;});
 
   [0,1,2].forEach(function(k){if(!seats[k]&&seats[k]!==0||G.mode!=='ct')$('pc'+k).classList.remove('out');});
-  $('mtag').textContent=(G.mode==='9'?'9-Ball':G.mode==='ct'?'Cut-throat':'8-Ball')+(G.stake?' \u00b7 '+money(G.stake*G.players.length)+' pot':' \u00b7 for fun')+(G.live?' \u00b7 live':'');
+  $('mtag').textContent=(G.mode==='9'?'9-Ball':G.mode==='ct'?'Cut-throat':'8-Ball')+(G.stake?' \u00b7 '+money(G.stake*G.players.length)+' pot':' \u00b7 for fun')+(G.watch?' \u00b7 watching':G.live?' \u00b7 live':'');
+  $('wbar').classList.toggle('hide',!G.watch);
   var t='';
   if(G.phase==='setup')t='Rack \u2019em up';
   else if(G.phase==='over')t=(G.winner===G.mySeat?'You win':who(G.winner)+' wins');
@@ -2037,7 +2061,7 @@ function hud(){
   if(G.mode==='9'&&G.phase!=='setup'){for(var m=1;m<=9;m++)rk+=mbHTML(m,(G.balls[m].on?'':'gone')+(m===lowest()&&busy()?' hot':''));$('rackL').textContent=lowest()&&busy()?'On the '+lowest():'Rack';}
   else{G.pocketOrder.forEach(function(n){rk+=mbHTML(n);});$('rackL').textContent='Pocketed';}
   $('rackB').innerHTML=rk;
-  $('newBtn').textContent=busy()?'Resign':'New game';$('newBtn').classList.toggle('warn',busy()&&resignArm);
+  $('newBtn').textContent=G.watch?'Stop watching':busy()?'Resign':'New game';$('newBtn').classList.toggle('warn',busy()&&resignArm);
   $('pow').classList.toggle('dis',!isMyTurn());
   $('livechip').classList.toggle('hide',!G.live);
   renderCall();
@@ -2058,7 +2082,7 @@ $('callp').addEventListener('click',function(){if(needCall()&&G.players[G.turn].
 function renderBank(){$('bank').textContent=money(bank);$('setBank').textContent=money(bank);}
 var toastT=0;
 function toast(t,foul){if(turbo)return;var el=$('toast');el.textContent=t;el.classList.toggle('foul',!!foul);el.classList.add('on');clearTimeout(toastT);toastT=setTimeout(function(){el.classList.remove('on');},2600);}
-function renderSetup(){
+function renderSetup(){try{renderWatch();}catch(e){}
   [].forEach.call($('optStake').querySelectorAll('button'),function(b){b.disabled=+b.dataset.v>bank;});
   if(opt.stake>bank){opt.stake=0;segSet('optStake','0');$('stakeIn').value='';}
   $('stakeIn').classList.toggle('on',opt.stake>0&&['10','25','100','500'].indexOf(String(opt.stake))<0);$('stakeAll').disabled=bank<1;
@@ -2090,9 +2114,9 @@ bindSeg('optTalk',function(v){opt.talk=v==='1';});
 bindSeg('optSound',function(v){opt.sound=v==='1';});
 $('goBtn').addEventListener('click',function(){unlock();startSolo();});
 $('refill').addEventListener('click',function(){bank=1000;renderSetup();});
-$('againBtn').addEventListener('click',function(){if(G.live){$('res').classList.add('hide');toSetup();if(LV.peer)challenge();}else{$('res').classList.add('hide');opt.mode=G.mode;startSolo();}});
+$('againBtn').addEventListener('click',function(){if(G.watch){stopWatch();return;}if(G.live){$('res').classList.add('hide');toSetup();if(LV.peer)challenge();}else{$('res').classList.add('hide');opt.mode=G.mode;startSolo();}});
 $('changeBtn').addEventListener('click',toSetup);
-function newGameBtn(){if(busy()){if(!resignArm){resignArm=true;toast('Tap again to resign this game'+(G.stake?' (you lose the stake)':''));clearTimeout(resignT);resignT=setTimeout(function(){resignArm=false;hud();},2500);hud();return;}resignArm=false;resign();return;}toSetup();}
+function newGameBtn(){if(G.watch){stopWatch();return;}if(busy()){if(!resignArm){resignArm=true;toast('Tap again to resign this game'+(G.stake?' (you lose the stake)':''));clearTimeout(resignT);resignT=setTimeout(function(){resignArm=false;hud();},2500);hud();return;}resignArm=false;resign();return;}toSetup();}
 $('newBtn').addEventListener('click',newGameBtn);
 $('newBtn2').addEventListener('click',function(){root.classList.remove('fsopt-open');newGameBtn();});
 
@@ -2196,13 +2220,13 @@ function applyStart(p){
 }
 function snapshot(){return {callEight:G.callEight,call:G.call,gid:G.gid,k:G.shotNo,mode:G.mode,stake:G.stake,ids:G.ids,names:G.players.map(function(p){return p.name;}),
   balls:G.balls.map(function(o){return [o.n,o.x,o.y,o.on?1:0];}),turn:G.turn,groups:G.groups,open:G.open,breakShot:G.breakShot,bih:G.bih,kitchen:G.kitchen,phase:G.phase,winner:G.winner,reason:G.reason,po:G.pocketOrder,clock:Math.max(0,G.clock-Date.now())};}
-function sendSync(to){if(LV.L&&G.live)LV.L.send('sync',snapshot(),to||null);}
+function sendSync(to){if(LV.L&&G.live&&!G.watch)LV.L.send('sync',snapshot(),to||null);}
 function adoptSync(d){
   if(!d||!Array.isArray(d.balls))return;
-  if(d.gid!==G.gid){if(!Array.isArray(d.ids)||d.ids.indexOf(LV.L.me.id)<0||d.phase==='over')return;
-    /* rejoining a game already in progress (stake was paid when it started) */
-    G.live=true;G.gid=d.gid;G.ids=d.ids.slice();G.mySeat=d.ids.indexOf(LV.L.me.id);G.mode=d.mode;G.stake=+d.stake||0;G.settled=false;
-    G.players=[0,1].map(function(s){return {name:safeName(d.names[s])||'Guest',kind:s===G.mySeat?'me':'remote',col:s===G.mySeat?'#10b981':'#f472b6',id:d.ids[s]};});
+  if(d.gid!==G.gid){if(!Array.isArray(d.ids)||(!G.watch&&d.ids.indexOf(LV.L.me.id)<0)||(!G.watch&&d.phase==='over'))return;
+    /* rejoining a game already in progress (stake was paid when it started), or starting to watch one */
+    gen++;G.live=true;G.gid=d.gid;G.ids=d.ids.slice();G.mySeat=G.watch?0:d.ids.indexOf(LV.L.me.id);G.mode=d.mode;G.stake=+d.stake||0;G.settled=G.watch;
+    G.players=[0,1].map(function(s){var mine=!G.watch&&s===G.mySeat;return {name:safeName(d.names[s])||'Guest',kind:mine?'me':'remote',col:mine?'#10b981':['#60a5fa','#f472b6'][s],id:d.ids[s]};});
     $('setup').classList.add('hide');$('res').classList.add('hide');}
   else if(d.k<G.shotNo||(d.k===G.shotNo&&!G.waitSync&&G.phase!=='run'&&d.phase===G.phase&&d.turn===G.turn))return;
   if(G.phase==='run'){SIMRUN=null;acc=0;}
@@ -2235,12 +2259,14 @@ function initLive(){
   L.on('status',function(){renderLivePanel();renderSetup();});
   L.on('roster',function(list){
     LV.roster=list||[];var others=LV.roster.filter(function(x){return !x.isMe;}),had=LV.peer;LV.peer=others[0]||null;
-    if(had&&(!LV.peer||LV.peer.id!==had.id)){if(G.live&&G.ids&&G.ids.indexOf(had.id)>=0)peerLeft();else{LV.out=null;LV.inc=null;}}
+    if(had&&(!LV.peer||LV.peer.id!==had.id)){if(G.live&&!G.watch&&G.ids&&G.ids.indexOf(had.id)>=0)peerLeft();else{LV.out=null;LV.inc=null;}}
     if(LV.peer&&(!had||had.id!==LV.peer.id)){
       if(G.live&&G.ids&&G.ids.indexOf(LV.peer.id)>=0&&busy()){clearTimeout(LV.graceT);toast('Opponent is back');if(L.isHost())setTimeout(function(){sendSync(LV.peer&&LV.peer.id);},300);}
       liveLobby(LV.peer.id);}
     renderLivePanel();renderSetup();});
-  L.on('host',function(h){if(h&&G.live&&busy()&&LV.peer)sendSync();});
+  L.on('host',function(h){if(h&&G.live&&!G.watch&&busy()&&LV.peer)sendSync();});
+  /* someone wants to watch our game: the host sends them the table */
+  L.on('msg:watch',function(d,from){if(G.live&&!G.watch&&busy()&&L.isHost())sendSync(from);});
   L.on('msg:lobby',function(d,from){if(!LV.peer||from!==LV.peer.id)return;LV.peerBusy=!!(d&&d.busy);renderSetup();});
   L.on('msg:invite',function(d,from){if(!d||!LV.peer||from!==LV.peer.id)return;if(busy()){L.send('decline',{gid:d.gid,busy:1},from);return;}
     LV.inc={gid:String(d.gid).slice(0,12),mode:d.mode==='9'?'9':'8',stake:Math.min(1e12,Math.max(0,Math.floor(+d.stake)||0))};LV.out=null;SFX.turn();renderSetup();toast(safeName(LV.peer.name)+' challenges you');});
@@ -2248,20 +2274,66 @@ function initLive(){
   L.on('msg:decline',function(d){if(LV.out&&d&&d.gid===LV.out.gid){LV.out=null;toast(d.busy?'They are in a game right now':'Challenge declined');renderSetup();}});
   L.on('msg:accept',function(d,from){if(LV.out&&d&&d.gid===LV.out.gid&&L.isHost()&&LV.peer&&from===LV.peer.id){if(busy())return;var o=LV.out;startLive(o);}});
   L.on('msg:start',function(d,from){if(!d||!Array.isArray(d.ids)||!Array.isArray(d.balls))return;if(busy())return;if(d.ids[0]!==from)return;applyStart(d);});
-  L.on('msg:aim',function(d,from){if(!d||!G.live||d.gid!==G.gid||d.k!==G.shotNo)return;var p=G.players[G.turn];if(p.kind!=='remote'||p.id!==from)return;
-    if(needCall()){var cl=Math.round(+d.call);G.call=cl>=0&&cl<=5?cl:-1;}LV.rem={a:+d.a||0,p:clamp(+d.p||0,0,1),cx:d.cx==null?null:+d.cx,cy:d.cy==null?null:+d.cy};});
-  L.on('msg:shot',function(d,from){if(!d||!G.live||d.gid!==G.gid||d.k!==G.shotNo||G.phase!=='aim')return;var p=G.players[G.turn];if(p.kind!=='remote'||p.id!==from)return;
-    var sp=Math.sqrt(d.vx*d.vx+d.vy*d.vy);if(!(sp<=MAXV+1))return;LV.rem=null;
-    var cx=+d.cx,cy=+d.cy;if(!G.bih){cx=G.balls[0].x;cy=G.balls[0].y;}
-    var cl2=Math.round(+d.call);fire({call:cl2>=0&&cl2<=5?cl2:-1,cx:cx,cy:cy,vx:+d.vx,vy:+d.vy,sx:clamp(+d.sx||0,-1,1),sy:clamp(+d.sy||0,-1,1)},true);});
-  L.on('msg:sync',function(d,from){if(!LV.peer||from!==LV.peer.id)return;if(L.isHost()&&G.gid===d.gid)return;adoptSync(d);});
-  L.on('msg:resign',function(d,from){if(!d||!G.live||d.gid!==G.gid||!busy())return;G.phase='over';G.winner=G.mySeat;G.reason=who(1-G.mySeat)+' resigned';endGame();});
+  L.on('msg:aim',function(d,from){if(!G.watch)onAim(d,from);});
+  L.on('msg:shot',function(d,from){if(!G.watch)onShot(d,from);});
+  L.on('msg:sync',function(d,from){if(G.watch||!LV.peer||from!==LV.peer.id)return;if(L.isHost()&&G.gid===d.gid)return;adoptSync(d);});
+  L.on('msg:resign',function(d,from){if(!d||!G.live||G.watch||d.gid!==G.gid||!busy())return;G.phase='over';G.winner=G.mySeat;G.reason=who(1-G.mySeat)+' resigned';endGame();});
   $('lname').addEventListener('change',function(){var v=safeName(this.value);if(!v)return;this.value=v;L.setName(v);renderLivePanel();});
-  bindSeg('optLive',function(v){LV.enabled=v==='1';if(LV.enabled)L.start();else{if(G.live&&busy())resign();L.stop();}renderLivePanel();renderSetup();});
+  bindSeg('optLive',function(v){LV.enabled=v==='1';if(LV.enabled){L.start();feedOn();}else{if(G.live&&busy())resign();L.stop();feedOff();}renderLivePanel();renderSetup();});
   renderLivePanel();
 }
+/* ================= spectators =================
+   Players in a live game announce it on a shared feed every few seconds. Anyone on the setup screen
+   sees the list and can watch: they listen on that table's channel without taking a seat, the host
+   sends them the table, and from then on they see the same shots and aims the players do. */
+var W={feed:null,games:{},ch:null};
+function feedOn(){if(W.feed||typeof Live==='undefined'||!Live.listen||!LV.enabled)return;
+  W.feed=Live.listen('arcade-pool-feed',function(type,d,from){
+    if(type==='game'&&d&&+d.t>0&&Array.isArray(d.names)){W.games[from]={t:+d.t,gid:String(d.gid||'').slice(0,12),names:d.names.slice(0,2).map(safeName),mode:d.mode==='9'?'9':'8',stake:Math.max(0,+d.stake||0),at:Date.now()};renderWatch();}
+    else if(type==='end'&&W.games[from]){delete W.games[from];renderWatch();}});}
+function feedOff(){if(W.feed){W.feed.stop();W.feed=null;}W.games={};renderWatch();}
+setInterval(function(){
+  if(LV.enabled&&!W.feed)feedOn();
+  var mineLive=G.live&&!G.watch&&busy()&&LV.L&&LV.L.isHost();
+  if(W.feed&&mineLive)W.feed.send('game',{t:LV.L.table,gid:G.gid,names:G.players.map(function(p){return p.name;}),mode:G.mode,stake:G.stake});
+  if(W.feed&&W.wasLive&&!mineLive)W.feed.send('end',{});W.wasLive=mineLive;
+  var ch=false;for(var k in W.games)if(Date.now()-W.games[k].at>13000){delete W.games[k];ch=true;}if(ch)renderWatch();
+},4000);
+function renderWatch(){var el=$('wbox');if(!el)return;var list=[];for(var k in W.games){var g=W.games[k];if(G.watch&&g.gid===G.gid)continue;if(G.live&&!G.watch&&g.gid===G.gid)continue;list.push(g);}
+  el.classList.toggle('hide',!list.length||G.phase!=='setup');if(!list.length){el.innerHTML='';return;}
+  el.innerHTML='<div class="wh">Live games now</div>'+list.map(function(g){return '<div class="wg"><span>'+esc(g.names[0])+' vs '+esc(g.names[1])+' <small>\u00b7 '+(g.mode==='9'?'9-Ball':'8-Ball')+(g.stake?' \u00b7 '+money(g.stake*2)+' pot':'')+'</small></span><button type="button" data-t="'+g.t+'" data-g="'+esc(g.gid)+'">Watch</button></div>';}).join('');}
+$('wbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;startWatch(+b.dataset.t,b.dataset.g);});
+function startWatch(t,gid){
+  if(busy()||typeof Live==='undefined'||!Live.listen)return;
+  stopWatch(true);gen++;BOT=null;SIMRUN=null;
+  G.watch=true;G.live=false;G.gid='';G.ids=null;G.phase='setup';
+  $('setup').classList.add('hide');$('res').classList.add('hide');toast('Joining the table to watch\u2026');
+  var asked=0,tries=0;
+  W.ch=Live.listen('arcade-pool-t'+t,function(type,d,from){
+    if(type==='_open'){W.ch.send('watch',{});asked=Date.now();return;}
+    if(!G.watch)return;
+    if(type==='sync'){if(!d||!Array.isArray(d.ids)||d.ids.indexOf(from)<0)return;if(G.gid&&d.gid!==G.gid&&G.phase!=='over')return;adoptSync(d);hud();}
+    else if(type==='aim')onAim(d,from);
+    else if(type==='shot')onShot(d,from);
+    else if(type==='resign'){if(!d||d.gid!==G.gid||!busy()||!G.ids)return;var ls=G.ids.indexOf(from);if(ls<0)return;G.phase='over';G.winner=1-ls;G.reason=who(ls)+' resigned';endGame();}
+  });
+  /* if the table never answers, ask again, then give up */
+  (function retry(){setTimeout(function(){if(!G.watch||G.gid)return;if(++tries>3){toast('That game has ended');stopWatch();return;}if(W.ch)W.ch.send('watch',{});retry();},2500);})();
+  hud();
+}
+function stopWatch(quiet){if(W.ch){W.ch.stop();W.ch=null;}if(!G.watch)return;G.watch=false;G.live=false;G.gid='';G.ids=null;
+  if(!quiet){gen++;BOT=null;SIMRUN=null;G.phase='setup';G.players=[{name:'You',kind:'me',col:'#10b981'},{name:OPP[opt.opp].name,kind:'bot',col:OPP[opt.opp].col,skill:opt.opp,key:OPP[opt.opp].key}];G.mySeat=0;
+    G.balls=rackBalls(opt.mode==='ct'?'8':opt.mode);$('res').classList.add('hide');$('setup').classList.remove('hide');renderSetup();hud();}}
+$('wstop').addEventListener('click',function(){stopWatch();});
+
+function onAim(d,from){if(!d||!G.live||d.gid!==G.gid||d.k!==G.shotNo)return;var p=G.players[G.turn];if(p.kind!=='remote'||p.id!==from)return;
+  if(needCall()){var cl=Math.round(+d.call);G.call=cl>=0&&cl<=5?cl:-1;}LV.rem={a:+d.a||0,p:clamp(+d.p||0,0,1),cx:d.cx==null?null:+d.cx,cy:d.cy==null?null:+d.cy};}
+function onShot(d,from){if(!d||!G.live||d.gid!==G.gid||d.k!==G.shotNo||G.phase!=='aim')return;var p=G.players[G.turn];if(p.kind!=='remote'||p.id!==from)return;
+  var sp=Math.sqrt(d.vx*d.vx+d.vy*d.vy);if(!(sp<=MAXV+1))return;LV.rem=null;
+  var cx=+d.cx,cy=+d.cy;if(!G.bih){cx=G.balls[0].x;cy=G.balls[0].y;}
+  var cl2=Math.round(+d.call);fire({call:cl2>=0&&cl2<=5?cl2:-1,cx:cx,cy:cy,vx:+d.vx,vy:+d.vy,sx:clamp(+d.sx||0,-1,1),sy:clamp(+d.sy||0,-1,1)},true);}
 /* host enforces the live shot clock */
-setInterval(function(){if(G.live&&G.phase==='aim'&&LV.L&&LV.L.isHost()&&G.clock&&Date.now()>G.clock&&!G.waitSync){
+setInterval(function(){if(G.live&&!G.watch&&G.phase==='aim'&&LV.L&&LV.L.isHost()&&G.clock&&Date.now()>G.clock&&!G.waitSync){
   var s=G.turn;G.turn=1-s;G.bih=true;G.kitchen=false;G.shotNo++;toast('Shot clock: '+who(s)+' ran out of time',true);sendSync();nextTurn();}
   if(G.live&&G.phase==='aim')hud();},1000);
 function onChat(m,mine){

@@ -1158,6 +1158,17 @@ var Live=(function(){
       ctx.say(b,String(line).replace(/\{n\}/g,b.name),900+i*1300+Math.random()*700);});
   }
 
+  /* ---------- listen-only channel: hear and send table messages without taking a seat (spectators, game feeds) ---------- */
+  function listen(name,onMsg){
+    var ch=null,stopped=false,useBC=window.__LIVE_TRANSPORT==='bc',lid=me().id,ok=!!LIVE_CFG||useBC;
+    if(ok){var mk=useBC?Promise.resolve(bcChannel(name,'l'+uid())):getClient().then(function(c){return c.channel(name,{config:{broadcast:{self:false,ack:false}}});});
+      mk.then(function(c){if(stopped){try{c.unsubscribe();}catch(e){}return;}
+        c.on('broadcast',{event:'m'},function(e){var d=e&&e.payload;if(!d||d.from===lid||d.type==='hb')return;if(d.to&&d.to!==lid)return;try{onMsg(d.type,d.payload,d.from);}catch(er){console.error(er);}});
+        c.subscribe(function(st){if(st==='SUBSCRIBED'){ch=c;try{onMsg('_open',null,null);}catch(er){}}});}).catch(function(e){console.warn('listen:',e&&e.message);});}
+    return {available:ok,send:function(type,payload,to){if(!ch)return false;try{ch.send({type:'broadcast',event:'m',payload:{type:type,from:lid,to:to||null,payload:payload}});}catch(e){return false;}return true;},
+      stop:function(){stopped=true;var c=ch;ch=null;if(c){try{c.unsubscribe();}catch(e){}}}};
+  }
+
   /* ---------- floor watcher: read who is seated at live tables without taking a seat ---------- */
   function watch(names,cb){
     var chans={},stopped=true,useBC=window.__LIVE_TRANSPORT==='bc',wid='w'+uid(),pr=0;
@@ -1174,7 +1185,7 @@ var Live=(function(){
     function stop(){stopped=true;clearInterval(pr);for(var n in chans){try{chans[n].unsubscribe();}catch(e){}}chans={};emit();}
     return {start:start,stop:stop,available:function(){return !!LIVE_CFG||useBC;}};
   }
-  return {create:create,me:me,chat:chat,banter:banter,wallet:wallet,walletAmount:wread,watch:watch};
+  return {create:create,me:me,chat:chat,banter:banter,wallet:wallet,walletAmount:wread,watch:watch,listen:listen};
 })();
 
 /* bot faces: swap the letter avatars at every table for the regulars' portraits */
