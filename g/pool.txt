@@ -42,6 +42,13 @@ kbd{font:700 10.5px Inter,system-ui,sans-serif;background:#0f172a;border:1px sol
   border:1px solid var(--edge2);box-shadow:0 8px 20px rgba(0,0,0,.35);transition:border-color .2s,box-shadow .2s}
 .pc.r{flex-direction:row-reverse;padding:6px 6px 6px 14px;text-align:right}
 .pc.hide{display:none}
+.rollov{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:rgba(5,8,16,.55);padding:16px}.rollov.hide{display:none}
+.rbx{background:linear-gradient(180deg,#1b1408,#0f0b05);border:1px solid rgba(242,210,126,.55);border-radius:18px;padding:18px 22px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.6);min-width:min(420px,92%)}
+.rbx .rt{font:700 22px Georgia,serif;color:#f2d27e}.rbx .rs{font:500 12px Inter,system-ui,sans-serif;color:#cbd5e1;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.rrow{display:flex;gap:14px;justify-content:center;margin:14px 0 10px}.rp{display:flex;flex-direction:column;align-items:center;gap:4px;transition:opacity .25s,transform .25s}
+.rd{font-size:64px;line-height:1;color:#fff8e7;text-shadow:0 3px 10px rgba(0,0,0,.6)}.rp.spin .rd{animation:rspin .14s linear infinite}
+@keyframes rspin{0%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}100%{transform:rotate(-14deg)}}
+.rp.hi .rd{color:#f2d27e;transform:scale(1.12)}.rp.lo{opacity:.4}.rn{font:700 13px Inter,system-ui,sans-serif;color:#e2e8f0}.rm{font:600 15px Inter,system-ui,sans-serif;color:#fde68a;min-height:20px}
 .phud.three .pc{flex:0 1 250px}.phud.three .pc.out{opacity:.45}
 .felt.m-port .phud.three .pc .mbs{display:none}
 .pc.turn{border-color:rgba(16,185,129,.85);box-shadow:0 0 0 2px rgba(16,185,129,.3),0 0 24px rgba(16,185,129,.4)}
@@ -674,6 +681,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
         <div class="pc r hide" id="pc2"><div class="av" id="av2"><span>H</span></div><div class="pi"><div class="nm" id="nm2">Hank</div><div class="gl" id="gl2"></div><div class="mbs" id="mb2"></div></div></div>
         <div class="pc r" id="pc1"><div class="av" id="av1"><span>D</span></div><div class="pi"><div class="nm" id="nm1">Dusty</div><div class="gl" id="gl1">Open table</div><div class="mbs" id="mb1"></div></div></div>
       </div>
+      <div class="rollov hide" id="roll"></div>
       <div class="tbox pooltbl" id="tbox">
         <canvas id="cv" aria-label="Pool table"></canvas>
         <div class="toast" id="toast"></div>
@@ -1922,12 +1930,14 @@ function startSolo(){
   G.callEight=opt.opp!=='easy';
   bank-=st;
   var N=G.players.length;G.nextBreaker=G.nextBreaker%N;
+  if(G.mode==='ct'){var g0=gen,rb=rackBalls('ct');SIMRUN=null;SINKING=[];G.balls=rb;G.groups=shuffle([0,1,2]);G.lastOut=[];G.pocketOrder=[];G.ctKeep=true;resetRot();$('setup').classList.add('hide');$('res').classList.add('hide');
+    rollOff(function(br){if(g0!==gen)return;beginRack(rb,br);});return;}
   beginRack(rackBalls(G.mode),G.nextBreaker);G.nextBreaker=(G.nextBreaker+1)%N;
 }
 function beginRack(balls,breaker){
   SIMRUN=null;SINKING=[];
-  G.balls=balls;G.turn=breaker;G.groups=[null,null];G.open=true;G.lastOut=[];
-  if(G.mode==='ct'){G.groups=shuffle([0,1,2]).slice(0,G.players.length);G.open=false;}G.breakShot=true;G.bih=true;G.kitchen=true;G.shotNo=0;G.winner=-1;G.reason='';G.pocketOrder=[];
+  G.balls=balls;G.turn=breaker;if(!G.ctKeep)G.groups=[null,null];G.open=true;G.lastOut=[];
+  if(G.mode==='ct'){if(!G.ctKeep)G.groups=shuffle([0,1,2]).slice(0,G.players.length);G.ctKeep=false;G.open=false;}G.breakShot=true;G.bih=true;G.kitchen=true;G.shotNo=0;G.winner=-1;G.reason='';G.pocketOrder=[];
   resetRot();
   $('setup').classList.add('hide');$('res').classList.add('hide');
   G.phase='aim';
@@ -1938,6 +1948,34 @@ function beginRack(balls,breaker){
   nextTurn();
 }
 function pot(){return G.stake*G.players.length;}
+/* cut-throat: everyone rolls a die, high roll breaks, ties roll again */
+var DIE=['\u2680','\u2681','\u2682','\u2683','\u2684','\u2685'];
+function rollOff(done){
+  var N=G.players.length,ov=$('roll');
+  if(turbo){var t=[];for(var i=0;i<N;i++)t.push(1+Math.floor(Math.random()*6));var hi=Math.max.apply(null,t);done(t.indexOf(hi));return;}
+  G.phase='roll';hud();
+  var live=[];for(var k=0;k<N;k++)live.push(k);
+  ov.innerHTML='<div class="rbx"><div class="rt">Roll for the break</div><div class="rs">High roll breaks</div><div class="rrow">'+G.players.map(function(p,k){
+    return '<div class="rp" id="rp'+k+'"><div class="rd" id="rd'+k+'">'+DIE[0]+'</div><div class="rn">'+(p.kind==='me'?'You':p.name)+'</div></div>';}).join('')+'</div><div class="rm" id="rmsg">Rolling\u2026</div></div>';
+  ov.classList.remove('hide');
+  function round(){
+    var vals={},t0=now();
+    live.forEach(function(k){$('rp'+k).classList.add('spin');$('rp'+k).classList.remove('lo','hi');});
+    (function tick(){
+      var el=now()-t0;
+      live.forEach(function(k){$('rd'+k).textContent=DIE[Math.floor(Math.random()*6)];});
+      if(el<1100){later(70,tick);return;}
+      live.forEach(function(k){var v=1+Math.floor(Math.random()*6);vals[k]=v;$('rd'+k).textContent=DIE[v-1];$('rp'+k).classList.remove('spin');});
+      try{SFX.click(900);}catch(e){}
+      var hi=Math.max.apply(null,live.map(function(k){return vals[k];})),top=live.filter(function(k){return vals[k]===hi;});
+      live.forEach(function(k){$('rp'+k).classList.add(vals[k]===hi?'hi':'lo');});
+      if(top.length>1){$('rmsg').textContent='Tie on '+hi+'! '+top.map(who).join(' and ')+' roll again';live=top;later(1300,round);return;}
+      var w=top[0];$('rmsg').textContent=(G.players[w].kind==='me'?'You break':who(w)+' breaks')+' with a '+hi+'!';
+      later(1500,function(){ov.classList.add('hide');done(w);});
+    })();
+  }
+  later(400,round);
+}
 function endGame(){
   var w=G.winner,mine=w===G.mySeat,pay=0;
   gen++;BOT=null;
@@ -1953,7 +1991,7 @@ function endGame(){
   later(turbo?0:1100,function(){if(G.phase==='over'){$('res').classList.remove('hide');}});
   liveLobby();
 }
-function toSetup(){gen++;BOT=null;SIMRUN=null;G.phase='setup';G.waitSync=false;$('res').classList.add('hide');$('setup').classList.remove('hide');renderSetup();hud();liveLobby();}
+function toSetup(){gen++;BOT=null;SIMRUN=null;G.phase='setup';$('roll').classList.add('hide');G.waitSync=false;$('res').classList.add('hide');$('setup').classList.remove('hide');renderSetup();hud();liveLobby();}
 function resign(){
   if(!busy())return;
   var op=nextSeat(G.mySeat);
@@ -1990,6 +2028,7 @@ function hud(){
   var t='';
   if(G.phase==='setup')t='Rack \u2019em up';
   else if(G.phase==='over')t=(G.winner===G.mySeat?'You win':who(G.winner)+' wins');
+  else if(G.phase==='roll')t='Rolling for the break';
   else if(G.phase==='run')t='Rolling\u2026';
   else if(G.waitSync)t='Syncing\u2026';
   else{var p=G.players[G.turn];t=p.kind==='me'?(G.bih?'Ball in hand':G.breakShot?'Your break':'Your shot'):(who(G.turn)+(G.breakShot?' breaks':' is shooting'));}
