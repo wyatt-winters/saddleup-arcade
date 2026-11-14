@@ -413,7 +413,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
           <h2>Drop Four</h2>
           <p>Red drops first. Four in a row wins.</p>
           <div class="lab">Opponent</div>
-          <div class="seg c2" id="optOpp"><button type="button" data-v="cpu" class="on">Computer<small>Hank</small></button><button type="button" data-v="online" id="oppOnline">Online<small id="onlineSub">nobody here yet</small></button></div>
+          <div class="seg c3" id="optOpp"><button type="button" data-v="cpu" class="on">Computer<small>Hank</small></button><button type="button" data-v="guest">Guest<small>Same device</small></button><button type="button" data-v="online" id="oppOnline">Online<small id="onlineSub">nobody here yet</small></button></div>
           <div id="cpuOpts"><div class="lab">Computer skill</div>
           <div class="seg c3" id="optLvl"><button type="button" data-v="1">Easy<small>learning</small></button><button type="button" data-v="2" class="on">Fair<small>steady</small></button><button type="button" data-v="3">Hard<small>sharp</small></button></div>
           <div class="lab">Who drops first</div>
@@ -957,25 +957,29 @@ function render(dropCol){var el=$('board');if(!G){el.innerHTML='';return;}var h=
     h+='</div>';}
   el.innerHTML=h;
   [].forEach.call(el.children,function(col){var c=+col.getAttribute('data-c');col.onclick=function(){tap(c);};col.onmouseenter=function(){hov=c;if(!busy)markHov();};col.onmouseleave=function(){hov=-1;markHov();};});
-  var me=G.mySide;$('nMe').textContent=G.names[me>0?0:1];$('nOpp').textContent=G.names[me>0?1:0];
+  var me=G.mode==='guest'?1:G.mySide;$('nMe').textContent=G.names[me>0?0:1];$('nOpp').textContent=G.names[me>0?1:0];
   $('pcMe').className='pc '+(me>0?'r':'y');$('pcOpp').className='pc '+(me>0?'y':'r');
   $('pMe').classList.toggle('turn',!G.over&&G.turn===me);$('pOpp').classList.toggle('turn',!G.over&&G.turn!==me);
-  $('bUndo').disabled=G.mode!=='cpu'||!G.hist.length||busy||G.over;$('bUndo').classList.toggle('hide',G.mode!=='cpu');
+  $('bUndo').disabled=(G.mode!=='cpu'&&G.mode!=='guest')||!G.hist.length||busy||G.over;$('bUndo').classList.toggle('hide',G.mode!=='cpu'&&G.mode!=='guest');
   $('rec').innerHTML='Record vs everyone: <b>'+rec.w+'</b> W \u00b7 <b>'+rec.l+'</b> L \u00b7 <b>'+rec.d+'</b> D';}
 function markHov(){var mine=G&&G.turn===G.mySide&&!G.over&&!busy;[].forEach.call($('board').children,function(col){var c=+col.getAttribute('data-c');col.classList.toggle('hov',mine&&c===hov&&height(G.b,c)<R);});}
 function say(t){if(t){$('msg').innerHTML=t;return;}if(!G||G.over)return;
+  if(G.mode==='guest'){$('msg').innerHTML='<b>'+esc(G.names[G.turn>0?0:1])+'</b> ('+(G.turn>0?'Red':'Yellow')+') \u2013 tap a column to drop a disc.';return;}
   $('msg').innerHTML=G.turn===G.mySide?'Your move. Tap a column to drop a disc.':esc(G.names[G.mySide>0?1:0])+(G.mode==='cpu'?' is thinking\u2026':'\u2019s move\u2026');}
 function tap(c){if(!G||G.over||busy||G.turn!==G.mySide)return;ac();if(height(G.b,c)>=R)return;play(c,true);}
 function play(c,mine){var h=height(G.b,c);if(h>=R)return;busy=true;
   if(G.mode==='online'&&mine)D.send('move',{n:G.n+1,c:c});
-  if(G.mode==='cpu'&&mine)G.hist.push({b:G.b.slice(),last:G.last});
+  if((G.mode==='cpu'||G.mode==='guest')&&mine)G.hist.push({b:G.b.slice(),last:G.last,turn:G.turn});
   G.b[c*R+h]=G.turn;G.last=[c,h];G.n++;render(c);setTimeout(sClack,(.18+.05*(R-h))*1000-40);
   setTimeout(function(){busy=false;var w=lineAt(G.b,c,h);
     if(w){G.win=w;render();endGame(G.turn===G.mySide?'win':'lose');return;}
     if(!legalCols(G.b).length){render();endGame('draw');return;}
-    G.turn=-G.turn;render();say();if(G.mode==='cpu'&&G.turn!==G.mySide)setTimeout(cpuTurn,250);},(.18+.05*(R-h))*1000+60);}
+    G.turn=-G.turn;if(G.mode==='guest')G.mySide=G.turn;render();say();if(G.mode==='cpu'&&G.turn!==G.mySide)setTimeout(cpuTurn,250);},(.18+.05*(R-h))*1000+60);}
 function cpuTurn(){if(!G||G.over||G.mode!=='cpu'||G.turn===G.mySide)return;var t0=Date.now(),c=cpuMove(G.b,G.turn,G.lvl);setTimeout(function(){if(G&&!G.over&&!busy)play(c,false);},Math.max(0,550-(Date.now()-t0)));}
-function endGame(r,note){if(!G||G.over)return;G.over=true;if(G.mode==='online')D.done();else D.solo(false);
+function endGame(r,note){if(!G||G.over)return;
+  if(G.mode==='guest'){G.over=true;D.solo(false);var ws=r==='draw'?0:(r==='win'?G.mySide:-G.mySide),wn=ws?G.names[ws>0?0:1]:'',yw=wn==='You';q('over');if(ws){tone(523,.2);tone(659,.2,.12);tone(784,.3,.24);}
+    $('ovTitle').textContent=ws?(yw?'You win!':wn+' wins!'):'Draw';$('ovSub').textContent=ws?'Four in a row!':'The rack is full with no four in a row.';render();say(ws?'<b>Four in a row! '+(yw?'You win':esc(wn)+' wins')+'!</b>':'Draw.');setTimeout(function(){showSheet('over');},1400);return;}
+ G.over=true;if(G.mode==='online')D.done();else D.solo(false);
   if(r==='win'){rec.w++;q('over');q('win');tone(523,.2);tone(659,.2,.12);tone(784,.3,.24);}else if(r==='lose'){rec.l++;q('over');tone(330,.3);tone(262,.4,.15);}else{rec.d++;q('over');}saveRec();
   $('ovTitle').textContent=r==='win'?'You win!':r==='lose'?(G.mode==='cpu'?G.names[1]+' wins':'You lose'):'Draw';
   $('ovSub').textContent=note||(r==='draw'?'The rack is full with no four in a row.':r==='win'?'Four in a row!':'They got four in a row.');
@@ -987,16 +991,17 @@ function setupUI(){var o=D.other();$('oppOnline').disabled=!o||!o.free;$('online
   [].forEach.call($('optLvl').children,function(b){b.classList.toggle('on',+b.getAttribute('data-v')===setup.lvl);});
   [].forEach.call($('optFirst').children,function(b){b.classList.toggle('on',b.getAttribute('data-v')===setup.first);});
   $('cpuOpts').classList.toggle('hide',setup.opp!=='cpu');$('bStart').textContent=setup.opp==='online'?'Invite '+(o?o.name:''):'Play';
-  var st=D.info();$('ldot').className='ldot '+(st.live?(o?'on':'wait'):'');$('ltxt').textContent=Duel.lobbyText(D,'a game of Drop Four');}
+  var st=D.info();$('ldot').className='ldot '+(st.live?(o?'on':'wait'):'');$('ltxt').textContent=Duel.lobbyText(D,'a game of Drop Four');if(setup.opp==='guest')$('ltxt').textContent='Pass and play: two people on this device. Red goes first, and you swap who starts each game.';}
 [].forEach.call($('optOpp').children,function(b){b.onclick=function(){if(b.disabled)return;setup.opp=b.getAttribute('data-v');setupUI();};});
 [].forEach.call($('optLvl').children,function(b){b.onclick=function(){setup.lvl=+b.getAttribute('data-v');setupUI();};});
 [].forEach.call($('optFirst').children,function(b){b.onclick=function(){setup.first=b.getAttribute('data-v');setupUI();};});
-$('bStart').onclick=function(){ac();if(setup.opp==='online'){D.invite({});return;}D.solo(true);
+var gFirst=1;
+$('bStart').onclick=function(){ac();if(setup.opp==='online'){D.invite({});return;}D.solo(true);if(setup.opp==='guest'){var nm=gFirst>0?['You','Guest']:['Guest','You'];gFirst=-gFirst;startGame({mode:'guest',mySide:1,names:nm});return;}
   var LN=['','Easy Ellie','Hank','Sharp Sadie'],side=setup.first==='me'?1:setup.first==='cpu'?-1:altFirst;if(setup.first==='alt')altFirst=-altFirst;
   startGame({mode:'cpu',mySide:side,lvl:setup.lvl,names:side>0?['You',LN[setup.lvl]]:[LN[setup.lvl],'You']});};
 $('againBtn').onclick=function(){showSheet('setup');};
 $('bNew').onclick=function(){if(G&&!G.over&&G.mode==='online')D.quit();G=null;render();showSheet('setup');};
-$('bUndo').onclick=function(){if(!G||G.mode!=='cpu'||busy||!G.hist.length)return;var h=G.hist.pop();G.b=h.b;G.last=h.last;G.turn=G.mySide;render();say('Move taken back.');};
+$('bUndo').onclick=function(){if(!G||(G.mode!=='cpu'&&G.mode!=='guest')||busy||!G.hist.length)return;var h=G.hist.pop();G.b=h.b;G.last=h.last;G.turn=G.mode==='guest'?h.turn:G.mySide;if(G.mode==='guest')G.mySide=G.turn;render();say('Move taken back.');};
 addEventListener('keydown',function(e){var k=+e.key;if(k>=1&&k<=7&&G&&!G.over)tap(k-1);});
 /* ---------- online: the inviter drops first ---------- */
 var D=Duel.create({game:'drop4',chatEl:$('felt'),busy:function(){return G&&!G.over;},

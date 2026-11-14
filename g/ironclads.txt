@@ -76,6 +76,7 @@ html.has-ir_sea .sea{background:url(https://saddleup-arcade.vercel.app/art/ir_se
 .rec{font-size:12px;color:#cbd5e1}.rec b{color:#fde68a}
 .sheet{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:rgba(5,8,16,.72);backdrop-filter:blur(2px);padding:14px}
 .sheet .box{width:min(440px,100%);max-height:100%;overflow:auto;background:linear-gradient(180deg,rgba(36,18,10,.97),rgba(18,10,6,.97));border:2px solid #c6a75e;border-radius:18px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.sheet.cover{background:#070b14;backdrop-filter:none}
 .sheet h2{margin:0 0 4px;font:400 26px Rye,Georgia,serif;color:var(--gold2);text-align:center}
 .sheet p{margin:0 0 12px;text-align:center;color:#cbd5e1;font-size:13px;line-height:1.5}
 .lab{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#cbb07a;margin:12px 0 6px}
@@ -440,7 +441,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
           <h2>Ironclads</h2>
           <p>Hide five ships. Take turns calling shots. Sink theirs first.</p>
           <div class="lab">Opponent</div>
-          <div class="seg c2" id="optOpp"><button type="button" data-v="cpu" class="on">Computer<small>Hank</small></button><button type="button" data-v="online" id="oppOnline">Online<small id="onlineSub">nobody here yet</small></button></div>
+          <div class="seg c3" id="optOpp"><button type="button" data-v="cpu" class="on">Computer<small>Hank</small></button><button type="button" data-v="guest">Guest<small>Same device</small></button><button type="button" data-v="online" id="oppOnline">Online<small id="onlineSub">nobody here yet</small></button></div>
           <div id="cpuOpts"><div class="lab">Computer skill</div>
           <div class="seg c3" id="optLvl"><button type="button" data-v="1">Easy<small>wild shots</small></button><button type="button" data-v="2" class="on">Fair<small>hunts you down</small></button><button type="button" data-v="3">Hard<small>reads the water</small></button></div></div>
           <div class="online"><span class="ldot" id="ldot"></span><span id="ltxt">Connecting to the parlor&#x2026;</span></div>
@@ -450,6 +451,11 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
           <h2 id="ovTitle">You win!</h2>
           <p id="ovSub"></p>
           <button class="go" type="button" id="againBtn">Play again</button>
+        </div>
+        <div id="pass" class="hide">
+          <h2 id="passT">Pass the device</h2>
+          <p id="passP"></p>
+          <button class="go" type="button" id="passGo">I'm ready</button>
         </div>
       </div>
     </div>
@@ -976,7 +982,16 @@ function newSide(){return {fleet:randomFleet(),shots:new Array(N*N).fill(0)};}
 function startGame(o){G={mode:o.mode,me:o.me||0,lvl:o.lvl||2,names:o.names,gid:o.gid,phase:'place',
     mine:newSide(),enemyKnow:new Array(N*N).fill(0),enemySunk:[],cpu:o.mode==='cpu'?newSide():null,
     turn:0,n:0,meReady:false,themReady:false,over:false,wait:false,shotsMine:0,hitsMine:0};
-  sel=-1;$('sheet').classList.add('hide');q('open');layout();render();say();}
+  if(G.mode==='guest'){G.pv=[null,{mine:newSide(),enemyKnow:new Array(N*N).fill(0),enemySunk:[],shotsMine:0,hitsMine:0,meReady:false}];}
+  sel=-1;$('sheet').classList.add('hide');q('open');layout();render();say();
+  if(G.mode==='guest')showPass('Player 1 hides first','<b>'+esc(G.names[1])+'</b>, look away while Player 1 hides their fleet.',null);}
+var passFn=null;
+function showPass(t,p,fn){passFn=fn;$('passT').textContent=t;$('passP').innerHTML=p;sel=-1;showSheet('pass');}
+$('passGo').onclick=function(){ac();$('sheet').classList.add('hide');$('sheet').classList.remove('cover');var f=passFn;passFn=null;if(f)f();};
+var PK=['mine','enemyKnow','enemySunk','shotsMine','hitsMine','meReady'];
+function swapTo(k){if(!G||G.me===k)return;var cur={};PK.forEach(function(x){cur[x]=G[x];});G.pv[G.me]=cur;var nx=G.pv[k];PK.forEach(function(x){G[x]=nx[x];});G.me=k;sel=-1;}
+function passTo(k){return k===0?'Back to Player 1':'Pass to '+G.names[k];}
+function foeSide(){return G.pv[G.me===0?1:0].mine;}
 function layout(){/* placing: your water is the big board; in battle the big board is theirs */
   var big=$('stage'),side=$('seaM').parentNode;
   if(G&&G.phase==='place'){if($('seaM').parentNode!==big)big.insertBefore($('seaM'),$('pMe'));$('seaM').classList.remove('mini');$('seaE').classList.add('hide');$('seaM').classList.add('place');}
@@ -1011,6 +1026,7 @@ function render(newE,newM){if(!G){$('gE').innerHTML='';$('gM').innerHTML='';retu
 function sunkCount(side){var n=0;side.fleet.forEach(function(s){if(cellsOf(s).every(function(x){return side.shots[x]===2;}))n++;});return n;}
 function isMyTurn(){return G&&G.phase==='battle'&&!G.over&&!G.wait&&G.turn===G.me;}
 function say(t){if(t){$('msg').innerHTML=t;return;}if(!G)return;
+  if(G.phase==='place'&&G.mode==='guest'){$('msg').innerHTML='<b>'+esc(G.names[G.me])+'</b>, hide your fleet. Tap a ship, then tap the water to move it. <b>Turn ship</b> stands it up.';return;}
   if(G.phase==='place'){$('msg').innerHTML=G.meReady?'Waiting for '+esc(G.names[G.me===0?1:0])+' to hide their fleet\u2026':'Hide your fleet. Tap a ship, then tap the water to move it. <b>Turn ship</b> stands it up.';return;}
   if(G.over)return;$('msg').innerHTML=isMyTurn()?'Your shot. Tap a square in <b>their water</b>.':esc(G.names[G.me===0?1:0])+(G.mode==='cpu'?' is taking aim\u2026':' is taking aim\u2026');}
 var banT=0;function banner(t){var b=$('ban');b.textContent=t;b.classList.add('on');clearTimeout(banT);banT=setTimeout(function(){b.classList.remove('on');},1100);}
@@ -1025,12 +1041,14 @@ function rotate(){if(!G||sel<0||G.meReady)return;var s=G.mine.fleet[sel],t={L:s.
 $('bRot').onclick=rotate;
 $('bShuffle').onclick=function(){if(!G||G.meReady)return;G.mine.fleet=randomFleet();sel=-1;render();};
 $('bReady').onclick=function(){if(!G||G.phase!=='place'||G.meReady)return;ac();G.meReady=true;sel=-1;
+  if(G.mode==='guest'){if(G.me===0){render();showPass(passTo(1),'Player 1&rsquo;s fleet is hidden. Hand the device to <b>'+esc(G.names[1])+'</b> to hide theirs. No peeking!',function(){swapTo(1);layout();render();say();});}else{showPass(passTo(0),'Both fleets are hidden. Player 1 fires first.',function(){swapTo(0);battle();});}return;}
   if(G.mode==='online'){D.send('ready',{});if(G.themReady)battle();else{render();say();}}else battle();};
 function battle(){G.phase='battle';G.turn=G.mode==='cpu'?0:0;layout();render();say();tone(440,.12);tone(660,.15,.12);
   if(G.mode==='cpu'&&G.turn!==G.me)setTimeout(cpuTurn,700);}
 /* ---------- firing ---------- */
 function fire(i){if(!isMyTurn()||G.enemyKnow[i])return;ac();sFire();G.wait=true;render();
   if(G.mode==='cpu'){setTimeout(function(){resolveMine(i,judge(G.cpu,i));},420);}
+  else if(G.mode==='guest'){setTimeout(function(){var r=judge(foeSide(),i);G.lastShot={i:i,res:r,by:G.me};resolveMine(i,r);},420);}
   else D.send('shot',{n:G.n+1,i:i});}
 function judge(side,i){side.shots[i]=owner(side.fleet,i)>=0?2:1;var k=owner(side.fleet,i);
   if(k<0)return {i:i,hit:false};var s=side.fleet[k],dead=cellsOf(s).every(function(x){return side.shots[x]===2;});
@@ -1042,7 +1060,8 @@ function resolveMine(i,res){if(!G||G.over)return;G.wait=false;G.n++;G.shotsMine+
   render(i,-1);
   if(res.all){endGame('win');return;}
   G.turn=G.me===0?1:0;render();say(res.sunk?'You sank their <b>'+SHIPS[res.sunk.k].n+'</b>!':res.hit?'<b>Hit!</b> Their turn.':'Miss. Their turn.');
-  if(G.mode==='cpu')setTimeout(cpuTurn,800);}
+  if(G.mode==='cpu')setTimeout(cpuTurn,800);
+  if(G.mode==='guest'){var nx=G.turn,ls=G.lastShot;setTimeout(function(){if(!G||G.over)return;showPass(passTo(nx),(nx===0?'Player 1':'<b>'+esc(G.names[nx])+'</b>')+', your shot. Tap when you have the device.',function(){swapTo(nx);var r=ls&&ls.res,sh=r&&r.sunk?'They sank your <b>'+SHIPS[r.sunk.k].n+'</b>. ':r&&r.hit?'They hit your '+SHIPS[owner(G.mine.fleet,ls.i)].n+'. ':'They missed. ';render(-1,ls?ls.i:-1);say('<b>'+esc(G.names[nx])+'</b>: '+sh+'Your shot. Tap a square in <b>their water</b>.');});},window.__irFast?0:1300);}}
 function incoming(i){/* their shot lands in my water */if(!G||G.over)return null;var res=judge(G.mine,i);G.n++;
   if(res.sunk){sSink();}else if(res.hit)sHit();else sSplash();
   G.turn=G.me;render(-1,i);
@@ -1052,23 +1071,27 @@ function cpuTurn(){if(!G||G.over||G.mode!=='cpu'||G.phase!=='battle'||G.turn===G
   var know=new Array(N*N).fill(0),left=[];G.mine.fleet.forEach(function(s){var dead=cellsOf(s).every(function(x){return G.mine.shots[x]===2;});if(!dead)left.push(s.L);});
   for(var i=0;i<N*N;i++){var v=G.mine.shots[i];if(v===1)know[i]=1;else if(v===2){var k=owner(G.mine.fleet,i),dead=cellsOf(G.mine.fleet[k]).every(function(x){return G.mine.shots[x]===2;});know[i]=dead?3:2;}}
   var t=aiShot(know,G.lvl,left);if(t<0)return;sFire();setTimeout(function(){incoming(t);},420);}
-function endGame(r,note){if(!G||G.over)return;G.over=true;if(G.mode==='online')D.done();else D.solo(false);
+function endGame(r,note){if(!G||G.over)return;
+  if(G.mode==='guest'){G.over=true;D.solo(false);var wn=G.names[G.me],yw=wn==='You',acc=G.shotsMine?Math.round(100*G.hitsMine/G.shotsMine):0;q('over');tone(523,.2);tone(659,.2,.12);tone(784,.3,.24);
+    var fo=foeSide();fo.fleet.forEach(function(s,k){if(G.enemySunk.every(function(x){return x.k!==k;}))G.enemySunk.push({k:k,L:s.L,v:s.v,r:s.r,c:s.c});});
+    $('ovTitle').textContent='Fleet sunk. '+(yw?'You win!':wn+' wins!');$('ovSub').textContent=wn+' fired '+G.shotsMine+' shots and hit '+G.hitsMine+' ('+acc+'% on target).';render();say('<b>'+esc(wn)+' sank the whole fleet!</b>');setTimeout(function(){showSheet('over');},1500);return;}
+ G.over=true;if(G.mode==='online')D.done();else D.solo(false);
   if(r==='win'){rec.w++;q('over');q('win');tone(523,.2);tone(659,.2,.12);tone(784,.3,.24);}else{rec.l++;q('over');tone(330,.3);tone(262,.4,.15);}saveRec();
   if(G.mode==='cpu'&&r==='lose'){G.cpu.fleet.forEach(function(s,k){if(G.enemySunk.every(function(x){return x.k!==k;}))G.enemySunk.push({k:k,L:s.L,v:s.v,r:s.r,c:s.c});});}
   var acc=G.shotsMine?Math.round(100*G.hitsMine/G.shotsMine):0;
   $('ovTitle').textContent=r==='win'?'Fleet sunk. You win!':G.mode==='cpu'?G.names[G.me===0?1:0]+' wins':'You lose';
   $('ovSub').textContent=note||('You fired '+G.shotsMine+' shots and hit '+G.hitsMine+' ('+acc+'% on target).');
   render();say(r==='win'?'<b>You sank their whole fleet!</b>':'Your fleet is on the river bottom.');setTimeout(function(){showSheet('over');},1500);}
-function showSheet(k){$('sheet').classList.remove('hide');$('setup').classList.toggle('hide',k!=='setup');$('over').classList.toggle('hide',k!=='over');if(k==='setup')setupUI();}
+function showSheet(k){$('sheet').classList.remove('hide');$('sheet').classList.toggle('cover',k==='pass');$('pass').classList.toggle('hide',k!=='pass');$('setup').classList.toggle('hide',k!=='setup');$('over').classList.toggle('hide',k!=='over');if(k==='setup')setupUI();}
 function setupUI(){var o=D.other();$('oppOnline').disabled=!o||!o.free;$('onlineSub').textContent=o?(o.free?o.name:o.name+' is busy'):'nobody here yet';
   if((!o||!o.free)&&setup.opp==='online')setup.opp='cpu';
   [].forEach.call($('optOpp').children,function(b){b.classList.toggle('on',b.getAttribute('data-v')===setup.opp);});
   [].forEach.call($('optLvl').children,function(b){b.classList.toggle('on',+b.getAttribute('data-v')===setup.lvl);});
   $('cpuOpts').classList.toggle('hide',setup.opp!=='cpu');$('bStart').textContent=setup.opp==='online'?'Invite '+(o?o.name:''):'Play';
-  var st=D.info();$('ldot').className='ldot '+(st.live?(o?'on':'wait'):'');$('ltxt').textContent=Duel.lobbyText(D,'a game of Ironclads');}
+  var st=D.info();$('ldot').className='ldot '+(st.live?(o?'on':'wait'):'');$('ltxt').textContent=Duel.lobbyText(D,'a game of Ironclads');if(setup.opp==='guest')$('ltxt').textContent='Pass and play: you each hide a fleet, then hand the device back and forth. A cover screen hides your board between turns.';}
 [].forEach.call($('optOpp').children,function(b){b.onclick=function(){if(b.disabled)return;setup.opp=b.getAttribute('data-v');setupUI();};});
 [].forEach.call($('optLvl').children,function(b){b.onclick=function(){setup.lvl=+b.getAttribute('data-v');setupUI();};});
-$('bStart').onclick=function(){ac();if(setup.opp==='online'){D.invite({});return;}D.solo(true);startGame({mode:'cpu',me:0,lvl:setup.lvl,names:['You',LN[setup.lvl]]});};
+$('bStart').onclick=function(){ac();if(setup.opp==='online'){D.invite({});return;}D.solo(true);if(setup.opp==='guest'){startGame({mode:'guest',me:0,names:['You','Guest']});return;}startGame({mode:'cpu',me:0,lvl:setup.lvl,names:['You',LN[setup.lvl]]});};
 $('againBtn').onclick=function(){showSheet('setup');};
 $('bNew').onclick=function(){if(G&&!G.over&&G.mode==='online')D.quit();G=null;layout();render();showSheet('setup');};
 addEventListener('keydown',function(e){if(e.key==='r'||e.key==='R')rotate();});
@@ -1086,6 +1109,7 @@ var D=Duel.create({game:'ironclads',chatEl:$('felt'),busy:function(){return G&&!
   onLeft:function(){if(G&&!G.over&&G.mode==='online')endGame('win',esc(G.names[G.me===0?1:0])+' left the game.');}});
 labels();layout();showSheet('setup');D.start();render();
 window.__ir={state:function(){return G?{phase:G.phase,turn:G.turn,me:G.me,mode:G.mode,n:G.n,over:G.over,wait:G.wait,sunkThem:G.enemySunk.length,sunkMe:sunkCount(G.mine),shots:G.shotsMine}:null;},aiShot:aiShot,
+  pass:function(){var b=$('pass');if(b.classList.contains('hide')||$('sheet').classList.contains('hide'))return false;$('passGo').click();return true;},
   start:function(lvl){setup.opp='cpu';setup.lvl=lvl||2;$('bStart').click();},ready:function(){$('bReady').click();},
   auto:function(){if(!isMyTurn())return false;var know=G.enemyKnow.slice(),left=SHIPS.filter(function(s,k){return G.enemySunk.every(function(x){return x.k!==k;});}).map(function(s){return s.L;});fire(aiShot(know,3,left));return true;}};
 })();
