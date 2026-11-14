@@ -601,7 +601,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'3009ede458'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'467f58041f'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}

@@ -148,7 +148,7 @@ kbd{font:inherit;font-size:10px;background:rgba(15,23,42,.35);border:1px solid r
 .sheet h2 span{color:var(--gold2);font-family:Rye,Georgia,serif;font-weight:400;letter-spacing:0}
 .sheet p{margin:6px auto 12px;color:var(--muted);font-size:13.5px;line-height:1.5;max-width:440px}
 .sheet p b{color:var(--text)}
-.opps{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0 12px}
+.opps{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0 12px}.opp.gst{grid-column:1/-1;flex-direction:row;justify-content:center;gap:8px;padding:7px 6px}.opp.gst .av{width:30px;height:30px}.opp.gst small{display:inline}
 .opp{display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(15,23,42,.6);border:1px solid rgba(148,163,184,.25);border-radius:14px;padding:9px 2px 7px;color:var(--text);min-width:0}
 .opp .av{width:46px;height:46px}
 .opp .nm{font-size:12.5px;max-width:100%}
@@ -747,7 +747,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     </div>
     <div class="panel">
       <h3>Game settings</h3>
-      <div class="opt" id="rowOpp"><span>Opponent</span><div class="seg" id="optOpp"><button type="button" data-v="0" class="on">Dusty</button><button type="button" data-v="1">Rosa</button><button type="button" data-v="2">Hank</button><button type="button" data-v="3">Lou</button><button type="button" data-v="4">June</button></div></div>
+      <div class="opt" id="rowOpp"><span>Opponent</span><div class="seg" id="optOpp"><button type="button" data-v="0" class="on">Dusty</button><button type="button" data-v="1">Rosa</button><button type="button" data-v="2">Hank</button><button type="button" data-v="3">Lou</button><button type="button" data-v="4">June</button><button type="button" data-v="g">Guest</button></div></div>
       <div class="opt" id="rowSkill"><span>Skill</span><div class="seg" id="optSkill"><button type="button" data-v="easy">Easy</button><button type="button" data-v="normal" class="on">Normal</button><button type="button" data-v="hard">Hard</button></div></div>
       <div class="opt"><span>Auto-roll when you can&rsquo;t double</span><div class="seg" id="optAutoRoll"><button type="button" data-v="1" class="on">On</button><button type="button" data-v="0">Off</button></div></div>
       <div class="opt"><span>Play forced moves for me</span><div class="seg" id="optForced"><button type="button" data-v="1" class="on">On</button><button type="button" data-v="0">Off</button></div></div>
@@ -1367,7 +1367,7 @@ addEventListener('message',function(e){var d=e.data;if(!d||d.arcade!=='visible')
   scheduleDecide();});
 
 /* ---------- sound ---------- */
-var opt={opp:0,skill:'normal',autoRoll:true,forced:true,confirm:true,labels:true,speed:1,talk:true,sound:true,stake:0};
+var opt={pp:false,opp:0,skill:'normal',autoRoll:true,forced:true,confirm:true,labels:true,speed:1,talk:true,sound:true,stake:0};
 var ac=null,unlocked=false;
 function unlock(){unlocked=true;try{var A=window.AudioContext||window.webkitAudioContext;if(A&&!ac)ac=new A();if(ac&&ac.state==='suspended')ac.resume();}catch(e){ac=null;}}
 document.addEventListener('pointerdown',unlock,true);document.addEventListener('keydown',unlock,true);
@@ -1656,6 +1656,8 @@ var bank=1000,record={w:0,l:0},best=0,ABORT={abort:true},forceQ=[];
 function opp(s){return 1-s;}
 function nameOf(s){return S.names[s]||'Opponent';}
 function isMine(s){return s===ME;}
+function ppIw(w){return S.pp?w===0:w===ME;}
+function ppFace(s){if(!S.pp||S.ctl[s]!=='me')return;if(ME!==s){ME=s;resync(true);try{placeDiceRest();}catch(e){}hud();updateControls();toast(nameOf(s)+(s===0?' (Player 1)':'')+' \u2013 your turn','Pass the device',1800);}}
 function W(ms){var g=S.gen;return wait(turbo?0:ms*opt.speed).then(function(){if(g!==S.gen)throw ABORT;});}
 function chk(g){if(g!==S.gen)throw ABORT;}
 
@@ -1766,12 +1768,12 @@ var talkT=0;
 function botTalk(kind,p){if(!opt.talk||S.ctl[1-ME]!=='bot')return;if(Math.random()>(p===undefined?0.55:p))return;var el=$('talk');el.textContent=pick(LINES[kind]);el.classList.add('on');clearTimeout(talkT);talkT=setTimeout(function(){el.classList.remove('on');},2600);}
 function hud(){
   var o=1-ME;
-  $('nmMe').textContent=LV.mode==='solo'?'You':safeName(S.names[ME]);$('nmOpp').textContent=safeName(nameOf(o));
+  $('nmMe').textContent=LV.mode==='solo'&&!S.pp?'You':safeName(S.names[ME]);$('nmOpp').textContent=safeName(nameOf(o));
   $('pipMe').textContent=pip(S.pos,ME);$('pipOpp').textContent=pip(S.pos,o);
   $('swMe').style.backgroundImage='url('+(ME===0?CHK_W:CHK_K)+')';$('swOpp').style.backgroundImage='url('+(ME===0?CHK_K:CHK_W)+')';
-  $('tagOpp').textContent=S.ctl[o]==='bot'?({easy:'Easy',normal:'Normal',hard:'Hard'}[S.skill]):'Live';
-  var bc=S.ctl[o]==='bot'?BOTS[S.botIdx].col:'#22d3ee';$('avOpp').style.background=bc;$('avOpp').firstChild.textContent=safeName(nameOf(o)).charAt(0).toUpperCase();$('avMe').firstChild.textContent=LV.mode==='solo'?'Y':safeName(S.names[ME]).charAt(0).toUpperCase();
-  $('avMe').style.background='#10b981';
+  $('tagOpp').textContent=S.ctl[o]==='bot'?({easy:'Easy',normal:'Normal',hard:'Hard'}[S.skill]):S.pp?'Same device':'Live';
+  var bc=S.ctl[o]==='bot'?BOTS[S.botIdx].col:S.pp?(o===0?'#10b981':'#f472b6'):'#22d3ee';$('avOpp').style.background=bc;$('avOpp').firstChild.textContent=safeName(nameOf(o)).charAt(0).toUpperCase();$('avMe').firstChild.textContent=LV.mode==='solo'&&!S.pp?'Y':safeName(S.names[ME]).charAt(0).toUpperCase();
+  $('avMe').style.background=S.pp&&ME===1?'#f472b6':'#10b981';
   var act=S.phase!=='setup'&&S.phase!=='over'&&S.phase!=='lobby'&&S.phase!=='propose'&&S.phase!=='wait';
   $('pMe').classList.toggle('turn',act&&S.turn===ME);$('pOpp').classList.toggle('turn',act&&S.turn===o);
   $('pMe').classList.toggle('won',S.phase==='over'&&S.result&&S.result.winner===ME);$('pOpp').classList.toggle('won',S.phase==='over'&&S.result&&S.result.winner===o);
@@ -2034,10 +2036,11 @@ async function movesFor(s){
     for(var i=0;i<seq.length;i++){var m=seq[i];var hit=await playMove(s,m);chk(g);S.left=rest(S.left,m.d);S.turnMoves.push({f:m.f,t:m.t,d:m.d,hit:hit});dimDice();hud();hostPush();
       if(hit)botTalk('hitYou',0.5);await W(170);}
   } else if(c==='me'){
+    ppFace(s);
     if(opt.forced){var fs=finals(S.pos,s,S.left);if(fs.length===1){say('Forced move \u2013 playing it for you.');await W(400);
       for(var j=0;j<fs[0].seq.length;j++){var m2=fs[0].seq[j];S.undo.push({pos:S.pos.slice(),left:S.left.slice(),moves:S.turnMoves.length});var h2=await playMove(s,m2);chk(g);S.left=rest(S.left,m2.d);S.turnMoves.push({f:m2.f,t:m2.t,d:m2.d,hit:h2});dimDice();LG=null;hud();hostPush();await W(120);}
       S.undo=[];updateControls();markUI();await W(250);logTurn(s,rl);return;}}
-    say('Your move: '+leftText());markUI();updateControls();
+    say((S.pp?'<b>'+esc(nameOf(s))+'</b>: ':'')+'Your move: '+leftText());markUI();updateControls();
     await waitFor('moves');chk(g);
   } else { /* remote guest */
     say('Waiting for '+esc(safeName(nameOf(s)))+' to move\u2026');
@@ -2056,9 +2059,9 @@ async function preroll(s){
     return 'roll';
   }
   if(c==='me'){
-    SFX.turn();
+    ppFace(s);SFX.turn();
     if(opt.autoRoll&&!canDouble(s)){say('Your roll.');await W(350);return 'roll';}
-    say('Your turn: <b>roll</b>'+(canDouble(s)?' or <b>double</b> to '+S.cube*2:'')+'.');
+    say((S.pp?'<b>'+esc(nameOf(s))+'</b>: ':'')+'Your turn: <b>roll</b>'+(canDouble(s)?' or <b>double</b> to '+S.cube*2:'')+'.');
     return await waitFor('preroll');
   }
   say('Waiting for '+esc(safeName(nameOf(s)))+' to roll\u2026');
@@ -2070,7 +2073,7 @@ async function cubeOffer(s){
   logLine('<b>'+esc(safeName(nameOf(s)))+'</b> doubles to '+S.cube*2,'h');
   var ans;
   if(c==='bot'){botTalk('double',0.8);say(isMine(s)?'You offer the cube at <b>'+S.cube*2+'</b>\u2026':'');await W(1100);ans=botTakes(t)?'take':'drop';}
-  else if(c==='me'){if(S.ctl[s]==='bot')botTalk('double',0.9);showAsk(s);ans=await waitFor('cube');hideAsk();}
+  else if(c==='me'){if(S.ctl[s]==='bot')botTalk('double',0.9);ppFace(t);showAsk(s);ans=await waitFor('cube');hideAsk();ppFace(s);}
   else{say('Waiting for '+esc(safeName(nameOf(t)))+' to take or drop\u2026');ans=await waitFor('rcube');}
   chk(g);
   S.offer=-1;
@@ -2101,9 +2104,10 @@ async function finish(w,mult,how){
   var g=S.gen,pts=S.cube*mult;
   S.result={winner:w,mult:mult,points:pts,how:how,cube:S.cube};S.phase='over';S.pending=null;select(-1);hideAsk();
   settle();hostPush();updateControls();
-  var kind=mult===3?'Backgammon':mult===2?'Gammon':'Single game',iw=w===ME;
+  var kind=mult===3?'Backgammon':mult===2?'Gammon':'Single game',iw=ppIw(w);
   logLine(esc(safeName(nameOf(w)))+' wins: '+kind+(how==='drop'?' (cube dropped)':how==='resign'?' (resigned)':'')+' \u00d7 cube '+S.cube+' = '+pts+' pt'+(pts>1?'s':''),iw?'w':'l');
-  if(iw){SFX.win();if(typeof suBanner==='function')suBanner(mult===3?'Backgammon!':mult===2?'Gammon!':'You Win!',S.stake?smoney(S.stake*pts):pts+' point'+(pts>1?'s':''));botTalk('lose',0.8);}
+  if(S.pp&&!iw)SFX.win();
+  else if(iw){SFX.win();if(typeof suBanner==='function')suBanner(mult===3?'Backgammon!':mult===2?'Gammon!':'You Win!',S.stake?smoney(S.stake*pts):pts+' point'+(pts>1?'s':''));botTalk('lose',0.8);}
   else{SFX.lose();botTalk('win',0.8);}
   say(iw?'<b>You win</b> \u2013 '+kind.toLowerCase()+'!':'<b>'+esc(safeName(nameOf(w)))+'</b> wins \u2013 '+kind.toLowerCase()+'.');
   await wait(turbo?0:1500);if(g!==S.gen)return;
@@ -2112,6 +2116,7 @@ async function finish(w,mult,how){
 function settle(){
   if(S.settled===S.gid||!S.result)return;S.settled=S.gid;
   var iw=S.result.winner===ME,amt=S.stake*S.result.points;
+  if(S.pp){S.escrow=0;hud();return;}
   if(iw)record.w++;else record.l++;
   if(S.stake){bank+=S.escrow+(iw?amt:-amt);S.escrow=0;if(iw&&amt>best)best=amt;}
   S.escrow=0;hud();
@@ -2122,10 +2127,10 @@ function resetBoard(){S.pos=newPos();S.cube=1;S.owner=-1;S.offer=-1;S.dice=[];S.
 function startSolo(){
   stopGame();
   var st=opt.stake;if(st&&bank<st*3)st=0;
-  S.ctl=ME===0?['me','bot']:['bot','me'];S.botIdx=opt.opp;S.skill=opt.skill;S.names=['You',BOTS[S.botIdx].name];
+  ME=0;S.pp=!!opt.pp;S.ctl=S.pp?['me','me']:['me','bot'];S.botIdx=opt.opp;S.skill=opt.skill;S.names=S.pp?['You','Guest']:['You',BOTS[S.botIdx].name];if(S.pp)st=0;
   S.gid++;S.stake=st;S.escrow=0;if(st){bank-=st;S.escrow=st;}
   resetBoard();hideSheet();$('log').innerHTML='';
-  logLine('New game vs '+BOTS[S.botIdx].name+' ('+opt.skill+')'+(st?' \u2013 stake '+money(st):' \u2013 for fun'),'h');
+  logLine(S.pp?'Pass and play: You vs Guest on this device':'New game vs '+BOTS[S.botIdx].name+' ('+opt.skill+')'+(st?' \u2013 stake '+money(st):' \u2013 for fun'),'h');
   botTalk('hello',0.9);updateControls();
   playGame();
 }
@@ -2146,13 +2151,13 @@ function showSheet(kind){
   if(kind==='setup'){
     if(opt.stake&&bank<opt.stake*3)opt.stake=0;
     h='<div class="pill"><i></i><span>Saloon backgammon</span></div><h2>Who&rsquo;s your <span>opponent?</span></h2>'+
-      '<div class="opps">'+BOTS.map(function(b,i){return '<button type="button" class="opp'+(opt.opp===i?' on':'')+'" data-opp="'+i+'"><span class="av" style="background:'+b.col+'"><span>'+b.name.charAt(0)+'</span></span><span class="nm">'+b.name+'</span><small>'+b.tag+'</small></button>';}).join('')+'</div>'+
-      '<div class="srow"><span>Skill</span><div class="seg" id="shSkill">'+['easy','normal','hard'].map(function(k){return '<button type="button" data-skill="'+k+'" class="'+(opt.skill===k?'on':'')+'">'+k.charAt(0).toUpperCase()+k.slice(1)+'</button>';}).join('')+'</div></div>'+
+      '<div class="opps">'+BOTS.map(function(b,i){return '<button type="button" class="opp'+(!opt.pp&&opt.opp===i?' on':'')+'" data-opp="'+i+'"><span class="av" style="background:'+b.col+'"><span>'+b.name.charAt(0)+'</span></span><span class="nm">'+b.name+'</span><small>'+b.tag+'</small></button>';}).join('')+'<button type="button" class="opp gst'+(opt.pp?' on':'')+'" data-guest="1"><span class="av" style="background:#f472b6"><span>G</span></span><span class="nm">Guest</span><small>Pass and play on this device</small></button></div>'+
+      (opt.pp?'<p class="note"><b>Pass and play:</b> two people on this device. The board turns to face whoever&rsquo;s up. Guest games are for fun, no stakes.</p>':'<div class="srow"><span>Skill</span><div class="seg" id="shSkill">'+['easy','normal','hard'].map(function(k){return '<button type="button" data-skill="'+k+'" class="'+(opt.skill===k?'on':'')+'">'+k.charAt(0).toUpperCase()+k.slice(1)+'</button>';}).join('')+'</div></div>'+
       '<div class="srow"><span>Stake</span><div class="stakes">'+stakeChips(bank)+'</div></div>'+
-      '<p class="note">Win or lose <b>stake &times; cube</b>, &times;2 for a gammon, &times;3 for a backgammon. Your bankroll must cover 3&times; the stake; the cube stops where it can&rsquo;t cover.</p>'+
+      '<p class="note">Win or lose <b>stake &times; cube</b>, &times;2 for a gammon, &times;3 for a backgammon. Your bankroll must cover 3&times; the stake; the cube stops where it can&rsquo;t cover.</p>')+
       '<div class="row"><button type="button" class="btn gold go" data-act="start">Start game &rarr;</button></div>';
   } else if(kind==='over'){
-    var r=S.result||{winner:o,mult:1,points:1},iw=r.winner===ME,kindT=r.mult===3?'Backgammon':r.mult===2?'Gammon':'Single game',amt=S.stake*r.points;
+    var r=S.result||{winner:o,mult:1,points:1},iw=ppIw(r.winner),kindT=r.mult===3?'Backgammon':r.mult===2?'Gammon':'Single game',amt=S.stake*r.points;
     h='<div class="pill"><i></i><span>'+(iw?'Victory':'Game over')+'</span></div><h2>'+(iw?'You <span>win!</span>':esc(safeName(nameOf(r.winner)))+' <span>wins</span>')+'</h2>'+
       '<div class="res">'+kindT+(r.how==='drop'?' &middot; cube dropped':r.how==='resign'?' &middot; resigned':'')+' &middot; cube '+r.cube+' &middot; <em>'+r.points+' pt'+(r.points>1?'s':'')+'</em></div>'+
       '<p>'+(S.stake?(iw?'You collect <b>'+money(amt)+'</b>.':'You pay <b>'+money(amt)+'</b>.')+' Bankroll <b>'+money(bank)+'</b>.':'Played for fun.')+' Record '+record.w+'&ndash;'+record.l+'.</p>'+
@@ -2182,7 +2187,8 @@ function showSheet(kind){
 function hideSheet(){$('ov').classList.add('hide');sheetKind='';}
 $('sheet').addEventListener('click',function(e){
   var b=e.target.closest('button');if(!b||b.disabled)return;
-  if(b.hasAttribute('data-opp')){setOpp(+b.getAttribute('data-opp'));[].forEach.call($('sheet').querySelectorAll('.opp'),function(x){x.classList.toggle('on',x===b);});return;}
+  if(b.hasAttribute('data-guest')){opt.pp=true;segSet('optOpp','g');showSheet('setup');return;}
+  if(b.hasAttribute('data-opp')){var wasPP=opt.pp;opt.pp=false;setOpp(+b.getAttribute('data-opp'));if(wasPP){showSheet('setup');return;}[].forEach.call($('sheet').querySelectorAll('.opp'),function(x){x.classList.toggle('on',x===b);});return;}
   if(b.hasAttribute('data-skill')){setSkill(b.getAttribute('data-skill'));[].forEach.call($('sheet').querySelectorAll('[data-skill]'),function(x){x.classList.toggle('on',x===b);});return;}
   if(b.hasAttribute('data-stake')){opt.stake=+b.getAttribute('data-stake');[].forEach.call($('sheet').querySelectorAll('[data-stake]'),function(x){x.classList.toggle('on',x===b);});SFX.place();hud();return;}
   var a=b.getAttribute('data-act');
@@ -2241,7 +2247,7 @@ function seg(id,fn){[].forEach.call(document.querySelectorAll('#'+id+' button'),
 function segSet(id,v){[].forEach.call(document.querySelectorAll('#'+id+' button'),function(x){x.classList.toggle('on',x.getAttribute('data-v')===String(v));});}
 function setOpp(i){opt.opp=i;segSet('optOpp',i);var sk=BOTS[i].skill;setSkill(sk);if(S.phase==='setup'){S.botIdx=i;S.names[1-ME]=BOTS[i].name;S.skill=opt.skill;hud();}}
 function setSkill(v){opt.skill=v;segSet('optSkill',v);if(sheetKind==='setup')[].forEach.call($('sheet').querySelectorAll('[data-skill]'),function(x){x.classList.toggle('on',x.getAttribute('data-skill')===v);});if(S.phase==='setup'){S.skill=v;hud();}}
-seg('optOpp',function(v){setOpp(+v);if(sheetKind==='setup')showSheet('setup');});
+seg('optOpp',function(v){if(v==='g'){opt.pp=true;}else{opt.pp=false;setOpp(+v);}if(sheetKind==='setup')showSheet('setup');});
 seg('optSkill',function(v){setSkill(v);});
 seg('optAutoRoll',function(v){opt.autoRoll=v==='1';});
 seg('optForced',function(v){opt.forced=v==='1';});
@@ -2302,7 +2308,7 @@ function leaveLive(quiet){
   var inGame=!idle()&&S.phase!=='lobby'&&S.phase!=='propose'&&S.phase!=='wait';
   stopGame();clearInterval(LV.hb);clearInterval(LV.helloT);
   if(inGame&&S.escrow){refund();if(!quiet||true)toast('Live game cancelled','Your stake is back in your bankroll',2600);logLine('Opponent left \u2013 game cancelled, stake returned','l');}
-  LV.mode='solo';ME=0;S.ctl=['me','bot'];S.phase='setup';S.stake=0;S.escrow=0;S.names=['You',BOTS[opt.opp].name];S.botIdx=opt.opp;S.skill=opt.skill;LV.lastSt=null;
+  LV.mode='solo';ME=0;S.pp=false;S.ctl=['me','bot'];S.phase='setup';S.stake=0;S.escrow=0;S.names=['You',BOTS[opt.opp].name];S.botIdx=opt.opp;S.skill=opt.skill;LV.lastSt=null;
   resetBoard();buildBoard(G?G.rot:false);fit();showSheet('setup');
 }
 /* ---------- host side ---------- */

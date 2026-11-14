@@ -405,7 +405,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
           <h2>Checkers</h2>
           <p>Red moves first. Jumps are required.</p>
           <div class="lab">Opponent</div>
-          <div class="seg c2" id="optOpp"><button type="button" data-v="cpu" class="on">Computer<small>Hank</small></button><button type="button" data-v="online" id="oppOnline">Online<small id="onlineSub">nobody here yet</small></button></div>
+          <div class="seg c3" id="optOpp"><button type="button" data-v="cpu" class="on">Computer<small>Hank</small></button><button type="button" data-v="guest">Guest<small>Same device</small></button><button type="button" data-v="online" id="oppOnline">Online<small id="onlineSub">nobody here yet</small></button></div>
           <div id="cpuOpts"><div class="lab">Computer skill</div>
           <div class="seg c3" id="optLvl"><button type="button" data-v="1">Easy<small>learning</small></button><button type="button" data-v="2" class="on">Fair<small>steady</small></button><button type="button" data-v="3">Hard<small>sharp</small></button></div></div>
           <div class="online"><span class="ldot" id="ldot"></span><span id="ltxt">Connecting to the parlor&#x2026;</span></div>
@@ -943,7 +943,7 @@ function saveRec(){try{localStorage.setItem('su_checkers_rec',JSON.stringify(rec
 var setup={opp:'cpu',lvl:2};
 function startGame(o){G={b:initBoard(),turn:1,mode:o.mode,mySide:o.mySide||1,lvl:o.lvl||2,names:o.names,gid:o.gid,n:0,quiet:0,hist:[],last:null,over:false};sel=null;partial=[];busy=false;
   $('sheet').classList.add('hide');q('open');render();say();if(G.turn!==G.mySide&&G.mode==='cpu')setTimeout(cpuTurn,500);}
-function flip(){return G&&G.mySide===-1;}
+function flip(){return G&&G.mode!=='guest'&&G.mySide===-1;}
 function sqAt(i){return flip()?63-i:i;}
 function legal(){return G?moves(G.b,G.turn):[];}
 function render(){var el=$('board');if(!G){el.innerHTML='';return;}var ms=G.turn===G.mySide&&!G.over&&!busy?legal():[],from={},tg={};
@@ -954,12 +954,13 @@ function render(){var el=$('board');if(!G){el.innerHTML='';return;}var ms=G.turn
     if(p)h+='<span class="pc '+(p>0?'r':'b')+(Math.abs(p)===2?' k':'')+(from[i]?' can':'')+(from[i]&&must?' must':'')+(sel===i?' sel':'')+'"></span>';h+='</div>';}
   el.innerHTML=h;
   [].forEach.call(el.children,function(sq){sq.onclick=function(){tap(+sq.getAttribute('data-i'));};});
-  var me=G.mySide,opp=-me;$('nMe').textContent=G.names[me>0?0:1];$('nOpp').textContent=G.names[me>0?1:0];
+  var me=G.mode==='guest'?1:G.mySide,opp=-me;$('nMe').textContent=G.names[me>0?0:1];$('nOpp').textContent=G.names[me>0?1:0];
   $('pcMe').className='pc '+(me>0?'r':'b');$('pcOpp').className='pc '+(me>0?'b':'r');$('cMe').textContent=count(G.b,me);$('cOpp').textContent=count(G.b,opp);
   $('pMe').classList.toggle('turn',!G.over&&G.turn===me);$('pOpp').classList.toggle('turn',!G.over&&G.turn!==me);
-  $('bUndo').disabled=G.mode!=='cpu'||!G.hist.length||busy||G.over;$('bUndo').classList.toggle('hide',G.mode!=='cpu');
+  $('bUndo').disabled=(G.mode!=='cpu'&&G.mode!=='guest')||!G.hist.length||busy||G.over;$('bUndo').classList.toggle('hide',G.mode!=='cpu'&&G.mode!=='guest');
   $('rec').innerHTML='Record vs everyone: <b>'+rec.w+'</b> W \u00b7 <b>'+rec.l+'</b> L \u00b7 <b>'+rec.d+'</b> D';}
 function say(t){if(t){$('msg').innerHTML=t;return;}if(!G)return;if(G.over)return;
+  if(G.mode==='guest'){var gm=legal(),nm='<b>'+esc(G.names[G.turn>0?0:1])+'</b> ('+(G.turn>0?'Red':'Black')+')';$('msg').innerHTML=nm+(gm.length&&gm[0].caps.length?' to move. <b>Must jump</b> (glowing pieces).':' to move. Tap a piece, then a green dot.');return;}
   if(G.turn===G.mySide){var ms=legal();$('msg').innerHTML=ms.length&&ms[0].caps.length?'Your move. <b>You must jump</b> (glowing pieces).':'Your move. Tap a piece, then a green dot.';}
   else $('msg').innerHTML=esc(G.names[G.mySide>0?1:0])+(G.mode==='cpu'?' is thinking\u2026':'\u2019s move\u2026');}
 function tap(i){if(!G||G.over||busy||G.turn!==G.mySide)return;ac();var ms=legal();
@@ -980,16 +981,19 @@ function animate(m,cb){var el=$('board'),from=m.path[0],cells=el.children,idx=fu
     if(m.caps[k-1]!=null){var cap=cells[idx(m.caps[k-1])].querySelector('.pc');if(cap)setTimeout(function(){cap.classList.add('gone');sJump();},120);}else setTimeout(sClack,180);
     k++;setTimeout(hop,240);})();}
 function play(m,mine){busy=true;if(G.mode==='online'&&mine)D.send('move',{n:G.n+1,path:m.path});
-  if(G.mode==='cpu'&&mine)G.hist.push({b:G.b.slice(),quiet:G.quiet,last:G.last});
+  if((G.mode==='cpu'||G.mode==='guest')&&mine)G.hist.push({b:G.b.slice(),quiet:G.quiet,last:G.last,turn:G.turn});
   animate(m,function(){var wasK=Math.abs(G.b[m.path[0]])===2,p=G.b[m.path[0]];G.b=apply(G.b,m);G.n++;G.last=m.path.slice();
     var crowned=Math.abs(p)===1&&Math.abs(G.b[m.path[m.path.length-1]])===2;if(crowned){tone(784,.15,0,.08);tone(1046,.2,.1,.08);}
     G.quiet=m.caps.length||!wasK?0:G.quiet+1;/* counts king moves without jumps */
-    G.turn=-G.turn;busy=false;render();
+    G.turn=-G.turn;if(G.mode==='guest')G.mySide=G.turn;busy=false;render();
     if(!moves(G.b,G.turn).length){endGame(G.turn===G.mySide?'lose':'win');return;}
     if(G.quiet>=80){endGame('draw');return;}
     say();if(G.mode==='cpu'&&G.turn!==G.mySide)setTimeout(cpuTurn,350);});}
 function cpuTurn(){if(!G||G.over||G.mode!=='cpu'||G.turn===G.mySide)return;var t0=Date.now(),m=cpuMove(G.b,G.turn,G.lvl);if(!m)return;setTimeout(function(){if(G&&!G.over)play(m,false);},Math.max(0,500-(Date.now()-t0)));}
-function endGame(r,note){if(!G||G.over)return;G.over=true;if(G.mode==='online')D.done();else D.solo(false);
+function endGame(r,note){if(!G||G.over)return;
+  if(G.mode==='guest'){G.over=true;D.solo(false);var ws=r==='draw'?0:(r==='win'?G.mySide:-G.mySide),wn=ws?G.names[ws>0?0:1]:'',ln=ws?G.names[ws>0?1:0]:'';q('over');if(ws){tone(523,.2);tone(659,.2,.12);tone(784,.3,.24);}
+    $('ovTitle').textContent=ws?(wn==='You'?'You win!':wn+' wins!'):'Draw';$('ovSub').textContent=note||(ws?esc(ln)+' has no moves left.':'40 moves with no jumps. The game is a draw.');render();say(ws?'<b>'+(wn==='You'?'You win':esc(wn)+' wins')+'!</b>':'Draw.');setTimeout(function(){showSheet('over');},900);return;}
+ G.over=true;if(G.mode==='online')D.done();else D.solo(false);
   if(r==='win'){rec.w++;q('over');q('win');tone(523,.2);tone(659,.2,.12);tone(784,.3,.24);}else if(r==='lose'){rec.l++;q('over');tone(330,.3);tone(262,.4,.15);}else{rec.d++;q('over');}saveRec();
   $('ovTitle').textContent=r==='win'?'You win!':r==='lose'?(G.mode==='cpu'?G.names[1]+' wins':'You lose'):'Draw';
   $('ovSub').textContent=note||(r==='draw'?'40 moves with no jumps. The game is a draw.':r==='win'?'Your opponent has no moves left.':'You\u2019re out of moves.');
@@ -1003,12 +1007,12 @@ function setupUI(){var o=D.other();$('oppOnline').disabled=!o||!o.free;$('online
   var st=D.info();$('ldot').className='ldot '+(st.live?(o?'on':'wait'):'');$('ltxt').textContent=Duel.lobbyText(D,'a game of checkers');}
 [].forEach.call($('optOpp').children,function(b){b.onclick=function(){if(b.disabled)return;setup.opp=b.getAttribute('data-v');setupUI();};});
 [].forEach.call($('optLvl').children,function(b){b.onclick=function(){setup.lvl=+b.getAttribute('data-v');setupUI();};});
-$('bStart').onclick=function(){ac();if(setup.opp==='online'){D.invite({});return;}D.solo(true);
+$('bStart').onclick=function(){ac();if(setup.opp==='online'){D.invite({});return;}D.solo(true);if(setup.opp==='guest'){startGame({mode:'guest',mySide:1,names:['You','Guest']});return;}
   var LN=['','Easy Ellie','Hank','Sharp Sadie'];startGame({mode:'cpu',mySide:1,lvl:setup.lvl,names:['You',LN[setup.lvl]]});};
 $('againBtn').onclick=function(){showSheet('setup');};
 $('bNew').onclick=function(){if(G&&!G.over&&G.mode==='online'){if(!confirmQuit())return;D.quit();}G=null;render();showSheet('setup');};
 function confirmQuit(){return true;}
-$('bUndo').onclick=function(){if(!G||G.mode!=='cpu'||busy||!G.hist.length)return;var h=G.hist.pop();G.b=h.b;G.quiet=h.quiet;G.last=h.last;G.turn=G.mySide;sel=null;partial=[];render();say('Move taken back.');};
+$('bUndo').onclick=function(){if(!G||(G.mode!=='cpu'&&G.mode!=='guest')||busy||!G.hist.length)return;var h=G.hist.pop();G.b=h.b;G.quiet=h.quiet;G.last=h.last;G.turn=G.mode==='guest'?h.turn:G.mySide;if(G.mode==='guest')G.mySide=G.turn;sel=null;partial=[];render();say('Move taken back.');};
 /* ---------- online ---------- */
 var D=Duel.create({game:'checkers',chatEl:$('felt'),busy:function(){return G&&!G.over;},
   onRefresh:function(){if(!$('sheet').classList.contains('hide')&&!$('setup').classList.contains('hide'))setupUI();},

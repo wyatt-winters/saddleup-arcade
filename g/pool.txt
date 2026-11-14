@@ -702,7 +702,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
             <b class="ttl">Rack 'em</b>
             <div class="sb">Bankroll <b id="setBank">$1,000</b></div>
             <div class="srow"><span>Game</span><div class="seg" id="optMode"><button type="button" data-v="8" class="on">8-Ball</button><button type="button" data-v="9">9-Ball</button><button type="button" data-v="ct">Cut-throat</button></div></div>
-            <div class="srow"><span>Opponent</span><div class="seg" id="optOpp"><button type="button" data-v="easy">Hank<small>Easy</small></button><button type="button" data-v="normal" class="on">Dusty<small>Normal</small></button><button type="button" data-v="hard">June<small>Hard</small></button></div></div>
+            <div class="srow"><span>Opponent</span><div class="seg" id="optOpp"><button type="button" data-v="easy">Hank<small>Easy</small></button><button type="button" data-v="normal" class="on">Dusty<small>Normal</small></button><button type="button" data-v="hard">June<small>Hard</small></button><button type="button" data-v="guest">Guest<small>Same device</small></button></div></div>
             <div class="srow"><span>Stake</span><div class="seg" id="optStake"><button type="button" data-v="0" class="on">Fun</button><button type="button" data-v="10">$10</button><button type="button" data-v="25">$25</button><button type="button" data-v="100">$100</button><button type="button" data-v="500">$500</button></div></div>
             <div class="srow stkc"><span>Or bet</span><div class="stkbox"><input id="stakeIn" type="text" inputmode="decimal" autocomplete="off" placeholder="Any amount" aria-label="Stake amount"><button type="button" id="stakeSet">Bet</button><button type="button" id="stakeAll">All in</button></div></div>
             <div class="lbox hide" id="lbox"></div>
@@ -1438,7 +1438,7 @@ function rackBalls(mode){
 var OPP={easy:{name:'Hank',col:'#60a5fa',key:'hank',err:0.025,perr:0.15,think:1250,cand:24,pos:0.12},
          normal:{name:'Dusty',col:'#c6a75e',key:'dusty',err:0.018,perr:0.12,think:1100,cand:36,pos:0.3},
          hard:{name:'June',col:'#a78bfa',key:'june',err:0.0075,perr:0.06,think:900,cand:100,pos:0.8}};
-var CT_MATE={easy:'normal',normal:'easy',hard:'normal'};
+var CT_MATE={easy:'normal',normal:'easy',hard:'normal',guest:'normal'};
 var opt={mode:'8',opp:'normal',stake:0,guide:'full',talk:true,sound:true};
 var G={mode:'8',phase:'setup',players:[{name:'You',kind:'me',col:'#10b981'},{name:'Dusty',kind:'bot',col:'#c6a75e',skill:'normal'}],
   balls:rackBalls('8'),turn:0,groups:[null,null],open:true,breakShot:true,bih:true,kitchen:true,shotNo:0,winner:-1,reason:'',pocketOrder:[],
@@ -1809,20 +1809,22 @@ function resolveShot(ev){
     G.turn=nextSeat(sh);G.bih=true;G.kitchen=r.kitchen;
     var c=G.balls[0];if(!c.on){var p=nearestPlace(HEAD.x,HEAD.y,r.kitchen);c.on=true;c.x=p.x;c.y=p.y;SPR[0].lx=c.x;SPR[0].ly=c.y;}
     else if(r.kitchen&&c.x>HEAD_X){var p2=nearestPlace(HEAD.x,HEAD.y,true);c.x=p2.x;c.y=p2.y;}
-    toast('Foul: '+r.reason+'. '+(revived.length?revived.length+(revived.length>1?' balls':' ball')+' back on the table. ':'')+(G.players[G.turn].kind==='me'?'Ball in hand':who(G.turn)+' has ball in hand'),true);SFX.foul();
+    toast('Foul: '+r.reason+'. '+(revived.length?revived.length+(revived.length>1?' balls':' ball')+' back on the table. ':'')+(me1(G.players[G.turn])?'Ball in hand':who(G.turn)+' has ball in hand'),true);SFX.foul();
     talk(shooter.kind==='me'?'youFoul':'botFoul',sh);
   } else if(r.cont){
-    if(r.assign)toast(who(sh)+(shooter.kind==='me'?' are ':' is ')+r.assign);
+    if(r.assign)toast(who(sh)+(me1(shooter)?' are ':' is ')+r.assign);
     talk(shooter.kind==='me'?'youGood':'botGood',sh);
     if(isCT(pre)){var out=[];for(var z=0;z<G.players.length;z++)if(z!==sh&&ctLeft(G.groups[z])===0&&G.lastOut.indexOf(z)<0){out.push(z);G.lastOut.push(z);}
-      if(out.length)toast(out.map(who).join(' and ')+(out.length>1||G.players[out[0]].kind==='me'?' are':' is')+' out!');}
+      if(out.length)toast(out.map(who).join(' and ')+(out.length>1||me1(G.players[out[0]])?' are':' is')+' out!');}
   } else {G.turn=nextSeat(sh);}
   if(isCT(pre)&&!ctAlive(G.turn))G.turn=nextSeat(G.turn);
   afterResolve();
   nextTurn();
 }
 function afterResolve(){if(amAuth())sendSync();}
-function who(seat){var p=G.players[seat];return p.kind==='me'?'You':p.name;}
+function me1(p){return p&&p.kind==='me'&&!p.guest;}
+function guestGame(){return !G.live&&G.players.some(function(p){return p.guest;});}
+function who(seat){var p=G.players[seat];return me1(p)?'You':p.name;}
 
 /* turn handling */
 function nextTurn(){
@@ -1835,7 +1837,7 @@ function nextTurn(){
   AIM.p=0;setPow(0);
   VIEW.a=AIM.a;VIEW.p=0;VIEW.show=p.kind!=='bot';VIEW.who=G.turn;LV.rem=null;
   hud();
-  if(p.kind==='me'){if(!turbo)SFX.turn();}
+  if(p.kind==='me'){if(!turbo)SFX.turn();if(guestGame()&&G.lastHum!=null&&G.lastHum!==G.turn&&!turbo)toast('Pass to '+(me1(p)?'Player 1 (You)':p.name)+' \u00b7 '+(me1(p)?'your':p.name+"'s")+' shot');G.lastHum=G.turn;}
   else if(p.kind==='bot'){VIEW.show=false;botTurn();}
 }
 function setPow(p){AIM.p=p;var pw=$('pow');$('pf').style.height=(p*100)+'%';$('pk').style.top='calc('+(p*100)+'% - '+(p*16)+'px + 3px)';$('pt').textContent=p>0.005?Math.round(p*100)+'%':'';pw.classList.toggle('on',p>0.005);pw.setAttribute('aria-valuenow',Math.round(p*100));if(isMyTurn()){VIEW.p=p;}}
@@ -1947,10 +1949,11 @@ function talk(kind,seat,force){
 /* ================= game start / end ================= */
 function startSolo(){
   var st=opt.stake;if(st>bank)return;
-  gen++;var o=OPP[opt.opp];
+  if(opt.opp==='guest'){st=0;}
+  gen++;var o=OPP[opt.opp]||OPP.normal;G.lastHum=null;
   G.mode=opt.mode;G.live=false;G.auth='';G.bots=[];G.gid='';G.ids=null;G.mySeat=0;G.stake=st;G.settled=false;G.waitSync=false;
-  G.players=[{name:'You',kind:'me',col:'#10b981'},{name:o.name,kind:'bot',col:o.col,skill:opt.opp,key:o.key}];
-  if(G.mode==='ct'){var k2=CT_MATE[opt.opp],o2=OPP[k2];G.players.push({name:o2.name,kind:'bot',col:o2.col,skill:k2,key:o2.key});}
+  G.players=[{name:'You',kind:'me',col:'#10b981'},opt.opp==='guest'?{name:'Guest',kind:'me',guest:true,col:'#f472b6'}:{name:o.name,kind:'bot',col:o.col,skill:opt.opp,key:o.key}];
+  if(G.mode==='ct'){var k2=CT_MATE[opt.opp]||'normal',o2=OPP[k2];G.players.push({name:o2.name,kind:'bot',col:o2.col,skill:k2,key:o2.key});}
   G.callEight=opt.opp!=='easy';
   bank-=st;
   var N=G.players.length;G.nextBreaker=G.nextBreaker%N;
@@ -1967,8 +1970,9 @@ function beginRack(balls,breaker){
   G.phase='aim';
   var c=G.balls[0];AIM.a=Math.atan2(FOOT.y-c.y,FOOT.x-c.x);
   renderBank();
-  if(G.mode==='ct'){var mgi=G.groups[G.mySeat];toast('Your balls: '+CTR[mgi][0]+'\u2013'+CTR[mgi][1]+' \u00b7 '+(G.players[breaker].kind==='me'?'your break':who(breaker)+' breaks')+(G.stake?' \u00b7 '+money(pot())+' pot':''));}
-  else toast((G.players[breaker].kind==='me'?'Your break':who(breaker)+' breaks')+(G.stake?' \u00b7 '+money(G.stake*2)+' pot':''));
+  if(G.mode==='ct'&&guestGame()){var gs=G.players.map(function(q,i){return q.kind==='me'?(me1(q)?'You':q.name)+' '+CTR[G.groups[i]][0]+'\u2013'+CTR[G.groups[i]][1]:'';}).filter(Boolean).join(' \u00b7 ');toast(gs+' \u00b7 '+(me1(G.players[breaker])?'your break':who(breaker)+' breaks'));}
+  else if(G.mode==='ct'){var mgi=G.groups[G.mySeat];toast('Your balls: '+CTR[mgi][0]+'\u2013'+CTR[mgi][1]+' \u00b7 '+(me1(G.players[breaker])?'your break':who(breaker)+' breaks')+(G.stake?' \u00b7 '+money(pot())+' pot':''));}
+  else toast((me1(G.players[breaker])?'Your break':who(breaker)+' breaks')+(G.stake?' \u00b7 '+money(G.stake*2)+' pot':''));
   nextTurn();
 }
 function pot(){return G.stake*G.players.length;}
@@ -1983,7 +1987,7 @@ function rollOff(done,preset){
   G.phase='roll';hud();
   var live=[];for(var k=0;k<N;k++)live.push(k);
   ov.innerHTML='<div class="rbx"><div class="rt">Roll for the break</div><div class="rs">High roll breaks</div><div class="rrow">'+G.players.map(function(p,k){
-    return '<div class="rp" id="rp'+k+'"><div class="rd" id="rd'+k+'">'+DIE[0]+'</div><div class="rn">'+(p.kind==='me'?'You':p.name)+'</div></div>';}).join('')+'</div><div class="rm" id="rmsg">Rolling\u2026</div></div>';
+    return '<div class="rp" id="rp'+k+'"><div class="rd" id="rd'+k+'">'+DIE[0]+'</div><div class="rn">'+(me1(p)?'You':p.name)+'</div></div>';}).join('')+'</div><div class="rm" id="rmsg">Rolling\u2026</div></div>';
   ov.classList.remove('hide');
   function round(){
     var vals={},t0=now();
@@ -1998,7 +2002,7 @@ function rollOff(done,preset){
       var hi=Math.max.apply(null,live.map(function(k){return vals[k];})),top=live.filter(function(k){return vals[k]===hi;});
       live.forEach(function(k){$('rp'+k).classList.add(vals[k]===hi?'hi':'lo');});
       if(top.length>1){$('rmsg').textContent='Tie on '+hi+'! '+top.map(who).join(' and ')+' roll again';live=top;later(1300,round);return;}
-      var w=top[0];$('rmsg').textContent=(G.players[w].kind==='me'?'You break':who(w)+' breaks')+' with a '+hi+'!';
+      var w=top[0];$('rmsg').textContent=(me1(G.players[w])?'You break':who(w)+' breaks')+' with a '+hi+'!';
       later(1500,function(){ov.classList.add('hide');done(w);});
     })();
   }
@@ -2009,13 +2013,13 @@ function endGame(){
   gen++;BOT=null;
   if(!G.settled){G.settled=true;if(G.stake>0&&mine){pay=pot();bank+=pay;}}
   renderBank();hud();
-  if(mine){SFX.win();if(typeof suBanner==='function')suBanner(G.mode==='9'?'Nine down!':G.mode==='ct'?'Last one standing!':'Winner!',G.stake?'+'+money(pot()):'Game won');talk('botLose',1,true);}
+  if(mine||(G.players[w]&&G.players[w].guest)){SFX.win();if(typeof suBanner==='function')suBanner(G.mode==='9'?'Nine down!':G.mode==='ct'?'Last one standing!':'Winner!',G.stake?'+'+money(pot()):'Game won');talk('botLose',1,true);}
   else if(G.watch){SFX.turn();}
   else{SFX.lose();talk('botWin',w>0?w:1,true);}
   var wn=who(w);
-  $('resT').textContent=mine?'You win!':wn+' wins';
+  $('resT').textContent=mine?'You win!':wn+' wins';var gw=!G.watch&&G.players[w]&&G.players[w].guest;
   if(G.watch)G.reason=G.reason.replace(/^You resigned$/,'Resigned');
-  $('resW').textContent=G.reason?(mine?G.reason:G.reason.replace(/^Sank/,(G.players[w].kind==='me'?'You sank':wn+' sank')))+'.':'';
+  $('resW').textContent=G.reason?(mine?G.reason:G.reason.replace(/^Sank/,(me1(G.players[w])?'You sank':wn+' sank')))+'.':'';
   var a=$('resA');a.textContent=G.watch?(G.stake?money(G.stake*2)+' pot':'For fun'):G.stake?(mine?'+'+money(pot()):'-'+money(G.stake)):(mine?'For fun':'');a.classList.toggle('neg',!mine&&!G.watch);
   $('againBtn').textContent=G.watch?'Back to the table':G.live&&G.mode==='ct'?'Back to the table':G.live?'Rematch':'Play again';
   later(turbo?0:1100,function(){if(G.phase==='over'){$('res').classList.remove('hide');}});
@@ -2038,11 +2042,11 @@ function hud(){
   var three=G.players.length>2,seats=three?[G.mySeat,(G.mySeat+1)%3,(G.mySeat+2)%3]:[G.mySeat,1-G.mySeat];
   $('phud').classList.toggle('three',three);$('pc2').classList.toggle('hide',!three);
   seats.forEach(function(s,k){var p=G.players[s],pc=$('pc'+k);
-    $('nm'+k).textContent=p.kind==='me'&&!G.live?'You':p.name+(p.kind==='me'&&G.live?' (you)':'')+(G.live&&p.reg?' (regular)':'');
-    var av=$('av'+k);av.style.background=p.col||'#94a3b8';av.querySelector('span').textContent=(p.kind==='me'&&!G.live?'Y':(p.name||'?').charAt(0)).toUpperCase();
+    $('nm'+k).textContent=me1(p)&&!G.live?'You':p.name+(p.kind==='me'&&G.live?' (you)':'')+(G.live&&p.reg?' (regular)':'');
+    var av=$('av'+k);av.style.background=p.col||'#94a3b8';av.querySelector('span').textContent=(me1(p)&&!G.live?'Y':(p.name||'?').charAt(0)).toUpperCase();
     pc.classList.toggle('turn',G.phase==='aim'||G.phase==='run'?G.turn===s:false);pc.classList.toggle('won',G.phase==='over'&&G.winner===s);
     var gl='',mbs='';
-    if(G.phase==='setup')gl=p.kind==='bot'?({easy:'Easy',normal:'Normal',hard:'Hard'}[p.skill]||'Regular'):p.kind==='remote'?'Live player':'Ready';
+    if(G.phase==='setup')gl=p.kind==='bot'?({easy:'Easy',normal:'Normal',hard:'Hard'}[p.skill]||'Regular'):p.kind==='remote'?'Live player':p.guest?'Same device':'Ready';
     else if(G.mode==='ct'){var gi=G.groups[s],lf=ctLeft(gi);
       gl='<b>'+CTR[gi][0]+'\u2013'+CTR[gi][1]+'</b> \u00b7 '+(lf?lf+' left':'Out');pc.classList.toggle('out',!lf);
       for(var cn=CTR[gi][0];cn<=CTR[gi][1];cn++)mbs+=mbHTML(cn,G.balls[cn].on?'':'gone');}
@@ -2064,7 +2068,7 @@ function hud(){
   else if(G.phase==='roll')t='Rolling for the break';
   else if(G.phase==='run')t='Rolling\u2026';
   else if(G.waitSync)t='Syncing\u2026';
-  else{var p=G.players[G.turn];t=p.kind==='me'?(G.bih?'Ball in hand':G.breakShot?'Your break':'Your shot'):(who(G.turn)+(G.breakShot?' breaks':' is shooting'));}
+  else{var p=G.players[G.turn];t=p.guest?(p.name+(G.bih?': ball in hand':G.breakShot?"'s break":"'s shot")):p.kind==='me'?(G.bih?'Ball in hand':G.breakShot?'Your break':'Your shot'):(who(G.turn)+(G.breakShot?' breaks':' is shooting'));}
   $('tmsg').textContent=t;$('tmsgp').textContent=t;
   var rk='';
   if(G.mode==='9'&&G.phase!=='setup'){for(var m=1;m<=9;m++)rk+=mbHTML(m,(G.balls[m].on?'':'gone')+(m===lowest()&&busy()?' hot':''));$('rackL').textContent=lowest()&&busy()?'On the '+lowest():'Rack';}
@@ -2096,21 +2100,22 @@ function renderSetup(){try{renderWatch();}catch(e){}
   if(opt.stake>bank){opt.stake=0;segSet('optStake','0');$('stakeIn').value='';}
   $('stakeIn').classList.toggle('on',opt.stake>0&&['10','25','100','500'].indexOf(String(opt.stake))<0);$('stakeAll').disabled=bank<1;
   var lb=liveOffer();
-  var vs=OPP[opt.opp].name+(opt.mode==='ct'?' & '+OPP[CT_MATE[opt.opp]].name:'');
+  var gst=opt.opp==='guest';if(gst&&opt.stake){opt.stake=0;segSet('optStake','0');$('stakeIn').value='';}[].forEach.call($('optStake').querySelectorAll('button'),function(b){if(gst&&b.dataset.v!=='0')b.disabled=true;});$('stakeIn').disabled=gst;$('stakeSet').disabled=gst;$('stakeAll').disabled=gst||bank<1;
+  var vs=(gst?'Guest':OPP[opt.opp].name)+(opt.mode==='ct'?' & '+OPP[CT_MATE[opt.opp]].name:'');
   $('goBtn').textContent=(opt.mode==='9'?'9-Ball':opt.mode==='ct'?'Cut-throat':'8-Ball')+' vs '+vs+(opt.stake?' \u00b7 '+money(opt.stake):'');
-  if(G.phase==='setup'){var want=opt.mode==='ct'?3:2;if(G.players.length!==want){var o1=OPP[opt.opp];G.players=[G.players[0],{name:o1.name,kind:'bot',col:o1.col,skill:opt.opp,key:o1.key}];
+  if(G.phase==='setup'){var want=opt.mode==='ct'?3:2;if(G.players.length!==want){var o1=OPP[opt.opp]||OPP.normal;G.players=[G.players[0],gst?{name:'Guest',kind:'me',guest:true,col:'#f472b6'}:{name:o1.name,kind:'bot',col:o1.col,skill:opt.opp,key:o1.key}];
     if(want===3){var m2=OPP[CT_MATE[opt.opp]];G.players.push({name:m2.name,kind:'bot',col:m2.col,skill:CT_MATE[opt.opp],key:m2.key});}G.mode=opt.mode;G.groups=want===3?[0,1,2]:[null,null];hud();}}
   $('goBtn').disabled=opt.stake>bank;
   $('refill').classList.toggle('hide',bank>=10);
-  var callTxt=opt.mode==='8'?(opt.opp==='easy'?'Call the 8: <b>off</b> vs Hank (any pocket wins). ':'Call the 8: <b>on</b>. Name the pocket before you shoot the 8. '):'';
-  if(opt.mode==='ct')callTxt='Three players: you, '+vs+'. Last one with balls on the table wins. ';
-  $('setNote').innerHTML=callTxt+(opt.stake?'Your stake '+money(opt.stake)+' comes out of your bankroll. Win and the pot pays <b>'+money(opt.stake*(opt.mode==='ct'?3:2))+'</b>.':'Playing for fun. Pick a stake to put money on it.');
+  var callTxt=gst?'<b>Pass and play:</b> two people on this device, taking turns. Guest games are for fun. ':'';callTxt+=opt.mode==='8'?(opt.opp==='easy'?'Call the 8: <b>off</b> vs Hank (any pocket wins). ':'Call the 8: <b>on</b>. Name the pocket before you shoot the 8. '):'';
+  if(opt.mode==='ct')callTxt=(gst?'<b>Pass and play</b> with a guest. ':'')+'Three players: you, '+vs+'. Last one with balls on the table wins. ';
+  $('setNote').innerHTML=callTxt+(gst?'':opt.stake?'Your stake '+money(opt.stake)+' comes out of your bankroll. Win and the pot pays <b>'+money(opt.stake*(opt.mode==='ct'?3:2))+'</b>.':'Playing for fun. Pick a stake to put money on it.');
   renderBank();
 }
 function segSet(id,v){[].forEach.call($(id).querySelectorAll('button'),function(b){b.classList.toggle('on',b.dataset.v===v);});}
 function bindSeg(id,fn){$(id).addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.disabled)return;segSet(id,b.dataset.v);fn(b.dataset.v);});}
 bindSeg('optMode',function(v){opt.mode=v;switchRoom(v==='ct'?'poolct':'pool');renderSetup();});
-bindSeg('optOpp',function(v){opt.opp=v;var o=OPP[v];if(G.phase==='setup'){G.players[1]={name:o.name,kind:'bot',col:o.col,skill:v,key:o.key};if(G.players[2]){var m2=OPP[CT_MATE[v]];G.players[2]={name:m2.name,kind:'bot',col:m2.col,skill:CT_MATE[v],key:m2.key};}hud();}renderSetup();});
+bindSeg('optOpp',function(v){opt.opp=v;var o=OPP[v]||OPP.normal;if(v==='guest'){opt.stake=0;segSet('optStake','0');$('stakeIn').value='';}if(G.phase==='setup'){G.players[1]=v==='guest'?{name:'Guest',kind:'me',guest:true,col:'#f472b6'}:{name:o.name,kind:'bot',col:o.col,skill:v,key:o.key};if(G.players[2]){var m2=OPP[CT_MATE[v]];G.players[2]={name:m2.name,kind:'bot',col:m2.col,skill:CT_MATE[v],key:m2.key};}hud();}renderSetup();});
 bindSeg('optStake',function(v){opt.stake=+v;$('stakeIn').value='';renderSetup();});
 function parseAmt(t){t=String(t||'').trim().toLowerCase().replace(/[$,\s]/g,'');var m=/^(\d*\.?\d+)([kmbtq]?)$/.exec(t);if(!m)return NaN;var v=parseFloat(m[1])*({k:1e3,m:1e6,b:1e9,t:1e12,q:1e15}[m[2]]||1);return Math.floor(v);}
 function setCustom(v){if(!(v>0)){toast('Type an amount, like 2500');return;}if(v>bank){toast('You have '+money(bank)+'. Bet set to all in.');v=Math.floor(bank);}

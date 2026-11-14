@@ -420,7 +420,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
           <h2>Chess</h2>
           <p>White moves first. Online, whoever sends the invite plays white.</p>
           <div class="lab">Opponent</div>
-          <div class="seg c2" id="optOpp"><button type="button" data-v="cpu" class="on">Computer<small>Hank</small></button><button type="button" data-v="online" id="oppOnline">Online<small id="onlineSub">nobody here yet</small></button></div>
+          <div class="seg c3" id="optOpp"><button type="button" data-v="cpu" class="on">Computer<small>Hank</small></button><button type="button" data-v="guest">Guest<small>Same device</small></button><button type="button" data-v="online" id="oppOnline">Online<small id="onlineSub">nobody here yet</small></button></div>
           <div id="cpuOpts"><div class="lab">Computer skill</div>
           <div class="seg c3" id="optLvl"><button type="button" data-v="1">Easy<small>learning</small></button><button type="button" data-v="2" class="on">Fair<small>steady</small></button><button type="button" data-v="3">Hard<small>sharp</small></button></div></div>
           <div class="online"><span class="ldot" id="ldot"></span><span id="ltxt">Connecting to the parlor&#x2026;</span></div>
@@ -975,7 +975,7 @@ function saveRec(){try{localStorage.setItem('su_chess_rec',JSON.stringify(rec));
 var setup={opp:'cpu',lvl:2};
 function startGame(o){G={S:initPos(),mode:o.mode,me:o.me||'w',lvl:o.lvl||2,names:o.names,gid:o.gid,n:0,hist:[],last:null,over:false,caps:{w:[],b:[]},seen:{}};sel=null;busy=false;
   $('sheet').classList.add('hide');q('open');render();say();if(G.mode==='cpu'&&G.S.turn!==G.me)setTimeout(cpuTurn,500);}
-function flip(){return G&&G.me==='b';}
+function flip(){return G&&G.mode!=='guest'&&G.me==='b';}
 function pieceHTML(p,small){var w=white(p),t=p.toUpperCase();return '<span class="pc cp '+(w?'cw':'cb')+(small?' sm':'')+'"><img alt="" src="'+CSU[(w?'w':'b')+t]+'" onload="this.parentNode.classList.add(\'art\')" onerror="this.remove()"><i>'+GLYPH[t]+'</i></span>';}
 function render(){var el=$('board');if(!G){el.innerHTML='';return;}var S=G.S,mine=!G.over&&!busy&&S.turn===G.me&&(G.mode!=='online'||true),ms=mine?legal(S):[],from={},tg={};
   ms.forEach(function(m){from[m.f]=1;if(sel===m.f)tg[m.t]=m.x||m.epc?2:1;});
@@ -985,13 +985,14 @@ function render(){var el=$('board');if(!G){el.innerHTML='';return;}var S=G.S,min
     if((v&7)===0)h+='<b class="rk">'+(8-r)+'</b>';if(v>=56)h+='<b class="fl">'+'abcdefgh'[c]+'</b>';
     if(p)h+=pieceHTML(p);h+='</div>';}
   el.innerHTML=h;[].forEach.call(el.children,function(sq){sq.onclick=function(){tap(+sq.getAttribute('data-i'));};});
-  var me=G.me,op=me==='w'?'b':'w';$('nMe').textContent=G.names[me==='w'?0:1];$('nOpp').textContent=G.names[me==='w'?1:0];
+  var me=G.mode==='guest'?'w':G.me,op=me==='w'?'b':'w';$('nMe').textContent=G.names[me==='w'?0:1];$('nOpp').textContent=G.names[me==='w'?1:0];
   $('pcMe').innerHTML=pieceHTML(me==='w'?'K':'k',1);$('pcOpp').innerHTML=pieceHTML(op==='w'?'K':'k',1);
   $('cMe').innerHTML=G.caps[me].map(function(p){return pieceHTML(p,1);}).join('');$('cOpp').innerHTML=G.caps[op].map(function(p){return pieceHTML(p,1);}).join('');
   $('pMe').classList.toggle('turn',!G.over&&S.turn===me);$('pOpp').classList.toggle('turn',!G.over&&S.turn!==me);
-  $('bUndo').disabled=G.mode!=='cpu'||!G.hist.length||busy||G.over;$('bUndo').classList.toggle('hide',G.mode!=='cpu');
+  $('bUndo').disabled=(G.mode!=='cpu'&&G.mode!=='guest')||!G.hist.length||busy||G.over;$('bUndo').classList.toggle('hide',G.mode!=='cpu'&&G.mode!=='guest');
   $('rec').innerHTML='Record: <b>'+rec.w+'</b> W \u00b7 <b>'+rec.l+'</b> L \u00b7 <b>'+rec.d+'</b> D';}
 function say(t){if(t){$('msg').innerHTML=t;return;}if(!G||G.over)return;var S=G.S,ck=inCheck(S,S.turn);
+  if(G.mode==='guest'){$('msg').innerHTML=(ck?'<b>Check!</b> ':'')+'<b>'+esc(G.names[S.turn==='w'?0:1])+'</b> to move ('+(S.turn==='w'?'White':'Black')+'). Tap a piece, then a square.';return;}
   if(S.turn===G.me)$('msg').innerHTML=(ck?'<b>Check!</b> ':'')+'Your move. Tap a piece, then a square.';
   else $('msg').innerHTML=(ck?'<b>Check!</b> ':'')+esc(G.names[G.me==='w'?1:0])+(G.mode==='cpu'?' is thinking\u2026':'\u2019s move\u2026');}
 function tap(i){if(!G||G.over||busy||G.S.turn!==G.me)return;ac();var S=G.S,ms=legal(S);
@@ -1002,7 +1003,7 @@ function promoAsk(c){pend=c;var col=G.me;$('promo').innerHTML='<div class="pbox"
   $('promo').classList.remove('hide');[].forEach.call($('promo').querySelectorAll('button'),function(b){b.onclick=function(){var p=b.getAttribute('data-p'),m=pend.filter(function(x){return x.promo===p;})[0];$('promo').classList.add('hide');pend=null;sel=null;if(m)play(m,true);};});}
 function key(S){return S.b.join(',')+S.turn+JSON.stringify(S.castle)+S.ep;}
 function play(m,mine){busy=true;if(G.mode==='online'&&mine)D.send('move',{n:G.n+1,f:m.f,t:m.t,promo:m.promo||''});
-  if(G.mode==='cpu'&&mine)G.hist.push({S:G.S,last:G.last,caps:{w:G.caps.w.slice(),b:G.caps.b.slice()},seen:JSON.parse(JSON.stringify(G.seen))});
+  if((G.mode==='cpu'||G.mode==='guest')&&mine)G.hist.push({S:G.S,last:G.last,caps:{w:G.caps.w.slice(),b:G.caps.b.slice()},seen:JSON.parse(JSON.stringify(G.seen))});
   var cap=m.x||(m.epc?(m.p==='P'?'p':'P'):'');if(cap)G.caps[colorOf(m.p)].push(cap);
   G.S=make(G.S,m);G.n++;G.last=m;sel=null;var k=key(G.S);G.seen[k]=(G.seen[k]||0)+1;
   if(cap)sCap();else sMove();busy=false;render();
@@ -1011,10 +1012,14 @@ function play(m,mine){busy=true;if(G.mode==='online'&&mine)D.send('move',{n:G.n+
   if(S.half>=100){endGame('draw','50 moves with no capture or pawn move.');return;}
   if(G.seen[k]>=3){endGame('draw','The same position came up three times.');return;}
   if(insufficient(S.b)){endGame('draw','Not enough pieces left to checkmate.');return;}
+  if(G.mode==='guest'){G.me=S.turn;render();}
   if(ck)sCheck();say();if(G.mode==='cpu'&&S.turn!==G.me)setTimeout(cpuTurn,250);}
 function cpuTurn(){if(!G||G.over||G.mode!=='cpu'||G.S.turn===G.me)return;busy=true;render();say();
   setTimeout(function(){var t0=Date.now(),m=cpuMove(G.S,G.lvl);setTimeout(function(){busy=false;if(G&&!G.over&&m)play(m,false);},Math.max(0,450-(Date.now()-t0)));},30);}
-function endGame(r,note){if(!G||G.over)return;G.over=true;if(G.mode==='online')D.done();else D.solo(false);
+function endGame(r,note){if(!G||G.over)return;
+  if(G.mode==='guest'){G.over=true;D.solo(false);var ws=r==='draw'?null:(r==='win'?G.me:(G.me==='w'?'b':'w')),wn=ws?G.names[ws==='w'?0:1]:'';q('over');if(ws)[523,659,784,1047].forEach(function(f,i){tone(f,.25,i*.12,.07);});
+    $('ovTitle').textContent=ws?(note==='Checkmate.'?'Checkmate! ':'')+(wn==='You'?'You win':wn+' wins'):'Draw';$('ovSub').textContent=note||'';render();say(ws?'<b>'+(wn==='You'?'You win':esc(wn)+' wins')+'!</b>':'Draw.');setTimeout(function(){showSheet('over');},1100);return;}
+ G.over=true;if(G.mode==='online')D.done();else D.solo(false);
   if(r==='win'){rec.w++;q('over');q('win');[523,659,784,1047].forEach(function(f,i){tone(f,.25,i*.12,.07);});}else if(r==='lose'){rec.l++;q('over');tone(330,.3);tone(262,.4,.15);}else{rec.d++;q('over');}saveRec();
   $('ovTitle').textContent=r==='win'?'Checkmate! You win':r==='lose'?(G.mode==='cpu'?G.names[1]+' wins':'You lose'):'Draw';$('ovSub').textContent=note||'';
   render();say(r==='win'?'<b>You win!</b>':r==='lose'?'Better luck next game.':'Draw.');setTimeout(function(){showSheet('over');},1100);}
@@ -1028,10 +1033,10 @@ function setupUI(){var o=D.other();$('oppOnline').disabled=!o||!o.free;$('online
 [].forEach.call($('optOpp').children,function(b){b.onclick=function(){if(b.disabled)return;setup.opp=b.getAttribute('data-v');setupUI();};});
 [].forEach.call($('optLvl').children,function(b){b.onclick=function(){setup.lvl=+b.getAttribute('data-v');setupUI();};});
 var LN=['','Easy Ellie','Hank','Sharp Sadie'];
-$('bStart').onclick=function(){ac();if(setup.opp==='online'){D.invite({});return;}D.solo(true);startGame({mode:'cpu',me:'w',lvl:setup.lvl,names:['You',LN[setup.lvl]]});};
+$('bStart').onclick=function(){ac();if(setup.opp==='online'){D.invite({});return;}D.solo(true);if(setup.opp==='guest'){startGame({mode:'guest',me:'w',names:['You','Guest']});return;}startGame({mode:'cpu',me:'w',lvl:setup.lvl,names:['You',LN[setup.lvl]]});};
 $('againBtn').onclick=function(){showSheet('setup');};
 $('bNew').onclick=function(){if(G&&!G.over&&G.mode==='online')D.quit();G=null;render();showSheet('setup');};
-$('bUndo').onclick=function(){if(!G||G.mode!=='cpu'||busy||!G.hist.length)return;var h=G.hist.pop();G.S=h.S;G.last=h.last;G.caps=h.caps;G.seen=h.seen;sel=null;render();say('Move taken back.');};
+$('bUndo').onclick=function(){if(!G||(G.mode!=='cpu'&&G.mode!=='guest')||busy||!G.hist.length)return;var h=G.hist.pop();G.S=h.S;G.last=h.last;G.caps=h.caps;G.seen=h.seen;if(G.mode==='guest')G.me=G.S.turn;sel=null;render();say('Move taken back.');};
 /* ---------- online: whoever invites plays white ---------- */
 var D=Duel.create({game:'chess',chatEl:$('felt'),busy:function(){return G&&!G.over;},
   onRefresh:function(){if(!$('sheet').classList.contains('hide')&&!$('setup').classList.contains('hide'))setupUI();},
