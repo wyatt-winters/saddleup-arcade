@@ -1025,7 +1025,7 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
    Progress is written by the arcade shell (it hears every game), payouts are trading cards (cards_collect.js). */
 var SUQ=(function(){
   var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','plinko'];
-  var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','chess','checkers','pdice','liars','trail','wrangler','ironclads','sudoku','drop4'];
+  var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','chess','checkers','pdice','trail','wrangler','ironclads','sudoku','drop4'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
   /* quests added later join the rotation from NEWDAY, so a day's picks never change mid-day */
@@ -1090,12 +1090,10 @@ var SUQ=(function(){
     ['kn2','m','Play 5 draws of Keno Blast','keno','play',5,0,0,NEWDAY],
     ['vp2','m','Collect 5 payouts at Video Poker','vpoker','pay',5,0,0,NEWDAY],
     ['pd2','m','Finish a game of Prospector\u2019s Dice','pdice','over',1,0,0,NEWDAY],
-    ['ld2','m','Finish a game of Liar\u2019s Dice','liars','over',1,0,0,NEWDAY],
     ['ww2','m','Finish a round of Word Wrangler','wrangler','over',1,0,0,NEWDAY],
     ['tw2','m','Solve a Trail Word','trail','win',1,0,0,NEWDAY],
     ['ck3','h','Win a game of Checkers','checkers','win',1,0,0,NEWDAY],
     ['pd3','h','Win a game of Prospector\u2019s Dice','pdice','win',1,0,0,NEWDAY],
-    ['ld3','h','Win a game of Liar\u2019s Dice','liars','win',1,0,0,NEWDAY],
     ['pk3','h','Collect $5,000 at Gold Strike Plinko','plinko','pay',5000,1,0,NEWDAY],
     ['cs1','e','Sit down for a game of Chess','chess','open',1,0,0,NEWDAY2],
     ['cs2','m','Finish a game of Chess','chess','over',1,0,0,NEWDAY2],
