@@ -128,7 +128,7 @@ button:disabled{cursor:default;opacity:.45}
 h1{margin:12px 0 4px;font-weight:900;font-size:clamp(30px,5.4vw,46px);line-height:1.02;letter-spacing:-.035em}
 h1 span{display:block;color:var(--green)}
 .sub{margin:8px 0 16px;color:var(--muted);font-size:15px;line-height:1.6;max-width:760px}.sub b{color:var(--text)}
-.cab{position:relative;border-radius:26px;padding:14px;background:radial-gradient(120% 80% at 50% 0%,#4a2a12,#2a160a 55%,#120904);border:3px solid #c6a75e;box-shadow:0 20px 60px rgba(0,0,0,.6),inset 0 0 0 3px #3b2410,inset 0 0 40px rgba(0,0,0,.5);container-type:inline-size}
+.cab{position:relative;border-radius:26px;padding:14px;background:linear-gradient(180deg,rgba(26,14,6,.55),rgba(12,6,2,.78)),url(https://saddleup-arcade.vercel.app/art/coach/sc_cab.webp) center/cover,radial-gradient(120% 80% at 50% 0%,#4a2a12,#2a160a 55%,#120904);border:3px solid #c6a75e;box-shadow:0 20px 60px rgba(0,0,0,.6),inset 0 0 0 3px #3b2410,inset 0 0 40px rgba(0,0,0,.5);container-type:inline-size}
 .marq{text-align:center;padding:4px 8px 8px}
 .marq b{display:block;font:400 clamp(24px,5.8cqw,44px) Rye,Georgia,serif;color:#fde68a;text-shadow:0 0 12px rgba(253,230,138,.7),0 3px 0 #7c2d12;letter-spacing:.02em;line-height:1.05}
 .marq small{display:block;font:800 11px Inter,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#f5d58a;opacity:.8;margin-top:4px}
@@ -138,7 +138,7 @@ h1 span{display:block;color:var(--green)}
 .jp b{display:block;font:900 clamp(11px,2.6cqw,17px) Inter,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .jp.j0{background:linear-gradient(180deg,#16a34a,#14532d)}.jp.j1{background:linear-gradient(180deg,#2563eb,#1e3a8a)}.jp.j2{background:linear-gradient(180deg,#c026d3,#701a75)}.jp.j3{background:linear-gradient(180deg,#f59e0b,#92400e)}.jp.j4{background:linear-gradient(180deg,#ef4444,#7f1d1d)}
 .jp.hit{animation:jpHit 1.2s ease-in-out 3}@keyframes jpHit{50%{transform:scale(1.08);box-shadow:0 0 24px #fde68a}}
-.stage{position:relative;border-radius:16px;padding:8px;background:linear-gradient(180deg,#1b0f07,#0d0703);box-shadow:inset 0 0 0 3px #0a0503,inset 0 0 30px rgba(0,0,0,.8)}
+.stage{position:relative;border-radius:16px;padding:8px;background:linear-gradient(180deg,rgba(27,15,7,.88),rgba(13,7,3,.92));box-shadow:inset 0 0 0 3px #0a0503,inset 0 0 30px rgba(0,0,0,.8)}
 .bhead{display:none;align-items:center;justify-content:space-between;gap:8px;padding:2px 4px 8px}
 .stage.bonus .bhead{display:flex}
 .bhead .bt{font:400 clamp(16px,3.6cqw,24px) Rye,Georgia,serif;color:#7dd3fc;text-shadow:0 0 10px rgba(56,189,248,.8)}
@@ -164,7 +164,7 @@ h1 span{display:block;color:var(--green)}
 .sy.reg .nm{position:absolute;left:0;right:0;top:3%;text-align:center;font:900 clamp(7px,1.5cqw,10px) Inter,sans-serif;color:#fff;text-shadow:0 1px 2px #000;letter-spacing:.06em;text-transform:uppercase}
 .sy.gift{inset:3px}
 .sy.gift img{filter:drop-shadow(0 4px 6px rgba(0,0,0,.6))}
-.sy.gift.green img{filter:hue-rotate(95deg) saturate(1.4) drop-shadow(0 4px 6px rgba(0,0,0,.6))}
+
 .sy.gift .val{position:absolute;left:3%;right:3%;bottom:4%;text-align:center;font:900 clamp(9px,2.3cqw,16px) Inter,sans-serif;color:#fff;background:rgba(0,0,0,.72);border:1px solid #fde68a;border-radius:7px;padding:1px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sy.gift.green .val{border-color:#4ade80;color:#bbf7d0}
 .sy.big .tot{position:absolute;left:3%;right:3%;top:3%;text-align:center;font:900 clamp(9px,2.2cqw,15px) Inter,sans-serif;color:#fde68a;background:rgba(0,0,0,.75);border:1px solid #fde68a;border-radius:7px;padding:1px 2px}
@@ -1196,9 +1196,9 @@ var SFX={stop:function(c){tone(220+c*40,.08,0,.04,'square');},win:function(){[52
   land:function(){tone(880,.15,0,.06);tone(1320,.15,.06,.04);},act:function(){tone(660,.12,0,.05,'square');tone(990,.18,.08,.05);},coin:function(){tone(1200,.08,0,.04);tone(1600,.1,.05,.03);},
   bell:function(){[1047,1319,1568,2093].forEach(function(f,i){tone(f,.4,i*.12,.06);});},tick:function(){tone(1400,.03,0,.02,'square');}};
 /* ---------- art (Classic picture URLs: the theme swaps them for its own) ---------- */
-var A={wild:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad949dc70f82b6224954.webp',jack:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada009f888e023f07a00.webp',
-  gold:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8d736386d0dc764ace.webp',green:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9d64f4028be3c2c3a4.webp',
-  0:'https://saddleup-arcade.vercel.app/art/sym_horse.webp',1:'https://saddleup-arcade.vercel.app/art/sym_revolver.webp',2:'https://saddleup-arcade.vercel.app/art/sym_whiskey.webp',3:'https://saddleup-arcade.vercel.app/art/sym_boot.webp',
+var A={wild:'https://saddleup-arcade.vercel.app/art/coach/sc_wild.webp',jack:'https://saddleup-arcade.vercel.app/art/coach/sc_jackpot.webp',
+  gold:'https://saddleup-arcade.vercel.app/art/coach/sc_box_gold.webp',green:'https://saddleup-arcade.vercel.app/art/coach/sc_box_green.webp',
+  0:'https://saddleup-arcade.vercel.app/art/coach/sc_coach.webp',1:'https://saddleup-arcade.vercel.app/art/coach/sc_gun.webp',2:'https://saddleup-arcade.vercel.app/art/coach/sc_whiskey.webp',3:'https://saddleup-arcade.vercel.app/art/coach/sc_boot.webp',
   4:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9f736386d0dc764eda.webp',5:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8cd542268bb4d413c0.webp',6:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8ec9d5b7168d29f7bd.webp',7:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9109f888e023f07658.webp',   /* the suits: the same suit art every card game uses, so each theme swaps them */
   10:'https://saddleup-arcade.vercel.app/art/classic/tex_face.webp',11:'https://saddleup-arcade.vercel.app/art/classic/marisol_face.webp',12:'https://saddleup-arcade.vercel.app/art/classic/lou_face.webp',13:'https://saddleup-arcade.vercel.app/art/classic/rosa_face.webp',
   14:'https://saddleup-arcade.vercel.app/art/cast/kael_face.webp',15:'https://saddleup-arcade.vercel.app/art/cast/brakk_face.webp',16:'https://saddleup-arcade.vercel.app/art/classic/pete_face.webp'};
