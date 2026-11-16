@@ -532,6 +532,7 @@ html.fs .wrap{max-width:none!important;padding:8px 12px 8px!important}
 html.fs h1,html.fs .sub,html.fs .wrap>.pill,html.fs [data-fs-hide],html.fsshort [data-short-hide]{display:none!important}
 .su-skin{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:10px 0;padding:10px 12px;border-radius:12px;background:rgba(15,23,42,.6);border:1px solid rgba(148,163,184,.18);font:700 11px Inter,system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;box-sizing:border-box}
 .su-skin .su-skinseg{display:inline-flex;gap:3px;padding:3px;border-radius:10px;background:rgba(0,0,0,.25);border:1px solid rgba(148,163,184,.2)}
+.su-skin{min-width:0;max-width:100%}.su-skinseg{display:flex!important;flex-wrap:nowrap!important;grid-template-columns:none!important;max-width:100%;min-width:0;overflow-x:auto!important;overflow-y:hidden;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x proximity}.su-skinseg::-webkit-scrollbar{display:none}.su-skinseg button{flex:0 0 auto!important;width:auto!important;white-space:nowrap;scroll-snap-align:start}.row:has(>.su-skinseg){min-width:0;max-width:100%}.row>.su-skinseg{flex:1 1 auto}
 .su-skin .su-skinseg button{font:700 13px Inter,system-ui,sans-serif;letter-spacing:0;text-transform:none;color:#cbd5e1;background:transparent;border:1px solid transparent;border-radius:8px;padding:8px 14px;min-height:40px;cursor:pointer;-webkit-appearance:none;appearance:none;margin:0}
 .su-skin .su-skinseg button.on{color:#f2d27e;background:rgba(242,210,126,.12);border-color:rgba(242,210,126,.45)}
 html[data-skin="neon"] .su-skinseg button.on{color:#5ef2ff;background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.5)}
@@ -795,6 +796,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     var all=[].filter.call(document.querySelectorAll('[data-opt]'),function(x){return !(x.parentNode&&x.parentNode.closest&&x.parentNode.closest('[data-opt]'));}),last=all[all.length-1];
     if(last&&last.parentNode)last.parentNode.insertBefore(el,last.nextSibling);else (document.querySelector('.wrap')||document.body).appendChild(el);
     wire(el);
+    setTimeout(function(){[].forEach.call(document.querySelectorAll('.su-skinseg'),function(g){var o=g.querySelector('.on');if(o)g.scrollLeft=Math.max(0,o.offsetLeft-g.offsetLeft-24);});},300);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
   /* full screen moves the options into the drawer: keep the art switch at the top of it */

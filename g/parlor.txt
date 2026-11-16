@@ -274,6 +274,7 @@ html.fs .wrap{max-width:none!important;padding:8px 12px 8px!important}
 html.fs h1,html.fs .sub,html.fs .wrap>.pill,html.fs [data-fs-hide],html.fsshort [data-short-hide]{display:none!important}
 .su-skin{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:10px 0;padding:10px 12px;border-radius:12px;background:rgba(15,23,42,.6);border:1px solid rgba(148,163,184,.18);font:700 11px Inter,system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;box-sizing:border-box}
 .su-skin .su-skinseg{display:inline-flex;gap:3px;padding:3px;border-radius:10px;background:rgba(0,0,0,.25);border:1px solid rgba(148,163,184,.2)}
+.su-skin{min-width:0;max-width:100%}.su-skinseg{display:flex!important;flex-wrap:nowrap!important;grid-template-columns:none!important;max-width:100%;min-width:0;overflow-x:auto!important;overflow-y:hidden;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x proximity}.su-skinseg::-webkit-scrollbar{display:none}.su-skinseg button{flex:0 0 auto!important;width:auto!important;white-space:nowrap;scroll-snap-align:start}.row:has(>.su-skinseg){min-width:0;max-width:100%}.row>.su-skinseg{flex:1 1 auto}
 .su-skin .su-skinseg button{font:700 13px Inter,system-ui,sans-serif;letter-spacing:0;text-transform:none;color:#cbd5e1;background:transparent;border:1px solid transparent;border-radius:8px;padding:8px 14px;min-height:40px;cursor:pointer;-webkit-appearance:none;appearance:none;margin:0}
 .su-skin .su-skinseg button.on{color:#f2d27e;background:rgba(242,210,126,.12);border-color:rgba(242,210,126,.45)}
 html[data-skin="neon"] .su-skinseg button.on{color:#5ef2ff;background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.5)}
@@ -537,6 +538,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     var all=[].filter.call(document.querySelectorAll('[data-opt]'),function(x){return !(x.parentNode&&x.parentNode.closest&&x.parentNode.closest('[data-opt]'));}),last=all[all.length-1];
     if(last&&last.parentNode)last.parentNode.insertBefore(el,last.nextSibling);else (document.querySelector('.wrap')||document.body).appendChild(el);
     wire(el);
+    setTimeout(function(){[].forEach.call(document.querySelectorAll('.su-skinseg'),function(g){var o=g.querySelector('.on');if(o)g.scrollLeft=Math.max(0,o.offsetLeft-g.offsetLeft-24);});},300);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
   /* full screen moves the options into the drawer: keep the art switch at the top of it */
@@ -582,7 +584,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 <div class="wrap">
   <div class="pill"><i></i>Arcade &middot; Game Parlor</div>
   <h1>The Game Parlor.<span>Pull up a chair.</span></h1>
-  <p class="sub">The quiet room off the casino floor. <b>Card tables, cabinets and workbenches</b> by the fire, where the regulars play Mahjong, Dominoes, Boomtown Tycoon, Solitaire, Spider, Minesweeper and Gold Rush. Click any station to walk over and play.</p>
+  <p class="sub">The quiet room off the casino floor. <b>Card tables, cabinets and workbenches</b> by the fire, where the regulars play Mahjong, Dominoes, Solitaire, Spider, Minesweeper and Gold Rush. Click any station to walk over and play.</p>
 
   <div class="felt" id="felt">
     <svg id="world" xmlns="http://www.w3.org/2000/svg" role="application" aria-label="Game parlor map. Use Tab to pick a game and Enter to play."></svg>
@@ -1112,7 +1114,6 @@ var KIND={
   mines:{g:'mines',name:'Minesweeper',k:"Stake the claim, flag every rattler",type:'mines',unit:'chairs'},
   gold:{g:'gold',name:'Gold Rush',k:'Match the nuggets at the sluice',type:'gold',unit:'spots'},
   dominoes:{g:'dominoes',name:'Dominoes',k:'Classic & Mexican Train \u00b7 play online',type:'dominoes',unit:'chairs'},
-  boomtown:{g:'boomtown',name:'Boomtown Tycoon',k:'Buy up the boomtown \u00b7 play online',type:'boomtown',unit:'chairs'},
   mjsol:{g:'mjsol',name:'Mahjong Solitaire',k:'Match free tiles, clear the corral',type:'mjsol',unit:'chairs'},
   mahjong:{g:'mahjong',name:'Mahjong',k:'American-style \u00b7 4 players \u00b7 play online',type:'mahjong',unit:'chairs'},
   cwar:{g:'cwar',name:'Classic War',k:'Flip, fight, take the deck \u00b7 play online',type:'cwar',unit:'chairs'}
@@ -1639,7 +1640,7 @@ document.getElementById('pX').addEventListener('click',hidePatron);
 /* ---------- games lobby ---------- */
 var lobbyEl=document.getElementById('lobby'),tlistEl=document.getElementById('tlist');
 var PIN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg>';
-var ORDER=['mahjong','mjsol','boomtown','dominoes','cwar','sol','spider','mines','gold'];
+var ORDER=['mahjong','mjsol','dominoes','cwar','sol','spider','mines','gold'];
 var NEWG=[["ironclads", "Ironclads", "Hide your fleet, sink theirs \u00b7 play online", "#0e4a63", "\u{1f6a2}"], ["drop4", "Drop Four", "Four in a row \u00b7 play online", "#1d4ed8", "\u{1f534}"], ["sudoku", "Sudoku", "Daily puzzle + practice", "#6b4a2a", "\u{1f522}"], ["chess", "Chess", "vs the computer \u00b7 play online", "#3b2414", "\u265e"], ["checkers", "Checkers", "vs the computer \u00b7 play online", "#7f1d1d", "\u26c0"], ["pdice", "Prospector\u2019s Dice", "Five dice, 13 boxes \u00b7 up to 4 online", "#14532d", "\u{1f3b2}"], ["liars", "Liar\u2019s Dice", "Bluff or call it \u00b7 up to 4 online", "#5a1d14", "\u{1f964}"], ["trail", "Trail Word", "Daily five-letter puzzle", "#6b4a2a", "\u{1f7e9}"], ["wrangler", "Word Wrangler", "2-minute word grid \u00b7 play online", "#1e3a5f", "\u{1f524}"]];
 function newRows(){return NEWG.map(function(x){return '<div class="tt"><button type="button" class="tgo" data-open="'+x[0]+'"><span class="ti" style="--c:'+x[3]+';display:inline-flex;align-items:center;justify-content:center;font-size:20px;border-radius:10px;background:'+x[3]+'" aria-hidden="true">'+x[4]+'</span><span class="tn"><b>'+x[1]+'</b><em class="fx">'+x[2]+'</em></span><span class="play">Play</span></button></div>';}).join('');}
 function buildList(){var h='';ORDER.forEach(function(k){var T=TB[k];if(!T)return;
@@ -1794,7 +1795,7 @@ window.__parlor_dbg={stations:function(){var o={};for(var k in TB){var T=TB[k];o
    Progress is written by the arcade shell (it hears every game), payouts are trading cards (cards_collect.js). */
 var SUQ=(function(){
   var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','plinko'];
-  var PARLOR=['sol','spider','mines','gold','dominoes','boomtown','mjsol','mahjong','cwar','chess','checkers','pdice','liars','trail','wrangler','ironclads','sudoku','drop4'];
+  var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','chess','checkers','pdice','liars','trail','wrangler','ironclads','sudoku','drop4'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
   /* quests added later join the rotation from NEWDAY, so a day's picks never change mid-day */
