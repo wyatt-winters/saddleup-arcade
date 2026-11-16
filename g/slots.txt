@@ -2094,7 +2094,7 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 var ENG=(function(){
   var SYMS=['W','S','A','K','Q','J','E','H','R','P','1','2','3','D','X','F','m','n','j','g','T','L'],W=0,S=1;
   var NR=5,NCELL=20; /* reels, and cells on the screen (5 x 4) */
-  /* nugget family: 1/2/3 = gold nuggets (count 1, 2, 3), D = dynamite (counts 1, blows open into a big cash nugget), X = strongbox (counts 1, holds cash, wakes bandits),
+  /* nugget family: 1/2/3 = gold nuggets (count 1, 2, 3), D = dynamite (counts 1, blows open into a big cash nugget), X = strongbox (counts 1, holds cash),
      F = gold pan (Gold Frenzy trigger), m/n/j/g = Mini/Minor/Major/Grand jackpot nuggets, T = bandit (bonus only), L = locomotive (Gold Frenzy only) */
   var N1=10,N2=11,N3=12,DY=13,BX=14,FP=15,JM=16,BD=20,LO=21;
   /* reel strips: each reel is a fixed strip; a spin shows 4 consecutive positions, cascades keep feeding from above */
@@ -2130,10 +2130,10 @@ var ENG=(function(){
     pot:[0,0,0,0,0,0,2,3,4,6,10,15],
     val:{10:[[0.38,30],[0.75,35],[1.5,20],[2.25,10],[3.75,5]],11:[[0.75,30],[1.5,35],[2.25,20],[3.75,10],[7.5,5]],12:[[1.5,30],[2.25,30],[3.75,25],[7.5,10],[15,5]],
       13:[[1.5,40],[2.25,30],[3.75,20],[7.5,10]],14:[[1.5,35],[2.25,30],[3.75,20],[7.5,10],[18.75,5]]},
-    rs:[[10,173],[11,86],[12,32],[16,14],[17,6],[18,2],[19,1],[14,22],[20,32]],
-    fz:[[10,136],[11,65],[12,24],[16,10],[17,4],[18,1],[19,1],[14,20],[20,29]],loco:[1450,600,280,150],
+    rs:[[10,173],[11,86],[12,32],[16,14],[17,6],[18,2],[19,1],[14,22],[20,12]],
+    fz:[[10,136],[11,65],[12,24],[16,10],[17,4],[18,1],[19,1],[14,20],[20,11]],loco:[1450,600,280,150],
     seedW:[[10,55],[11,30],[12,15]],
-    spins:3,lode:500,claimFull:100,seed:3,drop:3,multMax:3,cap:2500};
+    spins:3,lode:500,claimFull:100,seed:3,drop:3,multMax:3,cap:2500,bcx:1,vs:0.72};   /* bcx: share of the neighbours' cash a bandit collects after each spin */
   var rng=function(n){return Math.floor(Math.random()*n);};
   var REEL=[],BASE=[],FREE=[],POS=[0,0,0,0,0],FEEDQ=[[],[],[],[],[]];
   function load(st){STRIPS=st;var a=st.map(function(x){return x.split('').map(function(ch){return CODE.indexOf(ch);});});BASE=a.slice(0,NR);FREE=a.length>NR?a.slice(NR,2*NR):BASE;REEL=BASE;}
@@ -2191,7 +2191,7 @@ var ENG=(function(){
   /* ---------- nugget family ---------- */
   function wd(tab,tot){var t=0,i;for(i=0;i<tab.length;i++)t+=tab[i][1];var x=rng(tot||t);for(i=0;i<tab.length;i++){x-=tab[i][1];if(x<0)return tab[i][0];}return 0;}
   function isJL(k){return k>=JM&&k<JM+4;}
-  function cash(k){return {k:k,v:wd(NUG.val[k])};}
+  function cash(k){return {k:k,v:Math.round(wd(NUG.val[k])*(NUG.vs||1)*100)/100};}
   /* what the nuggets on a base-game screen do */
   function nugEval(g){
     var n=0,cells=[],keys=0,pans=[],lab=[0,0,0,0],sc=[];
@@ -2230,11 +2230,11 @@ var ENG=(function(){
           var at=x?[x.cl||0,x.c*4+x.r]:ok.length?ok[rng(ok.length)]:null;if(at)sp.locos.push({cl:at[0],idx:at[1]});});}}
       /* 1 land, 2 lock + meter */
       sp.lands.forEach(function(l){if(l.cell.v)meter+=l.cell.v;if(l.cell.t!==undefined&&label(l.cell.t))sp.jp.push(l.cell.t);});
-      /* 3 a strongbox turns every bandit in its claim active, 4 each bandit collects its orthogonal neighbours' cash */
-      for(i=0;i<NC;i++){var boxes=sp.lands.filter(function(l){return l.cl===i&&l.cell.k===BX;}).length;
-        for(var bx=0;bx<boxes;bx++)for(idx=0;idx<NCELL;idx++){var bd=cl[i][idx];if(!bd||bd.k!==BD)continue;bd.a=true;
+      /* 3 after every spin, each bandit on the board collects the cash of the nuggets right next to it (up, down, left, right) */
+      for(i=0;i<NC;i++){if(!act[i])continue;
+        for(idx=0;idx<NCELL;idx++){var bd=cl[i][idx];if(!bd||bd.k!==BD)continue;bd.a=true;
           var cc=idx>>2,rr=idx&3,sum=0,from=[];[[cc-1,rr],[cc+1,rr],[cc,rr-1],[cc,rr+1]].forEach(function(p){if(p[0]<0||p[0]>NR-1||p[1]<0||p[1]>3)return;var nb=cl[i][p[0]*4+p[1]];if(nb&&nb.v){sum+=nb.v;from.push(p[0]*4+p[1]);}});
-          sum=Math.round(sum*100)/100;bd.got=Math.round(((bd.got||0)+sum)*100)/100;meter+=sum;sp.collects.push({cl:i,idx:idx,amt:sum,from:from});}}
+          sum=Math.round(sum*NUG.bcx*100)/100;if(sum<=0)continue;bd.got=Math.round(((bd.got||0)+sum)*100)/100;meter+=sum;sp.collects.push({cl:i,idx:idx,amt:sum,from:from});}}
       /* locomotives open the next claim (it arrives with nuggets), or raise the meter multiplier once all four are open */
       sp.locos.forEach(function(){var nx=act.indexOf(false);
         if(nx>=0){act[nx]=true;var drops=[],e=empties(nx);for(var d=0;d<NUG.drop&&e.length;d++){var pp=e.splice(rng(e.length),1)[0],dc=cash(wd(NUG.seedW));cl[nx][pp]=dc;meter+=dc.v;drops.push({idx:pp,cell:dc});}sp.unlocks.push({cl:nx,drops:drops});}
@@ -3272,10 +3272,9 @@ async function playStep(sp){
   SFX.whirOff();SFX.anticOff();rolling.forEach(function(sl){sl.classList.remove('roll');});
   var zc2=$('zCnt');if(zc2)zc2.parentNode.classList.remove('last');
   await Promise.all(flies);if(sp.lands.length)await wait(D(750));
-  /* 3-4: a strongbox wakes every bandit in its claim, each bandit collects its neighbours' cash */
-  if(sp.collects.length){var boxes=sp.lands.filter(function(l){return l.cell.k===ENG.BX;});
-    boxes.forEach(function(l){var e=NB.claims[l.cl].cells[l.idx];if(e){e.classList.add('nhot');after(1400,function(){e.classList.remove('nhot');});}});
-    banner('BANDITS!','small nug',1200);SFX.gun();await wait(D(500));
+  /* 3: after every spin each bandit collects its neighbours' cash */
+  if(sp.collects.length){
+    banner('BANDITS COLLECT!','small nug',900);SFX.gun();await wait(D(350));
     for(var k=0;k<sp.collects.length;k++){var cc=sp.collects[k],ob=NB.claims[cc.cl],be=ob.cells[cc.idx];if(!be)continue;
       be.classList.add('act');SFX.gun();var bq=feltXY(be);spark(bq.x,bq.y,'#ef4444',14,1);
       await Promise.all(cc.from.map(function(x){return flyTo(ob.cells[x],be,'',null,420);}));
@@ -3433,13 +3432,13 @@ function nugCell(k,txt){return '<div class="pcell"><div class="sy s-'+k+'">'+sym
 function nugRules(b){var P=NG.pot;
   return '<h5>Gold nuggets</h5><div class="pgrid">'+
     nugCell('1','Counts as <b>1</b> nugget.')+nugCell('2','Counts as <b>2</b> nuggets.')+nugCell('3','Counts as <b>3</b> nuggets.')+
-    nugCell('D','Counts as 1 nugget and blows open into a <b>bigger cash nugget</b> (1.5&times; to 7.5&times;) when the respins start.')+nugCell('X','Counts as 1 nugget and holds cash (1.5&times; to 18.75&times;). In a bonus it wakes the bandits.')+
+    nugCell('D','Counts as 1 nugget and blows open into a <b>bigger cash nugget</b> (1.08&times; to 5.4&times;) when the respins start.')+nugCell('X','Counts as 1 nugget and holds cash (1.08&times; to 13.5&times;).')+
     nugCell('F','The <b>Frenzy Horseshoe</b> (amber, marked FRENZY). <b>3 or more anywhere</b> start the <b>Gold Frenzy</b>. ')+'</div>'+
     '<div class="pgrid" style="margin-top:8px">'+['m','n','j','g'].map(function(k,t){return nugCell(k,'Counts as 1 nugget. <b>3 on screen</b> win the '+JP.label[t]+' Jackpot.');}).join('')+'</div>'+
-    '<div class="pgrid" style="margin-top:8px">'+nugCell('T','Bonus only. Locks in place; when a <b>Strongbox</b> lands it collects the cash of the nuggets right next to it.')+nugCell('L','Gold Frenzy only. <b>Opens the next mine claim</b>, or once all 4 are open adds +1 to the meter multiplier (up to &times;'+NG.multMax+').')+'</div>'+
+    '<div class="pgrid" style="margin-top:8px">'+nugCell('T','Bonus only. Locks in place, and <b>after every spin</b> it collects the cash of the nuggets right next to it (up, down, left and right) into the prize meter.')+nugCell('L','Gold Frenzy only. <b>Opens the next mine claim</b>, or once all 4 are open adds +1 to the meter multiplier (up to &times;'+NG.multMax+').')+'</div>'+
     '<p style="margin-top:8px">Nuggets don&rsquo;t pay on the ways; they are counted on the screen <b>after the cascades finish</b>. Count every nugget symbol: a Double counts 2, a Triple counts 3, Dynamite, a Strongbox and a jackpot nugget count 1. With 4 or 5 the machine tells you how many more you need for the Respins.</p>'+
     '<h5>Nugget Respins</h5><p><b>6 or more nuggets anywhere</b> (Dynamite, Strongboxes and jackpot nuggets count too), or <b>3 or more Respin Charges</b>, start the Nugget Respins (about 1 in '+MATH.respin+' spins in all). Every nugget locks in place and shows its cash value (0.38&times; to 18.75&times; the bet); Dynamite and Respin Charges blow open into cash nuggets. The <b>prize meter</b> starts with their total.</p>'+
-    '<p>You get <b>3 respins</b>. Only the empty spaces spin. <b>Anything new that lands resets the count to 3</b>. New nuggets lock in and fly into the prize meter; jackpot nuggets fly into their jackpot&rsquo;s meter (the three lights on each coin). Each spin is settled in this order: land, lock, <b>Strongbox wakes every Bandit</b>, each Bandit collects the cash of the nuggets directly above, below, left and right of it, then the meters update and full jackpot meters are checked. <b>3 jackpot nuggets of one kind fill that meter</b> and win that jackpot. <b>Fill all 20 spaces</b> for the <b>Mother Lode: '+NG.lode+'&times; the bet</b>.</p>'+
+    '<p>You get <b>3 respins</b>. Only the empty spaces spin. <b>Anything new that lands resets the count to 3</b>. New nuggets lock in and fly into the prize meter; jackpot nuggets fly into their jackpot&rsquo;s meter (the three lights on each coin). Each spin is settled in this order: land, lock, then <b>every Bandit collects</b> the cash of the nuggets directly above, below, left and right of it, then the meters update and full jackpot meters are checked. <b>3 jackpot nuggets of one kind fill that meter</b> and win that jackpot. <b>Fill all 20 spaces</b> for the <b>Mother Lode: '+NG.lode+'&times; the bet</b>.</p>'+
     '<h5>Gold Frenzy</h5><p><b>3 or more Frenzy Horseshoes</b> start the Gold Frenzy (about 1 in '+MATH.frenzy+' spins): <b>four mine claims</b>, each its own 5&times;4 grid. Claim 1 opens with 3 nuggets; claims 2 to 4 start chained shut. All open claims share <b>one 3-spin counter</b>, reset by anything new landing on any claim. When a <b>steam locomotive</b> pulls in, the next claim opens and the train drops 3 nuggets on it. A locomotive after all four are open adds <b>+1 to the prize meter multiplier</b>. A completely filled claim pays <b>'+NG.claimFull+'&times; the bet</b>. Bandits, Strongboxes and jackpot meters work just like in the respins.</p>'+
     '<p><b>Which comes first:</b> if one spin starts both, the Gold Frenzy is played first and the Nugget Respins right after it. Neither bonus can start the other from inside. At the end the machine counts up the prize meter, then any jackpots, then the total. A nugget bonus pays at most <b>'+NG.cap.toLocaleString()+'&times; the bet</b>. The jackpots are the same progressive jackpots shown on the coins.</p>';}
 function renderPaytable(){
@@ -3677,6 +3676,10 @@ window.__slots_dbg={
     bots:bots.map(function(b){return {name:b.name,bank:b.bank,bet:b.bet,key:b.key,slot:b.slot};}),stats:JSON.parse(JSON.stringify(st.stats)),ladder:ladEls.findIndex(function(e){return e.classList.contains('on');}),
     win:$('winV').textContent,nb:st.nb?{kind:st.nb.kind,left:st.nb.left,meter:st.nb.meter,mult:st.nb.mult,jpm:st.nb.jpm.slice()}:null,feed:($('ftrack').textContent||''),bountyState:JSON.parse(JSON.stringify(btState())),meter:meterVal(),collector:PROG.c.map(function(c){return c.n;}),mg:!mgEl.classList.contains('hide')};},
   spin:function(){return spin();},
+  /* bonus value per base spin: runs base spins until n nugget bonuses, returns average cashX and spins per bonus (for tuning) */
+  tune:function(o){var N=ENG.NUG;for(var k in o){if(k==='bw'){N.rs.forEach(function(x){if(x[0]===20)x[1]=o.bw[0];});N.fz.forEach(function(x){if(x[0]===20)x[1]=o.bw[1];});}else N[k]=o[k];}return {bcx:N.bcx,rs:N.rs,fz:N.fz};},
+  nugEV:function(n){var sp=0,got={respin:[0,0,0],frenzy:[0,0,0]};while(got.respin[0]+got.frenzy[0]<n){sp++;var r=ENG.spin({});if(!r.nug)continue;['frenzy','respin'].forEach(function(kd){if(!r.nug[kd])return;var R=ENG.bonusRun(kd,r.final),cx=Math.min(R.cashX,ENG.NUG.cap);got[kd][0]++;got[kd][1]+=cx;got[kd][2]+=(R.steps||[]).reduce(function(a,s){return a+s.collects.reduce(function(b,c){return b+c.amt;},0);},0);});}
+    return {spins:sp,respin:{n:got.respin[0],avg:got.respin[0]?got.respin[1]/got.respin[0]:0,bandit:got.respin[0]?got.respin[2]/got.respin[0]:0},frenzy:{n:got.frenzy[0],avg:got.frenzy[0]?got.frenzy[1]/got.frenzy[0]:0,bandit:got.frenzy[0]?got.frenzy[2]/got.frenzy[0]:0},perSpin:(got.respin[1]+got.frenzy[1])/sp};},
   /* n instant spins through the real engine (no animation), bankroll applied */
   fast:function(n){var w=0,ret=0,hits=0,fsn=0;for(var i=0;i<n;i++){var b=bet();if(st.bank<b)break;st.bank=r2(st.bank-b);w+=b;st.spins++;for(var k=0;k<4;k++)pools[k]+=JP.inc[k];
       var r=ENG.spin({}),t=(r.lineWin+r.scatPay)*b;if(r.jp){t+=pools[r.jp.tier]*b;pools[r.jp.tier]=JP.seed[r.jp.tier];}
