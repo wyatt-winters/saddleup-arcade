@@ -156,7 +156,7 @@ h1 span{display:block;color:var(--green)}
 .sy .glyph{font:900 calc(var(--cell)*.55) Georgia,serif;line-height:1;filter:drop-shadow(0 3px 0 rgba(0,0,0,.45))}
 .sy.s4 .glyph{color:#ef4444}.sy.s5 .glyph{color:#a855f7}.sy.s6 .glyph{color:#22c55e}.sy.s7 .glyph{color:#3b82f6}
 .sy .lab{position:absolute;left:4%;right:4%;bottom:3%;text-align:center;font:900 clamp(7px,1.7cqw,12px) Inter,sans-serif;letter-spacing:.06em;border-radius:6px;padding:2px 2px;text-transform:uppercase;white-space:nowrap;overflow:hidden}
-.sy.wild .lab{background:linear-gradient(180deg,#22c55e,#14532d);color:#fef9c3;border:1px solid #fde68a}
+.sy.wild .lab{top:61%;bottom:auto;left:20%;right:20%;background:none;border:0;padding:0;font:400 clamp(9px,2.6cqw,20px)/1 Rye,Georgia,serif;letter-spacing:.06em;color:#4a1f06;text-shadow:0 1px 0 rgba(255,236,190,.6);overflow:visible}
 .sy.jack .lab{background:linear-gradient(180deg,#3b82f6,#1e3a8a);color:#fde68a;border:1px solid #fde68a}
 .sy.reg{inset:3px;border:3px solid var(--rc);background:#1e293b;box-shadow:0 0 0 1px rgba(0,0,0,.6)}
 .sy.reg img{object-fit:cover;object-position:50% 18%;filter:none}
