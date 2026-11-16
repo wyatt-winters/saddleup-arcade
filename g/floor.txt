@@ -2122,7 +2122,7 @@ window.__floor_dbg={tables:function(){var o={};for(var k in TB){var T=TB[k];o[k]
 <script>/* ===== Daily quests: one shared list, the same 7 picks for everyone each day =====
    Progress is written by the arcade shell (it hears every game), payouts are trading cards (cards_collect.js). */
 var SUQ=(function(){
-  var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','plinko'];
+  var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','coach','plinko'];
   var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','chess','checkers','pdice','trail','wrangler','ironclads','sudoku','drop4'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
@@ -2182,11 +2182,13 @@ var SUQ=(function(){
     ['kn1','e','Play a draw of Keno Blast','keno','play',1,0,0,NEWDAY],
     ['bs1','e','Play a card of Bingo Spins','bspins','play',1,0,0,NEWDAY],
     ['vp1','e','Play a hand of Video Poker','vpoker','bet',1,0,0,NEWDAY],
+    ['sc1','e','Spin Lucky Seven Stagecoach 10 times','coach','bet',10,0,0,NEWDAY],
     ['pk1','e','Drop 10 nuggets at Gold Strike Plinko','plinko','bet',10,0,0,NEWDAY],
     ['ck1','e','Sit down for a game of Checkers','checkers','open',1,0,0,NEWDAY],
     ['tw1','e','Play today\u2019s Trail Word','trail','open',1,0,0,NEWDAY],
     ['kn2','m','Play 5 draws of Keno Blast','keno','play',5,0,0,NEWDAY],
     ['vp2','m','Collect 5 payouts at Video Poker','vpoker','pay',5,0,0,NEWDAY],
+    ['sc2','m','Land 8 winning spins on Lucky Seven Stagecoach','coach','pay',8,0,0,NEWDAY],
     ['pd2','m','Finish a game of Prospector\u2019s Dice','pdice','over',1,0,0,NEWDAY],
     ['ww2','m','Finish a round of Word Wrangler','wrangler','over',1,0,0,NEWDAY],
     ['tw2','m','Solve a Trail Word','trail','win',1,0,0,NEWDAY],
