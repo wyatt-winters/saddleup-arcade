@@ -180,8 +180,9 @@ html.fs .tab img.gi{width:26px;height:26px}
 .thmenu .thnote{margin:8px 4px 2px;font:500 11.5px Inter,system-ui,sans-serif;color:#94a3b8}
 .thbtn[hidden]{display:none!important}
 .thbtn{position:relative}
-#thSel{position:absolute;top:0;bottom:0;right:0;left:30px;width:calc(100% - 30px);opacity:0;cursor:pointer;font-size:16px;border:0;margin:0;-webkit-appearance:menulist;appearance:auto}
-#thSel option{color:#0f172a;background:#fff}
+.thbtn{cursor:pointer;user-select:none}
+.thmenu.up{transform-origin:bottom}
+.thmenu .skinsw{gap:4px!important}.thmenu .skinsw button{min-height:44px!important;padding:5px 12px 5px 5px!important}.thmenu .skinsw button img{width:34px!important;height:34px!important;flex:0 0 34px!important}
 .thbtn .thi{width:20px;height:20px;border-radius:5px;object-fit:cover;display:block;flex:0 0 20px}
 .thbtn .caret{width:14px;height:14px;transition:transform .2s}
 .thbtn[aria-expanded="true"] .caret{transform:rotate(180deg)}
@@ -273,7 +274,7 @@ html.fs #acTxt{display:none!important}
     </div>
     <button class="fsbtn acbtn" id="acBtn" type="button" aria-haspopup="dialog"><span class="acf" id="acFace">👤</span><span id="acTxt">Save wallet</span></button>
     <button class="fsbtn" id="fsBtn" type="button" title="Full screen (F11 also works on desktop)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span id="fsTxt">Full screen</span></button>
-    <div class="fsbtn thbtn" id="thBtn" title="Change the theme" hidden><img class="thi" id="thImg" alt=""><span id="thName">Theme</span><select id="thSel" aria-label="Theme"></select><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="fsbtn thbtn" id="thBtn" title="Change the theme" role="button" tabindex="0" aria-haspopup="menu" aria-expanded="false" hidden><img class="thi" id="thImg" alt=""><span id="thName">Theme</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
     </div>
   </div>
   <div class="cmenu thmenu" id="thmenu" role="menu" aria-label="Theme"><div class="chead">Theme</div><div class="cskin" id="cskin" hidden><div class="skinsw" role="group" aria-label="Theme"></div><p class="thnote">Changes the art in every room and game.</p></div></div>
@@ -685,7 +686,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'ce32062899'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'1a43903220'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}
@@ -780,7 +781,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       P=(K&&K.pairs)||[];for(i=0;i<P.length;i++){if(P[i][0]===(m.b||w0))m.k=P[i][1];if(P[i][0]===w0&&!m.k)m.k=P[i][1];}
       return m.k||m.b||(K&&K.icons&&K.icons.floor)||(B&&B.icons&&B.icons.floor)||w0;}
     box.querySelector('.skinsw').innerHTML=SKIN_IDS.map(function(id){return '<button type="button" data-skin="'+id+'" title="'+skinName(id)+' theme" aria-pressed="false"'+(SKINS[id]&&SKINS[id].hidden&&!secretOn(id)?' hidden':'')+'><img alt="" data-p="'+prev(id)+'" src="'+prev(id)+'"><span>'+skinName(id)+'</span></button>';}).join('');})();
-  function thFill(){var sel=document.getElementById('thSel');if(!sel)return;var h=SKIN_IDS.filter(function(id){return !(SKINS[id]&&SKINS[id].hidden&&!secretOn(id));}).map(function(id){return '<option value="'+id+'"'+(id===skin?' selected':'')+'>'+skinName(id)+'</option>';}).join('');if(sel.innerHTML!==h)sel.innerHTML=h;sel.value=skin;var nm=document.getElementById('thName');if(nm)nm.textContent=skinName(skin);}
+  function thFill(){var nm=document.getElementById('thName');if(nm)nm.textContent=skinName(skin);}
   function skinUI(){
     document.documentElement.setAttribute('data-skin',skin);thFill();
     Array.prototype.forEach.call(document.querySelectorAll('.skinsw button'),function(b){var on=b.getAttribute('data-skin')===skin;b.setAttribute('aria-pressed',on?'true':'false');
@@ -830,16 +831,22 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       document.body.appendChild(d);d.addEventListener('click',function(){d.remove();});setTimeout(function(){if(d.parentNode)d.remove();},2600);
       (function(){var top=0,h=innerHeight;try{var w=window,off=0;while(w.parent&&w.parent!==w&&w.frameElement){off+=w.frameElement.getBoundingClientRect().top;w=w.parent;top=Math.max(top,-off);h=Math.min(h,w.innerHeight-Math.max(0,off));}}catch(e){}
         if(top>0||h<innerHeight){d.style.alignItems='flex-start';d.querySelector('.sb').style.marginTop=Math.max(12,Math.round(top+(h-d.querySelector('.sb').offsetHeight)/2))+'px';}})();}
-    var hd=document.getElementById('thImg'),n=0,t0=0;
+    var hd=document.querySelector('#thmenu .chead'),n=0,t0=0;
     if(hd)hd.addEventListener('click',function(e){e.stopPropagation();var t=Date.now();if(t-t0>3000)n=0;t0=t;n++;if(n>=7){n=0;thOpen(false);ask(hid[0]);}});
     try{var hs=(window.parent.location.hash||window.location.hash||'').toLowerCase();hid.forEach(function(k){var c=SKINS[k].code||k;if(hs.indexOf(c)>=0&&!secretOn(k))setTimeout(function(){ask(k);},900);});}catch(e){}
   })();
   Array.prototype.forEach.call(document.querySelectorAll('.cskin .skinsw button'),function(b){
     b.addEventListener('click',function(e){e.stopPropagation();thOpen(false);setSkin(b.getAttribute('data-skin'));});});
   var thBtn=document.getElementById('thBtn'),thMenu=document.getElementById('thmenu');
-  function thPlace(){var r=thBtn.getBoundingClientRect(),w=Math.max(240,thMenu.offsetWidth),left=Math.min(Math.max(8,r.right-w),innerWidth-w-8);thMenu.style.left=left+'px';thMenu.style.top=Math.round(r.bottom+6)+'px';thMenu.style.setProperty('--cmt',Math.round(r.bottom+6)+'px');}
+  /* the visible part of the screen, in this page's coordinates (the arcade can sit inside a taller page) */
+  function visArea(){var top=0,bot=innerHeight;try{var w=window,off=0;while(w.parent&&w.parent!==w&&w.frameElement){off+=w.frameElement.getBoundingClientRect().top;w=w.parent;top=Math.max(top,-off);bot=Math.min(bot,w.innerHeight-off);}}catch(e){}return {top:top,bottom:bot};}
+  function thPlace(){var r=thBtn.getBoundingClientRect(),w=Math.max(240,thMenu.offsetWidth),left=Math.min(Math.max(8,r.right-w),innerWidth-w-8),V=visArea();
+    thMenu.style.left=left+'px';thMenu.style.maxHeight='none';var need=thMenu.scrollHeight,below=V.bottom-r.bottom-12,above=r.top-V.top-12,up=below<Math.min(need,320)&&above>below;
+    var room=Math.max(160,up?above:below);thMenu.style.maxHeight=room+'px';thMenu.style.setProperty('--cmt','0px');
+    thMenu.classList.toggle('up',up);thMenu.style.top=Math.round(up?r.top-6-Math.min(need,room):r.bottom+6)+'px';}
   function thOpen(on){thMenu.classList.toggle('open',on);thBtn.setAttribute('aria-expanded',on?'true':'false');if(on){thPlace();var c=thMenu.querySelector('[aria-pressed="true"]')||thMenu.querySelector('button');if(c)setTimeout(function(){try{c.focus();}catch(e){}},20);}}
-  (function(){var sel=document.getElementById('thSel');if(!sel)return;thFill();sel.addEventListener('click',function(e){e.stopPropagation();});sel.addEventListener('change',function(){var v=sel.value;setSkin(v);setTimeout(thFill,50);});})();
+  thBtn.addEventListener('click',function(e){e.stopPropagation();thOpen(!thMenu.classList.contains('open'));});
+  thBtn.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();thOpen(!thMenu.classList.contains('open'));}});thFill();
   document.addEventListener('click',function(e){if(thMenu.classList.contains('open')&&!thMenu.contains(e.target)&&!thBtn.contains(e.target))thOpen(false);});
   addEventListener('keydown',function(e){if(e.key==='Escape'&&thMenu.classList.contains('open')){thOpen(false);thBtn.focus();}});
   addEventListener('resize',function(){if(thMenu.classList.contains('open'))thPlace();});
