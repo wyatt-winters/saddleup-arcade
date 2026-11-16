@@ -711,6 +711,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     if(K.css)s=s.replace('</head>','<style id="su-skin-'+skin+'">'+K.css+'</style></head>');
     return s;
   }
+  /* a menu icon whose picture is missing falls back to its built-in drawing every time (the theme swap can re-point it at the missing file) */
+  document.addEventListener('error',function(e){var im=e.target;if(!im||im.tagName!=='IMG'||!im.classList||!im.classList.contains('gi'))return;
+    var fb=im.getAttribute('data-fb');if(!fb){var oe=im.getAttribute('onerror')||'',m=oe.match(/this\.src='([^']+)'/);fb=m?m[1]:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='12' fill='%23c6a75e'/%3E%3C/svg%3E";im.setAttribute('data-fb',fb);}
+    if(im.getAttribute('src')!==fb)im.setAttribute('src',fb);},true);
   function skinIcons(){
     var K=cur(),P=(K&&K.pairs)||[],map={};
     if(K&&K.base&&SKINS[K.base]){var BP=SKINS[K.base].pairs||[],top={};for(var q=0;q<P.length;q++)top[P[q][0]]=P[q][1];
