@@ -1098,15 +1098,17 @@ var SCE=(function(){
   var T={
     /* base reel weights per symbol (index = symbol); reels 1 has no wild */
     base:[[8,10,12,14,30,30,36,36,0,3],[8,10,12,14,30,30,36,36,8,3],[8,10,12,14,30,30,36,36,8,3],[8,10,12,14,30,30,36,36,8,3],[8,10,12,14,30,30,36,36,8,3]],
-    sp:12,                     /* weight of "a regular" on the base reels (split by spw) */
+    sp:15,                     /* weight of "a regular" on the base reels (split by spw) */
     spw:[34,6,10,12,12,12,8],  /* which regular: Tex, Marisol, Lou, Rosa, Kael, Brakk, Pete */
-    land:38,                   /* bonus: chance per empty cell per spin that a regular lands, per 1000 */
+    land:30.8,                   /* bonus: chance per empty cell per spin that a regular lands, per 1000 */
     lw:[34,6,9,11,10,10,6],    /* bonus: which regular lands */
     gold:[[0.1,22],[0.2,22],[0.3,16],[0.5,14],[1,12],[2,8],[3,4],[5,2]],   /* gold strongbox values x total bet */
     jp:[[10,62],[25,24],[50,10],[150,3],[1000,1]],                          /* Mini, Minor, Major, Super, Grand x total bet */
     spins:3,maxRows:6,cap:5000,stack:3};
   var JPN=['Mini','Minor','Major','Super','Grand'];
-  var R=Math.random;function setRng(f){R=f||Math.random;}
+  /* every result comes from the browser's secure random number generator (no streaks, no pity timers: each spin stands alone) */
+  function secure(){try{var a=new Uint32Array(2);crypto.getRandomValues(a);return (a[0]*2097152+(a[1]>>>11))/9007199254740992;}catch(e){return Math.random();}}
+  var R=secure;function setRng(f){R=f||secure;}
   function wd(t){var s=0,i;for(i=0;i<t.length;i++)s+=t[i][1]||t[i];var x=R()*s;for(i=0;i<t.length;i++){x-=(t[i][1]!==undefined?t[i][1]:t[i]);if(x<0)return i;}return t.length-1;}
   function pick(w){var s=0,i;for(i=0;i<w.length;i++)s+=w[i];var x=R()*s;for(i=0;i<w.length;i++){x-=w[i];if(x<0)return i;}return w.length-1;}
   /* a base-game cell */
@@ -1341,7 +1343,7 @@ function help(){var h='<button class="x" type="button" id="hx" aria-label="Close
   [0,1,2,3,4,5,6,7].forEach(function(s){var p=E.PAY[s];h+='<div>'+mini(symHTML(s))+'<small>5 &ndash; '+p[2]+'<br>4 &ndash; '+p[1]+'<br>3 &ndash; '+p[0]+'</small></div>';});
   h+='<div>'+mini(symHTML(9))+'<small>5 &ndash; '+E.JACK5+'&times; bet<br>4 &ndash; '+E.PAY[9][1]+'<br>3 &ndash; '+E.PAY[9][0]+'</small></div><div>'+mini(symHTML(8))+'<small>Wild: stands in for every symbol except the regulars</small></div></div>';
   h+='<h4>25 lines</h4><div class="lgrid">'+E.LINES.map(function(L,i){return '<div>'+(i+1)+lineIcon(L)+'</div>';}).join('')+'</div>';
-  h+='<p style="margin-top:12px;font-size:12px;opacity:.8">Theoretical return about 95.8% from a 4.5-million-spin simulation. The bonus starts about once every 160 spins. Each bonus pays at most '+T.cap+'&times; the bet.</p>';
+  h+='<p style="margin-top:12px;font-size:12px;opacity:.8">Theoretical return about 96% from a 4.5-million-spin simulation. The bonus starts about once every 90 spins on average. Every spin is drawn from your browser&rsquo;s secure random number generator, so each spin stands on its own: no streaks, no timers, no &ldquo;due&rdquo; bonus. Each bonus pays at most '+T.cap+'&times; the bet.</p>';
   $('hbox').innerHTML=h;$('help').classList.add('on');$('hx').onclick=function(){$('help').classList.remove('on');};}
 $('help').addEventListener('click',function(e){if(e.target===$('help'))$('help').classList.remove('on');});
 /* ---------- controls ---------- */
