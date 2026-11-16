@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Quests &amp; Tickets</title>
+<title>Daily Quests</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Rye&display=swap" rel="stylesheet">
 <style>
@@ -21,8 +21,6 @@ h1 span{display:block;color:var(--green)}
 #app{position:relative;border-radius:22px;border:1px solid rgba(198,167,94,.22);background:linear-gradient(180deg,rgba(18,10,6,.78),rgba(12,7,4,.9)),url(https://saddleup-arcade.vercel.app/art/quests_board.webp) center/cover no-repeat,#120a06;box-shadow:0 18px 50px rgba(0,0,0,.45);overflow:hidden;min-height:560px}
 .top{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(242,210,126,.15);flex-wrap:wrap}
 .top .ttl{font:400 24px Rye,Georgia,serif;color:var(--gold2);flex:1;min-width:140px}
-.bankp{display:flex;flex-direction:column;align-items:flex-end;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#cbb07a}
-.bankp b{font-size:18px;color:var(--green2);letter-spacing:0;font-variant-numeric:tabular-nums}
 .tabs{display:flex;gap:6px;padding:10px 16px 0}
 .tabs button{padding:9px 14px;border-radius:10px 10px 0 0;background:rgba(255,255,255,.05);font-weight:800;font-size:14px;color:#cbd5e1;position:relative}
 .tabs button.on{background:rgba(242,210,126,.14);color:var(--gold2)}
@@ -34,133 +32,18 @@ h1 span{display:block;color:var(--green)}
 .q{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px;border-radius:14px;background:rgba(0,0,0,.32);border:1px solid rgba(242,210,126,.16)}
 .q.done{border-color:rgba(52,211,153,.5);background:rgba(16,185,129,.08)}
 .q.claimed{opacity:.62}
-.tk{width:52px;height:32px;position:relative;display:flex;align-items:center;justify-content:center;font-size:0;background:center/contain no-repeat;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
-
-.tk.b{background-image:url(https://saddleup-arcade.vercel.app/art/tk_bronze.webp)}.tk.s{background-image:url(https://saddleup-arcade.vercel.app/art/tk_silver.webp)}.tk.g{background-image:url(https://saddleup-arcade.vercel.app/art/tk_gold.webp)}
 .q .tx{font-weight:700;font-size:14px;line-height:1.3}
 .q .tx small{display:block;font-size:11px;color:#cbb07a;font-weight:700;margin-top:2px}
 .bar{height:7px;border-radius:7px;background:rgba(255,255,255,.08);margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#059669,#34d399);border-radius:7px}
 .claim{padding:9px 12px;border-radius:10px;font-weight:900;font-size:13px;background:linear-gradient(180deg,#fde68a,#c6a75e);color:#1a1206;box-shadow:0 3px 0 #7c5a1e;white-space:nowrap}
 .claim:disabled{background:rgba(255,255,255,.07);color:#94a3b8;box-shadow:none;cursor:default}
-.tlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-.tcard{position:relative;border-radius:14px;padding:12px 10px 10px;text-align:left;min-height:118px;box-shadow:0 6px 16px rgba(0,0,0,.45);overflow:hidden;color:#fff}
-.tcard .nm{font:400 17px Rye,Georgia,serif;line-height:1.1;text-shadow:0 2px 4px rgba(0,0,0,.5)}
-.tcard .tr{position:absolute;right:8px;top:8px;font-size:9px;font-weight:900;padding:2px 6px;border-radius:6px;background:rgba(0,0,0,.4)}
-.tcard .ds{font-size:11px;opacity:.85;margin-top:6px;line-height:1.3}
-.tcard .st{position:absolute;left:10px;bottom:8px;font-size:12px;font-weight:900}
-.tcard.played{opacity:.55}
-.empty{color:#94a3b8;font-size:14px;text-align:center;padding:30px 10px;line-height:1.6}
-.T-xw{background:#0f1d4a url(https://saddleup-arcade.vercel.app/art/ticket_xw.webp) center/cover}.T-ttt{background:#7c2d12 url(https://saddleup-arcade.vercel.app/art/ticket_ttt.webp) center/cover}.T-btd{background:#073b1c url(https://saddleup-arcade.vercel.app/art/ticket_btd.webp) center/cover}.T-map{background:#3b1d06 url(https://saddleup-arcade.vercel.app/art/ticket_map.webp) center/cover}.T-pkr{background:#2a0f4a url(https://saddleup-arcade.vercel.app/art/ticket_pkr.webp) center/cover}
-.tcard::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.55));z-index:0}.tcard>*{position:relative;z-index:1}.tcard .tr,.tcard .st{position:absolute;z-index:1}
-.play{container-type:inline-size}.ticket{--tw:min(720px,100cqw - 20px);width:var(--tw)!important;background-size:100% 100%!important;padding:calc(var(--tw)*.07) calc(var(--tw)*.055) calc(var(--tw)*.08)!important}.ticket.T-map{background:#e8d3a2!important;padding:16px!important}
-.ticket.T-xw{--tw:min(720px,100cqw - 20px,var(--tvh,100vh)*.62);padding-top:calc(var(--tw)*.14 + 34px)!important;padding-bottom:calc(var(--tw)*.2 + 8px)!important}.ticket.T-xw .hd b{position:absolute;left:12%;right:12%;top:9.6%;transform:translateY(-50%);font-size:clamp(20px,5vw,30px);line-height:1}.ticket.T-xw .hd>small{margin-top:0}.ticket .hd b,.ticket .hd small{text-shadow:0 2px 4px rgba(0,0,0,.8)}.ticket.T-xw .hd b{color:#2a1606;text-shadow:0 1px 0 rgba(255,255,255,.4)}.ticket.T-xw .hd>small,.ticket.T-xw .hd .tier{margin-top:14px}
-.ticket.T-map .hd b,.ticket.T-map .hd small,.ticket.T-map .lbl,.ticket.T-map .hint,.ticket.T-map .prizes{color:#3b1d06;text-shadow:none}
-
-/* high-roller vault */
-.T-vault{background:url(https://saddleup-arcade.vercel.app/art/ticket_vault.webp) center/cover,radial-gradient(120% 90% at 50% 0%,#3a3f4a 0%,#14171d 60%,#07080b 100%)}.T-vault::after{content:"";position:absolute;inset:6px;border-radius:12px;border:2px solid rgba(242,210,126,.55);pointer-events:none}
-.ticket.T-vault{background:linear-gradient(180deg,#1a1c21,#0d0e11)!important;box-shadow:0 20px 50px rgba(0,0,0,.7),inset 0 0 0 3px #c6a75e,inset 0 0 0 7px #2a2d34,inset 0 0 0 9px rgba(242,210,126,.5)!important;padding:22px 18px 20px!important}
-.ticket.T-vault .hd b{color:#fde68a;letter-spacing:.02em}
-.combo{display:flex;justify-content:center;gap:clamp(8px,3cqw,18px)}
-.combo .spot{width:min(78px,17cqw);aspect-ratio:1;border-radius:50%;font-size:min(46px,11cqw);background:radial-gradient(circle at 35% 30%,#fff7da,#e8c873 60%,#9a7a2e);box-shadow:0 0 0 4px #2a2d34,0 0 0 6px #c6a75e,0 6px 14px rgba(0,0,0,.6)}
-.boxes{grid-template-columns:repeat(4,1fr);width:min(100%,520px);margin:0 auto;gap:6px}
-
-.boxes .spot{aspect-ratio:1.55;flex-direction:column;gap:2px;background:linear-gradient(180deg,#d9dde3,#a9b0ba);color:#14171d;border-radius:8px;box-shadow:inset 0 0 0 2px #6b7280,inset 0 -4px 0 rgba(0,0,0,.18)}
-.boxes .spot .sy{font-size:clamp(18px,5.5cqw,32px);line-height:1}.boxes .spot .pz{font-size:clamp(10px,2.8cqw,14px);font-weight:900}
-.boxes .spot.won{background:linear-gradient(180deg,#fde68a,#d4a63a);box-shadow:inset 0 0 0 2px #7c5a1e,0 0 16px rgba(253,230,138,.7)}
 .vaultrow{display:flex;align-items:center;gap:12px;margin-top:10px;padding:12px;border-radius:14px;background:linear-gradient(90deg,rgba(242,210,126,.16),rgba(0,0,0,.3));border:1px solid rgba(242,210,126,.45)}
 .vaultrow .vi{font-size:28px}.vaultrow .tx{flex:1;font-weight:800;font-size:14px}.vaultrow small{display:block;font-size:11px;color:#cbb07a;margin-top:2px}.vaultrow.got{border-color:rgba(52,211,153,.6)}
-.tk.v{background:linear-gradient(180deg,#fde68a,#9a7a2e);border-radius:6px;font-size:16px}
-/* spin to win */
-.T-spin{background:url(https://saddleup-arcade.vercel.app/art/ticket_spin.webp) center/cover,radial-gradient(110% 90% at 50% 10%,#7c1d6f 0%,#3b0a45 55%,#14041c 100%)}
-.ticket.T-spin{background:linear-gradient(180deg,#2e0c40,#170520)!important;padding:20px 16px!important}
-.ticket.T-spin .hd b{color:#fde68a}
-.swrap{display:grid;grid-template-columns:auto 1fr;gap:clamp(10px,3cqw,22px);align-items:center;max-width:620px;margin:0 auto}
-@container (max-width:460px){.swrap{grid-template-columns:1fr;justify-items:center}}
-.wheelbox{position:relative;width:min(250px,56cqw);aspect-ratio:1}
-.wheelbox svg{width:100%;height:100%;transition:transform 2.6s cubic-bezier(.12,.7,.15,1);filter:drop-shadow(0 8px 14px rgba(0,0,0,.6))}
-.wheelbox .ptr{position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:24px solid #fde68a;filter:drop-shadow(0 2px 2px rgba(0,0,0,.6));z-index:2}
-.target{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 14px;border-radius:14px;background:rgba(0,0,0,.4);border:2px solid #fde68a;margin:0 auto 4px;width:max-content}
-.target b{font:400 clamp(26px,8cqw,40px) Rye,Georgia,serif;color:#fde68a;line-height:1}.target small{font-size:10px;font-weight:900;letter-spacing:.14em}
-.spins{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;width:100%}
-.spins button{aspect-ratio:1;border-radius:50%;font-weight:900;font-size:clamp(12px,3.6cqw,18px);background:radial-gradient(circle at 35% 30%,#fef3c7,#f59e0b 70%,#92400e);color:#3b0a45;box-shadow:0 3px 0 #78350f,0 6px 10px rgba(0,0,0,.4)}
-.spins button:disabled{cursor:default}
-.spins button.done{background:#fdf6e3;color:#1c1208;box-shadow:inset 0 0 0 2px rgba(0,0,0,.2)}.spins button.hit{background:#34d399;color:#04221a;box-shadow:0 0 0 3px #fde68a,0 0 16px rgba(52,211,153,.7)}.spins button.bonus{background:#fde68a;color:#7c2d12;box-shadow:0 0 0 3px #f472b6,0 0 16px rgba(244,114,182,.7)}
-.spins button.next{animation:pulse 1s ease-in-out infinite}@keyframes pulse{50%{transform:scale(1.08)}}
-html.short .ticket.T-xw .hd>small{display:none}html.short .ticket.T-xw{padding-bottom:calc(var(--tw)*.12 + 4px)!important;padding-top:calc(var(--tw)*.12 + 26px)!important}
-html.short .T-xw .prizes{font-size:10px;padding:3px 6px;margin-top:4px}html.short .T-xw .lbl{margin:3px 0 2px;font-size:9px}html.short .T-xw .xwc{margin-top:2px;font-size:12px}
-html.short .ticket .hd{margin-bottom:4px}.T-xw .hint{display:none}html.short{--xwb:420px}html.wide{--xwb:630px}html.wide.short{--xwb:600px}
-.ticket.T-vault .hd b,.ticket.T-spin .hd b{display:none}.ticket.T-vault .hd small,.ticket.T-spin .hd small{color:#f5e6c4}
-.ticket.T-vault::before,.ticket.T-spin::before{content:"";position:absolute;left:0;right:0;top:0;height:var(--arth,0px);background-position:top center;background-size:100% auto;background-repeat:no-repeat;pointer-events:none;border-radius:18px 18px 0 0}.ticket.T-vault::before{background-image:url(https://saddleup-arcade.vercel.app/art/ticket_vault.webp)}.ticket.T-spin::before{background-image:url(https://saddleup-arcade.vercel.app/art/ticket_spin.webp)}.ticket.T-vault,.ticket.T-spin{box-shadow:0 20px 50px rgba(0,0,0,.7),inset 0 0 0 3px #c6a75e,inset 0 0 0 7px rgba(0,0,0,.55),inset 0 0 0 8px rgba(242,210,126,.45)!important}
-/* the ticket you're playing */
-.play{position:absolute;inset:0;z-index:30;background:rgba(5,8,16,.92);display:flex;flex-direction:column;align-items:center;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;padding:14px 10px 18px}
-.ptop{width:min(720px,100%);display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.ptop .back{padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.08);font-weight:800;font-size:13px}
-.ptop .rv{margin-left:auto;padding:8px 12px;border-radius:10px;background:rgba(242,210,126,.16);color:var(--gold2);font-weight:800;font-size:13px}
-.ticket{position:relative;flex-shrink:0;width:min(720px,100%);border-radius:18px;padding:16px;box-shadow:0 20px 50px rgba(0,0,0,.7),inset 0 0 0 3px rgba(255,255,255,.12);overflow:hidden}
-.ticket .hd{text-align:center;margin-bottom:10px}
-.ticket .hd b{display:block;font:400 30px Rye,Georgia,serif;line-height:1;text-shadow:0 3px 0 rgba(0,0,0,.35)}
-.ticket .hd small{display:block;font-size:12px;font-weight:700;opacity:.9;margin-top:4px}
-.ticket .hd .tier{display:inline-block;margin-top:6px;font-size:10px;font-weight:900;letter-spacing:.1em;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.35)}
-.lbl{font-size:10px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin:10px 0 6px;text-align:center}
-.spot{position:relative;border-radius:10px;background:#fdf6e3;color:#1c1208;display:flex;align-items:center;justify-content:center;font-weight:900;overflow:hidden;user-select:none;-webkit-user-select:none}
-.spot canvas{position:absolute;inset:0;z-index:5;width:100%;height:100%;touch-action:none;cursor:crosshair;transition:opacity .35s}
-.spot canvas.gone{opacity:0;pointer-events:none}
-.grid{display:grid;gap:6px}
-.result{margin-top:12px;text-align:center;font:400 26px Rye,Georgia,serif;min-height:34px;text-shadow:0 2px 6px #000}
-.result.win{color:#6ee7b7}.result.lose{color:#cbd5e1;font-size:20px}
-.hint{text-align:center;font-size:12px;opacity:.85;margin-top:6px}
-/* crossword */
-.words{display:grid;gap:5px;justify-content:center}
-.word{display:flex;gap:3px;justify-content:center;align-items:center}
-.word i{width:30px;height:32px;border-radius:5px;background:#fdf6e3;color:#1c1208;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:900;font-size:17px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.15)}
-.word i.on{background:#fde68a;color:#7c2d12}
-.word.full i{background:#34d399;color:#04221a}
-.word em{font-style:normal;font-size:11px;font-weight:800;width:36px;text-align:right;opacity:.8}
-.letters{grid-template-columns:repeat(9,1fr)}.letters .spot{height:auto;aspect-ratio:1;font-size:clamp(15px,4.6cqw,28px)}
-.xwg{display:grid;gap:2px;width:min(100%,560px);margin:0 auto;padding:6px;border-radius:8px;background:rgba(8,14,40,.55)}
-.xwg{container-type:inline-size}.xwg i,.xwg b{display:flex;align-items:center;justify-content:center;aspect-ratio:1;border-radius:3px;font-style:normal;font-weight:900;font-size:clamp(10px,3.4vw,17px);min-width:0}
-.xwg i{background:#7f93b3;color:#1b2742;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}.xwg i.on{background:#fde68a;color:#7c2d12}.xwg i.full{background:#34d399;color:#04221a}
-.ticket .prizes{background:rgba(5,8,20,.72);border-radius:10px;padding:6px 8px;margin:8px auto 0;max-width:600px}.ticket .result{background:rgba(5,8,20,.6);border-radius:10px;max-width:600px;margin-left:auto;margin-right:auto}.ticket .result:empty{background:none}
-.T-xw #lts{max-width:440px;margin-left:auto;margin-right:auto;grid-template-columns:repeat(9,1fr)!important;gap:4px}.T-xw #lts .spot{font-size:clamp(13px,3.6cqw,22px)}.T-xw .lbl{margin:6px 0 4px}.xwc{text-align:center;font-size:13px;font-weight:700;margin-top:6px;text-shadow:0 1px 3px #000}.xwc b{color:#fde68a}
-/* three in a row */
-.board{grid-template-columns:repeat(3,1fr);width:min(100%,440px);margin:0 auto;gap:8px}.board .spot{height:auto;aspect-ratio:1;font-size:clamp(28px,10cqw,60px)}
-.board .spot.hit{background:#fde68a}.board .spot.line{background:#34d399}
-.called{grid-template-columns:repeat(6,1fr);width:100%;max-width:600px;margin:0 auto}.called .spot{height:auto;aspect-ratio:1;font-size:clamp(20px,7cqw,40px)}
-/* beat the dealer */
-.dealer{display:flex;justify-content:center}.dealer .spot{width:var(--dc);height:calc(var(--dc)*1.4);background:transparent;border-radius:calc(var(--dc)*.09);box-shadow:0 4px 10px rgba(0,0,0,.5);--dc:min(130px,26cqw)}
-.hands{display:flex;justify-content:center;gap:clamp(4px,1.4vw,10px);--hc:min(112px,calc(100cqw/5 - 20px))}
-@container (max-width:520px){.hands{--hc:calc(100cqw/3 - 34px);flex-wrap:wrap;row-gap:10px}}.hands .spot{width:calc(var(--hc) + 8px);height:calc(var(--hc)*1.4 + 34px);flex:0 0 auto;flex-direction:column;justify-content:flex-start;gap:4px;padding-top:4px;background:rgba(253,246,227,.96);border-radius:10px}
-.hands .spot .pz{font-size:clamp(11px,3.2vw,14px);font-weight:900;color:#065f46;line-height:1}.hands .spot .cs{position:relative;display:block;width:var(--hc);height:calc(var(--hc)*1.4)}
-.hands .spot.won{box-shadow:0 0 0 3px #34d399,0 0 16px rgba(52,211,153,.55);background:#d1fae5}
-.hands .spot .card{--cw:var(--hc)}.dealer .spot .card{--cw:var(--dc)}
-/* treasure map */
-.mapwrap{position:relative;width:min(600px,100%);aspect-ratio:1;margin:0 auto;background:url(https://saddleup-arcade.vercel.app/art/ticket_map.webp) center/100% 100% no-repeat;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.45)}
-.map{position:absolute;left:25.2%;top:27.8%;width:49.5%;height:48.4%;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:0}
-.map button{height:auto;border-radius:6px;background:transparent;border:0;font-size:clamp(16px,4.6vw,28px);display:flex;align-items:center;justify-content:center;transition:transform .12s,background .12s}
-.map button:not(:disabled):hover{background:rgba(124,45,18,.22)}.map button:not(:disabled):hover::after{content:'\2715';color:#7c2d12;font-weight:900;font-size:.7em}
-.map button.dug{background:rgba(120,53,15,.35);box-shadow:inset 0 0 0 2px rgba(60,25,5,.4)}
-.map button:disabled{cursor:default}
-.digs{display:flex;justify-content:center;gap:5px;margin-top:8px}.digs i{width:20px;height:20px;border-radius:50%;background:#fde68a;box-shadow:inset 0 -2px 0 rgba(0,0,0,.25)}.digs i.used{background:rgba(255,255,255,.15);box-shadow:none}
-/* poker */
-.pk{display:flex;justify-content:center;gap:clamp(5px,1.6vw,10px);--pc:min(124px,calc(100cqw/5 - 16px));padding:12px 8px;border-radius:14px;background:rgba(10,4,24,.55);box-shadow:inset 0 0 0 1px rgba(242,210,126,.35)}
-.pk .spot{width:var(--pc);height:calc(var(--pc)*1.4);flex:0 0 auto;background:transparent;border-radius:calc(var(--pc)*.09);overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.5)}.pk .spot .card{--cw:var(--pc)}
-.dealer .spot{position:relative}.dealer .spot .ix{position:absolute;left:3px;top:3px;z-index:2;padding:1px 5px 2px;border-radius:5px;background:rgba(253,246,227,.97);font:900 calc(var(--dc)*.22)/1 Inter,sans-serif;color:#1c1208;box-shadow:0 1px 3px rgba(0,0,0,.5)}.dealer .spot .ix.red{color:#b91c1c}
-.hands .spot .ix{position:absolute;left:2px;top:2px;z-index:2;padding:1px 4px 2px;border-radius:5px;background:rgba(253,246,227,.97);font:900 calc(var(--hc)*.24)/1 Inter,sans-serif;color:#1c1208;box-shadow:0 1px 3px rgba(0,0,0,.5)}.hands .spot .ix.red{color:#b91c1c}
-.pk .spot .ix{position:absolute;left:3px;top:3px;z-index:2;padding:1px 4px 2px;border-radius:5px;background:rgba(253,246,227,.95);font:900 calc(var(--pc)*.2)/1 Inter,sans-serif;color:#1c1208;box-shadow:0 1px 3px rgba(0,0,0,.5)}.pk .spot .ix.red{color:#b91c1c}
-.pk .spot.hl{box-shadow:0 0 0 3px #fde68a,0 0 18px rgba(253,230,138,.6)}
-.ticket.T-pkr{padding-top:calc(5% + 34px)!important;padding-bottom:calc(10% + 8px)!important}
-.paytab{display:grid;grid-template-columns:1fr auto;max-width:520px;margin:12px auto 0;padding:8px 10px;border-radius:12px;background:rgba(10,4,24,.72);border:1px solid rgba(242,210,126,.45);font-size:13px;font-weight:700}
-.paytab span{padding:4px 6px;border-bottom:1px dashed rgba(242,210,126,.16);color:#e9d5ff}.paytab span:nth-child(even){text-align:right;color:#fde68a;font-variant-numeric:tabular-nums}
-.paytab span:nth-last-child(-n+2){border-bottom:0}.paytab span.on{background:rgba(253,230,138,.9);color:#2a0f4a!important;border-bottom-color:transparent}.paytab span.on:nth-child(odd){border-radius:6px 0 0 6px}.paytab span.on:nth-child(even){border-radius:0 6px 6px 0}
-.prizes{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;font-size:11px;font-weight:800;opacity:.9}
-.prizes span.on{color:#6ee7b7}
-@media (max-width:520px){.map button{height:auto}.letters{grid-template-columns:repeat(6,1fr)}.word i{width:26px;height:28px;font-size:15px}}
 html.fs,html.fs body{height:100%;overflow:hidden}
 html.fs .wrap{max-width:none;height:100%;padding:8px 10px;display:flex;flex-direction:column}
 html.fs .wrap>.pill,html.fs .wrap>h1,html.fs .wrap>.sub{display:none}
 html.fs #app{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:34px}
 html.fs .pane{flex:1;min-height:0;overflow:auto}
-html.fs .play{padding-top:48px}
 /* ===== shared playing-card styles ===== */
 .card{position:relative;width:var(--cw);height:calc(var(--cw)*1.4);perspective:900px;flex:0 0 auto;user-select:none;-webkit-user-select:none}
 .card .inner{position:absolute;inset:0;transition:transform .42s cubic-bezier(.3,.7,.3,1);transform-style:preserve-3d}
@@ -276,6 +159,18 @@ html.fs .play{padding-top:48px}
 .q.go{cursor:pointer;transition:border-color .15s,background .15s}.q.go:hover{border-color:rgba(242,210,126,.6);background:rgba(242,210,126,.06)}
 .q.go .tx small::after{content:"  \00B7  Tap to play \203A";color:#34d399;font-weight:800}
 .q.go.claimed .tx small::after{content:none}
+.cardp{display:flex;align-items:center;gap:10px}
+.cardp .ct{display:flex;flex-direction:column;align-items:flex-end;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8}
+.cardp .ct b{font-size:18px;color:var(--gold2);letter-spacing:0;font-variant-numeric:tabular-nums}
+.cbtn{padding:9px 13px;border-radius:10px;font-weight:900;font-size:13px;background:linear-gradient(180deg,#fde68a,#d4a72c);color:#2a1a06;box-shadow:0 0 16px rgba(253,230,138,.3)}
+.cbtn .n{display:inline-flex;min-width:18px;height:18px;padding:0 5px;margin-left:6px;border-radius:9px;background:#ef4444;color:#fff;font-size:11px;align-items:center;justify-content:center}
+.ck{width:46px;height:40px;position:relative;display:flex;align-items:center;justify-content:center}
+.ck i{position:absolute;width:24px;height:33px;border-radius:4px;border:2px solid #c6a75e;background:repeating-linear-gradient(45deg,#4c0f0f 0 5px,#7f1d1d 5px 10px);box-shadow:0 3px 6px rgba(0,0,0,.5)}
+.ck i:nth-child(2){transform:translateX(7px) rotate(9deg)}.ck i:nth-child(3){transform:translateX(14px) rotate(18deg)}
+.ck i:first-child{transform:translateX(-4px) rotate(-6deg)}
+.ck b{position:relative;z-index:2;margin-left:22px;margin-top:20px;font-size:11px;font-weight:900;background:#0f172a;border:1px solid #f2d27e;color:#fde68a;border-radius:8px;padding:0 5px;line-height:16px}
+.q.done .ck i{border-color:#34d399}
+.vaultrow .vi{font-size:28px}
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
 html.fs,html.fs body{height:100%;overflow:hidden!important}
@@ -403,7 +298,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   var qn=0;
   function qpaint(){var i=document.querySelector('.su-qb i');if(!i)return;i.textContent=qn>9?'9+':String(qn);i.classList.toggle('on',qn>0);}
   function addQ(){if(document.querySelector('.su-q'))return;var r=document.createElement('div');r.className='row su-q';
-    r.innerHTML='<button type="button" class="su-navb su-qb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h10l3 3v15H6z"/><path d="M9 9h7M9 13h7M9 17h4"/></svg>Daily Quests &amp; Tickets<i></i></button>';
+    r.innerHTML='<button type="button" class="su-navb su-qb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h10l3 3v15H6z"/><path d="M9 9h7M9 13h7M9 17h4"/></svg>Daily Quests<i></i></button>';
     if(!put(r,true))return;
     r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'nav',to:'quests'},'*');}catch(x){}});qpaint();}
   try{parent.postMessage({arcade:'qask'},'*');}catch(x){}setTimeout(function(){try{parent.postMessage({arcade:'qask'},'*');}catch(x){}},1500);
@@ -460,7 +355,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     while(v.scrollWidth>v.clientWidth+1&&f>10&&n<14){f-=1;v.style.fontSize=f+'px';n++;}});}
   setInterval(fit,800);addEventListener('resize',function(){[].forEach.call(document.querySelectorAll('.stat .v,.stat b,.chip2 b'),function(v){v.__t=null;});fit();});})();
 
-/* quest tracker: a pill in every game shows the quests it can move forward; another pill shows tickets waiting */
+/* quest tracker: a pill in every game shows the quests it can move forward; finishing one hands out trading cards */
 (function(){
   if(window.parent===window)return;
   var st=document.createElement('style');st.textContent=
@@ -509,7 +404,6 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     var L=(D.list||[]).filter(function(x){return !x.claimed;}),h='';
     if(L.length){var done=L.filter(function(x){return x.done;}).length;var best=L.filter(function(x){return !x.done;}).sort(function(a,b){return b.n/b.goal-a.n/a.goal;})[0],pct=best?Math.round(100*best.n/best.goal):100;
       h+='<button type="button" class="suq-pill'+(D.tickets>0?' hastk':'')+'" data-a="q" title="Quest tracker (drag to move)"><span class="grip"></span>'+IQ+(done&&done===L.length?'<span>All done!</span>':'<span><b>'+L.length+'</b> quest'+(L.length>1?'s':'')+'</span><span class="bar"><i style="width:'+pct+'%"></i></span>')+'</button>';}
-    if(D.tickets>0)h+='<button type="button" class="suq-pill tk" data-a="t" title="Your scratch-off tickets">'+IT+'<span><b>'+D.tickets+'</b> to scratch</span></button>';
     wrap.innerHTML=h;[].forEach.call(wrap.querySelectorAll('button'),function(b){b.onclick=function(e){e.preventDefault();e.stopPropagation();if(dragged)return;if(b.getAttribute('data-a')==='t')go('t');else open();};});
     place();if(pop)fill();}
   function open(){if(pop)return close();pop=document.createElement('div');pop.className='suq-pop';pop.innerHTML='<div class="suq-box"></div>';
@@ -517,12 +411,11 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   function close(){if(pop){pop.remove();pop=null;}}
   function fill(){var bx=pop&&pop.querySelector('.suq-box');if(!bx)return;var L=D.list||[],h='<div class="suq-h"><b>'+(D.room?'Today’s quests':'Quests for this game')+'</b><button type="button" class="suq-x" aria-label="Close">&times;</button></div>';
     if(!L.length)h+='<div class="suq-none">None of today’s quests count here. Open the quest list to see where they are.</div>';
-    L.forEach(function(q){var pct=Math.min(100,100*q.n/q.goal);h+='<div class="suq-q'+(q.done?' done':'')+(q.claimed?' cl':'')+'" data-g="'+esc(q.g||'')+'" role="button" tabindex="0">'+esc(q.txt)+(D.room||q.g!==D.me?'<em class="suq-gp">Play \u203a</em>':'')+'<small>'+(q.t==='e'?'Bronze':q.t==='m'?'Silver':'Gold')+' ticket · '+(q.claimed?'done \u2713 ticket earned':q.done?'done!':fmt(q))+'</small><div class="bar"><i style="width:'+pct+'%"></i></div></div>';});
-    if(D.tickets>0)h+='<button type="button" class="suq-go" data-a="t">Scratch my tickets ('+D.tickets+')</button>';
-    h+='<button type="button" class="suq-go'+(D.tickets>0?' alt':'')+'" data-a="q">All daily quests</button>';
-    bx.innerHTML=h;bx.querySelector('.suq-x').onclick=close;[].forEach.call(bx.querySelectorAll('.suq-q'),function(r){r.onclick=function(){var g=r.getAttribute('data-g');close();if(g)try{parent.postMessage({arcade:'questGo',g:g},'*');}catch(e){}};});[].forEach.call(bx.querySelectorAll('.suq-go'),function(b){b.onclick=function(){go(b.getAttribute('data-a'));};});}
-  var toastT=0;function toast(d){var t=document.querySelector('.suq-toast');if(!t){t=document.createElement('div');t.className='suq-toast';document.body.appendChild(t);t.onclick=function(){t.classList.remove('on');go('t');};}
-    var nm=d.tier==='v'?'High-Roller Vault':d.tier==='g'?'Gold':d.tier==='s'?'Silver':'Bronze';t.innerHTML='<i>'+(d.tier==='v'?'\ud83d\udd10':'\ud83c\udf9f\ufe0f')+'</i><span><b>'+(d.tier==='v'?'Vault unlocked!':'Quest complete!')+'</b>'+esc(d.txt)+' \u00b7 '+nm+' ticket earned. Tap to scratch.</span>';
+    L.forEach(function(q){var pct=Math.min(100,100*q.n/q.goal);h+='<div class="suq-q'+(q.done?' done':'')+(q.claimed?' cl':'')+'" data-g="'+esc(q.g||'')+'" role="button" tabindex="0">'+esc(q.txt)+(D.room||q.g!==D.me?'<em class="suq-gp">Play \u203a</em>':'')+'<small>'+(q.t==='e'?'1 card':q.t==='m'?'2 cards':'3 cards')+' · '+(q.claimed?'done \u2713 cards earned':q.done?'done!':fmt(q))+'</small><div class="bar"><i style="width:'+pct+'%"></i></div></div>';});
+    h+='<button type="button" class="suq-go alt" data-a="c">My trading cards</button><button type="button" class="suq-go" data-a="q">All daily quests</button>';
+    bx.innerHTML=h;bx.querySelector('.suq-x').onclick=close;[].forEach.call(bx.querySelectorAll('.suq-q'),function(r){r.onclick=function(){var g=r.getAttribute('data-g');close();if(g)try{parent.postMessage({arcade:'questGo',g:g},'*');}catch(e){}};});[].forEach.call(bx.querySelectorAll('.suq-go'),function(b){b.onclick=function(){var a=b.getAttribute('data-a');if(a==='c'){close();try{parent.postMessage({arcade:'openCards'},'*');}catch(e){}return;}go(a);};});}
+  var toastT=0;function toast(d){var t=document.querySelector('.suq-toast');if(!t){t=document.createElement('div');t.className='suq-toast';document.body.appendChild(t);t.onclick=function(){t.classList.remove('on');try{parent.postMessage({arcade:'openCards'},'*');}catch(e){}};}
+    var nc=d.tier==='v'?'a 5-card bonus pack':d.tier==='g'?'3 cards':d.tier==='s'?'2 cards':'1 card';t.innerHTML='<i>\ud83c\udccf</i><span><b>'+(d.tier==='v'?'All quests done!':'Quest complete!')+'</b>'+esc(d.txt)+' \u00b7 '+nc+' earned. Tap to see your cards.</span>';
     requestAnimationFrame(function(){t.classList.add('on');});clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('on');},4200);}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='qdone'){if(document.body)toast(d);return;}if(d&&d.arcade==='qcount'){D=d;if(document.body)render();}else if(d&&d.arcade==='fs'){setTimeout(place,80);setTimeout(place,400);}});
   addEventListener('resize',function(){setTimeout(place,60);});
@@ -592,21 +485,13 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 <body>
 <div class="wrap">
   <span class="pill"><i></i>Arcade &#xb7; Daily Quests</span>
-  <h1>Do the quests.<span>Scratch the tickets.</span></h1>
-  <p class="sub">Every day brings <b>7 new quests</b> from all over the casino and the parlor. Finish one and you instantly earn a <b>scratch-off ticket</b>: crosswords, treasure maps, poker hands and more. Winnings go straight into your bankroll.</p>
+  <h1>Do the quests.<span>Collect the cards.</span></h1>
+  <p class="sub">Every day brings <b>7 new quests</b> from all over the casino and the parlor. Finish one and you instantly earn <b>trading cards of the regulars</b>. Easy quests give 1 card, medium 2, hard 3, and finishing all 7 adds a 5-card pack. Every theme has its own version of each card to collect.</p>
   <div id="app">
-    <div class="top"><div class="ttl">Quests &amp; Tickets</div><div class="bankp">Bankroll<b id="bank">$1,000</b></div></div>
-    <div class="tabs"><button type="button" id="tQ" class="on">Daily Quests<span class="bd hide" id="bQ"></span></button><button type="button" id="tT">My Tickets<span class="bd hide" id="bT"></span></button></div>
+    <div class="top"><div class="ttl">Daily Quests</div><div class="cardp"><div class="ct">Cards collected<b id="ccount">0</b></div><button type="button" class="cbtn" id="cOpen">My cards<span class="n hide" id="cPk"></span></button></div></div>
     <div class="pane" id="pQ">
       <div class="when"><span>Today&rsquo;s quests &middot; new ones in <b id="reset">--</b></span><span id="qsum"></span></div>
       <div class="qs" id="qs"></div>
-    </div>
-    <div class="pane hide" id="pT">
-      <div class="tlist" id="tl"></div>
-    </div>
-    <div class="play hide" id="play">
-      <div class="ptop"><button class="back" type="button" id="pBack">&larr; Tickets</button><button class="rv" type="button" id="pRev">Reveal all</button></div>
-      <div class="ticket" id="tix"></div>
     </div>
   </div>
 </div>
@@ -1135,7 +1020,7 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 <\u002fscript>
 <script>
 /* ===== Daily quests: one shared list, the same 7 picks for everyone each day =====
-   Progress is written by the arcade shell (it hears every game), claims and tickets by the Quests page. */
+   Progress is written by the arcade shell (it hears every game), payouts are trading cards (cards_collect.js). */
 var SUQ=(function(){
   var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','plinko'];
   var PARLOR=['sol','spider','mines','gold','dominoes','boomtown','mjsol','mahjong','cwar','chess','checkers','pdice','liars','trail','wrangler','ironclads','sudoku','drop4'];
@@ -1246,23 +1131,20 @@ var SUQ=(function(){
       else p.n[q.id]=Math.min(q.goal,cur+(q.amt?n:1));
       if(p.n[q.id]!==cur)ch++;});
     if(ch)write('su_qprog',p);return ch;}
-  /* finishing a quest earns its ticket right away: no claim step. Returns the quests that just paid out. */
-  var TYPES=['xw','ttt','btd','map','pkr','spin'];
-  function autoClaim(){var st=status(),c=claims(),tk=read('su_tickets',[]),got=[];
-    st.forEach(function(s){if(!s.done||c.c[s.q.id])return;c.c[s.q.id]=1;var seed=(Math.random()*4294967296)>>>0,tier=s.q.t==='h'?'g':s.q.t==='m'?'s':'b';
-      tk.push({id:'t'+Date.now().toString(36)+(seed%1000)+got.length,tier:tier,type:TYPES[seed%TYPES.length],seed:seed,q:s.q.txt,t:Date.now(),done:false,prize:0});got.push({txt:s.q.txt,tier:tier});});
-    /* all 7 done today: one High-Roller Vault ticket on top */
-    if(st.length&&!c.vault&&st.every(function(s){return s.done&&c.c[s.q.id];})){c.vault=1;var vs=(Math.random()*4294967296)>>>0;
-      tk.push({id:'v'+Date.now().toString(36)+(vs%1000),tier:'v',type:'vault',seed:vs,q:'All 7 daily quests',t:Date.now(),done:false,prize:0});got.push({txt:'All 7 daily quests done',tier:'v'});}
-    if(got.length){write('su_qclaim',c);write('su_tickets',tk.slice(-120));}return got;}
+  /* finishing a quest pays out right away (trading cards, handed out by the shell): no claim step. Returns the quests that just paid out. */
+  function autoClaim(){var st=status(),c=claims(),got=[];
+    st.forEach(function(s){if(!s.done||c.c[s.q.id])return;c.c[s.q.id]=1;var tier=s.q.t==='h'?'g':s.q.t==='m'?'s':'b';got.push({txt:s.q.txt,tier:tier});});
+    /* all 7 done today: a bonus pack on top */
+    if(st.length&&!c.vault&&st.every(function(s){return s.done&&c.c[s.q.id];})){c.vault=1;got.push({txt:'All 7 daily quests done',tier:'v'});}
+    if(got.length)write('su_qclaim',c);return got;}
   function vaultEarned(){return !!claims().vault;}
   function status(){var p=prog(),c=claims();return today().map(function(q){var n=p.n[q.id]||0;return {q:q,n:n,done:n>=q.goal,claimed:!!c.c[q.id]};});}
   /* the quests a game can move forward (rooms show the whole list) */
   function relevant(g){return status().filter(function(st){var q=st.q;if(g==='floor'||g==='parlor')return true;
     if(q.g===g||q.g==='any')return true;if(q.g==='casino')return CASINO.indexOf(g)>=0;if(q.g==='parlor')return PARLOR.indexOf(g)>=0;return false;});}
   function claimable(){return status().filter(function(s){return s.done&&!s.claimed;}).length;}
-  function tickets(){return read('su_tickets',[]);}
-  function unplayed(){return tickets().filter(function(t){return !t.done;}).length;}
+  function tickets(){return [];}
+  function unplayed(){return 0;}
   return {Q:Q,BY:BY,autoClaim:autoClaim,vaultEarned:vaultEarned,relevant:relevant,today:today,record:record,status:status,claimable:claimable,claims:claims,tickets:tickets,unplayed:unplayed,read:read,write:write,dayKey:dayKey,rng:rng,shuf:shuf,CASINO:CASINO,PARLOR:PARLOR};
 })();
 
@@ -1280,293 +1162,35 @@ var ART=(function(){var B='https://saddleup-arcade.vercel.app/art/',ok={},cbs=[]
 <\u002fscript>
 <script>
 (function(){'use strict';
-var SYMN={"\u2b50": "sym_star", "\u{1f40e}": "sym_horse", "\u{1f335}": "sym_cactus", "\u{1f920}": "sym_cowboy", "\u{1f462}": "sym_boot", "\u{1f52b}": "sym_revolver", "\u{1f4b0}": "sym_bag", "\u{1f37a}": "sym_beer", "\u{1f985}": "sym_eagle", "\u{1f402}": "sym_bull", "\u{1f6e1}\ufe0f": "sym_shield", "\u{1f3b2}": "sym_dice", "\u{1f48e}": "sym_diamond", "\u{1f451}": "sym_crown", "\u{1fa99}": "sym_coin", "\u{1f511}": "sym_key", "\u{1f943}": "sym_whiskey", "\u{1f3a9}": "sym_tophat"};function SYM(e){return ART.img(SYMN[e],e,'symimg');}
-try{ART.probe(Object.keys(SYMN).map(function(k){return SYMN[k];}).concat(['vt_dial','vt_box']));}catch(e){}
 var $=function(i){return document.getElementById(i);};
-/* amounts of $1M and up show short (26.896B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.floor(n/U[i][0]*1000)/1000;t=String(x)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?/,t);}
-function money(a,b,c){return __suBig(money0(a,b,c),a);}
-function money0(n){n=Math.round(n);return '$'+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
-/* ---------- bankroll ---------- */
-var bank=1000;try{var wa=Live.walletAmount();if(typeof wa==='number'&&isFinite(wa))bank=wa;}catch(e){}
-var WL=null;try{WL=Live.wallet({get:function(){return bank;},set:function(x){bank=x;hud();},idle:function(){return !paying;},active:function(){return true;}});}catch(e){}
-var paying=false;
-function hud(){$('bank').textContent=money(bank);}
-/* ---------- sound ---------- */
+function money(n){n=Math.round(n);var a=Math.abs(n);if(a>=1e6){var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']];for(var i=0;i<U.length;i++)if(a>=U[i][0])return '$'+(Math.floor(n/U[i][0]*1000)/1000)+U[i][1];}return '$'+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 var AC=null;function ac(){try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){}return AC;}
-function tone(f,d,delay,vol,type){var a=ac();if(!a)return;try{var o=a.createOscillator(),g=a.createGain(),t=a.currentTime+(delay||0);o.type=type||'triangle';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol||.08,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05);}catch(e){}}
-var scrN=null;function sScratch(){var a=ac();if(!a)return;try{if(!scrN){var sr=a.sampleRate,b=a.createBuffer(1,sr*.06,sr),ch=b.getChannelData(0);for(var i=0;i<ch.length;i++)ch[i]=(Math.random()*2-1)*(1-i/ch.length);scrN=b;}
-  var s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();s.buffer=scrN;f.type='highpass';f.frequency.value=3000;g.gain.value=.05;s.connect(f);f.connect(g);g.connect(a.destination);s.start();}catch(e){}}
+function tone(f,d,delay,vol){var a=ac();if(!a)return;try{var o=a.createOscillator(),g=a.createGain(),t=a.currentTime+(delay||0);o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol||.08,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05);}catch(e){}}
 function sDing(){tone(988,.18,0,.06);}
-function sWin(big){(big?[523,659,784,1047,1319]:[659,784,988]).forEach(function(f,i){tone(f,.35,i*.09,.09);});}
-function sMiss(){tone(330,.25,0,.05);tone(262,.3,.1,.05);}
-/* ---------- tickets ---------- */
-var TIER={b:{name:'BRONZE',mult:1},s:{name:'SILVER',mult:3},g:{name:'GOLD',mult:10},v:{name:'VAULT',mult:25}};
-var TYPES={
-  xw:{name:'Crossword Cash',ds:'Scratch your 18 letters. Complete 3 or more words in the puzzle to win.'},
-  ttt:{name:'Three in a Row',ds:'Scratch the board and the called brands. Mark three in a row to win.'},
-  btd:{name:'Beat the Dealer',ds:'Five hands against the dealer. Any card that beats the dealer wins its prize.'},
-  map:{name:'Treasure Map',ds:'Six digs. Find the buried chests and watch out for rattlers.'},
-  pkr:{name:'Poker Hand',ds:'Scratch five cards. A pair of jacks or better pays.'},
-  spin:{name:'Spin to Win',ds:'Five spins of the wheel. Land on your target value to win it.'},
-  vault:{name:'High-Roller Vault',ds:'Scratch the combination, then open the deposit boxes. Matching boxes pay out.'}
-};
-var TKEYS=['xw','ttt','btd','map','pkr','spin'];
-function tierOf(t){return t==='h'?'g':t==='m'?'s':'b';}
-function loadT(){return SUQ.tickets();}
-function saveT(a){SUQ.write('su_tickets',a.slice(-120));}
-/* ---------- quests list ---------- */
+/* cards each quest pays: easy 1, medium 2, hard 3; all 7 adds a 5-card pack */
+var NC={e:1,m:2,h:3};
+function cardsApi(){try{return parent.__suCards||null;}catch(e){return null;}}
 function fmt(q,n){return q.amt?money(n)+' / '+money(q.goal):n+' / '+q.goal;}
-function renderQ(){var st=SUQ.status(),h='',done=0,cl=0;
-  st.forEach(function(s){var q=s.q,tr=tierOf(q.t),pct=Math.min(100,100*s.n/q.goal);if(s.done)done++;if(s.claimed)cl++;
-    h+='<div class="q go'+(s.done?' done':'')+(s.claimed?' claimed':'')+'" data-g="'+q.g+'" title="Go play"><span class="tk '+tr+'">'+TIER[tr].name.slice(0,1)+'</span>'+
-      '<div class="tx">'+q.txt+'<small>'+(q.t==='e'?'Easy':q.t==='m'?'Medium':'Hard')+' \u00b7 '+TIER[tr].name.charAt(0)+TIER[tr].name.slice(1).toLowerCase()+' ticket \u00b7 '+fmt(q,s.n)+'</small><div class="bar"><i style="width:'+pct+'%"></i></div></div>'+
-      '<button class="claim" type="button" data-q="'+q.id+'"'+(s.done&&!s.claimed?'':' disabled')+'>'+(s.claimed?'Ticket earned \u2713':s.done?'Earning\u2026':'In progress')+'</button></div>';});
-  var vg=SUQ.vaultEarned();h+='<div class="vaultrow'+(vg?' got':'')+'"><span class="vi">\u{1f510}</span><div class="tx">Finish all '+st.length+' quests<small>Bonus: a High-Roller Vault ticket \u00b7 prizes \u00d725 \u00b7 '+done+' / '+st.length+'</small><div class="bar"><i style="width:'+(100*done/Math.max(1,st.length))+'%"></i></div></div><button class="claim" type="button" disabled>'+(vg?'Ticket earned \u2713':'Locked')+'</button></div>';
+function ck(n){var h='';for(var i=0;i<Math.min(3,n);i++)h+='<i></i>';return '<span class="ck">'+h+'<b>\u00d7'+n+'</b></span>';}
+function renderQ(){var st=SUQ.status(),h='',done=0;
+  st.forEach(function(s){var q=s.q,n=NC[q.t]||1,pct=Math.min(100,100*s.n/q.goal);if(s.done)done++;
+    h+='<div class="q go'+(s.done?' done':'')+(s.claimed?' claimed':'')+'" data-g="'+q.g+'" title="Go play">'+ck(n)+
+      '<div class="tx">'+q.txt+'<small>'+(q.t==='e'?'Easy':q.t==='m'?'Medium':'Hard')+' \u00b7 '+n+' card'+(n>1?'s':'')+' \u00b7 '+fmt(q,s.n)+'</small><div class="bar"><i style="width:'+pct+'%"></i></div></div>'+
+      '<button class="claim" type="button" disabled>'+(s.claimed?'Cards earned \u2713':s.done?'Earning\u2026':'In progress')+'</button></div>';});
+  var vg=SUQ.vaultEarned();h+='<div class="vaultrow'+(vg?' got':'')+'"><span class="vi">\u{1f0cf}</span><div class="tx">Finish all '+st.length+' quests<small>Bonus: a 5-card pack with better odds of silver and gold \u00b7 '+done+' / '+st.length+'</small><div class="bar"><i style="width:'+(100*done/Math.max(1,st.length))+'%"></i></div></div><button class="claim" type="button" disabled>'+(vg?'Pack earned \u2713':'Locked')+'</button></div>';
   $('qs').innerHTML=h;$('qsum').textContent=done+' of '+st.length+' done';
-  [].forEach.call($('qs').querySelectorAll('.claim'),function(b){b.onclick=function(){claim(b.getAttribute('data-q'));};});
-  [].forEach.call($('qs').querySelectorAll('.q.go'),function(r){r.onclick=function(e){if(e.target.closest('.claim'))return;try{parent.postMessage({arcade:'questGo',g:r.getAttribute('data-g')},'*');}catch(_){}};});
-  badges();}
-function claim(id){var st=SUQ.status().filter(function(s){return s.q.id===id;})[0];if(!st||!st.done||st.claimed)return;
-  var c=SUQ.claims();if(c.c[id])return;c.c[id]=1;SUQ.write('su_qclaim',c);
-  var tk=loadT(),seed=(Math.random()*4294967296)>>>0;
-  tk.push({id:'t'+Date.now().toString(36)+(seed%1000),tier:tierOf(st.q.t),type:TKEYS[seed%TKEYS.length],seed:seed,q:st.q.txt,t:Date.now(),done:false,prize:0});
-  saveT(tk);try{SUQ.autoClaim();}catch(e){}sDing();renderQ();renderT();tellShell();
-  toast('Ticket claimed! Open <b>My Tickets</b> to scratch it.');}
-function badges(){var a=SUQ.claimable(),b=SUQ.unplayed();$('bQ').textContent=a;$('bQ').classList.toggle('hide',!a);$('bT').textContent=b;$('bT').classList.toggle('hide',!b);}
+  [].forEach.call($('qs').querySelectorAll('.q.go'),function(r){r.onclick=function(){try{parent.postMessage({arcade:'questGo',g:r.getAttribute('data-g')},'*');}catch(_){}};});
+  cards();}
+function cards(){var A=cardsApi();if(!A)return;try{var s=A.state(),c=A.count(),t=A.total?A.total():0;$('ccount').textContent=c+(t?' / '+t:'');var p=(s.packs||[]).length;$('cPk').textContent=p>9?'9+':p;$('cPk').classList.toggle('hide',!p);}catch(e){}}
+$('cOpen').onclick=function(){ac();try{parent.postMessage({arcade:'openCards'},'*');}catch(e){}};
 function resetIn(){var d=new Date(),m=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1),s=Math.max(0,Math.floor((m-d)/1000));$('reset').textContent=Math.floor(s/3600)+'h '+Math.floor(s%3600/60)+'m';}
-function renderT(){var tk=loadT(),h='';var open=tk.filter(function(t){return !t.done;}),past=tk.filter(function(t){return t.done;}).slice(-24).reverse();
-  if(!tk.length)h='<div class="empty" style="grid-column:1/-1">No tickets yet.<br>Finish a daily quest and claim a ticket to scratch it here.</div>';
-  open.concat(past).forEach(function(t){var T=TYPES[t.type];h+='<button type="button" class="tcard T-'+t.type+(t.done?' played':'')+'" data-t="'+t.id+'"><span class="tr">'+TIER[t.tier].name+'</span><div class="nm">'+T.name+'</div><div class="ds">'+(t.done?'Played':T.ds)+'</div><div class="st">'+(t.done?(t.prize?'Won '+money(t.prize):'No win'):'Tap to scratch')+'</div></button>';});
-  $('tl').innerHTML=h;[].forEach.call($('tl').querySelectorAll('.tcard'),function(b){b.onclick=function(){openT(b.getAttribute('data-t'));};});badges();}
-function tab(w){$('tQ').classList.toggle('on',w==='q');$('tT').classList.toggle('on',w==='t');$('pQ').classList.toggle('hide',w!=='q');$('pT').classList.toggle('hide',w!=='t');}
-$('tQ').onclick=function(){tab('q');};$('tT').onclick=function(){tab('t');};
-function tellShell(){try{parent.postMessage({arcade:'questsChanged'},'*');}catch(e){}}
-var toastT=0;function toast(t){var r=$('qsum');r.innerHTML=t;clearTimeout(toastT);toastT=setTimeout(renderQ,3500);}
-/* ---------- scratching ---------- */
-var FOIL=new Image();FOIL.src='https://saddleup-arcade.vercel.app/art/scratch_foil.webp';
-function scratch(el,onReveal){var cv=document.createElement('canvas');el.appendChild(cv);var ctx=null,done=false,w=0,h=0,moves=0;
-  var GX=12,GY=12,cov=new Uint8Array(GX*GY);
-  function init(){if(ctx)return true;var r=el.getBoundingClientRect();if(!r.width)return false;w=Math.round(r.width);h=Math.round(r.height);cv.width=w;cv.height=h;ctx=cv.getContext('2d');
-    var g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#cfd4da');g.addColorStop(.5,'#9aa3ad');g.addColorStop(1,'#d8dde2');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-    if(FOIL.complete&&FOIL.naturalWidth){ctx.drawImage(FOIL,0,0,Math.max(w,h),Math.max(w,h));}
-    ctx.fillStyle='rgba(60,60,70,.35)';ctx.font='900 '+Math.max(9,Math.min(14,h/4))+'px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(w>84?'SCRATCH':'\u2605',w/2,h/2);
-    ctx.globalCompositeOperation='destination-out';return true;}
-  function cleared(){var c=0;for(var i=0;i<cov.length;i++)c+=cov[i];return c/cov.length;}
-  function reveal(){if(done)return;done=true;cv.classList.add('gone');setTimeout(function(){cv.remove();},400);onReveal&&onReveal();}
-  var down=false,lx=0,ly=0;
-  function pt(e){var r=cv.getBoundingClientRect(),kx=r.width?cv.width/r.width:1,ky=r.height?cv.height/r.height:1;return [(e.clientX-r.left)*kx,(e.clientY-r.top)*ky];}
-  function dot(x,y){var rr=Math.max(10,Math.min(w,h)*.22);ctx.beginPath();ctx.arc(x,y,rr,0,Math.PI*2);ctx.fill();
-    for(var gy=0;gy<GY;gy++)for(var gx=0;gx<GX;gx++){var cx=(gx+.5)*w/GX,cy=(gy+.5)*h/GY;if((cx-x)*(cx-x)+(cy-y)*(cy-y)<=rr*rr)cov[gy*GX+gx]=1;}}
-  cv.addEventListener('pointerdown',function(e){if(done||!init())return;ac();down=true;try{cv.setPointerCapture(e.pointerId);}catch(x){}var p=pt(e);lx=p[0];ly=p[1];dot(lx,ly);sScratch();e.preventDefault();});
-  cv.addEventListener('pointermove',function(e){if(!down||done)return;var p=pt(e),dx=p[0]-lx,dy=p[1]-ly,dist=Math.sqrt(dx*dx+dy*dy),st=Math.max(1,Math.floor(dist/5));
-    for(var i=1;i<=st;i++)dot(lx+dx*i/st,ly+dy*i/st);lx=p[0];ly=p[1];if(++moves%6===0){sScratch();if(cleared()>.5)reveal();}});
-  function up(){if(!down)return;down=false;if(!done&&ctx&&cleared()>.38)reveal();}
-  cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
-  /* a double tap uncovers the spot in one go */
-  var lastTap=0;cv.addEventListener('click',function(){var t=Date.now();if(t-lastTap<350)reveal();lastTap=t;});
-  /* paint the silver cover right away (retry until the ticket is laid out) */
-  (function paint(k){if(!init()&&k<60)requestAnimationFrame(function(){paint(k+1);});})(0);
-  return {reveal:reveal,isDone:function(){return done;}};}
-/* ---------- the five games: each ticket's outcome is fixed by its seed ---------- */
-var WORDS=['SADDLE','SPURS','RODEO','COWBOY','RANCH','HORSE','BRONCO','CACTUS','DESERT','SHERIFF','OUTLAW','POSSE','WAGON','LASSO','STAMPEDE','PRAIRIE','CANYON','SALOON','DEPUTY','BANDIT','BOUNTY','GOLD','NUGGET','MESA','BADGE','CATTLE','STEER','BOOTS','HOLSTER','RIFLE','TRAIL','CAMPFIRE','COYOTE','EAGLE','BUFFALO','MUSTANG','STABLE','HAYLOFT','WINDMILL','RAILROAD','BUCKLE','POKER','DEALER','JACKPOT','LUCKY','ACES','STETSON','DUSTY','TUMBLE','FRONTIER'];
-var XWORDS=WORDS.concat(['HAT','GUN','COLT','MULE','OXEN','HAY','BARN','CORRAL','REIN','REINS','SPUR','ROPE','DUST','MINE','PICK','PAN','ORE','SILVER','TRAIN','DEPOT','STAGE','COACH','SADDLES','PONY','FOAL','MARE','COLTS','HERD','DRIVE','TRAILS','CREEK','RIVER','FORD','BLUFF','RIDGE','PEAK','DUNE','SAND','HEAT','SUN','MOON','STAR','NIGHT','CAMP','FIRE','COFFEE','BEANS','BACON','STEAK','GRUB','CHUCK','WAGONS','FIDDLE','BANJO','PIANO','CARDS','DICE','CHIPS','POT','ANTE','BLUFFS','HAND','DEAL','DRAW','FLUSH','PAIR','KING','QUEEN','JACK','ACE','JOKER','TOWN','JAIL','BANK','VAULT','SAFE','LOOT','POSSES','MARSHAL','RANGER','SCOUT','TRADER','MINER','SMITH','FORGE','ANVIL','IRON','BRAND','STEERS','BULL','BRONC','RIDER','ROPER','CHAPS','VEST','SCARF','BOOT','HIDE','LEATHER','WOOL','LONGHORN','PRAIRIE','MESAS','ARROYO','ADOBE','PUEBLO','TRADE','POST','WELL','WATER','TROUGH','FENCE','GATE','POSTS','WIRE','PLOW','SEED','CROP','CORN','WHEAT','OATS','APPLE','PIE','SALT','TALL','TALE','YARN','HOWDY','PARTNER','YONDER','RUSTLER','WRANGLER']).filter(function(w,i,a){return w.length>=3&&w.length<=9&&a.indexOf(w)===i;});
-/* builds an interlocking crossword (across and down) on an 11x11 grid, the same way every time for a seed */
-function buildXW(R){var N=11,best=null;
-  for(var tr=0;tr<40;tr++){var g=[],words=[],pool=XWORDS.slice();for(var i=pool.length-1;i>0;i--){var j=Math.floor(R()*(i+1)),t=pool[i];pool[i]=pool[j];pool[j]=t;}
-    var D=[];for(var y=0;y<N;y++){g.push([]);D.push([]);for(var x=0;x<N;x++){g[y].push('');D[y].push(0);}}
-    function at(x,y){return x<0||y<0||x>=N||y>=N?null:g[y][x];}
-    function fits(w,x,y,d){var dx=d?0:1,dy=d?1:0,cross=0;if(x<0||y<0||x+dx*(w.length-1)>=N||y+dy*(w.length-1)>=N)return -1;
-      if(at(x-dx,y-dy)||at(x+dx*w.length,y+dy*w.length))return -1;
-      for(var k=0;k<w.length;k++){var cx=x+dx*k,cy=y+dy*k,c=g[cy][cx];
-        if(c){if(c!==w[k]||(D[cy][cx]&(d?2:1)))return -1;cross++;}else{if(at(cx+dy,cy+dx)||at(cx-dy,cy-dx))return -1;}}
-      return cross;}
-    function put(w,x,y,d){var dx=d?0:1,dy=d?1:0;for(var k=0;k<w.length;k++){g[y+dy*k][x+dx*k]=w[k];D[y+dy*k][x+dx*k]|=(d?2:1);}words.push({w:w,x:x,y:y,d:d});}
-    var first=pool.filter(function(w){return w.length>=7&&w.length<=N;})[0]||'FRONTIER';pool.splice(pool.indexOf(first),1);
-    put(first,Math.floor((N-first.length)/2),Math.floor(R()*3)+3,0);
-    for(var pi=0;pi<pool.length&&words.length<XWW;pi++){var w=pool[pi],opts=[];
-      words.forEach(function(pw){for(var a=0;a<pw.w.length;a++)for(var b=0;b<w.length;b++){if(pw.w[a]!==w[b])continue;var d=pw.d?0:1,x,y;
-        if(d){x=pw.x+a;y=pw.y-b;}else{x=pw.x-b;y=pw.y+a;}var c=fits(w,x,y,d);if(c>0)opts.push([x,y,d,c]);}});
-      if(words.some(function(q){return q.w.indexOf(w)>=0||w.indexOf(q.w)>=0;}))continue;
-      if(opts.length){var o=opts[Math.floor(R()*opts.length)];put(w,o[0],o[1],o[2]);}}
-    if(!best||words.length>best.words.length)best={g:g,words:words,N:N};if(words.length>=XWW)break;}
-  return best;}
-function gen(t){var R=SUQ.rng(t.seed),o={type:t.type};
-  if(t.type==='xw'){var X=buildXW(R),inW={};X.words.forEach(function(w){w.w.split('').forEach(function(c){inW[c]=(inW[c]||0)+1;});});
-    /* your 18 letters lean toward the ones in the grid, like a real crossword scratcher */
-    var al='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),wt=al.map(function(c){return inW[c]?XWB:1;}),lt=[];
-    while(lt.length<XWN){var tw=0;al.forEach(function(c,i){if(lt.indexOf(c)<0)tw+=wt[i];});var x=R()*tw;for(var i=0;i<26;i++){if(lt.indexOf(al[i])>=0)continue;x-=wt[i];if(x<=0){lt.push(al[i]);break;}}}
-    var full=X.words.filter(function(w){return w.w.split('').every(function(c){return lt.indexOf(c)>=0;});}).length;
-    o.grid=X;o.letters=SUQ.shuf(lt,t.seed^0x77);o.k=full;o.pay=XWP;o.prize=XWP[Math.min(full,XWP.length-1)];}
-  else if(t.type==='ttt'){var SY=['\u2b50','\u{1f40e}','\u{1f335}','\u{1f920}','\u{1f462}','\u{1f52b}','\u{1f4b0}','\u{1f37a}','\u{1f985}','\u{1f402}','\u{1f6e1}\ufe0f','\u{1f3b2}'];
-    var bd=SUQ.shuf(SY,t.seed).slice(0,9),cl=SUQ.shuf(SY,t.seed^0x9e37).slice(0,6);
-    var L=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]],lines=L.filter(function(l){return l.every(function(i){return cl.indexOf(bd[i])>=0;});});
-    o.board=bd;o.called=cl;o.lines=lines;o.L=L;var pay=[0,25,75,300,1200];o.pay=pay;o.prize=pay[Math.min(4,lines.length)];}
-  else if(t.type==='btd'){var rk=function(){return 2+Math.floor(R()*13);},su='shdc';
-    var PZ=[[2,40],[5,30],[10,15],[20,9],[50,4],[100,1.5],[500,.5]],tot=PZ.reduce(function(a,b){return a+b[1];},0);
-    function pz(){var x=R()*tot;for(var i=0;i<PZ.length;i++){x-=PZ[i][1];if(x<=0)return PZ[i][0];}return 2;}
-    o.dealer={r:rk(),s:su[Math.floor(R()*4)]};o.hands=[];for(var i=0;i<5;i++){var c={r:rk(),s:su[Math.floor(R()*4)]},p=pz();o.hands.push({c:c,p:p,win:c.r>o.dealer.r});}
-    o.prize=o.hands.reduce(function(a,h){return a+(h.win?h.p:0);},0);}
-  else if(t.type==='map'){var cells=SUQ.shuf(Array.apply(null,{length:25}).map(function(_,i){return i;}),t.seed);o.chests=cells.slice(0,5);o.snakes=cells.slice(5,7);o.digs=6;o.pay=[0,6,40,200,1000,6000];}
-  else if(t.type==='pkr'){var d=[];for(var s=0;s<4;s++)for(var r=2;r<=14;r++)d.push({r:r,s:'shdc'[s]});d=SUQ.shuf(d,t.seed);o.cards=d.slice(0,5);var hv=pokerHand(o.cards);o.hand=hv[0];o.prize=hv[1];o.table=PKT;}
-  else if(t.type==='spin'){o.wheel=SPW;var tot=SPW.reduce(function(a,w){return a+w[1];},0);
-    function pick(){var x=R()*tot;for(var i=0;i<SPW.length;i++){x-=SPW[i][1];if(x<=0)return i;}return 0;}
-    var tg;do{tg=pick();}while(SPW[tg][0]==='\u2605');o.target=tg;o.spins=[];o.prize=0;
-    for(var k=0;k<5;k++){var w=pick();o.spins.push(w);if(w===tg)o.prize+=SPW[w][0];else if(SPW[w][0]==='\u2605')o.prize+=SPW[tg][0]*5;}}
-  else if(t.type==='vault'){var SYM=['\u{1f48e}','\u{1f451}','\u{1fa99}','\u{1f511}','\u{1f4b0}','\u2b50','\u{1f40e}','\u{1f3b2}','\u{1f335}','\u{1f920}','\u{1f943}','\u{1f3a9}'],sy=SUQ.shuf(SYM,t.seed);o.combo=sy.slice(0,3);
-    var VZ=[[1,45],[2,25],[4,14],[8,8],[20,5],[60,2],[250,.8],[1000,.2]],vt=VZ.reduce(function(a,b){return a+b[1];},0);
-    function vp(){var x=R()*vt;for(var i=0;i<VZ.length;i++){x-=VZ[i][1];if(x<=0)return VZ[i][0];}return 2;}
-    o.boxes=[];for(var b=0;b<12;b++){var s2=R()<.3?o.combo[Math.floor(R()*3)]:sy[3+Math.floor(R()*9)],pz=vp();o.boxes.push({s:s2,p:pz,win:o.combo.indexOf(s2)>=0});}
-    o.prize=o.boxes.reduce(function(a,b){return a+(b.win?b.p:0);},0);}
-  return o;}
-/* wheel: [value, weight]; \u2605 pays 5x your target */
-var SPW=[[2,22],[5,20],[10,15],[20,11],[50,7],[100,4],[250,2],[1000,1],['\u2605',4],[3,18],[15,12],[30,8]];
-var PKT=[['Royal flush',50000],['Straight flush',20000],['Four of a kind',5000],['Full house',1200],['Flush',800],['Straight',600],['Three of a kind',250],['Two pair',100],['Jacks or better',40]];
-var XWB=1.4,XWN=18,XWW=11,XWP=[0,0,0,3,8,15,40,120,400,1500,5000,20000];
-function pokerHand(cs){var r=cs.map(function(c){return c.r;}).sort(function(a,b){return b-a;}),cnt={};r.forEach(function(x){cnt[x]=(cnt[x]||0)+1;});
-  var v=Object.keys(cnt).map(function(k){return cnt[k];}).sort(function(a,b){return b-a;}),fl=cs.every(function(c){return c.s===cs[0].s;});
-  var u=Object.keys(cnt).map(Number).sort(function(a,b){return b-a;}),st=u.length===5&&(u[0]-u[4]===4||(u[0]===14&&u[1]===5));
-  if(st&&fl)return u[0]===14&&u[1]===13?PKT[0]:PKT[1];if(v[0]===4)return PKT[2];if(v[0]===3&&v[1]===2)return PKT[3];if(fl)return PKT[4];if(st)return PKT[5];if(v[0]===3)return PKT[6];if(v[0]===2&&v[1]===2)return PKT[7];
-  if(v[0]===2){var pr=+Object.keys(cnt).filter(function(k){return cnt[k]===2;})[0];if(pr>=11)return PKT[8];}return ['No hand',0];}
-function card(c){var x={r:c.r===14?1:c.r,s:c.s,id:'k'+Math.random()};return makeCard(x,false);}
-function rname(r){return r===14?'Ace':r===13?'King':r===12?'Queen':r===11?'Jack':String(r);}
-/* ---------- playing a ticket ---------- */
-var CUR=null,SC=[];
-function openT(id){var tk=loadT(),t=tk.filter(function(x){return x.id===id;})[0];if(!t)return;CUR={t:t,o:gen(t),fin:t.done};SC=[];
-  var T=TYPES[t.type],m=TIER[t.tier].mult,el=$('tix');el.className='ticket T-'+t.type;
-  el.innerHTML='<div class="hd"><b>'+T.name+'</b><small>'+T.ds+'</small><span class="tier">'+TIER[t.tier].name+' TICKET \u00b7 PRIZES \u00d7'+m+'</span></div><div id="tb" style="container-type:inline-size"></div><div class="result" id="res"></div><div class="hint" id="hint"></div>';
-  /* size tickets to the screen you're actually looking at (the arcade frame can be taller than your phone) */
-  var vh=0;try{vh=window.top.innerHeight;}catch(e){}if(!vh)vh=Math.min(window.innerHeight,screen.height||window.innerHeight);
-  document.documentElement.style.setProperty('--tvh',vh+'px');document.documentElement.classList.toggle('short',vh<760);var vw=0;try{vw=window.top.innerWidth;}catch(e){}document.documentElement.classList.toggle('wide',(vw||innerWidth)>700);
-  $('play').classList.remove('hide');$('play').scrollTop=0;
-  try{$('play').scrollIntoView({block:'start'});}catch(e){}
-  ({xw:drawXW,ttt:drawTTT,btd:drawBTD,map:drawMAP,pkr:drawPKR,spin:drawSPIN,vault:drawVAULT})[t.type](CUR.o,m,t.done);
-  $('pRev').classList.toggle('hide',t.done||t.type==='map'||t.type==='spin');
-  if(t.done)showRes(t.prize,true);fitT();setTimeout(fitT,300);}
-/* tickets whose art has a picture on top: start the play area where the art's plain panel starts */
-var ARTTOP={vault:.49,spin:.52};
-function artPad(t){var k=(t.className.match(/T-(\w+)/)||[])[1],r=ARTTOP[k];if(!r)return;
-  /* the picture keeps its real shape: only its top part (title + scene) shows, the game sits on the panel below */
-  var w=t.offsetWidth,ah=w*4/3*r;t.style.setProperty('--arth',ah.toFixed(0)+'px');
-  t.style.setProperty('padding-top',(ah+6).toFixed(0)+'px','important');t.style.setProperty('padding-bottom',Math.max(16,w*.05).toFixed(0)+'px','important');}
-/* shrink the ticket to fit the screen you're looking at, so nothing hides below the bottom */
-function fitT(){var t=$('tix');if(!t||$('play').classList.contains('hide'))return;t.style.transform='';t.style.marginBottom='';artPad(t);
-  var vh=0,top=0;try{vh=window.top.innerHeight;var r=t.getBoundingClientRect(),w=window;top=r.top;while(w!==window.top&&w.frameElement){top+=w.frameElement.getBoundingClientRect().top;w=w.parent;}}catch(e){vh=innerHeight;top=t.getBoundingClientRect().top;}
-  var avail=vh-Math.max(0,top)-8,h=t.offsetHeight;if(h>avail&&avail>200){var sc=Math.max(.55,avail/h);t.style.transformOrigin='top center';t.style.transform='scale('+sc.toFixed(3)+')';t.style.marginBottom=(-h*(1-sc)).toFixed(0)+'px';}}
-addEventListener('resize',function(){setTimeout(fitT,100);});
-$('pBack').onclick=function(){$('play').classList.add('hide');CUR=null;renderT();};
-$('pRev').onclick=function(){SC.forEach(function(s){s.reveal();});};
-function allDone(){return SC.every(function(s){return s.isDone();});}
-function finish(prize){if(!CUR||CUR.fin)return;CUR.fin=true;var tk=loadT(),t=tk.filter(function(x){return x.id===CUR.t.id;})[0];if(!t||t.done)return;
-  t.done=true;t.prize=prize;t.at=Date.now();saveT(tk);
-  if(prize>0){paying=true;bank+=prize;hud();try{WL&&WL.tick();}catch(e){}paying=false;sWin(prize>=500*TIER[t.tier].mult/5);}else sMiss();
-  showRes(prize,false);$('pRev').classList.add('hide');tellShell();}
-function showRes(p,old){var r=$('res');r.className='result '+(p>0?'win':'lose');r.textContent=p>0?(old?'Won ':'You win ')+money(p)+'!':(old?'No win on this one.':'No win this time.');}
-function prizeList(pay,m,lbls){return '<div class="prizes">'+pay.map(function(v,i){return v?'<span data-i="'+i+'">'+lbls(i)+' '+money(v*m)+'</span>':'';}).join('')+'</div>';}
-/* Crossword Cash */
-function drawXW(o,m,old){var tb=$('tb'),X=o.grid,N=X.N,cells={};
-  X.words.forEach(function(w,wi){for(var k=0;k<w.w.length;k++){var key=(w.d?w.x:w.x+k)+','+(w.d?w.y+k:w.y);(cells[key]=cells[key]||{c:w.w[k],ws:[]}).ws.push(wi);}});
-  /* trim the empty edge of the grid */
-  var minx=N,miny=N,maxx=0,maxy=0;Object.keys(cells).forEach(function(k){var p=k.split(',').map(Number);minx=Math.min(minx,p[0]);maxx=Math.max(maxx,p[0]);miny=Math.min(miny,p[1]);maxy=Math.max(maxy,p[1]);});
-  var cols=maxx-minx+1,rows=maxy-miny+1,h='<div class="lbl">The puzzle</div><div class="xwg" style="grid-template-columns:repeat('+cols+',1fr);aspect-ratio:'+cols+'/'+rows+';width:min(100%,'+(cols*34)+'px,max(150px,calc((var(--tvh,var(--fsvh,100vh)) - var(--xwb,560px)) * '+cols+' / '+rows+')))">';
-  for(var y=miny;y<=maxy;y++)for(var x=minx;x<=maxx;x++){var c=cells[x+','+y];h+=c?'<i data-c="'+c.c+'" data-w="'+c.ws.join(' ')+'">'+c.c+'</i>':'<b></b>';}
-  h+='</div><div class="xwc" id="xwc">0 words</div><div class="lbl">Your letters</div><div class="grid letters" id="lts">'+o.letters.map(function(c){return '<div class="spot" data-c="'+c+'">'+c+'</div>';}).join('')+'</div>'+
-    prizeList(o.pay,m,function(i){return i+' words';});
-  tb.innerHTML=h;var got={};
-  function upd(){var full=0,done={};X.words.forEach(function(w,wi){var ok=w.w.split('').every(function(c){return got[c]||old&&o.letters.indexOf(c)>=0;});if(ok){done[wi]=1;full++;}});
-    [].forEach.call(tb.querySelectorAll('.xwg i'),function(e){var c=e.getAttribute('data-c'),on=!!(got[c]||(old&&o.letters.indexOf(c)>=0));e.classList.toggle('on',on);
-      e.classList.toggle('full',e.getAttribute('data-w').split(' ').some(function(w){return done[w];}));});
-    $('xwc').innerHTML='<b>'+full+'</b> word'+(full===1?'':'s')+' complete'+(o.pay[full]?' \u00b7 '+money(o.pay[full]*m):'');
-    [].forEach.call(tb.querySelectorAll('.prizes span'),function(s){s.classList.toggle('on',+s.getAttribute('data-i')===full);});return full;}
-  [].forEach.call(tb.querySelectorAll('#lts .spot'),function(sp){if(old)return;SC.push(scratch(sp,function(){got[sp.getAttribute('data-c')]=1;sDing();var f=upd();if(allDone()){finish((o.pay[Math.min(f,o.pay.length-1)]||0)*m);}}));});
-  upd();$('hint').textContent=old?'':'Every letter you scratch lights up in the puzzle. Light up every letter of a word to complete it. 3 or more words wins.';}
-/* Three in a Row */
-function drawTTT(o,m,old){var tb=$('tb');
-  tb.innerHTML='<div class="lbl">Called brands</div><div class="grid called" id="cl">'+o.called.map(function(s){return '<div class="spot">'+SYM(s)+'</div>';}).join('')+'</div>'+
-    '<div class="lbl">Your board</div><div class="grid board" id="bd">'+o.board.map(function(s,i){return '<div class="spot" data-i="'+i+'">'+SYM(s)+'</div>';}).join('')+'</div>'+prizeList(o.pay,m,function(i){return i+(i>3?'+ lines':i>1?' lines':' line');});
-  var cOpen={},bOpen={};
-  function upd(){var cells=tb.querySelectorAll('#bd .spot'),lines=0;
-    [].forEach.call(cells,function(c,i){c.classList.toggle('hit',!!((bOpen[i]||old)&&o.called.some(function(s,k){return (cOpen[k]||old)&&s===o.board[i];})));c.classList.remove('line');});
-    o.L.forEach(function(l){if(l.every(function(i){return cells[i].classList.contains('hit');})){lines++;l.forEach(function(i){cells[i].classList.add('line');});}});
-    [].forEach.call(tb.querySelectorAll('.prizes span'),function(s){s.classList.toggle('on',+s.getAttribute('data-i')===Math.min(4,lines));});return lines;}
-  if(!old){[].forEach.call(tb.querySelectorAll('#cl .spot'),function(sp,k){SC.push(scratch(sp,function(){cOpen[k]=1;upd();end();}));});
-    [].forEach.call(tb.querySelectorAll('#bd .spot'),function(sp,i){SC.push(scratch(sp,function(){bOpen[i]=1;upd();end();}));});}
-  function end(){if(allDone())finish(o.pay[Math.min(4,upd())]*m);}
-  upd();$('hint').textContent=old?'':'Board squares that match a called brand get marked. Three marked in a row wins.';}
-/* Beat the Dealer */
-function drawBTD(o,m,old){var tb=$('tb');
-  tb.innerHTML='<div class="lbl">Dealer\u2019s card</div><div class="dealer"><div class="spot" id="dl"></div></div><div class="lbl">Your hands</div><div class="grid hands" id="hs">'+
-    o.hands.map(function(h,i){return '<div class="spot" data-i="'+i+'"><span class="cs"></span><span class="pz">'+money(h.p*m)+'</span></div>';}).join('')+'</div>';
-  $('dl').appendChild(card(o.dealer));(function(cc){var ix=document.createElement('span');ix.className='ix'+(cc.s==='h'||cc.s==='d'?' red':'');ix.textContent=({14:'A',13:'K',12:'Q',11:'J'}[cc.r]||cc.r)+{s:'\u2660',h:'\u2665',d:'\u2666',c:'\u2663'}[cc.s];$('dl').appendChild(ix);})(o.dealer);tb.querySelectorAll('#hs .spot').forEach(function(sp,i){var cc=o.hands[i].c,cs=sp.querySelector('.cs');cs.appendChild(card(cc));
-    /* small cards can lose their corner rank: always show a clear index */
-    var ix=document.createElement('span');ix.className='ix'+(cc.s==='h'||cc.s==='d'?' red':'');ix.textContent=({14:'A',13:'K',12:'Q',11:'J'}[cc.r]||cc.r)+{s:'\u2660',h:'\u2665',d:'\u2666',c:'\u2663'}[cc.s];cs.appendChild(ix);});
-  var dOpen=old,hOpen={};
-  function upd(){tb.querySelectorAll('#hs .spot').forEach(function(sp,i){sp.classList.toggle('won',!!(dOpen&&(hOpen[i]||old)&&o.hands[i].win));});}
-  if(!old){SC.push(scratch($('dl'),function(){dOpen=true;upd();end();}));tb.querySelectorAll('#hs .spot').forEach(function(sp,i){SC.push(scratch(sp,function(){hOpen[i]=1;upd();end();}));});}
-  function end(){if(allDone())finish(o.prize*m);}
-  upd();$('hint').textContent=old?'':'A card higher than the dealer\u2019s ('+'aces high) wins the prize under it. Ties don\u2019t win.';}
-/* Treasure Map: you choose where to dig */
-function drawMAP(o,m,old){var tb=$('tb'),used=0,found=0,over=old;
-  tb.innerHTML='<div class="lbl">Pick your spots</div><div class="mapwrap"><div class="grid map" id="mp">'+Array.apply(null,{length:25}).map(function(_,i){return '<button type="button" data-i="'+i+'"></button>';}).join('')+'</div></div><div class="digs" id="dg"></div>'+prizeList(o.pay,m,function(i){return i+(i>1?' chests':' chest');});
-  function dg(){$('dg').innerHTML=Array.apply(null,{length:o.digs}).map(function(_,i){return '<i class="'+(i<used?'used':'')+'"></i>';}).join('');
-    [].forEach.call(tb.querySelectorAll('.prizes span'),function(s){s.classList.toggle('on',+s.getAttribute('data-i')===found);});}
-  var bs=tb.querySelectorAll('#mp button');
-  function show(i,b){var c=o.chests.indexOf(i)>=0,s=o.snakes.indexOf(i)>=0;b.classList.add('dug');b.disabled=true;b.textContent=c?'\u{1f4b0}':s?'\u{1f40d}':'\u00b7';return c?1:s?-1:0;}
-  [].forEach.call(bs,function(b){var i=+b.getAttribute('data-i');b.onclick=function(){if(over||b.disabled)return;ac();used++;var r=show(i,b);
-    if(r>0){found++;sDing();}else if(r<0){tone(150,.4,0,.08,'sawtooth');}else sScratch();
-    dg();if(r<0||used>=o.digs){over=true;setTimeout(function(){[].forEach.call(bs,function(x,k){if(!x.disabled){x.disabled=true;if(o.chests.indexOf(k)>=0){x.textContent='\u{1f4b0}';x.style.opacity=.45;}}});
-      $('hint').textContent=r<0?'A rattler! That ends the dig.':'Out of digs. Faded chests are the ones you missed.';finish(o.pay[found]*m);},450);}};});
-  if(old){$('hint').textContent='';[].forEach.call(bs,function(b,k){b.disabled=true;if(o.chests.indexOf(k)>=0)b.textContent='\u{1f4b0}';});}
-  else $('hint').textContent='Tap a square to dig. 5 chests and 2 rattlers are buried here. Hit a rattler and the dig is over.';
-  dg();}
-/* Poker Hand */
-function drawPKR(o,m,old){var tb=$('tb');
-  tb.innerHTML='<div class="lbl">Your hand</div><div class="grid pk" id="pk">'+o.cards.map(function(){return '<div class="spot"></div>';}).join('')+'</div><div class="paytab" id="pt">'+o.table.map(function(r){return '<span data-h="'+r[0]+'">'+r[0]+'</span><span data-h="'+r[0]+'">'+money(r[1]*m)+'</span>';}).join('')+'</div>';
-  tb.querySelectorAll('#pk .spot').forEach(function(sp,i){var cc=o.cards[i];sp.appendChild(card(cc));
-    /* face cards in the art skins are full paintings: add a clear corner index */
-    if(cc.r>=11&&cc.r<=13){var ix=document.createElement('span');ix.className='ix'+(cc.s==='h'||cc.s==='d'?' red':'');ix.textContent={11:'J',12:'Q',13:'K'}[cc.r]+{s:'\u2660',h:'\u2665',d:'\u2666',c:'\u2663'}[cc.s];sp.appendChild(ix);}if(!old)SC.push(scratch(sp,function(){if(allDone()){hl();finish(o.prize*m);}}));});
-  function hl(){[].forEach.call(tb.querySelectorAll('#pt span'),function(s){s.classList.toggle('on',s.getAttribute('data-h')===o.hand);});
-    if(o.prize){var cnt={};o.cards.forEach(function(c){cnt[c.r]=(cnt[c.r]||0)+1;});var all=/flush|straight|full house/i.test(o.hand);tb.querySelectorAll('#pk .spot').forEach(function(sp,i){sp.classList.toggle('hl',all||cnt[o.cards[i].r]>1);});}$('hint').textContent=o.hand==='No hand'?'No paying hand.':o.hand+'!';}
-  if(old)hl();else $('hint').textContent='Scratch all five cards to see your hand.';}
-/* High-Roller Vault */
-function drawVAULT(o,m,old){var tb=$('tb');
-  tb.innerHTML='<div class="lbl">The combination</div><div class="combo" id="cb">'+o.combo.map(function(c){return '<div class="spot">'+SYM(c)+'</div>';}).join('')+'</div>'+
-    '<div class="lbl">Deposit boxes</div><div class="grid boxes" id="bx">'+o.boxes.map(function(b){return '<div class="spot"><span class="sy">'+SYM(b.s)+'</span><span class="pz">'+money(b.p*m)+'</span></div>';}).join('')+'</div>';
-  var cOpen={},bOpen={};
-  function upd(){var tot=0;tb.querySelectorAll('#bx .spot').forEach(function(sp,i){var b=o.boxes[i],w=b.win&&(old||bOpen[i])&&(old||o.combo.some(function(c,k){return cOpen[k]&&c===b.s;}));sp.classList.toggle('won',!!w);if(w)tot+=b.p;});
-    $('hint').textContent=old?'':tot?'Opened so far: '+money(tot*m):'Any box showing a combination symbol pays the prize in it.';}
-  if(!old){tb.querySelectorAll('#cb .spot').forEach(function(sp,k){SC.push(scratch(sp,function(){cOpen[k]=1;sDing();upd();end();}));});
-    tb.querySelectorAll('#bx .spot').forEach(function(sp,i){SC.push(scratch(sp,function(){bOpen[i]=1;upd();end();}));});}
-  function end(){if(allDone())finish(o.prize*m);}
-  upd();}
-/* Spin to Win: tap each spin and the wheel turns */
-function wheelSVG(W){var n=W.length,cols=['#b91c1c','#f59e0b','#1d4ed8','#059669','#7c3aed','#db2777'],h='<svg viewBox="-100 -100 200 200"><circle r="99" fill="#2a0a33"/>';
-  for(var i=0;i<n;i++){var a0=(i/n-.25)*Math.PI*2-Math.PI/n,a1=a0+Math.PI*2/n,x0=Math.cos(a0)*94,y0=Math.sin(a0)*94,x1=Math.cos(a1)*94,y1=Math.sin(a1)*94,am=(a0+a1)/2,deg=am*180/Math.PI;
-    var star=W[i][0]==='\u2605';h+='<path d="M0 0L'+x0.toFixed(2)+' '+y0.toFixed(2)+'A94 94 0 0 1 '+x1.toFixed(2)+' '+y1.toFixed(2)+'Z" fill="'+(star?'#fde68a':cols[i%cols.length])+'" stroke="#fde68a" stroke-width="1"/>';
-    h+='<text transform="rotate('+deg.toFixed(1)+') translate(64 0) rotate(90)" text-anchor="middle" dominant-baseline="middle" font-family="Rye,Georgia,serif" font-size="'+(star?20:String(W[i][0]).length>3?11:14)+'" fill="'+(star?'#7c2d12':'#fff')+'" stroke="rgba(0,0,0,.35)" stroke-width=".6">'+(star?'\u2605':'$'+W[i][0])+'</text>';}
-  return h+'<circle r="14" fill="#fde68a" stroke="#7c5a1e" stroke-width="3"/></svg>';}
-function drawSPIN(o,m,old){var tb=$('tb'),W=o.wheel,n=W.length,rot=0,busy=false,next=0,won=0;
-  tb.innerHTML='<div class="swrap"><div class="wheelbox"><div class="ptr"></div>'+wheelSVG(W)+'</div><div><div class="target"><small>YOUR TARGET</small><b>'+money(W[o.target][0]*m)+'</b></div>'+
-    '<div class="lbl">Your five spins</div><div class="spins" id="sp">'+o.spins.map(function(_,i){return '<button type="button">SPIN</button>';}).join('')+'</div>'+
-    '<div class="prizes" style="margin-top:8px"><span>Hit your target: win it</span><span>\u2605 pays 5\u00d7 target</span></div></div></div>';
-  var svg=tb.querySelector('svg'),bs=tb.querySelectorAll('#sp button');
-  function label(i,b){var v=W[o.spins[i]][0],hit=o.spins[i]===o.target,star=v==='\u2605';b.textContent=star?'\u2605':money(v*m);b.disabled=true;b.className=hit?'hit':star?'bonus':'done';if(hit)won+=v;else if(star)won+=W[o.target][0]*5;}
-  function mark(){bs.forEach(function(b,i){b.classList.toggle('next',!old&&i===next&&!busy);b.disabled=old||i!==next||busy||b.textContent!=='SPIN';});}
-  if(old){bs.forEach(function(b,i){label(i,b);});return;}
-  bs.forEach(function(b,i){b.onclick=function(){if(busy||i!==next)return;ac();busy=true;mark();var w=o.spins[i];
-    /* land the chosen wedge under the pointer with a little wobble inside it */
-    var cur=((rot%360)+360)%360,want=(360-w*360/n+(Math.random()-.5)*(360/n)*.6+360)%360;rot+=(want-cur+360)%360+360*(4+Math.floor(Math.random()*2));svg.style.transform='rotate('+rot+'deg)';
-    var tk=0,iv=setInterval(function(){if(++tk<18)tone(900+Math.random()*200,.03,0,.02);},120);
-    setTimeout(function(){clearInterval(iv);label(i,b);if(b.className==='hit'||b.className==='bonus')sDing();else sScratch();busy=false;next++;mark();
-      $('hint').textContent=won?'Won so far: '+money(won*m):'';if(next>=o.spins.length)finish(o.prize*m);},2700);};});
-  mark();$('hint').textContent='Tap SPIN. Land on your target value to win it. A \u2605 pays 5\u00d7 your target.';}
-/* ---------- boot ---------- */
-function refresh(){try{if(SUQ.autoClaim().length)sDing();}catch(e){}renderQ();if($('play').classList.contains('hide'))renderT();resetIn();hud();}
-addEventListener('message',function(e){var d=e.data;if(d&&(d.arcade==='quests'||d.arcade==='visible'))setTimeout(refresh,60);if(d&&d.arcade==='openTickets'){tab(d.tab==='q'?'q':'t');$('play').classList.add('hide');}});
-addEventListener('storage',function(e){if(e.key==='su_qprog'||e.key==='su_tickets'||e.key==='su_qclaim')refresh();});
-setInterval(function(){resetIn();renderQ();},30000);
-refresh();if(SUQ.unplayed())tab('t');
-window.__q={tune:function(b,p){XWB=b;if(p)XWP=p;},gen:gen,status:SUQ.status,give:function(type,tier){var tk=loadT(),seed=(Math.random()*4294967296)>>>0;tk.push({id:'t'+Date.now().toString(36)+seed%999,tier:tier||'b',type:type,seed:seed,q:'test',t:Date.now(),done:false,prize:0});saveT(tk);renderT();return tk[tk.length-1].id;},open:openT,bank:function(){return bank;},
-  ev:function(type,tier,n){var tot=0,m=TIER[tier||'b'].mult;for(var i=0;i<n;i++){var o=gen({type:type,seed:(Math.random()*4294967296)>>>0});if(type==='map'){var sp=SUQ.shuf(Array.apply(null,{length:25}).map(function(_,k){return k;}),i*7+1),f=0;for(var d=0;d<6;d++){var c=sp[d];if(o.snakes.indexOf(c)>=0)break;if(o.chests.indexOf(c)>=0)f++;}tot+=o.pay[f];}else tot+=o.prize;}return tot/n*m;}};
+/* quests finished while this page is open pay out through the shell, which hands out the cards */
+function refresh(){try{var got=SUQ.autoClaim();if(got.length){sDing();var A=cardsApi();if(A)A.quests(got);}}catch(e){}renderQ();resetIn();}
+addEventListener('message',function(e){var d=e.data;if(d&&(d.arcade==='quests'||d.arcade==='visible'||d.arcade==='openTickets'))setTimeout(refresh,60);});
+addEventListener('storage',function(e){if(e.key==='su_qprog'||e.key==='su_qclaim'||e.key==='su_cards')refresh();});
+setInterval(function(){resetIn();renderQ();},30000);setInterval(cards,3000);
+refresh();
+window.__q={status:SUQ.status,render:renderQ};
 })();
 <\u002fscript>
 <script>

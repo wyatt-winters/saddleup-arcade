@@ -488,7 +488,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   var qn=0;
   function qpaint(){var i=document.querySelector('.su-qb i');if(!i)return;i.textContent=qn>9?'9+':String(qn);i.classList.toggle('on',qn>0);}
   function addQ(){if(document.querySelector('.su-q'))return;var r=document.createElement('div');r.className='row su-q';
-    r.innerHTML='<button type="button" class="su-navb su-qb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h10l3 3v15H6z"/><path d="M9 9h7M9 13h7M9 17h4"/></svg>Daily Quests &amp; Tickets<i></i></button>';
+    r.innerHTML='<button type="button" class="su-navb su-qb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h10l3 3v15H6z"/><path d="M9 9h7M9 13h7M9 17h4"/></svg>Daily Quests<i></i></button>';
     if(!put(r,true))return;
     r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'nav',to:'quests'},'*');}catch(x){}});qpaint();}
   try{parent.postMessage({arcade:'qask'},'*');}catch(x){}setTimeout(function(){try{parent.postMessage({arcade:'qask'},'*');}catch(x){}},1500);
@@ -545,7 +545,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     while(v.scrollWidth>v.clientWidth+1&&f>10&&n<14){f-=1;v.style.fontSize=f+'px';n++;}});}
   setInterval(fit,800);addEventListener('resize',function(){[].forEach.call(document.querySelectorAll('.stat .v,.stat b,.chip2 b'),function(v){v.__t=null;});fit();});})();
 
-/* quest tracker: a pill in every game shows the quests it can move forward; another pill shows tickets waiting */
+/* quest tracker: a pill in every game shows the quests it can move forward; finishing one hands out trading cards */
 (function(){
   if(window.parent===window)return;
   var st=document.createElement('style');st.textContent=
@@ -594,7 +594,6 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     var L=(D.list||[]).filter(function(x){return !x.claimed;}),h='';
     if(L.length){var done=L.filter(function(x){return x.done;}).length;var best=L.filter(function(x){return !x.done;}).sort(function(a,b){return b.n/b.goal-a.n/a.goal;})[0],pct=best?Math.round(100*best.n/best.goal):100;
       h+='<button type="button" class="suq-pill'+(D.tickets>0?' hastk':'')+'" data-a="q" title="Quest tracker (drag to move)"><span class="grip"></span>'+IQ+(done&&done===L.length?'<span>All done!</span>':'<span><b>'+L.length+'</b> quest'+(L.length>1?'s':'')+'</span><span class="bar"><i style="width:'+pct+'%"></i></span>')+'</button>';}
-    if(D.tickets>0)h+='<button type="button" class="suq-pill tk" data-a="t" title="Your scratch-off tickets">'+IT+'<span><b>'+D.tickets+'</b> to scratch</span></button>';
     wrap.innerHTML=h;[].forEach.call(wrap.querySelectorAll('button'),function(b){b.onclick=function(e){e.preventDefault();e.stopPropagation();if(dragged)return;if(b.getAttribute('data-a')==='t')go('t');else open();};});
     place();if(pop)fill();}
   function open(){if(pop)return close();pop=document.createElement('div');pop.className='suq-pop';pop.innerHTML='<div class="suq-box"></div>';
@@ -602,12 +601,11 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   function close(){if(pop){pop.remove();pop=null;}}
   function fill(){var bx=pop&&pop.querySelector('.suq-box');if(!bx)return;var L=D.list||[],h='<div class="suq-h"><b>'+(D.room?'Today’s quests':'Quests for this game')+'</b><button type="button" class="suq-x" aria-label="Close">&times;</button></div>';
     if(!L.length)h+='<div class="suq-none">None of today’s quests count here. Open the quest list to see where they are.</div>';
-    L.forEach(function(q){var pct=Math.min(100,100*q.n/q.goal);h+='<div class="suq-q'+(q.done?' done':'')+(q.claimed?' cl':'')+'" data-g="'+esc(q.g||'')+'" role="button" tabindex="0">'+esc(q.txt)+(D.room||q.g!==D.me?'<em class="suq-gp">Play \u203a</em>':'')+'<small>'+(q.t==='e'?'Bronze':q.t==='m'?'Silver':'Gold')+' ticket · '+(q.claimed?'done \u2713 ticket earned':q.done?'done!':fmt(q))+'</small><div class="bar"><i style="width:'+pct+'%"></i></div></div>';});
-    if(D.tickets>0)h+='<button type="button" class="suq-go" data-a="t">Scratch my tickets ('+D.tickets+')</button>';
-    h+='<button type="button" class="suq-go'+(D.tickets>0?' alt':'')+'" data-a="q">All daily quests</button>';
-    bx.innerHTML=h;bx.querySelector('.suq-x').onclick=close;[].forEach.call(bx.querySelectorAll('.suq-q'),function(r){r.onclick=function(){var g=r.getAttribute('data-g');close();if(g)try{parent.postMessage({arcade:'questGo',g:g},'*');}catch(e){}};});[].forEach.call(bx.querySelectorAll('.suq-go'),function(b){b.onclick=function(){go(b.getAttribute('data-a'));};});}
-  var toastT=0;function toast(d){var t=document.querySelector('.suq-toast');if(!t){t=document.createElement('div');t.className='suq-toast';document.body.appendChild(t);t.onclick=function(){t.classList.remove('on');go('t');};}
-    var nm=d.tier==='v'?'High-Roller Vault':d.tier==='g'?'Gold':d.tier==='s'?'Silver':'Bronze';t.innerHTML='<i>'+(d.tier==='v'?'\ud83d\udd10':'\ud83c\udf9f\ufe0f')+'</i><span><b>'+(d.tier==='v'?'Vault unlocked!':'Quest complete!')+'</b>'+esc(d.txt)+' \u00b7 '+nm+' ticket earned. Tap to scratch.</span>';
+    L.forEach(function(q){var pct=Math.min(100,100*q.n/q.goal);h+='<div class="suq-q'+(q.done?' done':'')+(q.claimed?' cl':'')+'" data-g="'+esc(q.g||'')+'" role="button" tabindex="0">'+esc(q.txt)+(D.room||q.g!==D.me?'<em class="suq-gp">Play \u203a</em>':'')+'<small>'+(q.t==='e'?'1 card':q.t==='m'?'2 cards':'3 cards')+' · '+(q.claimed?'done \u2713 cards earned':q.done?'done!':fmt(q))+'</small><div class="bar"><i style="width:'+pct+'%"></i></div></div>';});
+    h+='<button type="button" class="suq-go alt" data-a="c">My trading cards</button><button type="button" class="suq-go" data-a="q">All daily quests</button>';
+    bx.innerHTML=h;bx.querySelector('.suq-x').onclick=close;[].forEach.call(bx.querySelectorAll('.suq-q'),function(r){r.onclick=function(){var g=r.getAttribute('data-g');close();if(g)try{parent.postMessage({arcade:'questGo',g:g},'*');}catch(e){}};});[].forEach.call(bx.querySelectorAll('.suq-go'),function(b){b.onclick=function(){var a=b.getAttribute('data-a');if(a==='c'){close();try{parent.postMessage({arcade:'openCards'},'*');}catch(e){}return;}go(a);};});}
+  var toastT=0;function toast(d){var t=document.querySelector('.suq-toast');if(!t){t=document.createElement('div');t.className='suq-toast';document.body.appendChild(t);t.onclick=function(){t.classList.remove('on');try{parent.postMessage({arcade:'openCards'},'*');}catch(e){}};}
+    var nc=d.tier==='v'?'a 5-card bonus pack':d.tier==='g'?'3 cards':d.tier==='s'?'2 cards':'1 card';t.innerHTML='<i>\ud83c\udccf</i><span><b>'+(d.tier==='v'?'All quests done!':'Quest complete!')+'</b>'+esc(d.txt)+' \u00b7 '+nc+' earned. Tap to see your cards.</span>';
     requestAnimationFrame(function(){t.classList.add('on');});clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('on');},4200);}
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='qdone'){if(document.body)toast(d);return;}if(d&&d.arcade==='qcount'){D=d;if(document.body)render();}else if(d&&d.arcade==='fs'){setTimeout(place,80);setTimeout(place,400);}});
   addEventListener('resize',function(){setTimeout(place,60);});
