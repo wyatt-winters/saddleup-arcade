@@ -1197,6 +1197,7 @@ var SFX={stop:function(c){tone(220+c*40,.08,0,.04,'square');},win:function(){[52
 var A={wild:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad949dc70f82b6224954.webp',jack:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada009f888e023f07a00.webp',
   gold:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8d736386d0dc764ace.webp',green:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9d64f4028be3c2c3a4.webp',
   0:'https://saddleup-arcade.vercel.app/art/sym_horse.webp',1:'https://saddleup-arcade.vercel.app/art/sym_revolver.webp',2:'https://saddleup-arcade.vercel.app/art/sym_whiskey.webp',3:'https://saddleup-arcade.vercel.app/art/sym_boot.webp',
+  4:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9f736386d0dc764eda.webp',5:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8cd542268bb4d413c0.webp',6:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8ec9d5b7168d29f7bd.webp',7:'https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9109f888e023f07658.webp',   /* the suits: the same suit art every card game uses, so each theme swaps them */
   10:'https://saddleup-arcade.vercel.app/art/classic/tex_face.webp',11:'https://saddleup-arcade.vercel.app/art/classic/marisol_face.webp',12:'https://saddleup-arcade.vercel.app/art/classic/lou_face.webp',13:'https://saddleup-arcade.vercel.app/art/classic/rosa_face.webp',
   14:'https://saddleup-arcade.vercel.app/art/cast/kael_face.webp',15:'https://saddleup-arcade.vercel.app/art/cast/brakk_face.webp',16:'https://saddleup-arcade.vercel.app/art/classic/pete_face.webp'};
 var GLY={4:'\u2660',5:'\u2666',6:'\u2665',7:'\u2663'};
@@ -1212,7 +1213,6 @@ function symHTML(s){
   if(s>=10)return '<div class="sy reg" style="--rc:'+REG[s].c+'"><img alt="" src="'+A[s]+'"><span class="nm">'+REG[s].n+'</span><span class="lab">'+REG[s].lab+'</span></div>';
   if(s===8)return '<div class="sy wild"><img alt="" src="'+A.wild+'"><span class="lab">Wild</span></div>';
   if(s===9)return '<div class="sy jack"><img alt="" src="'+A.jack+'"><span class="lab">Jackpot</span></div>';
-  if(GLY[s])return '<div class="sy s'+s+'"><span class="glyph">'+GLY[s]+'</span></div>';
   return '<div class="sy s'+s+'"><img alt="" src="'+A[s]+'"></div>';}
 function giftHTML(x){var b=bet();
   if(x.kind==='big')return '<div class="sy reg big" style="--rc:'+REG[16].c+'"><img alt="" src="'+A[16]+'"><span class="tot">'+money(x.v*b)+'</span><span class="lab">Big Collect</span></div>';
