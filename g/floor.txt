@@ -1233,7 +1233,7 @@ var KIND={
   roul:{g:'roul',name:'Roulette',k:'European & American wheels',type:'roul',live:'arcade-roulette-t1'},
   craps:{g:'craps',name:'Craps',k:'Pass line, come bets & odds',type:'craps',live:'arcade-craps-t1'},
   slots:{g:'slots',name:'Saddle Up Stampede',k:'4\u00d74 cascade slots \u00b7 4 jackpots',type:'slots',live:'arcade-slots-t1'},
-  pool1:{g:'pool',name:'Pool',k:'8-ball & 9-ball \u00b7 2 players',type:'pool',live:'arcade-pool-t1'},
+  pool1:{g:'pool',name:'Pool',k:'8-ball, 9-ball & cut-throat \u00b7 live tables',type:'pool',live:'arcade-pool-t1'},
   bg1:{g:'backgammon',name:'Backgammon',k:'Doubling cube \u00b7 2 players',type:'backgammon',live:'arcade-backgammon-t1'},
   crash:{g:'crash',name:'Runaway Express',k:'Crash game \u00b7 cash out before the train derails',type:'crash',live:'arcade-crash-t1'},
   derby:{g:'derby',name:'Dusty Trail Derby',k:'Horse racing \u00b7 a race every minute',type:'derby',live:'arcade-derby-t1'}
@@ -1302,8 +1302,10 @@ var GEO={
     return {seats:s,spots:s.map(function(p){return {x:p.x,y:p.y*.4};}),box:[-180,-115,360,230],sign:-132};},
   /* pool: table stands upright (long axis vertical). Players STAND: the shooter at the foot of the table, the other player
      waits at one long side (pos[3] = 1 right side, -1 left side) */
-  pool:function(pos){var m=pos&&pos[3]<0?-1:1,s=[{x:-m*14,y:140,a:0},{x:m*90,y:-40,a:-m*90}];
-    return {seats:s,spots:s.map(function(p){return {x:p.x,y:p.y};}),box:m>0?[-72,-122,196,288]:[-124,-122,196,288],sign:-126,stand:1};},
+  /* up to 5 people: the shooter at the foot, a second player beside them, and three more waiting along the open long side
+     (cut-throat has 3 players, and live tables have people watching) */
+  pool:function(pos){var m=pos&&pos[3]<0?-1:1,s=[{x:-m*14,y:140,a:0},{x:m*90,y:-40,a:-m*90},{x:m*90,y:52,a:-m*90},{x:m*44,y:146,a:-m*20},{x:m*86,y:-118,a:-m*120}];
+    return {seats:s,spots:s.map(function(p){return {x:p.x,y:p.y};}),box:m>0?[-72,-140,196,306]:[-124,-140,196,306],sign:-144,stand:1};},
   /* backgammon: small square table, open board, two chairs. pos[3]=90 turns it so the players sit left/right */
   backgammon:function(pos){var r=pos&&pos[3]?90:0,s=[{x:0,y:-74,a:180},{x:0,y:74,a:0}];
     if(r)s=s.map(function(p){return {x:-p.y,y:p.x,a:p.a+90};});
@@ -1878,7 +1880,7 @@ function updateSigns(){var humans=0,floor=0;
   var hid={};for(var k0 in TB)TB[k0].humans.forEach(function(h){hid[h.id]=1;});humans=Object.keys(hid).length;
   for(var id in people){var p=people[id];if(p.kind==='bot'||p.kind==='human')floor++;}
   for(var k in TB){var T=TB[k],taken=T.seats.filter(function(s){return s.occ;}).length,n=T.seats.length;
-    T.occTxt.textContent=(T.kind.type==='pool'?taken+' of '+n+' players':T.kind.type==='pinball'?taken+' of '+n+' machines playing':T.kind.type==='crash'?taken+' of '+n+' riders aboard':T.kind.type==='derby'?taken+' of '+n+' bettors at the rail':T.kind.type==='slots'?taken+' of '+n+' machines busy':taken+' of '+n+' seats taken');
+    T.occTxt.textContent=(T.kind.type==='pool'?taken+' at the table':T.kind.type==='pinball'?taken+' of '+n+' machines playing':T.kind.type==='crash'?taken+' of '+n+' riders aboard':T.kind.type==='derby'?taken+' of '+n+' bettors at the rail':T.kind.type==='slots'?taken+' of '+n+' machines busy':taken+' of '+n+' seats taken');
     T.livePill.setAttribute('opacity',T.humans.length?1:0);T.liveTxt.textContent=T.humans.length>1?T.humans.length+' LIVE':'LIVE';}
   document.getElementById('hLive').textContent=humans;document.getElementById('hDot').classList.toggle('on',humans>0);document.getElementById('hLiveChip').classList.toggle('on',humans>0);
   document.getElementById('hFloor').textContent=floor+(me?1:0);
@@ -2132,7 +2134,7 @@ addEventListener('message',function(e){var d=e.data;if(!d||d.arcade!=='visible')
 myId=Live.me().id;LV=Live.watch(LIVE_NAMES,onLive);
 build(wantLayout());setMode(LNAME);applyCam();
 setTimeout(function(){if(!running&&document.visibilityState!=='hidden')resume(null);},60);
-window.__floor_dbg={tables:function(){var o={};for(var k in TB){var T=TB[k];o[k]={seats:T.seats.length,taken:T.seats.filter(function(s){return s.occ;}).length,humans:T.humans.map(function(h){return h.name;})};}return o;},
+window.__floor_dbg={live:function(m){onLive(m);},tables:function(){var o={};for(var k in TB){var T=TB[k];o[k]={seats:T.seats.length,taken:T.seats.filter(function(s){return s.occ;}).length,humans:T.humans.map(function(h){return h.name;})};}return o;},
   people:function(){return Object.keys(people).map(function(k){var p=people[k];return {id:p.id,kind:p.kind,name:p.name,walking:!!p.path,x:Math.round(p.x),y:Math.round(p.y)};});},
   layout:function(){return LNAME;},boxes:function(){var o={};for(var k in TB){var T=TB[k],b=T.geo.box;o[k]=[T.x+b[0]*T.s,T.y+b[1]*T.s,b[2]*T.s,b[3]*T.s];}return o;},svgEl:function(){return svg;},cam:function(){return cam;},go:function(id){go(TB[id]);},tick:lifeTick,win:bigWin,running:function(){return running;}};
 })();
