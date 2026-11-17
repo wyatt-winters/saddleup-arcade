@@ -1851,8 +1851,10 @@ var SEASON=(document.documentElement.getAttribute('data-season')||'').replace(/[
 var RACKDIR=POOLART+({xmas:'xmas/',beach:'beach/',comic:'comic/',wasteland:'wasteland/',pirate:'pirate/',vegas:'vegas/'}[SEASON]||'')+'pool/';
 var CUEIMG={},BSHEET={};
 function artImg(url,done){var im=new Image();im.crossOrigin='anonymous';im.onload=function(){im._ok=1;if(done)done();};im.src=url;return im;}
-LK.CUES.forEach(function(c){if(c.id!=='house')CUEIMG[c.id]=artImg(POOLART+'pool/cue_'+c.id+'.webp',function(){if(typeof renderLocker==='function'&&!$('locker').classList.contains('hide'))renderLocker();});});
-LK.BALLS.forEach(function(b){if(b.id!=='classic')BSHEET[b.id]=artImg(POOLART+'pool/balls_'+b.id+'.webp',function(){if(typeof spriteGen!=='undefined')spriteGen++;});});
+/* the theme's own version first, then the Classic one */
+function artImg2(name,done){var tried=RACKDIR!==POOLART+'pool/',im=artImg(RACKDIR+name,done);im.onerror=function(){if(tried){tried=false;im.src=POOLART+'pool/'+name;}};return im;}
+LK.CUES.forEach(function(c){if(c.id!=='house')CUEIMG[c.id]=artImg2('cue_'+c.id+'.webp',function(){if(typeof renderLocker==='function'&&!$('locker').classList.contains('hide'))renderLocker();});});
+LK.BALLS.forEach(function(b){if(b.id!=='classic')BSHEET[b.id]=artImg2('balls_'+b.id+'.webp',function(){if(typeof spriteGen!=='undefined')spriteGen++;});});
 function discSheet(){var b=BSK&&BSHEET[BSK.id];return b&&b._ok?b:(ballsOk?ballsImg:null);}
 
 applyBallSkin();
