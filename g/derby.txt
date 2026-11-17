@@ -875,7 +875,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
       <div class="pod" id="pod" aria-live="polite"></div>
       <div class="cmt off" id="cmt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span id="cmtT"></span></div>
       <div class="hashln" id="hashln" title="Provably fair: tap to verify">Preparing the hash chain&hellip;</div>
-      <div class="ov hide" id="broke"><h3>Out of chips</h3><p>Saddle back up and ride again.</p><button class="btn" id="rebuy" type="button">Rebuy $1,000</button></div>
+      <div class="ov hide" id="broke"><h3>Out of chips</h3><p>Saddle back up and ride again.</p><button class="btn" id="rebuy" type="button">Bank loan $1,000</button></div>
     </div>
     <div class="pane" id="pane">
       <div class="ptabs" role="tablist">
@@ -1310,10 +1310,12 @@ var Live=(function(){
   function wread(){try{var v=JSON.parse(localStorage.getItem(WKEY)||'null');return v&&typeof v.amt==='number'&&isFinite(v.amt)?v.amt:null;}catch(e){return null;}}
   function wwrite(a){try{localStorage.setItem(WKEY,JSON.stringify({amt:Math.round(a*100)/100,t:Date.now()}));}catch(e){}}
   function wallet(o){
-    var last=null,inactive=false,timer=0;
+    var last=null,inactive=false,timer=0,wasIdle=null;
     function tick(){
       try{
         if(o.active&&!o.active()){inactive=true;return;}
+        /* tell the arcade when money is in play, so it never offers a loan in the middle of a hand */
+        var idl=!!o.idle();if(idl!==wasIdle){wasIdle=idl;try{if(parent!==window)parent.postMessage({arcade:'widle',idle:idl},'*');}catch(x){}}
         var b=o.get();if(typeof b!=='number'||!isFinite(b))return;
         var w=wread();
         if(last===null||inactive){

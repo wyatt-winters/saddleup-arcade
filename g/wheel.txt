@@ -947,10 +947,12 @@ var Live=(function(){
   function wread(){try{var v=JSON.parse(localStorage.getItem(WKEY)||'null');return v&&typeof v.amt==='number'&&isFinite(v.amt)?v.amt:null;}catch(e){return null;}}
   function wwrite(a){try{localStorage.setItem(WKEY,JSON.stringify({amt:Math.round(a*100)/100,t:Date.now()}));}catch(e){}}
   function wallet(o){
-    var last=null,inactive=false,timer=0;
+    var last=null,inactive=false,timer=0,wasIdle=null;
     function tick(){
       try{
         if(o.active&&!o.active()){inactive=true;return;}
+        /* tell the arcade when money is in play, so it never offers a loan in the middle of a hand */
+        var idl=!!o.idle();if(idl!==wasIdle){wasIdle=idl;try{if(parent!==window)parent.postMessage({arcade:'widle',idle:idl},'*');}catch(x){}}
         var b=o.get();if(typeof b!=='number'||!isFinite(b))return;
         var w=wread();
         if(last===null||inactive){

@@ -1257,7 +1257,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
         <button class="btn2" id="rebetBtn" type="button">Rebet</button>
         <button class="btn2" id="dblBtn" type="button">Double</button>
         <button class="btn" id="dealBtn" type="button">Deal &rarr;</button>
-        <button class="btn gold hide" id="rebuyBtn" type="button">Rebuy $1,000</button>
+        <button class="btn gold hide" id="rebuyBtn" type="button">Bank loan $1,000</button>
       </div>
     </div>
     <div class="optslot" data-optbtn><button class="roadsBtn" id="roadsBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="13" r="2.5"/><circle cx="13" cy="6" r="2.5"/><circle cx="18" cy="13" r="2.5"/><circle cx="18" cy="20" r="2.5"/></svg>Roads</button></div>
@@ -1662,10 +1662,12 @@ var Live=(function(){
   function wread(){try{var v=JSON.parse(localStorage.getItem(WKEY)||'null');return v&&typeof v.amt==='number'&&isFinite(v.amt)?v.amt:null;}catch(e){return null;}}
   function wwrite(a){try{localStorage.setItem(WKEY,JSON.stringify({amt:Math.round(a*100)/100,t:Date.now()}));}catch(e){}}
   function wallet(o){
-    var last=null,inactive=false,timer=0;
+    var last=null,inactive=false,timer=0,wasIdle=null;
     function tick(){
       try{
         if(o.active&&!o.active()){inactive=true;return;}
+        /* tell the arcade when money is in play, so it never offers a loan in the middle of a hand */
+        var idl=!!o.idle();if(idl!==wasIdle){wasIdle=idl;try{if(parent!==window)parent.postMessage({arcade:'widle',idle:idl},'*');}catch(x){}}
         var b=o.get();if(typeof b!=='number'||!isFinite(b))return;
         var w=wread();
         if(last===null||inactive){
