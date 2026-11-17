@@ -179,6 +179,7 @@ html.fs .felt{aspect-ratio:auto!important;height:calc(var(--fsvh,100vh) - 16px);
   background:linear-gradient(180deg,rgba(24,33,56,.95),rgba(8,12,24,.95));border:1px solid rgba(242,210,126,.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 6px 18px rgba(0,0,0,.45)}
 .coin{width:30px;height:30px;flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font:900 15px Inter,system-ui,sans-serif;color:#6b4a12;
   background:radial-gradient(circle at 35% 30%,#fff6d0,#f2d27e 42%,#b8892e 80%);box-shadow:inset 0 0 0 2px rgba(120,80,20,.45),0 0 10px rgba(242,210,126,.35)}
+.bank{cursor:pointer;font:inherit;color:inherit;text-align:left}.bank em i.bkopen{font-style:normal;color:var(--gold2,#f2d27e)}html.isghost .bank b,.bank.ghost b{color:#fca5a5}
 .bank em{display:block;font:700 9.5px Inter,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);line-height:1.1;font-style:normal}
 .bank b{display:block;font:900 17px Inter,system-ui,sans-serif;color:var(--green2);line-height:1.1;letter-spacing:-.01em}
 .stats{margin-left:auto;display:flex;gap:6px;align-items:center}
@@ -701,7 +702,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
       <div class="brand"><span class="wm" aria-hidden="true"></span><b>Casino Floor</b></div>
       <button type="button" class="me" id="meBtn" aria-label="Find yourself on the floor"><img id="hMe" alt=""></button>
       <div class="mi"><b id="hName">You</b><em>On the floor</em></div>
-      <span class="bank" aria-label="Bankroll"><span class="coin" aria-hidden="true">$</span><span><em>Bankroll</em><b id="hBank">$1,000</b></span></span>
+      <button type="button" class="bank" id="hBankBtn" aria-label="Bankroll: open the Bank for loans and sending money" title="Open the Bank: loans and sending money"><span class="coin" aria-hidden="true">$</span><span><em>Bankroll <i class="bkopen">&#xb7; Bank &#x203a;</i></em><b id="hBank">$1,000</b></span></button>
       <div class="stats">
         <span class="chip lvchip" id="hLiveChip"><span class="d" id="hDot"></span><b id="hLive">0</b><em>live</em></span>
         <span class="chip"><b id="hFloor">0</b><em>on the floor</em></span>
@@ -800,7 +801,9 @@ var Live=(function(){
     if(!id){id=uid();try{sessionStorage.setItem('su_live_id',id);}catch(e){}}
     try{var ac=JSON.parse(localStorage.getItem('saddleup-arcade-tok')||'null');if(ac&&ac.t&&ac.u)id='u_'+String(ac.u).toLowerCase();}catch(e){}
     var nm=store('su_live_name');if(!nm){nm='Guest '+(1000+Math.floor(Math.random()*9000));store('su_live_name',nm);}
-    ME={id:id,name:String(nm).slice(0,18)};return ME;
+    /* players who owe money show up as ghosts at live tables */
+    var gh=store('su_ghost')==='1';
+    ME={id:id,name:(gh?'\uD83D\uDC7B ':'')+String(nm).slice(0,gh?15:18)};return ME;
   }
   var supaP=null;
   function loadSupa(){
@@ -1023,11 +1026,12 @@ var Live=(function(){
           return;
         }
         var d=b-last;
-        if(Math.abs(d)>0.004){w=(w===null?b-d:w)+d;wwrite(w);last=b;
-          /* daily quests: money going onto the table is a bet, money coming back is a payout */
-          /* going from broke to a fresh stack is a rebuy, not a payout */
+        if(Math.abs(d)>0.004){
+          /* going from broke to a fresh stack is a rebuy (now a bank loan), not a payout */
           var rebuy=d>=500&&last<5;
-          try{if(parent!==window&&!rebuy)parent.postMessage({arcade:'quest',ev:d<0?'bet':'pay',n:Math.abs(d)},'*');}catch(x){}}
+          w=(w===null?b-d:w)+d;wwrite(w);last=b;
+          /* daily quests: money going onto the table is a bet, money coming back is a payout */
+          try{if(parent!==window)parent.postMessage(rebuy?{arcade:'rebuy',n:d}:{arcade:'quest',ev:d<0?'bet':'pay',n:Math.abs(d)},'*');}catch(x){}}
         if(w!==null&&Math.abs(w-b)>0.004&&o.idle()){o.set(w);last=w;}
       }catch(e){}
     }
@@ -2270,6 +2274,8 @@ var SUQ=(function(){
   badge();setInterval(badge,3000);addEventListener('storage',function(e){if(/^su_(qprog|qclaim|tickets)$/.test(e.key||''))badge();});
   addEventListener('message',function(e){if(e.data&&(e.data.arcade==='quests'||e.data.arcade==='visible'))setTimeout(badge,80);});})();
 <\u002fscript>
+<script>(function(){var b=document.getElementById('hBankBtn');if(b)b.addEventListener('click',function(){try{parent.postMessage({arcade:'bank'},'*');}catch(e){}});
+  function gh(){try{b&&b.classList.toggle('ghost',localStorage.getItem('su_ghost')==='1');}catch(e){}}gh();setInterval(gh,3000);addEventListener('storage',gh);})();<\u002fscript>
 <script>
 (function(){
   var last=0;

@@ -184,6 +184,43 @@ html[data-skin="neon"] .pill{background:rgba(34,211,238,.12);color:#5ef2ff;borde
 #skinload[data-to="anime"] .sl-bar i{background:linear-gradient(90deg,#f472b6,#fb7185,#fbbf24)}
 #skinload[data-to="anime"] .sl-n{color:#f9a8d4}
 .skinsw button[data-skin="anime"][aria-pressed="true"]{color:#fbcfe8;background:rgba(244,114,182,.14);border-color:rgba(244,114,182,.5)}
+
+/* the Bank and ghosts */
+.bkbtn .bk-dot{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;border-radius:9px;background:#ef4444;color:#fff;font:800 10px/16px Inter,sans-serif;text-align:center;padding:0 4px;font-style:normal}
+.bkbtn.ghost{border-color:rgba(167,139,250,.7)!important;color:#ddd6fe;box-shadow:0 0 14px rgba(167,139,250,.35)}
+.bkbtn.ghost #bkTxt{color:#fca5a5}
+html.fs #bkTxt{display:none!important}
+@media (max-width:760px){#bkTxt{display:none}}
+#bkModal{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(2,6,23,.6)}
+#bkModal[hidden]{display:none}
+.bk-card{width:min(440px,100%);max-height:calc(100% - 10px);overflow:auto;background:linear-gradient(180deg,rgba(36,18,10,.98),rgba(18,10,6,.98));border:2px solid #c6a75e;border-radius:16px;padding:14px;color:#e2e8f0;font:14px/1.45 Inter,system-ui,sans-serif;box-shadow:0 20px 50px rgba(0,0,0,.6)}
+.bk-h{display:flex;align-items:center;gap:8px;margin-bottom:8px}.bk-h b{flex:1;font:400 22px Rye,Georgia,serif;color:#f2d27e}
+.bk-x{background:rgba(255,255,255,.08);border:0;color:#fff;border-radius:8px;width:32px;height:32px;font-size:20px;cursor:pointer}
+.bk-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.bk-sum>div{background:rgba(0,0,0,.35);border:1px solid rgba(242,210,126,.2);border-radius:10px;padding:6px 8px;text-align:center}
+.bk-sum em{display:block;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#cbb07a}
+.bk-sum b{font-size:16px;font-variant-numeric:tabular-nums}.bk-sum .neg,.bk-row .neg{color:#fca5a5}.bk-sum .pos,.bk-row .pos{color:#6ee7b7}
+.bk-gh{grid-column:1/-1;margin:2px 0 0;padding:8px 10px;border-radius:10px;background:rgba(167,139,250,.14);border:1px solid rgba(167,139,250,.45);color:#ede9fe;font-size:12.5px}
+.bk-tabs{display:flex;gap:4px;background:rgba(0,0,0,.35);border-radius:10px;padding:3px;margin-bottom:10px}
+.bk-tabs button{flex:1;position:relative;border:0;background:none;color:#e5d6b0;font:700 12.5px Inter,sans-serif;padding:8px 4px;border-radius:7px;cursor:pointer}
+.bk-tabs button.on{background:linear-gradient(180deg,#fde68a,#c6a75e);color:#2a1606}
+.bk-tabs i{font-style:normal;margin-left:4px;background:#ef4444;color:#fff;border-radius:8px;padding:0 5px;font-size:10px}.bk-tabs i:empty{display:none}
+.bk-body h4{margin:10px 0 6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#e2c27a}
+.bk-p{margin:0 0 8px;font-size:13px;color:#e5d6b0}.bk-p b{color:#fff}.bk-mt{color:#94a3b8;font-size:13px;margin:4px 0}
+.bk-row{display:flex;align-items:center;gap:6px;padding:7px 8px;border-radius:10px;background:rgba(0,0,0,.3);margin-bottom:5px;font-size:13px}
+.bk-row span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}.bk-row em{color:#94a3b8;font-size:11.5px}
+.bk-row button,.bk-ob button{border:1px solid rgba(242,210,126,.4);background:rgba(242,210,126,.1);color:#f2d27e;border-radius:8px;padding:5px 8px;font:700 12px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.bk-go{display:block;width:100%;margin-top:6px;border:0;border-radius:10px;min-height:42px;background:linear-gradient(180deg,#f7dc8f,#d9b562);color:#1a1205;font:900 14px Inter,sans-serif;cursor:pointer}
+.bk-go[disabled]{opacity:.45;cursor:not-allowed}
+.bk-f{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#e2c27a;margin:6px 0}
+.bk-f input{display:block;width:100%;margin-top:4px;background:rgba(0,0,0,.4);border:1px solid rgba(242,210,126,.35);border-radius:9px;color:#fff;font:600 15px Inter,sans-serif;padding:9px 10px;letter-spacing:0;text-transform:none}
+.bk-seg{display:flex;gap:6px;margin:8px 0}.bk-seg button{flex:1;border:1px solid rgba(242,210,126,.35);background:rgba(0,0,0,.3);color:#e5d6b0;border-radius:9px;padding:9px;font:700 13px Inter,sans-serif;cursor:pointer}
+.bk-seg button.on{background:rgba(242,210,126,.2);color:#fde68a;border-color:#fde68a}
+.bk-res{min-height:18px;margin:6px 0 0;font-size:13px;color:#fca5a5}.bk-res.ok{color:#6ee7b7}
+.bk-offer{padding:9px 10px;border-radius:12px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.4);margin-bottom:6px;font-size:13px}
+.bk-ob{display:flex;gap:6px;margin-top:6px}.bk-ob .bk-go{margin:0;min-height:34px;flex:1}.bk-ob button:not(.bk-go){flex:1}
+#bkNote{position:fixed;left:50%;top:58px;transform:translate(-50%,-16px);opacity:0;z-index:2147483001;max-width:min(92vw,460px);padding:9px 14px;border-radius:12px;background:rgba(20,12,30,.96);border:1px solid rgba(167,139,250,.6);color:#ede9fe;font:600 13px/1.4 Inter,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:opacity .25s,transform .25s;pointer-events:none;text-align:center}
+#bkNote.on{opacity:1;transform:translate(-50%,0)}#bkNote b{color:#fff}
 .acbtn{position:relative}.acbtn .acf{font-size:16px;line-height:1;width:18px;text-align:center}
 .acbtn.in{border-color:rgba(242,210,126,.45);color:#f2d27e}
 .acbtn.in::after{content:"";position:absolute;right:5px;top:5px;width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 6px #10b981}
@@ -235,6 +272,7 @@ html.fs #acTxt{display:none!important}
       <button class="tab ctab qtab" type="button" id="cTop" title="Your trading card collection"><img class="gi" alt="" src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2064%2064%22%3E%3Crect%20x=%228%22%20y=%2212%22%20width=%2230%22%20height=%2242%22%20rx=%224%22%20fill=%22%237f1d1d%22%20stroke=%22%23f2d27e%22%20stroke-width=%223%22%20transform=%22rotate%28-12%2023%2033%29%22/%3E%3Crect%20x=%2224%22%20y=%228%22%20width=%2230%22%20height=%2242%22%20rx=%224%22%20fill=%22%231e293b%22%20stroke=%22%23f2d27e%22%20stroke-width=%223%22/%3E%3Ccircle%20cx=%2239%22%20cy=%2224%22%20r=%227%22%20fill=%22%23fde68a%22/%3E%3Cpath%20d=%22M28%2044c2-8%2020-8%2022%200%22%20fill=%22%23fde68a%22/%3E%3C/svg%3E"><span class="lg">Cards</span><span class="sm">Cards</span><i id="cTopBd"></i></button>
     </div>
     <button class="fsbtn acbtn" id="acBtn" type="button" aria-haspopup="dialog"><span class="acf" id="acFace">👤</span><span id="acTxt">Save wallet</span></button>
+    <button class="fsbtn acbtn bkbtn" id="bkBtn" type="button" aria-haspopup="dialog" title="Bank: loans and sending money"><span class="acf" id="bkFace">🏦</span><span id="bkTxt">Bank</span><i class="bk-dot" id="bkDot" hidden></i></button>
     <button class="fsbtn" id="fsBtn" type="button" title="Full screen (F11 also works on desktop)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span id="fsTxt">Full screen</span></button>
     <div class="fsbtn thbtn" id="thBtn" title="Change the theme" role="button" tabindex="0" aria-haspopup="menu" aria-expanded="false" hidden><img class="thi" id="thImg" alt=""><span id="thName">Theme</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
     </div>
@@ -652,7 +690,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'228ef17291'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'7cfb1e5120'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}
@@ -893,7 +931,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     if(d.arcade==='hasNav'){HASNAV[k]=1;if(k===active)navTab(k);}
     else if(d.arcade==='questGo'&&d.g){var tg=String(d.g);tg=tg==='parlor'?'parlor':(tg==='casino'||tg==='any'||!NAMES[tg])?'floor':tg;if(tg!==active)show(tg,true);return;}
     if(d.arcade==='nav'&&d.to&&NAMES[d.to]){show(d.to,true);if(d.to==='quests'&&d.tab){var qf=frames.quests;setTimeout(function(){if(frames.quests)post(frames.quests,{arcade:'openTickets',tab:d.tab});},qf?60:900);}}
-    else if(d.arcade==='quest'&&d.ev)questEv(k,String(d.ev),+d.n||1);return;}}});
+    else if(d.arcade==='bank'){if(window.__money)__money.open(d.tab||'loans');}
+    else if(d.arcade==='rebuy'&&+d.n>0){if(window.__money)__money.gameRebuy(+d.n);}
+    else if(d.arcade==='quest'&&d.ev){if(window.__money){if(d.ev==='bet')__money.onBet(k,+d.n||0);else if(d.ev==='pay')__money.onPay(k,+d.n||0);}questEv(k,String(d.ev),+d.n||1);}return;}}});
   /* daily quests: every game reports what you do; the shell keeps the tally */
   var lastWin={};
   function questEv(g,ev,n){try{if(ev==='win'){var t=Date.now();if(lastWin[g]&&t-lastWin[g]<4000)return;lastWin[g]=t;}try{if(ev==='win'&&window.__suCards)__suCards.win(g);}catch(e){}if(SUQ.record(g,ev,n)){var got=SUQ.autoClaim();try{window.__suCards&&__suCards.quests(got);}catch(e){}questPing();
@@ -918,14 +958,13 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   function rbRead(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');return v&&typeof v.amt==='number'?v.amt:null;}catch(e){return null;}}
   var rbEl=null,rbHid=0;
   function rbBox(){if(rbEl)return rbEl;rbEl=document.createElement('div');rbEl.id='rebuyBox';
-    rbEl.innerHTML='<div class="rb-card"><div class="rb-ic">💰</div><b>You’re out of chips</b><p>Your bankroll is shared by every casino game. Rebuy to refill it to <span id="rbAmt"></span> and keep playing anywhere.</p><button type="button" id="rbGo">Rebuy $1,000</button><button type="button" id="rbLater" class="rb-later">Not now</button><small id="rbN"></small></div>';
+    rbEl.innerHTML='<div class="rb-card"><div class="rb-ic">👻</div><b>You’re out of chips</b><p>Borrow $1,000 from the bank to keep playing. You’ll owe $1,100, and 30% of every win pays it back. Until it’s paid you play as a 👻 ghost. Friends can lend you money too.</p><button type="button" id="rbGo">Take a $1,000 bank loan</button><button type="button" class="rb-later" id="rbAsk" style="color:#f2d27e">Open the Bank</button><button type="button" class="rb-later" id="rbLater" style="margin-top:0">Not now</button><small id="rbN"></small><span id="rbAmt" hidden></span></div>';
     document.body.appendChild(rbEl);
-    rbEl.querySelector('#rbGo').onclick=rebuy;rbEl.querySelector('#rbLater').onclick=function(){rbHid=Date.now();rbEl.classList.remove('on');};return rbEl;}
-  function rebuy(){var w=rbRead()||0,top=Math.max(RB_START,Math.round(w*100)/100);
-    try{localStorage.setItem('su_casino_wallet',JSON.stringify({amt:top,t:Date.now()}));var n=(+localStorage.getItem('su_rebuys')||0)+1;localStorage.setItem('su_rebuys',n);}catch(e){}
-    for(var k in frames)post(frames[k],{arcade:'visible',on:k===active});if(rbEl)rbEl.classList.remove('on');}
+    rbEl.querySelector('#rbGo').onclick=rebuy;rbEl.querySelector('#rbAsk').onclick=function(){rbHid=Date.now();rbEl.classList.remove('on');if(window.__money)__money.open('loans');};rbEl.querySelector('#rbLater').onclick=function(){rbHid=Date.now();rbEl.classList.remove('on');};return rbEl;}
+  function rebuy(){if(window.__money&&__money.bankLoan(RB_START)){try{var n=(+localStorage.getItem('su_rebuys')||0)+1;localStorage.setItem('su_rebuys',n);}catch(e){}}
+    if(rbEl)rbEl.classList.remove('on');}
   function rbCheck(){var w=rbRead();if(w===null||!RB_GAMES[active])return rbEl&&rbEl.classList.remove('on');
-    if(w<5&&Date.now()-rbHid>45000){var b=rbBox();b.querySelector('#rbAmt').textContent='$'+RB_START.toLocaleString();var n=0;try{n=+localStorage.getItem('su_rebuys')||0;}catch(e){}b.querySelector('#rbN').textContent=n?'Rebuys so far: '+n:'';b.classList.add('on');}
+    if(w<5&&Date.now()-rbHid>45000){var b=rbBox();b.querySelector('#rbAmt').textContent='$'+RB_START.toLocaleString();var n=0;try{n=+localStorage.getItem('su_rebuys')||0;}catch(e){}b.querySelector('#rbN').textContent=window.__money&&__money.debt()>0?'You owe '+'$'+__money.debt().toLocaleString()+' so far':'';b.classList.add('on');}
     else if(w>=5&&rbEl)rbEl.classList.remove('on');}
   setInterval(rbCheck,1500);addEventListener('storage',function(e){if(e.key==='su_casino_wallet')setTimeout(rbCheck,50);});
   window.addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='rebuy')rebuy();});
@@ -1121,7 +1160,146 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
     try{var sv=JSON.parse(ls(TOKK)||'null');if(sv&&sv.t){tok=sv.t;uname=sv.u||'';}}catch(e){}
     paintBtn();
     if(tok)rpc('arcade_load',{p_token:tok}).then(function(r){if(r.error==='signed_out'){kicked();return;}uname=r.username||uname;return afterSignIn(r.save,false);}).catch(function(){});
-    window.__acct={push:push,state:function(){return {tok:!!tok,user:uname,meta:meta(),snap:snap()};}};
+    window.__acct={push:push,rpc:rpc,tok:function(){return tok;},state:function(){return {tok:!!tok,user:uname,meta:meta(),snap:snap()};}};
+  })();
+  /* ===== the Bank: house loans, player gifts and loans, ghosts =====
+     House loans live in su_loans (part of the save). Player gifts and loans go through the arcade_* money functions.
+     Anyone who owes money (to the bank or a player) is a ghost. 30% of every win pays loans down, players first. */
+  (function(){
+    var RATE=0.30,INT=0.10,CAP=10000,LKEY='su_loans',QKEY='arc_repayq';
+    var M={owe:[],lent:[],offers:[],inbox:[],recent:[]},S={},Q={},qT=0,pollT=0,toastT=0,toastAmt=0;
+    function r2(x){return Math.round(x*100)/100;}
+    function money(n){var neg=n<0,a=Math.abs(r2(n)),t=(a%1?a.toFixed(2):String(a)).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+      if(a>=1e6){var U=[[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']];for(var i=0;i<U.length;i++)if(a>=U[i][0]){var x=Math.round(a/U[i][0]*10)/10;if(x>=1000&&i>0){i--;x=Math.round(a/U[i][0]*10)/10;}t=x.toFixed(1)+U[i][1];break;}}
+      return (neg?'-$':'$')+t;}
+    function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+    function L(){try{var o=JSON.parse(localStorage.getItem(LKEY)||'null');if(o&&typeof o==='object')return {bank:+o.bank||0,n:+o.n||0,paid:+o.paid||0};}catch(e){}return {bank:0,n:0,paid:0};}
+    function Lset(o){o.bank=Math.max(0,r2(o.bank));try{localStorage.setItem(LKEY,JSON.stringify(o));}catch(e){}paint();}
+    function wget(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');return v&&typeof v.amt==='number'?v.amt:0;}catch(e){return 0;}}
+    function wadd(x){try{localStorage.setItem('su_casino_wallet',JSON.stringify({amt:r2(wget()+x),t:Date.now()}));}catch(e){}
+      for(var k in frames)post(frames[k],{arcade:'visible',on:k===active});paint();}
+    function acct(){var a=window.__acct;return a&&a.tok&&a.tok()?a:null;}
+    function rpc(fn,body){var a=acct();if(!a)return Promise.reject(new Error('signed_out'));body.p_token=a.tok();return a.rpc(fn,body);}
+    function queued(){var t=0;for(var k in Q)t+=Q[k];return t;}
+    function playerOwed(){var t=0;M.owe.forEach(function(l){t+=+l.owed||0;});return Math.max(0,r2(t-queued()));}
+    function debt(){return r2(L().bank+playerOwed());}
+    function ghost(){return debt()>0.004;}
+    /* ---- the top-bar button, the ghost look, and the flag live tables read ---- */
+    function paint(){var g=ghost(),d=debt(),b=document.getElementById('bkBtn');
+      try{localStorage.setItem('su_ghost',g?'1':'0');}catch(e){}
+      document.documentElement.classList.toggle('isghost',g);
+      if(!b)return;document.getElementById('bkFace').textContent=g?'👻':'🏦';
+      document.getElementById('bkTxt').textContent=g?money(wget()-d):'Bank';
+      b.classList.toggle('ghost',g);b.title=g?'Ghost: you owe '+money(d)+'. 30% of your winnings pay it back.':'Bank: loans and sending money';
+      var n=M.offers.length;var dot=document.getElementById('bkDot');dot.hidden=!n;dot.textContent=n||'';
+      if(modal&&!modal.hidden)render();}
+    function note(t){var n=document.getElementById('bkNote');if(!n){n=document.createElement('div');n.id='bkNote';document.body.appendChild(n);}
+      n.innerHTML=t;n.classList.add('on');clearTimeout(n._t);n._t=setTimeout(function(){n.classList.remove('on');},3800);}
+    /* ---- 30% of what you win pays your loans. A win is money coming back beyond what that game just put on the table ---- */
+    function onBet(k,n){S[k]=r2((S[k]||0)+n);}
+    function onPay(k,n){var profit=r2(n-(S[k]||0));S[k]=0;if(profit<=0.004||!ghost())return;payDown(r2(profit*RATE),true);}
+    function payDown(amt,auto){var d=debt();amt=Math.min(r2(amt),d,auto?Infinity:wget());if(!(amt>0.004))return 0;
+      wadd(-amt);var left=amt;
+      M.owe.forEach(function(l){if(left<=0)return;var room=r2((+l.owed||0)-(Q[l.id]||0));var x=Math.min(left,room);if(x>0){Q[l.id]=r2((Q[l.id]||0)+x);left=r2(left-x);}});
+      if(left>0){var o=L();var x=Math.min(left,o.bank);o.bank-=x;o.paid=r2(o.paid+x);left=r2(left-x);Lset(o);}
+      if(left>0)wadd(left);
+      saveQ();clearTimeout(qT);qT=setTimeout(flush,auto?4000:200);
+      if(auto){toastAmt=r2(toastAmt+amt);clearTimeout(toastT);toastT=setTimeout(function(){note('👻 '+money(toastAmt)+' of your winnings went to your loans'+(ghost()?' · '+money(debt())+' left':' · <b>paid off! You\'re back among the living.</b>'));toastAmt=0;},900);}
+      else if(!ghost())note('<b>Paid off!</b> You\'re back among the living.');
+      paint();return amt;}
+    function saveQ(){try{localStorage.setItem(QKEY,JSON.stringify(Q));}catch(e){}}
+    function flush(){var ids=Object.keys(Q);if(!ids.length||!acct())return;
+      ids.forEach(function(id){var x=Q[id];if(!(x>0)){delete Q[id];return;}
+        rpc('arcade_repay',{p_loan:+id,p_amount:x}).then(function(r){
+          if(r&&r.ok){Q[id]=r2((Q[id]||0)-x);if(Q[id]<=0.004)delete Q[id];}
+          else if(r&&r.error==='no_loan'){var back=Q[id];delete Q[id];wadd(back);}   /* the loan was forgiven or paid: give it back */
+          saveQ();poll();}).catch(function(){});});}
+    /* ---- house loans ---- */
+    function bankLoan(amt,quiet){var o=L(),owe=r2(amt*(1+INT));
+      if(o.bank+owe>CAP+0.004){note('The bank won\'t lend more than '+money(CAP)+'. Pay some back or ask a player.');return false;}
+      o.bank+=owe;o.n++;Lset(o);wadd(amt);if(!quiet)note('👻 Bank loan: <b>+'+money(amt)+'</b>. You owe '+money(owe)+'. 30% of your winnings pay it back.');return true;}
+    /* a game's own rebuy button just refilled the bankroll: that's a bank loan too */
+    function gameRebuy(n){var o=L();o.bank+=r2(n*(1+INT));o.n++;Lset(o);note('👻 That rebuy was a bank loan: you owe '+money(r2(n*(1+INT)))+'. 30% of your winnings pay it back.');}
+    /* ---- the server side: gifts, loans, repayments ---- */
+    var MSG={funds:'You don\'t have that much in your saved bankroll.',ghost:'Ghosts can\'t lend or give money. Pay off your loans first.',no_player:'No player with that username.',self:'You can\'t send money to yourself.',limit:'That\'s 30 sends today. Try again tomorrow.',bad_amount:'Enter an amount of at least $1.',signed_out:'Sign in (Save wallet) to send or borrow from players.',not_allowed:'That can\'t be done anymore.'};
+    function poll(){clearTimeout(pollT);pollT=setTimeout(poll,30000);if(!acct()){paint();return Promise.resolve();}
+      return rpc('arcade_money',{}).then(function(r){if(!r||r.error)return;M=r;
+        var ids=(r.inbox||[]).map(function(x){return x.id;});
+        if(ids.length)return rpc('arcade_claim',{p_ids:ids}).then(function(c){var got={};((c&&c.claimed)||[]).forEach(function(x){got[x.id]=x;});
+          (r.inbox||[]).forEach(function(x){if(!got[x.id])return;var a=+x.amount;wadd(a);
+            note(x.kind==='gift'?'🎁 <b>'+esc(x.who)+'</b> sent you '+money(a)+(x.note?': “'+esc(x.note)+'”':''):x.kind==='loan'?'👻 Loan from <b>'+esc(x.who)+'</b>: +'+money(a):x.kind==='repay'?'💵 <b>'+esc(x.who)+'</b> paid you back '+money(a):'↩️ Refund: '+money(a));});
+          try{window.__acct.push&&window.__acct.push(true);}catch(e){}return rpc('arcade_money',{}).then(function(r2_){if(r2_&&!r2_.error)M=r2_;});});
+      }).then(paint,paint);}
+    function send(to,amt,kind,txt){amt=r2(+amt);
+      if(!acct())return Promise.resolve(MSG.signed_out);if(ghost())return Promise.resolve(MSG.ghost);if(!(amt>=1))return Promise.resolve(MSG.bad_amount);
+      if(amt>wget()+0.004)return Promise.resolve('You only have '+money(wget())+'.');
+      var a=window.__acct;return Promise.resolve(a.push?a.push(true):0).catch(function(){}).then(function(){return rpc('arcade_send',{p_to:to,p_amount:amt,p_kind:kind,p_note:txt||null});})
+        .then(function(r){if(r&&r.ok){wadd(-amt);try{a.push&&a.push(true);}catch(e){}poll();
+          return kind==='gift'?'ok:Sent '+money(amt)+' to '+esc(r.to)+'.':'ok:Loan offer sent to '+esc(r.to)+'. They owe '+money(r2(amt*1.1))+' if they take it.';}
+          return MSG[r&&r.error]||'Something went wrong. Try again.';}).catch(function(){return 'Can\'t reach the bank right now.';});}
+    function act(id,a){return rpc('arcade_loan_act',{p_loan:id,p_act:a}).then(function(r){if(r&&r.error)note(MSG[r.error]||'That didn\'t work.');return poll();}).catch(function(){note('Can\'t reach the bank right now.');});}
+    /* ---- the Bank window ---- */
+    var modal=null,tab='loans',lastRes=null;
+    function build(){modal=document.createElement('div');modal.id='bkModal';modal.hidden=true;
+      modal.innerHTML='<div class="bk-card" role="dialog" aria-label="The Bank"><div class="bk-h"><b>The Bank</b><button type="button" class="bk-x" aria-label="Close">×</button></div>'+
+        '<div class="bk-sum" id="bkSum"></div><div class="bk-tabs"><button type="button" data-t="loans">Loans</button><button type="button" data-t="send">Send money</button><button type="button" data-t="inbox">Offers &amp; history<i id="bkTabDot"></i></button></div><div class="bk-body" id="bkBody"></div></div>';
+      document.body.appendChild(modal);
+      modal.addEventListener('click',function(e){if(e.target===modal||e.target.closest('.bk-x'))close();var t=e.target.closest('.bk-tabs button');if(t){tab=t.getAttribute('data-t');render();}});}
+    function open(t){if(!modal)build();if(t)tab=t;lastRes=null;modal.hidden=false;render();poll().then(render);}
+    function close(){if(modal)modal.hidden=true;}
+    function render(){if(!modal)return;var g=ghost(),d=debt(),w=wget(),signed=!!acct();
+      document.getElementById('bkSum').innerHTML='<div><em>Bankroll</em><b>'+money(w)+'</b></div><div><em>You owe</em><b class="'+(d?'neg':'')+'">'+money(d)+'</b></div><div><em>Net worth</em><b class="'+(w-d<0?'neg':'pos')+'">'+money(w-d)+'</b></div>'+(g?'<p class="bk-gh">👻 You\'re a <b>ghost</b> until every loan is paid. 30% of your winnings go to your loans, and ghosts can\'t lend or give money.</p>':'');
+      [].forEach.call(modal.querySelectorAll('.bk-tabs button'),function(b){b.classList.toggle('on',b.getAttribute('data-t')===tab);});
+      document.getElementById('bkTabDot').textContent=M.offers.length||'';
+      var h='';
+      if(tab==='loans'){
+        var o=L(),rows='';
+        if(o.bank>0)rows+=row('🏦 The Bank',o.bank,'bank');
+        M.owe.forEach(function(l){var left=r2((+l.owed||0)-(Q[l.id]||0));if(left>0)rows+=row('🤠 '+esc(l.who),left,l.id);});
+        h+='<h4>What you owe</h4>'+(rows||'<p class="bk-mt">Nothing. You\'re square with everyone.</p>');
+        var can=o.bank+1100<=CAP+0.004;
+        h+='<h4>Borrow from the bank</h4><p class="bk-p">$1,000 now, you owe $1,100. <b>30% of every win</b> pays it back automatically. While you owe anything you play as a 👻 ghost.</p>'+
+          '<button type="button" class="bk-go" id="bkLoan"'+(can?'':' disabled')+'>'+(can?'Take a $1,000 bank loan':'The bank won\'t lend more ('+money(CAP)+' limit)')+'</button>';
+      }else if(tab==='send'){
+        if(!signed)h+='<p class="bk-p">Sending money needs an account so it reaches the right person. Tap <b>Save wallet</b> at the top to make one (it takes a username and password).</p>';
+        else{h+='<p class="bk-p">Send to another player by their <b>username</b>. A <b>gift</b> is theirs to keep. A <b>loan</b> asks them to accept; they owe you back 10% extra, and 30% of their winnings pay you back automatically. You are <b>'+esc(window.__acct.state().user)+'</b>.</p>'+
+          '<label class="bk-f">Player username<input id="bkTo" autocomplete="off" maxlength="20" placeholder="their username"></label>'+
+          '<label class="bk-f">Amount<input id="bkAmt" inputmode="decimal" autocomplete="off" placeholder="$"></label>'+
+          '<div class="bk-seg" id="bkKind"><button type="button" data-k="gift" class="on">🎁 Gift</button><button type="button" data-k="loan">🤝 Loan (+10%)</button></div>'+
+          '<label class="bk-f">Note (optional)<input id="bkMsg" maxlength="80" placeholder="Good luck at the tables"></label>'+
+          '<button type="button" class="bk-go" id="bkSend"'+(g?' disabled':'')+'>'+(g?'Ghosts can\'t send money':'Send')+'</button><p class="bk-res'+(lastRes&&lastRes.ok?' ok':'')+'" id="bkRes">'+(lastRes?lastRes.h:'')+'</p>';
+          if(M.lent.length){h+='<h4>Money you\'ve lent</h4>';M.lent.forEach(function(l){h+='<div class="bk-row"><span>'+esc(l.who)+(l.status==='offered'?' <em>(waiting for them)</em>':'')+'</span><b>'+money(+l.owed)+'</b>'+
+            (l.status==='offered'?'<button type="button" data-act="cancel" data-id="'+l.id+'">Cancel</button>':'<button type="button" data-act="forgive" data-id="'+l.id+'">Forgive</button>')+'</div>';});}}
+      }else{
+        if(!signed)h+='<p class="bk-p">Sign in to get money and loan offers from other players.</p>';
+        if(M.offers.length){h+='<h4>Loan offers</h4>';M.offers.forEach(function(l){h+='<div class="bk-offer"><div><b>'+esc(l.who)+'</b> offers you <b>'+money(+l.principal)+'</b>. You\'d owe '+money(+l.owed)+' and become a 👻 ghost until it\'s paid.'+(l.note?'<br><em>“'+esc(l.note)+'”</em>':'')+'</div><div class="bk-ob"><button type="button" class="bk-go" data-act="accept" data-id="'+l.id+'">Accept</button><button type="button" data-act="decline" data-id="'+l.id+'">No thanks</button></div></div>';});}
+        else if(signed)h+='<p class="bk-mt">No loan offers right now.</p>';
+        if(M.recent.length){h+='<h4>Recent</h4>';M.recent.forEach(function(x){var lab={gift:'Gift',loan:'Loan',repay:'Repayment',refund:'Refund'}[x.kind]||x.kind;
+          h+='<div class="bk-row"><span>'+(x.out?'To ':'From ')+esc(x.who||'the bank')+' · '+lab+'</span><b class="'+(x.out?'neg':'pos')+'">'+(x.out?'-':'+')+money(+x.amount)+'</b></div>';});}
+      }
+      var body=document.getElementById('bkBody'),keep={};['bkTo','bkAmt','bkMsg'].forEach(function(id){var el=document.getElementById(id);if(el)keep[id]=el.value;});var kk=body.querySelector('#bkKind .on');kk=kk&&kk.getAttribute('data-k');
+      body.innerHTML=h;for(var id in keep){var el2=document.getElementById(id);if(el2)el2.value=keep[id];}if(kk){var ks0=document.getElementById('bkKind');if(ks0)[].forEach.call(ks0.children,function(x){x.classList.toggle('on',x.getAttribute('data-k')===kk);});}
+      var lb=document.getElementById('bkLoan');if(lb)lb.onclick=function(){if(bankLoan(1000))render();};
+      [].forEach.call(body.querySelectorAll('[data-pay]'),function(b){b.onclick=function(){var id=b.getAttribute('data-pay'),all=b.getAttribute('data-all')==='1',owe=id==='bank'?L().bank:r2(+((M.owe.filter(function(l){return String(l.id)===id;})[0]||{}).owed||0)-(Q[id]||0));
+        var amt=Math.min(all?owe:Math.min(100,owe),wget());if(!(amt>0)){note('You don\'t have any money to pay with.');return;}payOne(id,amt);render();};});
+      [].forEach.call(body.querySelectorAll('[data-act]'),function(b){b.onclick=function(){b.disabled=true;act(+b.getAttribute('data-id'),b.getAttribute('data-act')).then(render);};});
+      var ks=document.getElementById('bkKind');if(ks)[].forEach.call(ks.children,function(b){b.onclick=function(){[].forEach.call(ks.children,function(x){x.classList.toggle('on',x===b);});};});
+      var sb=document.getElementById('bkSend');if(sb)sb.onclick=function(){var kind=ks.querySelector('.on').getAttribute('data-k'),to=document.getElementById('bkTo').value.trim(),amt=parseFloat(String(document.getElementById('bkAmt').value).replace(/[$,\s]/g,''));
+        if(!to){document.getElementById('bkRes').textContent='Type their username.';return;}
+        sb.disabled=true;send(to,amt,kind,document.getElementById('bkMsg').value.trim()).then(function(m){var res=document.getElementById('bkRes');sb.disabled=false;
+          if(/^ok:/.test(m)){lastRes={ok:1,h:m.slice(3)};res.className='bk-res ok';res.innerHTML=lastRes.h;document.getElementById('bkAmt').value='';}else{lastRes={ok:0,h:esc(m)};res.className='bk-res';res.textContent=m;}});};}
+    function row(name,owed,id){return '<div class="bk-row"><span>'+name+'</span><b class="neg">'+money(owed)+'</b><button type="button" data-pay="'+id+'">Pay $100</button><button type="button" data-pay="'+id+'" data-all="1">Pay all</button></div>';}
+    /* pay a chosen loan by hand */
+    function payOne(id,amt){amt=r2(amt);if(!(amt>0))return;wadd(-amt);
+      if(id==='bank'){var o=L();var x=Math.min(amt,o.bank);o.bank-=x;o.paid=r2(o.paid+x);Lset(o);if(amt>x)wadd(amt-x);}
+      else{Q[id]=r2((Q[id]||0)+amt);saveQ();clearTimeout(qT);qT=setTimeout(flush,200);}
+      note(ghost()?'Paid '+money(amt)+'. '+money(debt())+' left.':'<b>Paid off!</b> You\'re back among the living.');paint();}
+    /* ---- start ---- */
+    try{Q=JSON.parse(localStorage.getItem(QKEY)||'{}')||{};}catch(e){Q={};}
+    var bb=document.getElementById('bkBtn');if(bb)bb.addEventListener('click',function(){open();});
+    addEventListener('storage',function(e){if(e.key===LKEY||e.key==='su_casino_wallet')paint();});
+    setInterval(paint,4000);paint();setTimeout(function(){poll();flush();},2500);
+    window.__money={onBet:onBet,onPay:onPay,gameRebuy:gameRebuy,bankLoan:bankLoan,open:open,close:close,poll:poll,debt:debt,ghost:ghost,payDown:payDown,state:function(){return {M:M,L:L(),Q:Q,S:S,debt:debt(),ghost:ghost(),wallet:wget()};}};
   })();
 
   if(skin!=='western'&&!ONLY_SKIN)loader(skin,function(done){show(start,false);var f=frames[active];if(f)f.addEventListener('load',function(){setTimeout(done,250);},{once:true});else done();});

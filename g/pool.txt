@@ -105,6 +105,47 @@ html.fs .optslot{display:flex}
 .optslot .fsopt-btn{height:40px}
 
 
+
+.lkbtn{min-height:58px!important;gap:10px!important}
+.lkbtn .rkic{width:56px;height:42px;flex:0 0 auto;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+.lkbtn .rkt{display:flex;flex-direction:column;align-items:flex-start;min-width:0;flex:1}.lkbtn .rkt b{font:400 17px Rye,Georgia,serif;color:var(--gold2)}.lkbtn .rkt em{margin:0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.lkbtn:hover .rkic{transform:translateY(-2px);transition:transform .15s}
+.sheet.lk{width:min(620px,100%)}
+/* the wall rack: walnut board, a top rail with notches and a felt-lined foot rail */
+.qrack{flex-direction:row!important;align-items:stretch!important;position:relative;display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;padding:30px 14px 0;margin:8px 0 0;border-radius:12px 12px 4px 4px;height:250px;min-height:250px;flex:0 0 auto;scrollbar-width:thin;
+  background:repeating-linear-gradient(90deg,rgba(0,0,0,.08) 0 2px,transparent 2px 9px),linear-gradient(180deg,#4a2a14,#3a200f 60%,#2c180b);box-shadow:inset 0 0 0 2px #1a0d05,inset 0 0 30px rgba(0,0,0,.6)}
+.qrack::before{content:"";position:sticky;left:0;flex:0 0 0}
+.qrack .rail{position:absolute;left:0;right:0;height:16px;pointer-events:none}
+.rcue{position:relative;flex:0 0 52px;height:100%;display:flex;flex-direction:column;align-items:center;cursor:pointer;background:none;border:0;padding:0;color:inherit}
+.rcue .slot{position:absolute;top:-18px;left:50%;width:30px;height:16px;transform:translateX(-50%);border-radius:0 0 12px 12px;background:linear-gradient(180deg,#6b3f1d,#4a2a14);box-shadow:inset 0 -3px 4px rgba(0,0,0,.6),0 0 0 2px #1a0d05;z-index:2}
+.rcue canvas{display:block;width:16px!important;height:192px!important;transition:transform .35s cubic-bezier(.2,1.4,.4,1),filter .2s;filter:drop-shadow(3px 4px 3px rgba(0,0,0,.6))}
+.rcue:hover canvas{transform:translateY(-6px)}
+.rcue.on canvas{transform:translateY(-26px) rotate(-3deg);filter:drop-shadow(0 0 10px rgba(242,210,126,.8)) drop-shadow(3px 6px 4px rgba(0,0,0,.6))}
+.rcue.lock canvas{filter:grayscale(1) brightness(.4)}
+.rcue.sec canvas{filter:brightness(0) drop-shadow(0 0 6px rgba(167,139,250,.6))}
+.rcue.lift canvas{animation:lift .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes lift{0%{transform:translateY(0)}45%{transform:translateY(-40px) rotate(-6deg)}100%{transform:translateY(-26px) rotate(-3deg)}}
+.rcue .plate{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:50px;padding:2px 2px;border-radius:4px;background:linear-gradient(180deg,#e9cf7d,#b8892f);color:#2a1606;font:800 8.5px/1.1 Inter,sans-serif;text-align:center;box-shadow:0 1px 0 #5a3a10,inset 0 1px 0 rgba(255,255,255,.5);min-height:20px;display:flex;align-items:center;justify-content:center}
+.rcue.lock .plate{background:linear-gradient(180deg,#6b7280,#4b5563);color:#e5e7eb}
+.rcue .lk{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-size:14px;filter:drop-shadow(0 1px 1px #000)}
+.rcue .nw,.tray .nw{position:absolute;top:2px;left:50%;transform:translateX(-50%);font-size:8.5px;font-weight:900;letter-spacing:.08em;color:#022c22;background:#34d399;border-radius:100px;padding:1px 5px;z-index:3}
+.foot{flex:0 0 auto;height:22px;margin:0 0 8px;border-radius:0 0 10px 10px;background:linear-gradient(180deg,#0b4a37,#08311f);box-shadow:inset 0 3px 6px rgba(0,0,0,.6),0 0 0 2px #1a0d05}
+/* the ball shelf: trays of racked balls */
+.shelf{flex:0 0 auto;min-height:118px;display:flex;gap:8px;overflow-x:auto;padding:10px 10px 18px;border-radius:10px;scrollbar-width:thin;background:linear-gradient(180deg,rgba(0,0,0,0) 0 calc(100% - 16px),#6b3f1d calc(100% - 16px),#4a2a14),linear-gradient(180deg,#2c180b,#3a200f);box-shadow:inset 0 0 0 2px #1a0d05}
+.tray{position:relative;flex:0 0 92px;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;padding:4px 2px 0;cursor:pointer;color:inherit;border-radius:10px;transition:transform .2s}
+.tray .tri{position:relative;width:78px;height:64px;transition:transform .35s cubic-bezier(.2,1.4,.4,1)}
+.tray .tri::before{content:"";position:absolute;inset:0;clip-path:polygon(50% 0,100% 100%,0 100%);background:linear-gradient(180deg,#8a5a2b,#5a3218);opacity:.85}
+.tray .tri canvas{position:absolute;display:block}
+.tray:hover .tri{transform:translateY(-4px)}
+.tray.on .tri{transform:translateY(-10px) scale(1.06);filter:drop-shadow(0 0 10px rgba(242,210,126,.7))}
+.tray.lock .tri canvas{filter:grayscale(1) brightness(.4)}.tray.sec .tri canvas{filter:brightness(0)}
+.tray .plate{padding:2px 6px;border-radius:4px;background:linear-gradient(180deg,#e9cf7d,#b8892f);color:#2a1606;font:800 9.5px/1.15 Inter,sans-serif;text-align:center;max-width:90px}
+.tray.lock .plate{background:linear-gradient(180deg,#6b7280,#4b5563);color:#e5e7eb}
+.rkinfo{min-height:62px;margin:8px 0 0;padding:9px 12px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid rgba(242,210,126,.25);text-align:left;font-size:13px;color:#e5d6b0}
+.rkinfo b{display:block;font:400 18px Rye,Georgia,serif;color:var(--gold2)}.rkinfo .pb{height:6px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:6px}.rkinfo .pb i{display:block;height:100%;background:linear-gradient(90deg,#c6a75e,#f2d27e)}
+.rkinfo .eq{color:#6ee7b7;font-weight:800}
+.pooltbl .qrack canvas,.pooltbl .shelf canvas{position:static;width:auto;height:auto;cursor:pointer}
+.pooltbl .tray .tri canvas{position:absolute}
 /* cue & ball locker */
 .lkbtn{width:100%;margin-top:10px;display:flex;align-items:center;gap:8px;min-height:42px;padding:0 12px;border-radius:10px;background:rgba(242,210,126,.1);border:1px solid rgba(242,210,126,.45);color:var(--gold2);font-weight:800;font-size:14px}
 .lkbtn em{margin-left:auto;font-style:normal;font-size:11.5px;font-weight:700;color:#cbd5e1}
@@ -744,20 +785,18 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
             <div class="srow stkc"><span>Or bet</span><div class="stkbox"><input id="stakeIn" type="text" inputmode="decimal" autocomplete="off" placeholder="Any amount" aria-label="Stake amount"><button type="button" id="stakeSet">Bet</button><button type="button" id="stakeAll">All in</button></div></div>
             <div class="lbox hide" id="lbox"></div>
             <div class="wbox hide" id="wbox"></div>
-            <button type="button" class="lkbtn" id="lkBtn"><span>Cue &amp; balls</span><i id="lkNew" class="hide"></i><em id="lkSum"></em></button>
+            <button type="button" class="lkbtn" id="lkBtn" aria-label="Equipment rack: pick your cue and balls"><svg class="rkic" viewBox="0 0 64 48" aria-hidden="true"><rect x="2" y="3" width="60" height="7" rx="2" fill="#7a4a24" stroke="#2a170b" stroke-width="1.5"/><rect x="2" y="38" width="60" height="7" rx="2" fill="#7a4a24" stroke="#2a170b" stroke-width="1.5"/><g stroke-linecap="round"><path d="M12 7v35" stroke="#e7d3a6" stroke-width="3"/><path d="M12 30v12" stroke="#3a2516" stroke-width="4.5"/><path d="M22 7v35" stroke="#e7d3a6" stroke-width="3"/><path d="M22 30v12" stroke="#13254a" stroke-width="4.5"/><path d="M32 2v35" stroke="#e7d3a6" stroke-width="3"/><path d="M32 25v12" stroke="#b8862f" stroke-width="4.5"/><path d="M42 7v35" stroke="#e7d3a6" stroke-width="3"/><path d="M42 30v12" stroke="#111" stroke-width="4.5"/></g><path d="M12 7h0M22 7h0M32 2h0M42 7h0" stroke="#3b7fd1" stroke-width="3" stroke-linecap="round"/><circle cx="52" cy="31" r="5" fill="#f6c816"/><circle cx="56" cy="22" r="4.4" fill="#e31a1c"/><circle cx="51" cy="14" r="4" fill="#19529a"/></svg><span class="rkt"><b>Equipment rack</b><em id="lkSum"></em></span><i id="lkNew" class="hide"></i></button>
             <button type="button" class="go" id="goBtn">Break</button>
             <button type="button" class="refill hide" id="refill">Refill bankroll to $1,000</button>
             <p class="snote" id="setNote">Winner takes the pot: 2&times; the stake.</p>
           </div>
         </div>
         <div class="ovl hide" id="locker">
-          <div class="sheet lk"><b class="ttl">Cue rack</b>
+          <div class="sheet lk"><b class="ttl">Equipment rack</b>
             <div class="sb" id="lkStats"></div>
-            <div class="lkh">Cues</div>
-            <div class="lkrow"><button type="button" class="lkar" data-k="cue" data-d="-1" aria-label="Previous cue">&#8249;</button><div class="lkscroll" id="lkCues"></div><button type="button" class="lkar" data-k="cue" data-d="1" aria-label="Next cue">&#8250;</button></div>
-            <div class="lkh">Balls</div>
-            <div class="lkrow"><button type="button" class="lkar" data-k="balls" data-d="-1" aria-label="Previous ball set">&#8249;</button><div class="lkscroll" id="lkBalls"></div><button type="button" class="lkar" data-k="balls" data-d="1" aria-label="Next ball set">&#8250;</button></div>
-            <p class="snote" id="lkNote">Win games to earn new cues and ball sets. Your cue and balls show on every table, online too.</p>
+            <div class="qrack" id="lkCues" role="listbox" aria-label="Cues"></div><div class="foot"></div>
+            <div class="shelf" id="lkBalls" role="listbox" aria-label="Ball sets"></div>
+            <div class="rkinfo" id="lkInfo"></div>
             <button type="button" class="go" id="lkDone">Done</button>
           </div>
         </div>
@@ -958,7 +997,9 @@ var Live=(function(){
     if(!id){id=uid();try{sessionStorage.setItem('su_live_id',id);}catch(e){}}
     try{var ac=JSON.parse(localStorage.getItem('saddleup-arcade-tok')||'null');if(ac&&ac.t&&ac.u)id='u_'+String(ac.u).toLowerCase();}catch(e){}
     var nm=store('su_live_name');if(!nm){nm='Guest '+(1000+Math.floor(Math.random()*9000));store('su_live_name',nm);}
-    ME={id:id,name:String(nm).slice(0,18)};return ME;
+    /* players who owe money show up as ghosts at live tables */
+    var gh=store('su_ghost')==='1';
+    ME={id:id,name:(gh?'\uD83D\uDC7B ':'')+String(nm).slice(0,gh?15:18)};return ME;
   }
   var supaP=null;
   function loadSupa(){
@@ -1181,11 +1222,12 @@ var Live=(function(){
           return;
         }
         var d=b-last;
-        if(Math.abs(d)>0.004){w=(w===null?b-d:w)+d;wwrite(w);last=b;
-          /* daily quests: money going onto the table is a bet, money coming back is a payout */
-          /* going from broke to a fresh stack is a rebuy, not a payout */
+        if(Math.abs(d)>0.004){
+          /* going from broke to a fresh stack is a rebuy (now a bank loan), not a payout */
           var rebuy=d>=500&&last<5;
-          try{if(parent!==window&&!rebuy)parent.postMessage({arcade:'quest',ev:d<0?'bet':'pay',n:Math.abs(d)},'*');}catch(x){}}
+          w=(w===null?b-d:w)+d;wwrite(w);last=b;
+          /* daily quests: money going onto the table is a bet, money coming back is a payout */
+          try{if(parent!==window)parent.postMessage(rebuy?{arcade:'rebuy',n:d}:{arcade:'quest',ev:d<0?'bet':'pay',n:Math.abs(d)},'*');}catch(x){}}
         if(w!==null&&Math.abs(w-b)>0.004&&o.idle()){o.set(w);last=w;}
       }catch(e){}
     }
@@ -2311,35 +2353,48 @@ function lkStatus(it){var r=it.req;if(!r)return {ok:true,txt:'Free'};var have=LK
   return {ok:ok,txt:ok?'':(it.secret?it.hint:r[2]+' ('+Math.min(have,r[1])+'/'+r[1]+')'),pct:Math.min(1,have/r[1])};}
 function renderLkBtn(){var n=LK.unseen();$('lkNew').classList.toggle('hide',!n);
   var c=LK.CUES.filter(LK.got).length,b=LK.BALLS.filter(LK.got).length;$('lkSum').textContent=LK.cue().name+' \u00b7 '+LK.balls().name+' \u00b7 '+(c+b)+'/'+(LK.CUES.length+LK.BALLS.length);}
+var LKF={kind:'cue',id:null};
+function cueVertical(it){var W=32,H=472,k=document.createElement('canvas');k.width=W;k.height=H;k.style.width='16px';k.style.height='192px';var g=k.getContext('2d');
+  g.translate(W/2,H);g.rotate(-Math.PI/2);var cc=cueCanvas(it);
+  if(cc)g.drawImage(cc,0,-W/2,H,W);else if(cueOk)g.drawImage(cueImg,0,-W/2,H,W);else{g.fillStyle='#d6b98a';g.fillRect(0,-5,H,10);}return k;}
+function trayBalls(it,box){var keep=BSK,save=BPAL,sc=BCREAM;BSK=it;applyPreviewPal(it);
+  var pos=[[1,0,0],[9,-1,1],[2,1,1],[10,-2,2],[8,0,2],[3,2,2]],sz=20;
+  pos.forEach(function(p){var c=ballPreview(p[0],sz);c.style.left=(39-sz/2+p[1]*10.5)+'px';c.style.top=(6+p[2]*18)+'px';box.appendChild(c);});
+  BSK=keep;BPAL=save;BCREAM=sc;}
+function lkInfo(){var kind=LKF.kind,L=kind==='cue'?LK.CUES:LK.BALLS,cur=kind==='cue'?LK.cue():LK.balls(),it=null;
+  for(var i=0;i<L.length;i++)if(L[i].id===(LKF.id||cur.id))it=L[i];it=it||cur;var st=lkStatus(it),hid=it.secret&&!st.ok,on=cur.id===it.id;
+  $('lkInfo').innerHTML='<b>'+(hid?'??? (secret)':esc(it.name))+'</b>'+(kind==='cue'?'Cue':'Ball set')+' \u00b7 '+(on?'<span class="eq">In your hands</span>':st.ok?'Tap it again to take it off the rack':esc(st.txt))+
+    (!st.ok&&!it.secret?'<div class="pb"><i style="width:'+Math.round(st.pct*100)+'%"></i></div>':'');}
 function renderLocker(){
   var S=LK.S;$('lkStats').innerHTML='Games <b>'+S.g+'</b> \u00b7 Wins <b>'+S.w+'</b> \u00b7 Beat Dusty <b>'+S.wn+'</b> \u00b7 Beat June <b>'+S.wh+'</b> \u00b7 Live wins <b>'+S.wl+'</b>';
-  function card(it,kind){var st=lkStatus(it),on=(kind==='cue'?LK.cue():LK.balls()).id===it.id,hid=it.secret&&!st.ok;
-    var d=document.createElement('button');d.type='button';d.className='lkc'+(on?' on':'')+(st.ok?'':' lock')+(hid?' sec':'');d.setAttribute('data-id',it.id);
-    var pv=document.createElement('div');pv.className='pv';
-    if(kind==='cue'){var cc=cueCanvas(it),k=document.createElement('canvas');k.width=240;k.height=24;k.style.width='120px';k.style.height='12px';var g=k.getContext('2d');
-      if(cc)g.drawImage(cc,0,0,240,24);else if(cueOk)g.drawImage(cueImg,0,0,240,24);else{g.fillStyle='#d6b98a';g.fillRect(0,8,240,8);}pv.appendChild(k);}
-    else{var keep=BSK;BSK=it;var save=BPAL,sc=BCREAM;applyPreviewPal(it);[1,9,8,3,12].forEach(function(n){pv.appendChild(ballPreview(n,22));});BSK=keep;BPAL=save;BCREAM=sc;}
-    d.appendChild(pv);
-    var nm=document.createElement('b');nm.textContent=hid?'???':it.name;d.appendChild(nm);
-    var sm=document.createElement('small');sm.textContent=on?'Equipped':st.ok?'Tap to use':st.txt;d.appendChild(sm);
-    if(!st.ok&&!it.secret){var pb=document.createElement('div');pb.className='pb';pb.innerHTML='<i style="width:'+Math.round(st.pct*100)+'%"></i>';d.appendChild(pb);}
-    if(st.ok&&it.req&&!LK.S.seen[it.id]){var nw=document.createElement('span');nw.className='nw';nw.textContent='NEW';d.insertBefore(nw,d.firstChild);}
-    d.onclick=function(){if(!st.ok){toast(it.secret?it.hint:it.req[2]+' to unlock '+it.name+'.');return;}LK.set(kind,it.id);if(kind==='balls')applyBallSkin();SFX.click&&SFX.click();renderLocker();renderLkBtn();};
-    return d;}
   var C=$('lkCues'),B=$('lkBalls'),sl=C.scrollLeft,bl=B.scrollLeft;C.innerHTML='';B.innerHTML='';
-  LK.CUES.forEach(function(it){C.appendChild(card(it,'cue'));});LK.BALLS.forEach(function(it){B.appendChild(card(it,'balls'));});C.scrollLeft=sl;B.scrollLeft=bl;
+  LK.CUES.forEach(function(it){var st=lkStatus(it),on=LK.cue().id===it.id,hid=it.secret&&!st.ok;
+    var d=document.createElement('button');d.type='button';d.className='rcue'+(on?' on':'')+(st.ok?'':' lock')+(hid?' sec':'');d.setAttribute('role','option');d.setAttribute('aria-selected',on?'true':'false');d.setAttribute('aria-label',hid?'Secret cue':it.name);
+    d.innerHTML='<span class="slot"></span>';d.appendChild(cueVertical(it));
+    var pl=document.createElement('span');pl.className='plate';pl.textContent=hid?'???':it.name;d.appendChild(pl);
+    if(!st.ok){var lk=document.createElement('span');lk.className='lk';lk.textContent=hid?'\u2754':'\u{1f512}';d.appendChild(lk);}
+    if(st.ok&&it.req&&!LK.S.seen[it.id]){var nw=document.createElement('span');nw.className='nw';nw.textContent='NEW';d.appendChild(nw);}
+    d.onclick=function(){pick('cue',it,d);};C.appendChild(d);});
+  LK.BALLS.forEach(function(it){var st=lkStatus(it),on=LK.balls().id===it.id,hid=it.secret&&!st.ok;
+    var d=document.createElement('button');d.type='button';d.className='tray'+(on?' on':'')+(st.ok?'':' lock')+(hid?' sec':'');d.setAttribute('role','option');d.setAttribute('aria-selected',on?'true':'false');d.setAttribute('aria-label',hid?'Secret ball set':it.name);
+    var tri=document.createElement('div');tri.className='tri';trayBalls(it,tri);d.appendChild(tri);
+    var pl=document.createElement('span');pl.className='plate';pl.textContent=(st.ok?'':(hid?'\u2754 ':'\u{1f512} '))+(hid?'???':it.name);d.appendChild(pl);
+    if(st.ok&&it.req&&!LK.S.seen[it.id]){var nw=document.createElement('span');nw.className='nw';nw.textContent='NEW';d.appendChild(nw);}
+    d.onclick=function(){pick('balls',it,d);};B.appendChild(d);});
+  C.scrollLeft=sl;B.scrollLeft=bl;lkInfo();
 }
+/* first tap looks at it; tapping one you own takes it off the rack */
+function pick(kind,it,el){var st=lkStatus(it),cur=kind==='cue'?LK.cue():LK.balls();
+  if(LKF.kind!==kind||LKF.id!==it.id){LKF={kind:kind,id:it.id};}
+  if(st.ok&&cur.id!==it.id){LK.set(kind,it.id);if(kind==='balls')applyBallSkin();try{SFX.cue&&SFX.cue(0.25);}catch(e){}renderLocker();
+    var host=$(kind==='cue'?'lkCues':'lkBalls'),nel=host.querySelector('[aria-label="'+it.name.replace(/"/g,'')+'"]');if(nel&&kind==='cue'){nel.classList.add('lift');setTimeout(function(){nel.classList.remove('lift');},600);}
+    renderLkBtn();return;}
+  lkInfo();}
 function applyPreviewPal(it){var cr=it.cr?hexRgb(it.cr):[246,243,230];BCREAM=cr;BPAL=[];for(var n=0;n<16;n++){var h=it.p16?it.p16[n]:it.pal?it.pal[n>8?n-8:n]:ballCol(n);BPAL.push(hexRgb(h));}}
-function openLocker(){renderLocker();$('locker').classList.remove('hide');
-  ['lkCues','lkBalls'].forEach(function(id){var el=$(id),on=el.querySelector('.lkc.on');if(on)el.scrollLeft=Math.max(0,on.offsetLeft-el.offsetLeft-40);});}
+function openLocker(){LKF={kind:'cue',id:null};renderLocker();$('locker').classList.remove('hide');
+  ['lkCues','lkBalls'].forEach(function(id){var el=$(id),on=el.querySelector('.on');if(on)el.scrollLeft=Math.max(0,on.offsetLeft-el.clientWidth/2);});}
 function closeLocker(){LK.seeAll();renderLkBtn();$('locker').classList.add('hide');}
 $('lkBtn').addEventListener('click',openLocker);$('lkDone').addEventListener('click',closeLocker);
-[].forEach.call(document.querySelectorAll('.lkar'),function(b){b.addEventListener('click',function(){
-  /* step through what you own: the arrows equip the previous / next unlocked one */
-  var kind=b.getAttribute('data-k'),L=(kind==='cue'?LK.CUES:LK.BALLS).filter(LK.got),cur=(kind==='cue'?LK.cue():LK.balls()).id,i=0;
-  for(var k=0;k<L.length;k++)if(L[k].id===cur)i=k;var nx=L[(i+(+b.getAttribute('data-d'))+L.length)%L.length];
-  LK.set(kind,nx.id);if(kind==='balls')applyBallSkin();renderLocker();
-  var el=$(kind==='cue'?'lkCues':'lkBalls'),on=el.querySelector('.lkc.on');if(on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});});});
 renderLkBtn();
 
 $('againBtn').addEventListener('click',function(){if(G.watch){stopWatch();return;}if(G.live&&G.mode==='ct'){G.live=false;G.gid='';G.auth='';$('res').classList.add('hide');toSetup();if(LV.L)LV.L.send('lobby',{busy:false});return;}if(G.live){$('res').classList.add('hide');toSetup();if(LV.peer)challenge();}else{$('res').classList.add('hide');opt.mode=G.mode;startSolo();}});

@@ -473,7 +473,9 @@ var Live=(function(){
     if(!id){id=uid();try{sessionStorage.setItem('su_live_id',id);}catch(e){}}
     try{var ac=JSON.parse(localStorage.getItem('saddleup-arcade-tok')||'null');if(ac&&ac.t&&ac.u)id='u_'+String(ac.u).toLowerCase();}catch(e){}
     var nm=store('su_live_name');if(!nm){nm='Guest '+(1000+Math.floor(Math.random()*9000));store('su_live_name',nm);}
-    ME={id:id,name:String(nm).slice(0,18)};return ME;
+    /* players who owe money show up as ghosts at live tables */
+    var gh=store('su_ghost')==='1';
+    ME={id:id,name:(gh?'\uD83D\uDC7B ':'')+String(nm).slice(0,gh?15:18)};return ME;
   }
   var supaP=null;
   function loadSupa(){
@@ -696,11 +698,12 @@ var Live=(function(){
           return;
         }
         var d=b-last;
-        if(Math.abs(d)>0.004){w=(w===null?b-d:w)+d;wwrite(w);last=b;
-          /* daily quests: money going onto the table is a bet, money coming back is a payout */
-          /* going from broke to a fresh stack is a rebuy, not a payout */
+        if(Math.abs(d)>0.004){
+          /* going from broke to a fresh stack is a rebuy (now a bank loan), not a payout */
           var rebuy=d>=500&&last<5;
-          try{if(parent!==window&&!rebuy)parent.postMessage({arcade:'quest',ev:d<0?'bet':'pay',n:Math.abs(d)},'*');}catch(x){}}
+          w=(w===null?b-d:w)+d;wwrite(w);last=b;
+          /* daily quests: money going onto the table is a bet, money coming back is a payout */
+          try{if(parent!==window)parent.postMessage(rebuy?{arcade:'rebuy',n:d}:{arcade:'quest',ev:d<0?'bet':'pay',n:Math.abs(d)},'*');}catch(x){}}
         if(w!==null&&Math.abs(w-b)>0.004&&o.idle()){o.set(w);last=w;}
       }catch(e){}
     }
