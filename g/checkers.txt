@@ -1107,6 +1107,61 @@ window.__ck={state:function(){return G?{turn:G.turn,me:G.mySide,mode:G.mode,n:G.
   addEventListener('storage',function(e){if(e.key==='su_ghost')apply();});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
 })();
+<\u002fscript><script>
+/* your own chip: one chip in every chip rack that you set to any amount (saved in su_cchip, the same everywhere).
+   Tapping it plays through the rack's smallest chip with your amount, so every game's own rules (limits, bankroll) still apply. */
+(function(){
+  var KEY='su_cchip',DEF=250;
+  function get(){var v=+(localStorage.getItem(KEY)||0);return v>0&&isFinite(v)?v:DEF;}
+  function set(v){try{localStorage.setItem(KEY,String(v));}catch(e){}}
+  function short(n){var U=[[1e12,'T'],[1e9,'B'],[1e6,'M'],[1e3,'K']];for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.round(n/U[i][0]*10)/10;return (x%1?x.toFixed(1):String(x))+U[i][1];}return String(Math.round(n*100)/100);}
+  function parse(t){t=String(t||'').trim().toLowerCase().replace(/[$,\s]/g,'');var m=/^(\d*\.?\d+)(k|m|b|t)?$/.exec(t);if(!m)return NaN;return Math.round(parseFloat(m[1])*({k:1e3,m:1e6,b:1e9,t:1e12}[m[2]]||1)*100)/100;}
+  function racks(){var out=[];[].forEach.call(document.querySelectorAll('button.chip[data-v]:not(.cchip)'),function(b){var p=b.parentNode;if(out.indexOf(p)<0&&p.querySelectorAll(':scope > button.chip[data-v]:not(.cchip)').length>=2)out.push(p);});return out;}
+  function paint(c){var v=get();c.setAttribute('data-v',String(v));c.querySelector('.cv').textContent=short(v);c.title='Your chip: $'+v.toLocaleString()+'. Tap ✎ to change it.';}
+  function proxyOf(rack){var best=null,bv=Infinity;[].forEach.call(rack.querySelectorAll(':scope > button.chip[data-v]:not(.cchip)'),function(b){var v=+b.getAttribute('data-v');if(v>0&&v<bv){bv=v;best=b;}});return best;}
+  function play(c){var rack=c.parentNode,px=proxyOf(rack);if(!px||c.disabled)return;
+    if(px.disabled){px.disabled=false;var re=true;}
+    var old=px.getAttribute('data-v');px.setAttribute('data-v',c.getAttribute('data-v'));
+    try{px.click();}catch(e){}
+    px.setAttribute('data-v',old);if(re)px.disabled=true;
+    ['on','sel'].forEach(function(k){if(px.classList.contains(k)){px.classList.remove(k);c.classList.add(k);}});}
+  var pop=null;
+  function edit(c){if(!pop){pop=document.createElement('div');pop.className='cchip-pop';
+      pop.innerHTML='<b>Your chip</b><label>Worth<input type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 750 or 2.5k"></label><div class="row"><button type="button" class="ok">Set chip</button><button type="button" class="no">Cancel</button></div><p class="err"></p>';
+      document.body.appendChild(pop);
+      pop.querySelector('.no').onclick=function(){pop.classList.remove('on');};
+      pop.querySelector('input').addEventListener('keydown',function(e){if(e.key==='Enter')pop.querySelector('.ok').click();if(e.key==='Escape')pop.classList.remove('on');});}
+    var inp=pop.querySelector('input'),err=pop.querySelector('.err');inp.value=String(get());err.textContent='';
+    pop.querySelector('.ok').onclick=function(){var v=parse(inp.value);if(!(v>=1)){err.textContent='Enter an amount of $1 or more.';return;}if(v>1e12){err.textContent='That chip is too big for any table.';return;}
+      set(v);[].forEach.call(document.querySelectorAll('button.cchip'),paint);pop.classList.remove('on');play(c);};
+    var r=c.getBoundingClientRect(),W=Math.min(260,innerWidth-16);pop.style.width=W+'px';
+    pop.style.left=Math.max(8,Math.min(innerWidth-W-8,r.left+r.width/2-W/2))+'px';
+    var top=r.top-150;pop.style.top=(top<8?r.bottom+8:top)+'px';pop.classList.add('on');setTimeout(function(){inp.focus();inp.select();},30);}
+  function add(){racks().forEach(function(rack){if(rack.querySelector(':scope > .cchip'))return;
+      var any=rack.querySelector(':scope > button.chip[data-v]'),c=document.createElement('button');c.type='button';c.className='chip cchip';
+      c.innerHTML='<span class="cv"></span><i class="ce" role="button" aria-label="Change your chip">✎</i>';
+      /* match the other chips' size */
+      try{var cs=getComputedStyle(any);c.style.width=cs.width;c.style.height=cs.height;}catch(e){}
+      paint(c);rack.appendChild(c);
+      c.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();if(e.target.closest('.ce')||!localStorage.getItem(KEY)){edit(c);return;}play(c);},true);});}
+  var st=document.createElement('style');st.textContent=
+   'button.cchip{position:relative;background:radial-gradient(circle at 50% 45%,#2a1606 0 52%,transparent 53%),repeating-conic-gradient(#f2d27e 0 15deg,#7a5410 15deg 30deg)!important;color:#fde68a!important;font-weight:900!important;border:0}'+
+   'button.cchip .cv{position:relative;font-size:11px;letter-spacing:-.02em}'+
+   'button.cchip .ce{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#fde68a;color:#2a1606;font:900 11px/18px system-ui,sans-serif;font-style:normal;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.5)}'+
+   'button.cchip.on,button.cchip.sel{box-shadow:0 0 0 3px #fde68a,0 0 14px rgba(253,230,138,.7)!important}'+
+   '.cchip-pop{position:fixed;z-index:2147483000;display:none;padding:12px;border-radius:14px;background:linear-gradient(180deg,#2a1608,#140a04);border:2px solid #c6a75e;box-shadow:0 16px 40px rgba(0,0,0,.6);color:#f8fafc;font:14px Inter,system-ui,sans-serif}'+
+   '.cchip-pop.on{display:block}.cchip-pop b{display:block;font:400 18px Rye,Georgia,serif;color:#f2d27e;margin-bottom:6px}'+
+   '.cchip-pop label{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#e2c27a}'+
+   '.cchip-pop input{display:block;width:100%;margin-top:4px;box-sizing:border-box;background:rgba(0,0,0,.45);border:1px solid rgba(242,210,126,.45);border-radius:9px;color:#fff;font:700 16px Inter,sans-serif;padding:9px 10px}'+
+   '.cchip-pop .row{display:flex;gap:6px;margin-top:8px}.cchip-pop .row button{flex:1;border:0;border-radius:9px;min-height:38px;font:800 13px Inter,sans-serif;cursor:pointer}'+
+   '.cchip-pop .ok{background:linear-gradient(180deg,#f7dc8f,#d9b562);color:#1a1205}.cchip-pop .no{background:rgba(255,255,255,.08);color:#e5d6b0}'+
+   '.cchip-pop .err{margin:6px 0 0;min-height:14px;font-size:12px;color:#fca5a5}';
+  (document.head||document.documentElement).appendChild(st);
+  var t=0;function soon(){if(!t)t=setTimeout(function(){t=0;add();},150);}
+  function start(){add();try{new MutationObserver(soon).observe(document.body,{childList:true,subtree:true});}catch(e){}}
+  addEventListener('storage',function(e){if(e.key===KEY)[].forEach.call(document.querySelectorAll('button.cchip'),paint);});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
 <\u002fscript>
 </body>
 </html>
