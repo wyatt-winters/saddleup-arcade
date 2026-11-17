@@ -737,7 +737,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'7cfb1e5120'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'cfb7ff5e50'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}
@@ -1266,7 +1266,10 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
       if(o.bank+owe>CAP+0.004){note('The bank won\'t lend more than '+money(CAP)+'. Pay some back or ask a player.');return false;}
       o.bank+=owe;o.n++;Lset(o);wadd(amt);if(!quiet)note('👻 Bank loan: <b>+'+money(amt)+'</b>. You owe '+money(owe)+'. 30% of your winnings pay it back.');return true;}
     /* a game's own rebuy button just refilled the bankroll: that's a bank loan too */
-    function gameRebuy(n){var o=L();o.bank+=r2(n*(1+INT));o.n++;Lset(o);note('👻 That rebuy was a bank loan: you owe '+money(r2(n*(1+INT)))+'. 30% of your winnings pay it back.');}
+    function gameRebuy(n){var o=L(),owe=r2(n*(1+INT));
+      /* over the bank's limit: take the chips back off the table */
+      if(o.bank+owe>CAP+0.004){setTimeout(function(){wadd(-Math.min(n,wget()));},50);note('The bank won\'t lend more than '+money(CAP)+'. Pay some back, or ask a player from the <b>Bank</b> button.');return;}
+      o.bank+=owe;o.n++;Lset(o);note('👻 That rebuy was a bank loan: you owe '+money(owe)+'. 30% of your winnings pay it back.');}
     /* ---- the server side: gifts, loans, repayments ---- */
     var MSG={funds:'You don\'t have that much in your saved bankroll.',ghost:'Ghosts can\'t lend or give money. Pay off your loans first.',no_player:'No player with that username.',self:'You can\'t send money to yourself.',limit:'That\'s 30 sends today. Try again tomorrow.',bad_amount:'Enter an amount of at least $1.',signed_out:'Sign in (Save wallet) to send or borrow from players.',not_allowed:'That can\'t be done anymore.'};
     function poll(){clearTimeout(pollT);pollT=setTimeout(poll,30000);if(!acct()){paint();return Promise.resolve();}

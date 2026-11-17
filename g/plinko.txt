@@ -985,6 +985,40 @@ window.__pl={state:function(){return {bank:bank,net:net,drops:drops,pending:pend
   addEventListener('message',function(e){if(e.data&&e.data.arcade==='visible'&&e.data.on){last=0;setTimeout(post,30);}});
   setInterval(post,900); post();
 })();
+<\u002fscript><script>
+/* ghosts (players who owe money) bet the table minimum: bigger chips, max / all-in and typed amounts are locked */
+(function(){
+  var ON=false,SNAP=0,MARK='data-ghoff';
+  function ghost(){try{return localStorage.getItem('su_ghost')==='1';}catch(e){return false;}}
+  function num(el){var v=el.getAttribute('data-v');if(v==null)v=el.getAttribute('data-stake');var n=parseFloat(v);return isFinite(n)?n:NaN;}
+  function off(el){if(el.getAttribute(MARK))return el.disabled||(el.disabled=true);el.setAttribute(MARK,'1');el.setAttribute('data-ghtitle',el.title||'');el.disabled=true;el.title='Ghosts bet the table minimum. Pay off your loans to raise your bets.';el.classList.add('gh-off');}
+  function onAll(){[].forEach.call(document.querySelectorAll('['+MARK+']'),function(el){el.removeAttribute(MARK);el.disabled=false;el.title=el.getAttribute('data-ghtitle')||'';el.removeAttribute('data-ghtitle');el.classList.remove('gh-off');if(el.hasAttribute('data-ghph')){el.placeholder=el.getAttribute('data-ghph');el.removeAttribute('data-ghph');}});}
+  var BIG=/^\s*(all[\s-]?in|bet max|max bet|max)\s*$/i,UP=/raise bet/i;
+  function apply(){
+    var g=ghost();
+    if(!g){if(ON){ON=false;onAll();}return;}
+    var first=!ON;ON=true;
+    /* chip racks and stake pickers: keep the smallest real amount (and a free / fun option) */
+    var groups=new Map();
+    [].forEach.call(document.querySelectorAll('button.chip[data-v],button.chip[data-stake],[id*="Stake"] button[data-v],[id*="stake"] button[data-v]'),function(b){var p=b.parentNode;if(!groups.has(p))groups.set(p,[]);groups.get(p).push(b);});
+    groups.forEach(function(list){var vals=list.map(num).filter(function(v){return v>0;});if(vals.length<2)return;var mn=Math.min.apply(null,vals),keep=null;
+      list.forEach(function(b){var v=num(b);if(v>mn)off(b);else if(v===mn)keep=b;});
+      /* if a bigger chip is still selected, pick the smallest for them */
+      if(first&&keep&&list.some(function(b){return num(b)>mn&&/\bon\b|\bsel/.test(b.className);}))try{keep.click();}catch(e){}});
+    [].forEach.call(document.querySelectorAll('button'),function(b){var t=(b.textContent||'').trim(),a=b.getAttribute('aria-label')||'';
+      if(BIG.test(t)||UP.test(a)||b.getAttribute('data-q')==='all'||b.id==='stakeSet'||b.id==='betUp'||b.id==='bUp'||b.getAttribute('data-a')==='+')off(b);});
+    var si=document.getElementById('stakeIn');if(si){if(!si.getAttribute(MARK)){si.setAttribute(MARK,'1');si.setAttribute('data-ghph',si.placeholder||'');}si.disabled=true;si.placeholder='Ghosts bet the minimum';}
+    /* bet up / down machines: step down to the lowest bet once */
+    if(first)['betDn','bDn'].forEach(function(id){var d=document.getElementById(id);if(d)for(var i=0;i<24&&!d.disabled;i++)try{d.click();}catch(e){}});
+    [].forEach.call(document.querySelectorAll('button[data-a="-"]'),function(d){if(first)for(var i=0;i<24&&!d.disabled;i++)try{d.click();}catch(e){}});
+  }
+  var st=document.createElement('style');st.textContent='.gh-off{opacity:.35!important;filter:grayscale(1)!important;cursor:not-allowed!important}';
+  (document.head||document.documentElement).appendChild(st);
+  var t=0;function soon(){if(!t)t=setTimeout(function(){t=0;apply();},120);}
+  function start(){apply();try{new MutationObserver(soon).observe(document.body,{childList:true,subtree:true});}catch(e){}setInterval(apply,900);}
+  addEventListener('storage',function(e){if(e.key==='su_ghost')apply();});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
 <\u002fscript>
 </body>
 </html>
