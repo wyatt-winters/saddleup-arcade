@@ -1241,6 +1241,7 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
       for(var k in frames)post(frames[k],{arcade:'visible',on:k===active});paint();}
     function acct(){var a=window.__acct;return a&&a.tok&&a.tok()?a:null;}
     function rpc(fn,body){var a=acct();if(!a)return Promise.reject(new Error('signed_out'));body.p_token=a.tok();return a.rpc(fn,body);}
+    function norm(r){['owe','lent','offers','inbox','recent'].forEach(function(k){if(!Array.isArray(r[k]))r[k]=[];});return r;}
     function queued(){var t=0;for(var k in Q)t+=Q[k];return t;}
     function playerOwed(){var t=0;M.owe.forEach(function(l){t+=+l.owed||0;});return Math.max(0,r2(t-queued()));}
     function debt(){return r2(L().bank+playerOwed());}
@@ -1253,7 +1254,7 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
       document.getElementById('bkTxt').textContent=g?money(wget()-d):'Bank';
       b.classList.toggle('ghost',g);b.title=g?'Ghost: you owe '+money(d)+'. 30% of your winnings pay it back.':'Bank: loans and sending money';
       var n=M.offers.length;var dot=document.getElementById('bkDot');dot.hidden=!n;dot.textContent=n||'';
-      if(modal&&!modal.hidden)render();}
+      if(modal&&!modal.hidden)render(true);}
     function note(t){var n=document.getElementById('bkNote');if(!n){n=document.createElement('div');n.id='bkNote';document.body.appendChild(n);}
       n.innerHTML=t;n.classList.add('on');clearTimeout(n._t);n._t=setTimeout(function(){n.classList.remove('on');},3800);}
     /* ---- 30% of what you win pays your loans. A win is money coming back beyond what that game just put on the table ---- */
@@ -1287,12 +1288,12 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
     /* ---- the server side: gifts, loans, repayments ---- */
     var MSG={funds:'You don\'t have that much in your saved bankroll.',ghost:'Ghosts can\'t lend or give money. Pay off your loans first.',no_player:'No player with that username.',self:'You can\'t send money to yourself.',limit:'That\'s 30 sends today. Try again tomorrow.',bad_amount:'Enter an amount of at least $1.',signed_out:'Sign in (Save wallet) to send or borrow from players.',not_allowed:'That can\'t be done anymore.'};
     function poll(){clearTimeout(pollT);pollT=setTimeout(poll,30000);if(!acct()){paint();return Promise.resolve();}
-      return rpc('arcade_money',{}).then(function(r){if(!r||r.error)return;M=r;
+      return rpc('arcade_money',{}).then(function(r){if(!r||r.error||!Array.isArray(r.owe))return;M=norm(r);
         var ids=(r.inbox||[]).map(function(x){return x.id;});
         if(ids.length)return rpc('arcade_claim',{p_ids:ids}).then(function(c){var got={};((c&&c.claimed)||[]).forEach(function(x){got[x.id]=x;});
           (r.inbox||[]).forEach(function(x){if(!got[x.id])return;var a=+x.amount;wadd(a);
             note(x.kind==='gift'?'🎁 <b>'+esc(x.who)+'</b> sent you '+money(a)+(x.note?': “'+esc(x.note)+'”':''):x.kind==='loan'?'👻 Loan from <b>'+esc(x.who)+'</b>: +'+money(a):x.kind==='repay'?'💵 <b>'+esc(x.who)+'</b> paid you back '+money(a):'↩️ Refund: '+money(a));});
-          try{window.__acct.push&&window.__acct.push(true);}catch(e){}return rpc('arcade_money',{}).then(function(r2_){if(r2_&&!r2_.error)M=r2_;});});
+          try{window.__acct.push&&window.__acct.push(true);}catch(e){}return rpc('arcade_money',{}).then(function(r2_){if(r2_&&!r2_.error&&Array.isArray(r2_.owe))M=norm(r2_);});});
       }).then(paint,paint);}
     function send(to,amt,kind,txt){amt=r2(+amt);
       if(!acct())return Promise.resolve(MSG.signed_out);if(ghost())return Promise.resolve(MSG.ghost);if(!(amt>=1))return Promise.resolve(MSG.bad_amount);
@@ -1318,10 +1319,14 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
         if(!e.target.closest('#bkDD')){var l=document.getElementById('bkDDl');if(l&&!l.hidden){l.hidden=true;document.getElementById('bkDD').classList.remove('open');}}});}
     function open(t){if(!modal)build();if(t)tab=t;lastRes=null;online();clearInterval(onT);onT=setInterval(function(){if(modal.hidden){clearInterval(onT);return;}online();},20000);modal.hidden=false;render();poll().then(render);}
     function close(){if(modal)modal.hidden=true;}
-    function render(){if(!modal)return;var g=ghost(),d=debt(),w=wget(),signed=!!acct();
-      document.getElementById('bkSum').innerHTML='<div><em>Bankroll</em><b>'+money(w)+'</b></div><div><em>You owe</em><b class="'+(d?'neg':'')+'">'+money(d)+'</b></div><div><em>Net worth</em><b class="'+(w-d<0?'neg':'pos')+'">'+money(w-d)+'</b></div>'+(g?'<p class="bk-gh">👻 You\'re a <b>ghost</b> until every loan is paid. 30% of your winnings go to your loans, and ghosts can\'t lend or give money.</p>':'');
-      [].forEach.call(modal.querySelectorAll('.bk-tabs button'),function(b){b.classList.toggle('on',b.getAttribute('data-t')===tab);});
-      document.getElementById('bkTabDot').textContent=M.offers.length||'';
+    var lastSig='';
+    /* soft: a background refresh. It updates the numbers, and only rebuilds the rest when something in it changed and you're not typing */
+    function render(soft){if(!modal)return;var g=ghost(),d=debt(),w=wget(),signed=!!acct();
+      if(soft){var ae=document.activeElement,typing=ae&&modal.contains(ae)&&/^(INPUT|TEXTAREA)$/.test(ae.tagName),
+        sig=JSON.stringify([tab,g,signed,L().bank,M.owe,M.lent,M.offers,M.recent,Q]);
+        renderSum(g,d,w);if(typing||sig===lastSig)return;}
+      lastSig=JSON.stringify([tab,g,signed,L().bank,M.owe,M.lent,M.offers,M.recent,Q]);
+      renderSum(g,d,w);
       var h='';
       if(tab==='loans'){
         var o=L(),rows='';
@@ -1364,6 +1369,10 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
         if(!to){document.getElementById('bkRes').textContent='Type their username.';return;}
         sb.disabled=true;send(to,amt,kind,document.getElementById('bkMsg').value.trim()).then(function(m){var res=document.getElementById('bkRes');sb.disabled=false;
           if(/^ok:/.test(m)){lastRes={ok:1,h:m.slice(3)};res.className='bk-res ok';res.innerHTML=lastRes.h;document.getElementById('bkAmt').value='';}else{lastRes={ok:0,h:esc(m)};res.className='bk-res';res.textContent=m;}});};}
+    function renderSum(g,d,w){var h='<div><em>Bankroll</em><b>'+money(w)+'</b></div><div><em>You owe</em><b class="'+(d?'neg':'')+'">'+money(d)+'</b></div><div><em>Net worth</em><b class="'+(w-d<0?'neg':'pos')+'">'+money(w-d)+'</b></div>'+(g?'<p class="bk-gh">👻 You\'re a <b>ghost</b> until every loan is paid. 30% of your winnings go to your loans, and ghosts can\'t lend or give money.</p>':'');
+      var el=document.getElementById('bkSum');if(el._h!==h){el._h=h;el.innerHTML=h;}
+      [].forEach.call(modal.querySelectorAll('.bk-tabs button'),function(b){b.classList.toggle('on',b.getAttribute('data-t')===tab);});
+      document.getElementById('bkTabDot').textContent=M.offers.length||'';}
     function row(name,owed,id){return '<div class="bk-row"><span>'+name+'</span><b class="neg">'+money(owed)+'</b><button type="button" data-pay="'+id+'">Pay $100</button><button type="button" data-pay="'+id+'" data-all="1">Pay all</button></div>';}
     /* pay a chosen loan by hand */
     function payOne(id,amt){amt=r2(amt);if(!(amt>0))return;wadd(-amt);
