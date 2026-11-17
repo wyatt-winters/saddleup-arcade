@@ -83,6 +83,15 @@ html.fs .tabs .ctab .lg,.tabs .ctab .lg{display:inline!important}html.fs .tabs .
   .tabs .ctab .lg{display:none!important}.tabs .ctab .sm{display:inline!important}html.fs .tabs .ctab .lg{display:none!important}html.fs .tabs .ctab .sm{display:inline!important}}
 html .cmenu .tab .lg,html.fs .cmenu .tab .lg{display:inline!important}html .cmenu .tab .sm,html.fs .cmenu .tab .sm{display:none!important}
 .cmenu .tab.on{background:rgba(16,185,129,.1);color:#34d399;border-color:rgba(16,185,129,.32)}
+.cgrp{display:flex;flex-direction:column}
+.cmenu .tab.cgh{position:relative}
+.cmenu .tab.cgh .gct{margin-left:auto;font:800 11px Inter,system-ui,sans-serif;color:#94a3b8;background:rgba(255,255,255,.07);border-radius:10px;padding:1px 7px}
+.cmenu .tab.cgh .gch{width:16px!important;height:16px!important;flex:0 0 16px;color:#c6a75e;transition:transform .22s ease;display:block!important}
+.cgrp.open>.cgh .gch{transform:rotate(90deg)}
+.cgrp.has-on>.cgh{color:#34d399}
+.cgb{display:flex;flex-direction:column;gap:2px;overflow:hidden;max-height:0;transition:max-height .22s ease,opacity .2s;opacity:0;padding-left:14px;margin-left:12px;border-left:1px solid rgba(198,167,94,.25)}
+.cgrp.open>.cgb{max-height:420px;opacity:1;margin-top:2px;margin-bottom:4px}
+
 html.fs .ctab .caret{display:block!important}
 @media (min-width:561px){.tabs{display:flex!important;flex-wrap:nowrap}}
 
@@ -830,6 +839,32 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   addEventListener('resize',function(){if(pmenu.classList.contains('open'))placeP();});
   addEventListener('scroll',function(){if(pmenu.classList.contains('open'))placeP();},true);
   window.addEventListener('blur',function(){openP(false);});
+  /* ---------- group related games in the menus: a header that slides open to show its games ---------- */
+  var GROUPS={pmenu:[['cards','Card games',['sol','spider','cwar']],['tiles','Mahjong & tiles',['mjsol','mahjong','dominoes']],['board','Board games',['chess','checkers','drop4','ironclads']],['words','Word & puzzle',['trail','wrangler','sudoku','mines']]],
+    cmenu:[['slots','Slots & machines',['slots','coach','vpoker']],['cardt','Card tables',['bj','holdem','bacc','war']],['dice','Dice & wheels',['craps','roul','wheel']],['race','Races',['crash','derby']]]};
+  var CHEV='<svg class="gch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+  function regroup(){Object.keys(GROUPS).forEach(function(mid){var menu=document.getElementById(mid);if(!menu||menu.getAttribute('data-grouped'))return;menu.setAttribute('data-grouped','1');
+    GROUPS[mid].forEach(function(gr){var btns=gr[2].map(function(g){return document.getElementById('tab-'+g);}).filter(Boolean);if(btns.length<2)return;
+      var wrap=document.createElement('div');wrap.className='cgrp';wrap.setAttribute('data-grp',gr[0]);
+      var head=document.createElement('button');head.type='button';head.className='tab cgh';head.setAttribute('aria-expanded','false');
+      var ic=btns[0].querySelector('img.gi');head.innerHTML=(ic?ic.outerHTML:'')+'<span class="lg">'+gr[1]+'</span><span class="sm">'+gr[1]+'</span><span class="gct">'+btns.length+'</span>'+CHEV;
+      var body=document.createElement('div');body.className='cgb';body.setAttribute('role','group');body.setAttribute('aria-label',gr[1]);
+      btns[0].parentNode.insertBefore(wrap,btns[0]);btns.forEach(function(b){body.appendChild(b);});wrap.appendChild(head);wrap.appendChild(body);
+      head.addEventListener('click',function(e){e.stopPropagation();var open=!wrap.classList.contains('open');
+        /* one group open at a time keeps the menu short */
+        [].forEach.call(menu.querySelectorAll('.cgrp.open'),function(o){if(o!==wrap){o.classList.remove('open');o.querySelector('.cgh').setAttribute('aria-expanded','false');}});
+        wrap.classList.toggle('open',open);head.setAttribute('aria-expanded',open?'true':'false');
+        setTimeout(function(){if(mid==='cmenu'&&cmenu.classList.contains('open'))placeMenu();if(mid==='pmenu'&&pmenu.classList.contains('open'))placeP();},230);});});});}
+  /* menu order: groups and single games */
+  var MORDER={pmenu:['parlor','g:cards','g:tiles','g:board','g:words','pdice','gold'],cmenu:['floor','g:slots','g:cardt','g:dice','g:race','plinko','pool','backgammon']};
+  function reorder(){Object.keys(MORDER).forEach(function(mid){var menu=document.getElementById(mid);if(!menu)return;MORDER[mid].forEach(function(k){var el=k.indexOf('g:')===0?menu.querySelector('.cgrp[data-grp="'+k.slice(2)+'"]'):document.getElementById('tab-'+k);if(el&&el.parentNode===menu)menu.appendChild(el);});
+    /* anything not listed stays at the end, in its old order */
+    [].slice.call(menu.children).forEach(function(c){if(c.classList.contains('chead'))return;var id=c.id?c.id.replace('tab-',''):'g:'+c.getAttribute('data-grp');if(MORDER[mid].indexOf(id)<0)menu.appendChild(c);});});}
+  /* whichever group holds the game you're in starts open */
+  function openActiveGroups(){[].forEach.call(document.querySelectorAll('.cgrp'),function(w){var on=!!w.querySelector('.cgb .tab.on');w.classList.toggle('open',on);w.classList.toggle('has-on',on);var h=w.querySelector('.cgh');if(h)h.setAttribute('aria-expanded',on?'true':'false');});}
+  regroup();reorder();
+  cbtn.addEventListener('click',function(){if(!cmenu.classList.contains('open'))openActiveGroups();},true);
+  pbtn.addEventListener('click',function(){if(!pmenu.classList.contains('open'))openActiveGroups();},true);
   cbtn.addEventListener('click',function(){if(pmenu.classList.contains('open'))openP(false);});
   function parlorLabel(id){var on=!!PAR[id];pbtn.classList.toggle('on',on);
     document.getElementById('parLbl').textContent='Game Parlor';document.getElementById('parLblS').textContent='Parlor';pbtn.title=on?'Game Parlor: '+NAMES[id]:'Game Parlor games';}
