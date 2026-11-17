@@ -2164,7 +2164,7 @@ function startSolo(){
   G.players=[{name:'You',kind:'me',col:'#10b981'},opt.opp==='guest'?{name:'Guest',kind:'me',guest:true,col:'#f472b6'}:{name:o.name,kind:'bot',col:o.col,skill:opt.opp,key:o.key}];
   if(G.mode==='ct'){var k2=CT_MATE[opt.opp]||'normal',o2=OPP[k2];G.players.push({name:o2.name,kind:'bot',col:o2.col,skill:k2,key:o2.key});}
   G.callEight=opt.opp!=='easy';
-  bank-=st;
+  bank-=st;G.inPlay=true;   /* the stake is on the table until the game is settled */
   var N=G.players.length;G.nextBreaker=G.nextBreaker%N;
   if(G.mode==='ct'){var g0=gen,rb=rackBalls('ct');SIMRUN=null;SINKING=[];G.balls=rb;G.groups=shuffle([0,1,2]);G.lastOut=[];G.pocketOrder=[];G.ctKeep=true;resetRot();$('setup').classList.add('hide');$('res').classList.add('hide');
     rollOff(function(br){if(g0!==gen)return;beginRack(rb,br);});return;}
@@ -2221,6 +2221,7 @@ function endGame(){
   var w=G.winner,mine=!G.watch&&w===G.mySeat,pay=0;
   gen++;BOT=null;
   if(!G.settled){G.settled=true;if(G.stake>0&&mine){pay=pot();bank+=pay;}}
+  G.inPlay=false;
   renderBank();hud();
   if(mine||(G.players[w]&&G.players[w].guest)){SFX.win();if(typeof suBanner==='function')suBanner(G.mode==='9'?'Nine down!':G.mode==='ct'?'Last one standing!':'Winner!',G.stake?'+'+money(pot()):'Game won');talk('botLose',1,true);}
   else if(G.watch){SFX.turn();}
@@ -2235,7 +2236,7 @@ function endGame(){
   later(turbo?0:1100,function(){if(G.phase==='over'){$('res').classList.remove('hide');}});
   liveLobby();
 }
-function toSetup(){if(G.watch){stopWatch(true);}gen++;BOT=null;SIMRUN=null;G.phase='setup';$('roll').classList.add('hide');G.waitSync=false;$('res').classList.add('hide');$('setup').classList.remove('hide');renderSetup();hud();liveLobby();}
+function toSetup(){G.inPlay=false;if(G.watch){stopWatch(true);}gen++;BOT=null;SIMRUN=null;G.phase='setup';$('roll').classList.add('hide');G.waitSync=false;$('res').classList.add('hide');$('setup').classList.remove('hide');renderSetup();hud();liveLobby();}
 function resign(){
   if(!busy())return;
   if(G.watch){stopWatch();return;}
@@ -2500,7 +2501,7 @@ function applyStart(p){
   G.live=true;G.auth='';G.bots=[];G.gid=p.gid;G.ids=p.ids.slice();G.mySeat=seat;G.mode=p.mode;G.stake=+p.stake||0;G.settled=false;G.waitSync=false;
   G.players=[0,1].map(function(s){return {name:safeName(p.names[s])||'Guest',kind:s===seat?'me':'remote',col:s===seat?'#10b981':'#f472b6',id:p.ids[s]};});
   G.callEight=p.callEight!==false;
-  if(G.stake>bank)G.stake=0;bank-=G.stake;
+  if(G.stake>bank)G.stake=0;bank-=G.stake;G.inPlay=true;
   var balls=[];for(var n=0;n<16;n++)balls.push({n:n,x:0,y:0,vx:0,vy:0,on:false});
   p.balls.forEach(function(a){var o=balls[a[0]];o.x=+a[1];o.y=+a[2];o.on=!!a[3];});
   G.nextBreaker=1-p.breaker;
@@ -2654,7 +2655,7 @@ function applyStartCT(p){
   G.live=true;G.watch=false;G.gid=p.gid;G.ids=p.ids.slice();G.bots=(p.bots||[]).slice();G.auth=p.auth;G.mySeat=mySeatIn(G.ids,G.bots);if(G.mySeat<0)return;
   G.mode='ct';G.stake=+p.stake||0;G.settled=false;G.waitSync=false;G.callEight=false;
   G.players=buildPlayers(p.names);
-  if(G.stake>bank)G.stake=0;bank-=G.stake;renderBank();
+  if(G.stake>bank)G.stake=0;bank-=G.stake;G.inPlay=true;renderBank();
   var balls=[];for(var n=0;n<16;n++)balls.push({n:n,x:0,y:0,vx:0,vy:0,on:false});
   p.balls.forEach(function(a){var o=balls[a[0]];if(o){o.x=+a[1];o.y=+a[2];o.on=!!a[3];}});
   SIMRUN=null;SINKING=[];G.balls=balls;G.groups=p.groups.slice(0,3);G.ctKeep=true;G.lastOut=[];G.pocketOrder=[];resetRot();
@@ -2770,7 +2771,7 @@ window.__pool_dbg={
 
 /* ================= boot ================= */
 try{var wa0=Live.walletAmount();if(typeof wa0==='number')bank=wa0;}catch(e){}
-try{Live.wallet({get:function(){return bank;},set:function(x){bank=Math.max(0,x);renderBank();if(G.phase==='setup')renderSetup();},idle:function(){return !busy();},active:function(){return true;}});}catch(e){}
+try{Live.wallet({get:function(){return bank;},set:function(x){bank=Math.max(0,x);renderBank();if(G.phase==='setup')renderSetup();},idle:function(){return !G.inPlay&&(G.phase==='setup'||G.phase==='over');},active:function(){return true;}});}catch(e){}
 initLive();
 layout();renderSetup();hud();
 requestAnimationFrame(frame);

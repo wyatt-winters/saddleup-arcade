@@ -748,7 +748,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'ed652e04a1'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'601c5bf1f7'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}
@@ -1017,14 +1017,16 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   function rbRead(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');return v&&typeof v.amt==='number'?v.amt:null;}catch(e){return null;}}
   var rbEl=null,rbHid=0,WIDLE={};
   /* only between hands: a game with money still in play (an all-in, a hand being dealt) waits until it's settled, plus a moment to see the result */
-  function rbSettled(){var w=WIDLE[active];return !w||(w.idle&&Date.now()-w.t>2400);}
+  var rbLow=0;
+  /* broke for a few seconds AND the game says no money is in play (it can take a moment to flip to busy after an all-in) */
+  function rbSettled(){var w=WIDLE[active],now=Date.now();return now-rbLow>3000&&(!w||(w.idle&&now-w.t>2400));}
   function rbBox(){if(rbEl)return rbEl;rbEl=document.createElement('div');rbEl.id='rebuyBox';
     rbEl.innerHTML='<div class="rb-card"><div class="rb-ic">👻</div><b>You’re out of chips</b><p>Borrow $1,000 from the bank to keep playing. You’ll owe $1,100, and 30% of every win pays it back. Until it’s paid you play as a 👻 ghost. Friends can lend you money too.</p><button type="button" id="rbGo">Take a $1,000 bank loan</button><button type="button" class="rb-later" id="rbAsk" style="color:#f2d27e">Open the Bank</button><button type="button" class="rb-later" id="rbLater" style="margin-top:0">Not now</button><small id="rbN"></small><span id="rbAmt" hidden></span></div>';
     document.body.appendChild(rbEl);
     rbEl.querySelector('#rbGo').onclick=rebuy;rbEl.querySelector('#rbAsk').onclick=function(){rbHid=Date.now();rbEl.classList.remove('on');if(window.__money)__money.open('loans');};rbEl.querySelector('#rbLater').onclick=function(){rbHid=Date.now();rbEl.classList.remove('on');};return rbEl;}
   function rebuy(){if(window.__money&&__money.bankLoan(RB_START)){try{var n=(+localStorage.getItem('su_rebuys')||0)+1;localStorage.setItem('su_rebuys',n);}catch(e){}}
     if(rbEl)rbEl.classList.remove('on');}
-  function rbCheck(){var w=rbRead();if(w===null||!RB_GAMES[active])return rbEl&&rbEl.classList.remove('on');
+  function rbCheck(){var w=rbRead();if(w!==null&&w<5){if(!rbLow)rbLow=Date.now();}else rbLow=0;if(w===null||!RB_GAMES[active])return rbEl&&rbEl.classList.remove('on');
     if(w<5&&Date.now()-rbHid>45000&&rbSettled()){var b=rbBox();b.querySelector('#rbAmt').textContent='$'+RB_START.toLocaleString();var n=0;try{n=+localStorage.getItem('su_rebuys')||0;}catch(e){}b.querySelector('#rbN').textContent=window.__money&&__money.debt()>0?'You owe '+'$'+__money.debt().toLocaleString()+' so far':'';b.classList.add('on');}
     else if(w>=5&&rbEl)rbEl.classList.remove('on');}
   setInterval(rbCheck,1500);addEventListener('storage',function(e){if(e.key==='su_casino_wallet')setTimeout(rbCheck,50);});
