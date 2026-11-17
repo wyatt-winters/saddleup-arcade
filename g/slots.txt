@@ -2286,8 +2286,8 @@ var ENG=(function(){
 var $=function(id){return document.getElementById(id);};
 var root=document.documentElement,felt=$('felt'),cab=$('cab'),reelsEl=$('reels'),pathsEl=$('paths');
 function fmt(n,dec){var s=Math.abs(n),i=Math.floor(s+1e-9),c=Math.round((s-i)*100);if(c===100){i++;c=0;}var t=String(i).replace(/\B(?=(\d{3})+(?!\d))/g,',');return dec||c?t+'.'+('0'+c).slice(-2):t;}
-/* amounts of $1M and up show short (26.896B) so huge bankrolls stay readable */function __suSig(n){n=Math.abs(+n);var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']];for(var i=0;i<U.length;i++)if(n>=U[i][0]){var t=Number((n/U[i][0]).toPrecision(3));if(t>=1000&&i>0)return String(Number((n/U[i-1][0]).toPrecision(3)))+U[i-1][1];return String(t)+U[i][1];}return String(Math.round(n));}
-function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.floor(n/U[i][0]*1000)/1000;t=String(x)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?/,t);}
+/* amounts of $1M and up show short (26.9B) so huge bankrolls stay readable */function __suSig(n){n=Math.abs(+n);var U=[[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']];for(var i=0;i<U.length;i++)if(n>=U[i][0]){var t=Math.round(n/U[i][0]*10)/10;if(t>=1000&&i>0)return (Math.round(n/U[i-1][0]*10)/10).toFixed(1)+U[i-1][1];return t.toFixed(1)+U[i][1];}return String(Math.round(n));}
+function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.round(n/U[i][0]*10)/10;if(x>=1000&&i>0){i--;x=Math.round(n/U[i][0]*10)/10;}t=x.toFixed(1)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?(e[+-]?\d+)?/,t);}
 function money(a,b,c){return __suBig(money0(a,b,c),a);}
 function money0(n,dec){return (n<0?'\u2212$':'$')+fmt(n,dec);}
 function smoney(a,b){return __suBig(smoney0(a,b),a);}

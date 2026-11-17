@@ -104,6 +104,29 @@ kbd{font:700 10.5px Inter,system-ui,sans-serif;background:#0f172a;border:1px sol
 html.fs .optslot{display:flex}
 .optslot .fsopt-btn{height:40px}
 
+
+/* cue & ball locker */
+.lkbtn{width:100%;margin-top:10px;display:flex;align-items:center;gap:8px;min-height:42px;padding:0 12px;border-radius:10px;background:rgba(242,210,126,.1);border:1px solid rgba(242,210,126,.45);color:var(--gold2);font-weight:800;font-size:14px}
+.lkbtn em{margin-left:auto;font-style:normal;font-size:11.5px;font-weight:700;color:#cbd5e1}
+.lkbtn i{width:9px;height:9px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399}
+.sheet.lk{width:min(560px,100%)}
+.lkh{margin:10px 0 4px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#e2c27a;text-align:left}
+.lkrow{display:flex;align-items:stretch;gap:6px}
+.lkar{flex:0 0 30px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(242,210,126,.3);color:var(--gold2);font-size:22px;font-weight:900}
+.lkscroll{flex:1;min-width:0;display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;padding:2px 2px 6px}
+.lkc{flex:0 0 132px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 6px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid rgba(242,210,126,.2);color:#f8fafc;cursor:pointer;text-align:center}
+.lkc.on{border-color:#34d399;box-shadow:0 0 0 2px rgba(52,211,153,.45)}
+.lkc b{font-size:12.5px;line-height:1.15}
+.lkc small{font-size:10.5px;color:#cbd5e1;line-height:1.25;min-height:26px}
+.lkc.on small{color:#6ee7b7}
+.lkc .pv{height:44px;display:flex;align-items:center;justify-content:center;gap:2px}
+.pooltbl .lkc .pv canvas{display:block;position:static;width:auto;height:auto;cursor:pointer}
+.lkc.lock .pv{filter:grayscale(1) brightness(.45)}
+.lkc.sec .pv{filter:brightness(0)}
+.lkc .pb{width:100%;height:5px;border-radius:5px;background:rgba(255,255,255,.12);overflow:hidden}.lkc .pb i{display:block;height:100%;background:linear-gradient(90deg,#c6a75e,#f2d27e)}
+.lkc .nw{font-size:9px;font-weight:900;letter-spacing:.1em;color:#022c22;background:#34d399;border-radius:100px;padding:1px 6px}
+.unl{margin-top:10px;padding:8px 10px;border-radius:10px;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.45);color:#d1fae5;font-size:13px;font-weight:700}
+.unl button{margin-left:8px;padding:5px 10px;border-radius:8px;background:#34d399;color:#022c22;font-weight:900;font-size:12px}
 /* overlays on the table (they never change the table size) */
 .ovl{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:10px;background:rgba(5,8,15,.55);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border-radius:12px}
 .sheet{width:min(470px,100%);max-height:100%;overflow:auto;background:linear-gradient(180deg,rgba(30,20,12,.97),rgba(15,10,6,.97));border:2px solid #c6a75e;border-radius:16px;
@@ -721,13 +744,25 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
             <div class="srow stkc"><span>Or bet</span><div class="stkbox"><input id="stakeIn" type="text" inputmode="decimal" autocomplete="off" placeholder="Any amount" aria-label="Stake amount"><button type="button" id="stakeSet">Bet</button><button type="button" id="stakeAll">All in</button></div></div>
             <div class="lbox hide" id="lbox"></div>
             <div class="wbox hide" id="wbox"></div>
+            <button type="button" class="lkbtn" id="lkBtn"><span>Cue &amp; balls</span><i id="lkNew" class="hide"></i><em id="lkSum"></em></button>
             <button type="button" class="go" id="goBtn">Break</button>
             <button type="button" class="refill hide" id="refill">Refill bankroll to $1,000</button>
             <p class="snote" id="setNote">Winner takes the pot: 2&times; the stake.</p>
           </div>
         </div>
+        <div class="ovl hide" id="locker">
+          <div class="sheet lk"><b class="ttl">Cue rack</b>
+            <div class="sb" id="lkStats"></div>
+            <div class="lkh">Cues</div>
+            <div class="lkrow"><button type="button" class="lkar" data-k="cue" data-d="-1" aria-label="Previous cue">&#8249;</button><div class="lkscroll" id="lkCues"></div><button type="button" class="lkar" data-k="cue" data-d="1" aria-label="Next cue">&#8250;</button></div>
+            <div class="lkh">Balls</div>
+            <div class="lkrow"><button type="button" class="lkar" data-k="balls" data-d="-1" aria-label="Previous ball set">&#8249;</button><div class="lkscroll" id="lkBalls"></div><button type="button" class="lkar" data-k="balls" data-d="1" aria-label="Next ball set">&#8250;</button></div>
+            <p class="snote" id="lkNote">Win games to earn new cues and ball sets. Your cue and balls show on every table, online too.</p>
+            <button type="button" class="go" id="lkDone">Done</button>
+          </div>
+        </div>
         <div class="ovl hide" id="res">
-          <div class="sheet res"><b class="big" id="resT">You win!</b><div class="why" id="resW"></div><b class="amt" id="resA"></b>
+          <div class="sheet res"><b class="big" id="resT">You win!</b><div class="why" id="resW"></div><b class="amt" id="resA"></b><div class="unl hide" id="resU"></div>
             <div class="row2" style="margin-top:12px"><button type="button" class="go g" id="againBtn" style="margin:0">Play again</button><button type="button" class="go" id="changeBtn" style="margin:0">Change game</button></div></div>
         </div>
       </div>
@@ -1307,7 +1342,7 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 'use strict';
 var $=function(id){return document.getElementById(id);};
 var root=document.documentElement,felt=$('felt'),stage=$('stage'),tbox=$('tbox'),cv=$('cv'),ctx=cv.getContext('2d');
-/* amounts of $1M and up show short (26.896B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e15,'Q'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.floor(n/U[i][0]*1000)/1000;t=String(x)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?/,t);}
+/* amounts of $1M and up show short (26.9B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.round(n/U[i][0]*10)/10;if(x>=1000&&i>0){i--;x=Math.round(n/U[i][0]*10)/10;}t=x.toFixed(1)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?(e[+-]?\d+)?/,t);}
 function money(a,b,c){return __suBig(money0(a,b,c),a);}
 function money0(v){v=Math.round(v*100)/100;return '$'+(v%1?v.toFixed(2):String(v)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -1644,6 +1679,122 @@ function normals(sz){if(NT&&NTsz===sz)return NT;NTsz=sz;var r=sz/2-1,c=sz/2,a=[]
   if(al<=0){a.push(null);continue;}var w=Math.sqrt(Math.max(0,1-Math.min(1,q)));a.push([u,v,w,al]);}NT=a;return a;}
 function hexRgb(h){return [parseInt(h.substr(1,2),16),parseInt(h.substr(3,2),16),parseInt(h.substr(5,2),16)];}
 var CREAM=[246,243,230],RGB=[];for(var ci=0;ci<16;ci++)RGB.push(hexRgb(ballCol(ci)));
+/* ================= cue & ball skins: earned by playing, saved in su_pool_locker (syncs with the account) ================= */
+var LK=(function(){
+  var KEY='su_pool_locker',S={g:0,w:0,we:0,wn:0,wh:0,wl:0,hl:0,cue:'house',balls:'classic',seen:{}};
+  try{var o=JSON.parse(localStorage.getItem(KEY)||'null');if(o)for(var k in o)S[k]=o[k];}catch(e){}
+  if(!S.seen||typeof S.seen!=='object')S.seen={};
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+  /* req: [stat, count, text]   stats: g games, w wins, wn wins vs Dusty, wh wins vs June, wl live-table wins, hl losses to Hank */
+  var CUES=[
+    {id:'house',name:'House Cue',req:null},
+    {id:'mesquite',name:'Mesquite',req:['g',3,'Play 3 games'],sl:'#5a2a17',wr:'#1b1410',wp:'linen',fa:'#7a3a1f',rg:'#d9c49a'},
+    {id:'ebony',name:'Ebony Diamond',req:['w',3,'Win 3 games'],sl:'#141414',wr:'#2b2b2b',wp:'leather',fa:'#111111',pt:'#f1ead8',rg:'#cfd4dc',inl:'diamond',ic:'#f1ead8'},
+    {id:'turq',name:'Turquoise Trail',req:['w',10,'Win 10 games'],sl:'#3a2516',wr:'#2fb3a7',wp:'linen',fa:'#3a2516',pt:'#2fb3a7',rg:'#d0d6dd',inl:'dots',ic:'#c7f2ee'},
+    {id:'rattler',name:'Rattlesnake',req:['wn',5,'Beat Dusty 5 times'],sl:'#6b4a2a',wr:'#2a1d12',wp:'leather',fa:'#b48a55',pt:'#3b2a18',rg:'#e8d7b0',inl:'snake',ic:'#4a3220'},
+    {id:'marshal',name:"Marshal's Star",req:['wh',3,'Beat June 3 times'],sl:'#13254a',wr:'#0d1a33',wp:'linen',fa:'#13254a',pt:'#c9a23a',rg:'#e9c46a',inl:'star',ic:'#f2d27e'},
+    {id:'gold',name:'Gold Rush',req:['w',25,'Win 25 games'],sl:'#b8862f',wr:'#2a1d12',wp:'leather',fa:'#d4a72c',pt:'#7a5410',rg:'#fff1b8',inl:'nugget',ic:'#fff3c4',metal:1},
+    {id:'brand',name:'Branding Iron',req:['w',50,'Win 50 games'],sl:'#111111',wr:'#1a1a1a',wp:'leather',fa:'#111111',rg:'#ff7a1a',inl:'flame',ic:'#ff7a1a'},
+    {id:'hank',name:"Hank's Lucky Stick",req:['hl',7,'Lose to Hank 7 times'],secret:1,hint:'A secret. Hank says his luck rubs off on folks he beats.',sl:'#c8a26b',wr:'#9aa0a6',wp:'tape',fa:'#c8a26b',rg:'#7a5a32',inl:'horseshoe',ic:'#c0c6cf',worn:1}
+  ];
+  var BALLS=[
+    {id:'classic',name:'Classic',req:null},
+    {id:'saloon',name:'Saloon',req:['g',5,'Play 5 games'],cr:'#e9dcc0',pal:['#efe6d0','#d6a32b','#2f4f6f','#a63a2a','#5b3a5e','#c8682a','#3d6b3a','#6b2e1e','#1c1712']},
+    {id:'sweet',name:'Sweetwater',req:['w',5,'Win 5 games'],cr:'#fbf7ef',pal:['#fbf7ef','#f7e38a','#9ec5f0','#f4a3a3','#c9a7e8','#f8c08f','#a8dbb5','#d8a0a6','#3a3a44']},
+    {id:'midnight',name:'Midnight',req:['w',15,'Win 15 games'],cr:'#2a2d3a',pal:['#e8eaf2','#ffd23f','#3b82f6','#ef4444','#a855f7','#fb923c','#22c55e','#be123c','#0b0b10']},
+    {id:'wanted',name:'Wanted Poster',req:['wh',5,'Beat June 5 times'],cr:'#e8d5b0',pal:['#efe0c2','#c9a45c','#5e4630','#8a4b2f','#4a3a2e','#b07a3c','#6b5a3a','#5a2e1f','#1e140c']},
+    {id:'goldsilver',name:'Gold & Silver',req:['w',30,'Win 30 games'],cr:'#2b2f37',metal:1,p16:['#f3f0e2','#e0b43a','#d4a72c','#c99a22','#ddb340','#cfa12a','#d9ad35','#c69524','#1d1f24','#8e98a8','#7f8a9b','#8892a2','#7a8596','#86909f','#7d8899','#8a94a4']},
+    {id:'neon',name:'Neon Nights',req:['wl',1,'Win a game at a live table'],cr:'#16161c',pal:['#f4f4f8','#faff00','#00e5ff','#ff2e63','#b026ff','#ff8a00','#39ff14','#ff0080','#111111']},
+    {id:'marbles',name:"Hank's Marbles",req:['hl',13,'Lose to Hank 13 times'],secret:1,hint:'A secret. Keep losing to Hank. An odd number of times.',cr:'#f5efe0',marble:1}
+  ];
+  function got(it){return !it.req||(S[it.req[0]]||0)>=it.req[1];}
+  function find(L,id){for(var i=0;i<L.length;i++)if(L[i].id===id)return L[i];return L[0];}
+  function cue(){var c=find(CUES,S.cue);return got(c)?c:CUES[0];}
+  function balls(){var b=find(BALLS,S.balls);return got(b)?b:BALLS[0];}
+  function unseen(){var n=0;CUES.concat(BALLS).forEach(function(it){if(it.req&&got(it)&&!S.seen[it.id])n++;});return n;}
+  /* call once per finished game; returns the items this game unlocked */
+  function record(r){var before={};CUES.concat(BALLS).forEach(function(it){before[it.id]=got(it);});
+    S.g++;if(r.win){S.w++;if(r.vs==='easy')S.we++;else if(r.vs==='normal')S.wn++;else if(r.vs==='hard')S.wh++;else if(r.vs==='live')S.wl++;}
+    else if(r.hank)S.hl++;
+    save();return CUES.concat(BALLS).filter(function(it){return got(it)&&!before[it.id];});}
+  return {S:S,CUES:CUES,BALLS:BALLS,got:got,cue:cue,balls:balls,unseen:unseen,record:record,save:save,
+    set:function(kind,id){var L=kind==='cue'?CUES:BALLS,it=find(L,id);if(!got(it))return false;S[kind]=it.id;S.seen[it.id]=1;save();return true;},
+    seeAll:function(){CUES.concat(BALLS).forEach(function(it){if(got(it))S.seen[it.id]=1;});save();}};
+})();
+
+/* ---- ball colours: one function used by the table sprites and the locker previews ---- */
+var BSK=null,BPAL=[],BCREAM=[246,243,230];
+function applyBallSkin(){BSK=LK.balls();var cr=BSK.cr?hexRgb(BSK.cr):[246,243,230];BCREAM=cr;BPAL=[];
+  for(var n=0;n<16;n++){var h=BSK.p16?BSK.p16[n]:BSK.pal?BSK.pal[n>8?n-8:n]:ballCol(n);BPAL.push(hexRgb(h));}
+  if(typeof spriteGen!=='undefined')spriteGen++;}
+function ballRGB(n,bx,by,bz){
+  var s=BSK||{},cream=s.id==='classic'||!s.id?[246,243,230]:BCREAM;
+  if(n===0)return BPAL[0]||cream;
+  if(bz>0.885||bz<-0.885)return n>8&&s.id!=='classic'?cream:[246,243,230];
+  if(n>8&&(by>0.56||by<-0.56))return cream;
+  var c=BPAL[n]||[128,128,128];
+  if(s.marble){/* swirled glass marble: the colour folds into cream, painted on the ball so it rolls with it */
+    var t=Math.sin((bx*3.1+by*4.7+bz*2.3)*2.6+2.2*Math.sin(bx*6.3-bz*5.1+by*1.7));t=t*t*t;var m=t>0?t*0.85:0;
+    var cr=[246,240,224];return [c[0]+(cr[0]-c[0])*m|0,c[1]+(cr[1]-c[1])*m|0,c[2]+(cr[2]-c[2])*m|0];}
+  if(s.metal){var k=0.72+0.5*Math.abs(Math.sin(by*5.5+bx*2.2));return [Math.min(255,c[0]*k)|0,Math.min(255,c[1]*k)|0,Math.min(255,c[2]*k)|0];}
+  return c;
+}
+
+/* ---- cues: drawn in code at the same 958x46 shape as the house cue art (butt left, tip right) ---- */
+var CUECV={};
+function cueCanvas(d){
+  if(!d||d.id==='house')return null;if(CUECV[d.id])return CUECV[d.id];
+  var W=958,H=46,c=document.createElement('canvas');c.width=W;c.height=H;var g=c.getContext('2d'),cy=H/2;
+  function half(x){/* radius along the cue: 20 at the butt, 15 at the joint, 9 at the tip */return x<566?20-5*(x/566):15-6*((x-566)/(W-566));}
+  g.beginPath();g.moveTo(0,cy-half(0));for(var x=0;x<=W;x+=8)g.lineTo(x,cy-half(x));g.lineTo(W,cy-half(W));g.lineTo(W,cy+half(W));for(x=W;x>=0;x-=8)g.lineTo(x,cy+half(x));g.closePath();
+  g.save();g.clip();
+  function band(x0,x1,col){g.fillStyle=col;g.fillRect(x0,0,x1-x0,H);}
+  band(0,14,'#0c0c0c');band(14,200,d.sl);band(200,420,d.wr);band(420,560,d.fa);band(560,572,d.rg);
+  var sh=g.createLinearGradient(572,0,930,0);sh.addColorStop(0,d.worn?'#c9b085':'#e7d3a6');sh.addColorStop(1,d.worn?'#d8c49c':'#f1e3c0');g.fillStyle=sh;g.fillRect(572,0,358,H);
+  band(930,950,'#f7f3ea');band(950,W,'#3b7fd1');
+  [196,200,416,420,556].forEach(function(x){band(x,x+3,d.rg);});
+  /* wrap texture */
+  g.save();g.beginPath();g.rect(203,0,214,H);g.clip();
+  if(d.wp==='linen'){g.strokeStyle='rgba(255,255,255,.12)';g.lineWidth=1;for(x=200;x<430;x+=4){g.beginPath();g.moveTo(x,0);g.lineTo(x+10,H);g.stroke();}}
+  else if(d.wp==='leather'){g.fillStyle='rgba(255,255,255,.05)';for(x=205;x<420;x+=9)g.fillRect(x,0,1,H);}
+  else if(d.wp==='tape'){g.fillStyle='rgba(0,0,0,.18)';for(x=210;x<420;x+=38){g.beginPath();g.moveTo(x,0);for(var yy=0;yy<=H;yy+=6)g.lineTo(x+((yy/6)%2?3:-3),yy);g.lineTo(x+4,H);g.lineTo(x+4,0);g.fill();}}
+  g.restore();
+  /* points: long triangles from the joint reaching toward the butt */
+  if(d.pt){g.fillStyle=d.pt;for(var s=-1;s<=1;s+=2){g.beginPath();g.moveTo(560,cy+s*2);g.lineTo(560,cy+s*20);g.lineTo(440,cy+s*8);g.closePath();g.fill();}
+    g.beginPath();g.moveTo(560,cy-5);g.lineTo(560,cy+5);g.lineTo(470,cy);g.closePath();g.fill();}
+  /* inlays on the sleeve and forearm */
+  function diamond(x,y,r,col){g.fillStyle=col;g.beginPath();g.moveTo(x-r*1.6,y);g.lineTo(x,y-r);g.lineTo(x+r*1.6,y);g.lineTo(x,y+r);g.closePath();g.fill();}
+  function star(x,y,r,col){g.fillStyle=col;g.beginPath();for(var i=0;i<10;i++){var a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*0.45:r;g.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr);}g.closePath();g.fill();}
+  var I=d.inl,ic=d.ic;
+  if(I==='diamond'){[60,107,154].forEach(function(x){diamond(x,cy,6,ic);});diamond(500,cy,5,ic);}
+  else if(I==='dots'){[50,80,110,140,170].forEach(function(x){g.fillStyle=ic;g.beginPath();g.arc(x,cy,4,0,7);g.fill();});}
+  else if(I==='star'){[70,130].forEach(function(x){star(x,cy,9,ic);});star(495,cy,7,ic);}
+  else if(I==='nugget'){g.fillStyle=ic;[[40,-6,4],[66,5,5],[95,-3,3],[120,6,4],[150,-5,5],[176,3,3],[470,-4,3],[505,4,4]].forEach(function(p){g.beginPath();g.ellipse(p[0],cy+p[1],p[2]*1.3,p[2],0.4,0,7);g.fill();});}
+  else if(I==='snake'){g.fillStyle=ic;for(x=428;x<556;x+=16)diamond(x,cy,8,ic);g.fillStyle='rgba(255,236,190,.55)';for(x=436;x<556;x+=16)diamond(x,cy,3,'rgba(255,236,190,.55)');for(x=22;x<196;x+=16)diamond(x,cy,7,'#3b2a18');}
+  else if(I==='flame'){var fl=function(x0,x1){var gr=g.createLinearGradient(x0,0,x1,0);gr.addColorStop(0,'#ffd23f');gr.addColorStop(1,'#ff4d00');g.fillStyle=gr;g.beginPath();g.moveTo(x1,0);
+      for(var i=0;i<=6;i++){var xx=x1-(x1-x0)*(i/6),yy=i%2?cy-3:2;g.lineTo(xx,yy);}g.lineTo(x0,cy);for(i=6;i>=0;i--){xx=x1-(x1-x0)*(i/6);yy=i%2?cy+3:H-2;g.lineTo(xx,yy);}g.closePath();g.fill();};
+    fl(430,560);fl(30,196);}
+  else if(I==='horseshoe'){g.strokeStyle=ic;g.lineWidth=4;g.beginPath();g.arc(110,cy,9,Math.PI*0.15,Math.PI*1.85,false);g.stroke();g.fillStyle='#4b5563';[[-6,-6],[-6,6],[3,-9],[3,9]].forEach(function(p){g.beginPath();g.arc(110+p[0],cy+p[1],1.2,0,7);g.fill();});
+    g.strokeStyle='rgba(60,40,20,.35)';g.lineWidth=1;for(var k=0;k<14;k++){var sx=440+k*9;g.beginPath();g.moveTo(sx,cy-12+(k%3)*4);g.lineTo(sx+14,cy-6+(k%4)*3);g.stroke();}}
+  if(d.worn){g.strokeStyle='rgba(70,45,20,.35)';g.lineWidth=1;for(k=0;k<26;k++){var wx=20+k*21;g.beginPath();g.moveTo(wx,cy-8+(k*7)%16);g.lineTo(wx+12,cy-4+(k*5)%12);g.stroke();}}
+  if(d.metal){var mg=g.createLinearGradient(0,0,0,H);mg.addColorStop(0,'rgba(255,255,255,.35)');mg.addColorStop(.35,'rgba(255,255,255,0)');mg.addColorStop(.6,'rgba(0,0,0,0)');mg.addColorStop(1,'rgba(0,0,0,.25)');g.fillStyle=mg;g.fillRect(14,0,546,H);}
+  /* roundness: light along the top, shadow along the bottom */
+  var rd=g.createLinearGradient(0,0,0,H);rd.addColorStop(0,'rgba(0,0,0,.35)');rd.addColorStop(.28,'rgba(255,255,255,.28)');rd.addColorStop(.42,'rgba(255,255,255,0)');rd.addColorStop(.75,'rgba(0,0,0,.1)');rd.addColorStop(1,'rgba(0,0,0,.5)');
+  g.fillStyle=rd;g.fillRect(0,0,W,H);g.restore();
+  CUECV[d.id]=c;return c;
+}
+
+/* ---- locker previews ---- */
+function ballPreview(n,size){var c=document.createElement('canvas'),sz=size*2;c.width=sz;c.height=sz;c.style.width=c.style.height=size+'px';var g=c.getContext('2d'),img=g.createImageData(sz,sz),d=img.data,r=sz/2-1;
+  for(var y=0;y<sz;y++)for(var x=0;x<sz;x++){var u=(x+0.5-sz/2)/r,v=(y+0.5-sz/2)/r,q=u*u+v*v;if(q>1)continue;var w=Math.sqrt(1-q);
+    /* tip the ball a little so the stripe and the number both show */
+    var by=v*0.94-w*0.34,bz=w*0.94+v*0.34,cc=ballRGB(n,u,by,bz),o=(y*sz+x)*4;d[o]=cc[0];d[o+1]=cc[1];d[o+2]=cc[2];d[o+3]=255;}
+  g.putImageData(img,0,0);
+  if(n>0){g.fillStyle='#111';g.font='900 '+Math.round(sz*0.26)+'px Inter,Arial,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(String(n),sz/2,sz/2+sz*0.16);}
+  var gl=g.createRadialGradient(sz*0.35,sz*0.3,0,sz*0.35,sz*0.3,sz*0.45);gl.addColorStop(0,'rgba(255,255,255,.75)');gl.addColorStop(1,'rgba(255,255,255,0)');g.globalCompositeOperation='source-atop';g.fillStyle=gl;g.fillRect(0,0,sz,sz);
+  var sd=g.createRadialGradient(sz/2,sz/2,sz*0.3,sz/2,sz/2,sz*0.52);sd.addColorStop(0,'rgba(0,0,0,0)');sd.addColorStop(1,'rgba(0,0,0,.45)');g.fillStyle=sd;g.fillRect(0,0,sz,sz);return c;}
+
+applyBallSkin();
 function drawSprite(n){
   var sp=SPR[n],rp=R*SC*DPR,sz=Math.max(8,Math.ceil(rp*2)+2);
   if(!sp.c){sp.c=document.createElement('canvas');}
@@ -1653,8 +1804,7 @@ function drawSprite(n){
   var c=sp.c.getContext('2d'),img=c.createImageData(sz,sz),d=img.data,NTb=normals(sz),M=ROT[n],col=RGB[n],stripe=n>8;
   for(var p=0;p<NTb.length;p++){var t=NTb[p];if(!t)continue;
     var wx=PORT?-t[1]:t[0],wy=PORT?t[0]:t[1],wz=t[2];
-    var by=M[1]*wx+M[4]*wy+M[7]*wz,bz=M[2]*wx+M[5]*wy+M[8]*wz,cc;
-    if(n===0)cc=CREAM;else if(bz>0.885||bz<-0.885)cc=CREAM;else if(stripe&&(by>0.56||by<-0.56))cc=CREAM;else cc=col;
+    var bx=M[0]*wx+M[3]*wy+M[6]*wz,by=M[1]*wx+M[4]*wy+M[7]*wz,bz=M[2]*wx+M[5]*wy+M[8]*wz,cc=ballRGB(n,bx,by,bz);
     var o=p*4;d[o]=cc[0];d[o+1]=cc[1];d[o+2]=cc[2];d[o+3]=Math.round(t[3]*255);}
   c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,sz,sz);c.putImageData(img,0,0);
   var ctr=sz/2,rr=sz/2-1;
@@ -1742,7 +1892,8 @@ function draw(t){
     ctx.save();ctx.translate(cue.x,cue.y);ctx.rotate(VIEW.a);
     ctx.globalAlpha=VIEW.stroke?1-Math.max(0,strokeF-0.6)*2.5:1;
     ctx.fillStyle='rgba(0,0,0,0.3)';ctx.beginPath();ctx.moveTo(-R-pull+3,4);ctx.lineTo(-R-pull-CL+3,4+CT*0.4);ctx.lineTo(-R-pull-CL+3,4-CT*0.4+CT*0.2);ctx.closePath();ctx.fill();
-    if(cueOk)ctx.drawImage(cueImg,-R-pull-CL,-CT/2,CL,CT);else{ctx.fillStyle='#d6b98a';ctx.fillRect(-R-pull-CL,-3,CL,6);}
+    var shp=G.players[VIEW.who>=0?VIEW.who:G.turn],myCue=shp&&shp.kind==='me'?cueCanvas(LK.cue()):null;   /* your cue is yours; the regulars shoot the house cue */
+    if(myCue)ctx.drawImage(myCue,-R-pull-CL,-CT/2,CL,CT);else if(cueOk)ctx.drawImage(cueImg,-R-pull-CL,-CT/2,CL,CT);else{ctx.fillStyle='#d6b98a';ctx.fillRect(-R-pull-CL,-3,CL,6);}
     ctx.restore();ctx.globalAlpha=1;
   }
 }
@@ -2030,6 +2181,7 @@ function endGame(){
   if(mine||(G.players[w]&&G.players[w].guest)){SFX.win();if(typeof suBanner==='function')suBanner(G.mode==='9'?'Nine down!':G.mode==='ct'?'Last one standing!':'Winner!',G.stake?'+'+money(pot()):'Game won');talk('botLose',1,true);}
   else if(G.watch){SFX.turn();}
   else{SFX.lose();talk('botWin',w>0?w:1,true);}
+  try{recordLocker(w,mine);}catch(e){}
   var wn=who(w);
   $('resT').textContent=mine?'You win!':wn+' wins';var gw=!G.watch&&G.players[w]&&G.players[w].guest;
   if(G.watch)G.reason=G.reason.replace(/^You resigned$/,'Resigned');
@@ -2131,7 +2283,7 @@ function bindSeg(id,fn){$(id).addEventListener('click',function(e){var b=e.targe
 bindSeg('optMode',function(v){opt.mode=v;switchRoom(v==='ct'?'poolct':'pool');renderSetup();});
 bindSeg('optOpp',function(v){opt.opp=v;var o=OPP[v]||OPP.normal;if(v==='guest'){opt.stake=0;segSet('optStake','0');$('stakeIn').value='';}if(G.phase==='setup'){G.players[1]=v==='guest'?{name:'Guest',kind:'me',guest:true,col:'#f472b6'}:{name:o.name,kind:'bot',col:o.col,skill:v,key:o.key};if(G.players[2]){var m2=OPP[CT_MATE[v]];G.players[2]={name:m2.name,kind:'bot',col:m2.col,skill:CT_MATE[v],key:m2.key};}hud();}renderSetup();});
 bindSeg('optStake',function(v){opt.stake=+v;$('stakeIn').value='';renderSetup();});
-function parseAmt(t){t=String(t||'').trim().toLowerCase().replace(/[$,\s]/g,'');var m=/^(\d*\.?\d+)([kmbtq]?)$/.exec(t);if(!m)return NaN;var v=parseFloat(m[1])*({k:1e3,m:1e6,b:1e9,t:1e12,q:1e15}[m[2]]||1);return Math.floor(v);}
+function parseAmt(t){t=String(t||'').trim().toLowerCase().replace(/[$,\s]/g,'');var m=/^(\d*\.?\d+)(k|m|b|t|qa|qi|q|sx|sp|oc|no|dc)?$/.exec(t);if(!m)return NaN;var v=parseFloat(m[1])*({k:1e3,m:1e6,b:1e9,t:1e12,q:1e15,qa:1e15,qi:1e18,sx:1e21,sp:1e24,oc:1e27,no:1e30,dc:1e33}[m[2]]||1);return Math.floor(v);}
 function setCustom(v){if(!(v>0)){toast('Type an amount, like 2500');return;}if(v>bank){toast('You have '+money(bank)+'. Bet set to all in.');v=Math.floor(bank);}
   opt.stake=v;var pre=['10','25','100','500'].indexOf(String(v))>=0;segSet('optStake',pre?String(v):'');$('stakeIn').value=pre?'':money0(v);renderSetup();}
 $('stakeSet').addEventListener('click',function(){setCustom(parseAmt($('stakeIn').value));});
@@ -2142,6 +2294,54 @@ bindSeg('optTalk',function(v){opt.talk=v==='1';});
 bindSeg('optSound',function(v){opt.sound=v==='1';});
 $('goBtn').addEventListener('click',function(){unlock();startSolo();});
 $('refill').addEventListener('click',function(){bank=1000;renderSetup();});
+
+/* ================= cue rack (locker) ================= */
+function recordLocker(w,mine){
+  var u=$('resU');u.classList.add('hide');u.innerHTML='';
+  if(G.watch||G.lkDone===G.gid+':'+G.shotNo+':'+gen)return;G.lkDone=G.gid+':'+G.shotNo+':'+gen;
+  var me=G.players[G.mySeat];if(!me||G.players.some(function(p){return p.guest;}))return;   /* pass-and-play games are just for fun */
+  if(!G.shotNo)return;
+  var vs=G.live?'live':opt.opp,wp=G.players[w],hank=!mine&&wp&&wp.key==='hank'&&!G.live&&G.reason!=='You resigned';
+  var news=LK.record({win:mine,vs:vs,hank:hank});renderLkBtn();
+  if(news.length){var it=news[news.length-1],kind=LK.CUES.indexOf(it)>=0?'cue':'balls';
+    u.innerHTML=(it.secret?'&#129323; Secret unlocked: ':'&#127881; Unlocked: ')+'<b>'+esc(it.name)+'</b>'+(kind==='cue'?' cue':' balls')+(news.length>1?' (+'+(news.length-1)+' more)':'')+'<button type="button" id="resUse">Use it</button>';
+    u.classList.remove('hide');$('resUse').onclick=function(){LK.set(kind,it.id);applyBallSkin();renderLkBtn();$('resUse').textContent='Equipped';$('resUse').disabled=true;};}
+}
+function lkStatus(it){var r=it.req;if(!r)return {ok:true,txt:'Free'};var have=LK.S[r[0]]||0,ok=have>=r[1];
+  return {ok:ok,txt:ok?'':(it.secret?it.hint:r[2]+' ('+Math.min(have,r[1])+'/'+r[1]+')'),pct:Math.min(1,have/r[1])};}
+function renderLkBtn(){var n=LK.unseen();$('lkNew').classList.toggle('hide',!n);
+  var c=LK.CUES.filter(LK.got).length,b=LK.BALLS.filter(LK.got).length;$('lkSum').textContent=LK.cue().name+' \u00b7 '+LK.balls().name+' \u00b7 '+(c+b)+'/'+(LK.CUES.length+LK.BALLS.length);}
+function renderLocker(){
+  var S=LK.S;$('lkStats').innerHTML='Games <b>'+S.g+'</b> \u00b7 Wins <b>'+S.w+'</b> \u00b7 Beat Dusty <b>'+S.wn+'</b> \u00b7 Beat June <b>'+S.wh+'</b> \u00b7 Live wins <b>'+S.wl+'</b>';
+  function card(it,kind){var st=lkStatus(it),on=(kind==='cue'?LK.cue():LK.balls()).id===it.id,hid=it.secret&&!st.ok;
+    var d=document.createElement('button');d.type='button';d.className='lkc'+(on?' on':'')+(st.ok?'':' lock')+(hid?' sec':'');d.setAttribute('data-id',it.id);
+    var pv=document.createElement('div');pv.className='pv';
+    if(kind==='cue'){var cc=cueCanvas(it),k=document.createElement('canvas');k.width=240;k.height=24;k.style.width='120px';k.style.height='12px';var g=k.getContext('2d');
+      if(cc)g.drawImage(cc,0,0,240,24);else if(cueOk)g.drawImage(cueImg,0,0,240,24);else{g.fillStyle='#d6b98a';g.fillRect(0,8,240,8);}pv.appendChild(k);}
+    else{var keep=BSK;BSK=it;var save=BPAL,sc=BCREAM;applyPreviewPal(it);[1,9,8,3,12].forEach(function(n){pv.appendChild(ballPreview(n,22));});BSK=keep;BPAL=save;BCREAM=sc;}
+    d.appendChild(pv);
+    var nm=document.createElement('b');nm.textContent=hid?'???':it.name;d.appendChild(nm);
+    var sm=document.createElement('small');sm.textContent=on?'Equipped':st.ok?'Tap to use':st.txt;d.appendChild(sm);
+    if(!st.ok&&!it.secret){var pb=document.createElement('div');pb.className='pb';pb.innerHTML='<i style="width:'+Math.round(st.pct*100)+'%"></i>';d.appendChild(pb);}
+    if(st.ok&&it.req&&!LK.S.seen[it.id]){var nw=document.createElement('span');nw.className='nw';nw.textContent='NEW';d.insertBefore(nw,d.firstChild);}
+    d.onclick=function(){if(!st.ok){toast(it.secret?it.hint:it.req[2]+' to unlock '+it.name+'.');return;}LK.set(kind,it.id);if(kind==='balls')applyBallSkin();SFX.click&&SFX.click();renderLocker();renderLkBtn();};
+    return d;}
+  var C=$('lkCues'),B=$('lkBalls'),sl=C.scrollLeft,bl=B.scrollLeft;C.innerHTML='';B.innerHTML='';
+  LK.CUES.forEach(function(it){C.appendChild(card(it,'cue'));});LK.BALLS.forEach(function(it){B.appendChild(card(it,'balls'));});C.scrollLeft=sl;B.scrollLeft=bl;
+}
+function applyPreviewPal(it){var cr=it.cr?hexRgb(it.cr):[246,243,230];BCREAM=cr;BPAL=[];for(var n=0;n<16;n++){var h=it.p16?it.p16[n]:it.pal?it.pal[n>8?n-8:n]:ballCol(n);BPAL.push(hexRgb(h));}}
+function openLocker(){renderLocker();$('locker').classList.remove('hide');
+  ['lkCues','lkBalls'].forEach(function(id){var el=$(id),on=el.querySelector('.lkc.on');if(on)el.scrollLeft=Math.max(0,on.offsetLeft-el.offsetLeft-40);});}
+function closeLocker(){LK.seeAll();renderLkBtn();$('locker').classList.add('hide');}
+$('lkBtn').addEventListener('click',openLocker);$('lkDone').addEventListener('click',closeLocker);
+[].forEach.call(document.querySelectorAll('.lkar'),function(b){b.addEventListener('click',function(){
+  /* step through what you own: the arrows equip the previous / next unlocked one */
+  var kind=b.getAttribute('data-k'),L=(kind==='cue'?LK.CUES:LK.BALLS).filter(LK.got),cur=(kind==='cue'?LK.cue():LK.balls()).id,i=0;
+  for(var k=0;k<L.length;k++)if(L[k].id===cur)i=k;var nx=L[(i+(+b.getAttribute('data-d'))+L.length)%L.length];
+  LK.set(kind,nx.id);if(kind==='balls')applyBallSkin();renderLocker();
+  var el=$(kind==='cue'?'lkCues':'lkBalls'),on=el.querySelector('.lkc.on');if(on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});});});
+renderLkBtn();
+
 $('againBtn').addEventListener('click',function(){if(G.watch){stopWatch();return;}if(G.live&&G.mode==='ct'){G.live=false;G.gid='';G.auth='';$('res').classList.add('hide');toSetup();if(LV.L)LV.L.send('lobby',{busy:false});return;}if(G.live){$('res').classList.add('hide');toSetup();if(LV.peer)challenge();}else{$('res').classList.add('hide');opt.mode=G.mode;startSolo();}});
 $('changeBtn').addEventListener('click',toSetup);
 function newGameBtn(){if(G.watch){stopWatch();return;}if(busy()){if(!resignArm){resignArm=true;toast('Tap again to resign this game'+(G.stake?' (you lose the stake)':''));clearTimeout(resignT);resignT=setTimeout(function(){resignArm=false;hud();},2500);hud();return;}resignArm=false;resign();return;}toSetup();}
@@ -2481,6 +2681,7 @@ function onChat(m,mine){
 /* ================= test / debug hook ================= */
 function potAngle(n,pi){var o=G.balls[n],p=POCKETS[pi],c=G.balls[0],dx=p.ax-o.x,dy=p.ay-o.y,d=Math.hypot(dx,dy),gx=o.x-dx/d*D2,gy=o.y-dy/d*D2;return Math.atan2(gy-c.y,gx-c.x);}
 window.__pool_dbg={
+  lk:function(){return {LK:LK,openLocker:openLocker,recordLocker:recordLocker,applyBallSkin:applyBallSkin,endGame:endGame};},
   _in:function(){return {G:G,planShot:planShot,cloneBalls:cloneBalls,fire:fire,nearestPlace:nearestPlace,HEAD:HEAD,SPR:SPR,ctLeft:ctLeft,bank:function(){return bank;}};},
   state:function(){return {call:G.call,callEight:G.callEight,needCall:needCall(),phase:G.phase,mode:G.mode,turn:G.turn,mySeat:G.mySeat,myTurn:isMyTurn(),groups:G.groups.slice(),open:G.open,breakShot:G.breakShot,bih:G.bih,kitchen:G.kitchen,shotNo:G.shotNo,
     winner:G.winner,reason:G.reason,stake:G.stake,bank:bank,live:G.live,gid:G.gid,waitSync:G.waitSync,players:G.players.map(function(p){return {name:p.name,kind:p.kind,skill:p.skill||null};}),
