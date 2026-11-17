@@ -755,15 +755,15 @@ var Live=(function(){
         });
       }).catch(function(e){console.warn('live:',e&&e.message);setStatus('error');});
     }
-    /* switching to another game in the arcade leaves this table; coming back takes a seat again */
-    addEventListener('message',function(e){var d=e.data;if(!d||d.arcade!=='visible')return;
-      if(!d.on){if(!stopped){hiddenPaused=true;stopped=true;clearTimeout(retryT);var was=hostFlag;hostFlag=false;leave();setStatus('off');if(was)emit('host',false);emit('roster',[]);}}
-      else if(hiddenPaused&&!document.hidden){hiddenPaused=false;stopped=false;join(1);}});
-    var docAway=false;
-    function docVis(){var h=document.hidden;
-      if(h&&!stopped){docAway=true;hiddenPaused=true;stopped=true;clearTimeout(retryT);var was=hostFlag;hostFlag=false;leave();setStatus('off');if(was)emit('host',false);emit('roster',[]);}
-      else if(!h&&docAway){docAway=false;if(hiddenPaused&&!arcAway){hiddenPaused=false;stopped=false;join(1);}}}
-    var arcAway=false;addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='visible')arcAway=!d.on;});
+    /* switching tabs (another game in the arcade, or another browser tab) keeps your seat for a while:
+       you only leave the table if you stay away longer than AWAY_MS. Closing the page still leaves right away. */
+    var AWAY_MS=window.__LIVE_AWAY_MS||180000,awayT=0,arcAway=false,docAway=false;
+    function goAway(){if(stopped)return;hiddenPaused=true;stopped=true;clearTimeout(retryT);var was=hostFlag;hostFlag=false;leave();setStatus('off');if(was)emit('host',false);emit('roster',[]);}
+    function awayCheck(){var away=arcAway||document.hidden;
+      if(away){if(!awayT&&!stopped)awayT=setTimeout(function(){awayT=0;if(arcAway||document.hidden)goAway();},AWAY_MS);}
+      else{clearTimeout(awayT);awayT=0;if(hiddenPaused){hiddenPaused=false;stopped=false;join(1);}}}
+    addEventListener('message',function(e){var d=e.data;if(!d||d.arcade!=='visible')return;arcAway=!d.on;awayCheck();});
+    function docVis(){docAway=document.hidden;awayCheck();}
     document.addEventListener('visibilitychange',docVis);addEventListener('pagehide',function(){if(!stopped){try{leave();}catch(e){}}});
     self.on=function(k,f){(handlers[k]=handlers[k]||[]).push(f);return self;};
     self.start=function(){if(!stopped)return self;if(!LIVE_CFG&&window.__LIVE_TRANSPORT!=='bc'){setStatus('off');return self;}stopped=false;join(1);return self;};
