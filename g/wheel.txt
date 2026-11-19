@@ -285,11 +285,18 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 <\u002fscript>
 <script>
 (function(){
-  var root=document.documentElement,btn=null,drawer=null,body=null,shade=null,host=null;
+  var root=document.documentElement,btn=null,hb=null,drawer=null,body=null,shade=null,host=null;
+  /* floating Options: park the ? just to its left */
+  function placeHelp(){if(!hb||!btn||!hb.classList.contains('floating'))return;var r=btn.getBoundingClientRect();if(!r.width)return;hb.style.top=r.top+'px';hb.style.height=r.height+'px';hb.style.right=Math.max(0,innerWidth-r.left)+'px';}
   var ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>';
   function build(){
     if(btn)return;
     btn=document.createElement('button');btn.type='button';btn.className='fsopt-btn';btn.innerHTML=ICON+'Options';
+    /* the ? beside Options: asks the arcade shell to show this game's How to play guide */
+    hb=document.createElement('button');hb.type='button';hb.className='fsopt-btn fsopt-help';hb.innerHTML='<b>?</b>';hb.title='How to play';hb.setAttribute('aria-label','How to play');
+    hb.addEventListener('click',function(e){e.stopPropagation();try{parent.postMessage({arcade:'howto'},'*');}catch(x){}});
+    var hs=document.createElement('style');hs.textContent='.fsopt-help{padding:0!important;width:34px;min-width:34px;align-self:stretch;min-height:28px;justify-content:center;border-color:rgba(242,210,126,.65)!important;color:#fde68a!important;margin-right:6px!important}.fsopt-help b{font:900 15px/1 Inter,system-ui,sans-serif}.fsopt-help:hover{background:rgba(242,210,126,.95)!important;color:#1c1208!important}.fsopt-help.floating{position:fixed;z-index:60}';document.head.appendChild(hs);
+    addEventListener('resize',placeHelp);
     shade=document.createElement('div');shade.className='fsopt-shade';
     drawer=document.createElement('div');drawer.className='fsopt-drawer';drawer.setAttribute('role','dialog');drawer.setAttribute('aria-label','Options');
     drawer.innerHTML='<div class="fsopt-head"><span>Options</span><button type="button">Close</button></div><div class="fsopt-body"></div>';
@@ -311,7 +318,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
       opts.forEach(function(el){if(el.hasAttribute('data-opt-narrow')&&!el.hasAttribute('data-opt')&&!narrow())return;park(el);body.appendChild(el);});
       huds.forEach(function(el){var t=document.querySelector(el.getAttribute('data-hud'));if(!t)return;park(el);t.appendChild(el);el.classList.add('hud');});
       host=document.querySelector('[data-optbtn]');
-      if(host){btn.classList.remove('floating');host.appendChild(btn);}else{btn.classList.add('floating');document.body.appendChild(btn);}
+      if(host){btn.classList.remove('floating');hb.classList.remove('floating');host.appendChild(hb);host.appendChild(btn);}else{btn.classList.add('floating');hb.classList.add('floating');document.body.appendChild(hb);document.body.appendChild(btn);}placeHelp();setTimeout(placeHelp,300);
     } else {
       close();
       huds.forEach(function(el){unpark(el);el.classList.remove('hud');});
