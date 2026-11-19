@@ -142,6 +142,15 @@ html.fs .optslot{display:flex}
 .tray .plate{padding:2px 6px;border-radius:4px;background:linear-gradient(180deg,#e9cf7d,#b8892f);color:#2a1606;font:800 9.5px/1.15 Inter,sans-serif;text-align:center;max-width:90px}
 .tray.lock .plate{background:linear-gradient(180deg,#6b7280,#4b5563);color:#e5e7eb}
 .rkinfo{min-height:62px;margin:8px 0 0;padding:9px 12px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid rgba(242,210,126,.25);text-align:left;font-size:13px;color:#e5d6b0}
+.lkPro{display:flex;gap:10px;align-items:center;margin-top:8px;text-align:left;font-size:12px;line-height:1.4;color:#e2e8f0}
+.lkPro em{display:block;font-style:normal;font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#f2d27e}
+.lkPro u{color:#fde68a;text-decoration:none;font-weight:800}
+.lkArtB{flex:none;width:52px;height:65px;padding:0;border-radius:8px;overflow:hidden;border:1px solid rgba(242,210,126,.55);background:#000;cursor:zoom-in}
+.lkArtB img{width:100%;height:100%;object-fit:cover;display:block}
+#lkArtOv{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.86);padding:16px;cursor:zoom-out}
+#lkArtOv.on{display:flex}
+#lkArtOv img{max-width:min(560px,94vw);max-height:92vh;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,.7)}
+#lkArtOv button{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.5);color:#fff;font-size:18px;cursor:pointer}
 .rkinfo b{display:block;font:400 18px Rye,Georgia,serif;color:var(--gold2)}.rkinfo .pb{height:6px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:6px}.rkinfo .pb i{display:block;height:100%;background:linear-gradient(90deg,#c6a75e,#f2d27e)}
 .rkinfo .eq{color:#6ee7b7;font-weight:800}
 .pooltbl .qrack canvas,.pooltbl .shelf canvas{position:static;width:auto;height:auto;cursor:pointer}
@@ -1739,6 +1748,11 @@ var LK=(function(){
   /* req: [stat, count, text]   stats: g games, w wins, wn wins vs Dusty, wh wins vs June, wl live-table wins, hl losses to Hank */
   var CUES=[
     {id:'house',name:'House Cue',req:null},
+    /* Pro Shop cues: free to pick, cosmetic only. Sprite art in art/pool/cue_<id>.webp, design sheet in cue_<id>_design.webp */
+    {id:'sovereign',name:'The Sovereign',req:null,pro:1,desc:'Black and gold luxury',sl:'#121212',wr:'#1c1c1c',wp:'leather',fa:'#121212',pt:'#d4a72c',rg:'#d4a72c',inl:'diamond',ic:'#f1ead8',metal:1},
+    {id:'desert',name:'Desert Turquoise',req:null,pro:1,desc:'Southwestern walnut and turquoise',sl:'#6b3a1f',wr:'#5a3218',wp:'leather',fa:'#6b3a1f',pt:'#2fb3a7',rg:'#2fb3a7',inl:'diamond',ic:'#2fb3a7'},
+    {id:'vortex',name:'Vortex X1',req:null,pro:1,desc:'Graphite and electric blue',sl:'#1b1e24',wr:'#101216',wp:'leather',fa:'#1b1e24',pt:'#1e7bff',rg:'#1e7bff',inl:'dots',ic:'#5aa2ff'},
+    {id:'heritage',name:'Classic Heritage',req:null,pro:1,desc:'Rosewood and maple',sl:'#7a2e1a',wr:'#4a2f22',wp:'linen',fa:'#7a2e1a',pt:'#f1e3c0',rg:'#f1e3c0',inl:'diamond',ic:'#f1e3c0'},
     {id:'mesquite',name:'Mesquite',req:['g',3,'Play 3 games'],sl:'#5a2a17',wr:'#1b1410',wp:'linen',fa:'#7a3a1f',rg:'#d9c49a'},
     {id:'ebony',name:'Ebony Diamond',req:['w',3,'Win 3 games'],sl:'#141414',wr:'#2b2b2b',wp:'leather',fa:'#111111',pt:'#f1ead8',rg:'#cfd4dc',inl:'diamond',ic:'#f1ead8'},
     {id:'turq',name:'Turquoise Trail',req:['w',10,'Win 10 games'],sl:'#3a2516',wr:'#2fb3a7',wp:'linen',fa:'#3a2516',pt:'#2fb3a7',rg:'#d0d6dd',inl:'dots',ic:'#c7f2ee'},
@@ -2407,7 +2421,13 @@ function trayBalls(it,box){var sh=BSHEET[it.id];
 function lkInfo(){var kind=LKF.kind,L=kind==='cue'?LK.CUES:LK.BALLS,cur=kind==='cue'?LK.cue():LK.balls(),it=null;
   for(var i=0;i<L.length;i++)if(L[i].id===(LKF.id||cur.id))it=L[i];it=it||cur;var st=lkStatus(it),hid=it.secret&&!st.ok,on=cur.id===it.id;
   $('lkInfo').innerHTML='<b>'+(hid?'??? (secret)':esc(it.name))+'</b>'+(kind==='cue'?'Cue':'Ball set')+' \u00b7 '+(on?'<span class="eq">In your hands</span>':st.ok?'Tap it again to take it off the rack':esc(st.txt))+
-    (!st.ok&&!it.secret?'<div class="pb"><i style="width:'+Math.round(st.pct*100)+'%"></i></div>':'');}
+    (!st.ok&&!it.secret?'<div class="pb"><i style="width:'+Math.round(st.pct*100)+'%"></i></div>':'')+
+    (kind==='cue'&&it.pro?'<div class="lkPro"><button type="button" class="lkArtB" data-id="'+it.id+'" aria-label="View the '+esc(it.name)+' design"><img alt="" src="'+POOLART+'pool/cue_'+it.id+'_design.webp"></button><span><em>Pro Shop</em>'+esc(it.desc)+'<br><u>View the design</u></span></div>':'');
+  var ab=$('lkInfo').querySelector('.lkArtB');if(ab)ab.onclick=function(){lkArt(ab.getAttribute('data-id'));};}
+function lkArt(id){var o=$('lkArtOv');if(!o){o=document.createElement('div');o.id='lkArtOv';o.setAttribute('role','dialog');o.setAttribute('aria-label','Cue design');
+    o.innerHTML='<img alt=""><button type="button" aria-label="Close">\u2715</button>';document.body.appendChild(o);
+    o.addEventListener('click',function(){o.classList.remove('on');});}
+  o.querySelector('img').src=POOLART+'pool/cue_'+id+'_design.webp';o.classList.add('on');}
 function renderLocker(){
   var S=LK.S;$('lkStats').innerHTML='Games <b>'+S.g+'</b> \u00b7 Wins <b>'+S.w+'</b> \u00b7 Beat Dusty <b>'+S.wn+'</b> \u00b7 Beat June <b>'+S.wh+'</b> \u00b7 Live wins <b>'+S.wl+'</b>';
   var C=$('lkCues'),B=$('lkBalls'),sl=C.scrollLeft,bl=B.scrollLeft;C.innerHTML='';B.innerHTML='';
