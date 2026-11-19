@@ -1050,7 +1050,7 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 /* ===== Daily quests: one shared list, the same 7 picks for everyone each day =====
    Progress is written by the arcade shell (it hears every game), payouts are trading cards (cards_collect.js). */
 var SUQ=(function(){
-  var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','coach','plinko'];
+  var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','coach'];
   var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','chess','checkers','pdice','trail','wrangler','ironclads','sudoku','drop4','freecell'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
@@ -1112,7 +1112,6 @@ var SUQ=(function(){
     ['vp1','e','Play a hand of Video Poker','vpoker','bet',1,0,0,NEWDAY],
     ['sc1','e','Spin Lucky Seven Stagecoach 10 times','coach','bet',10,0,0,NEWDAY],
     ['fc1','e','Sit down at FreeCell','freecell','open',1,0,0,NEWDAY4],
-    ['pk1','e','Drop 10 nuggets at Gold Strike Plinko','plinko','bet',10,0,0,NEWDAY],
     ['ck1','e','Sit down for a game of Checkers','checkers','open',1,0,0,NEWDAY],
     ['tw1','e','Play today\u2019s Trail Word','trail','open',1,0,0,NEWDAY],
     ['kn2','m','Play 5 draws of Keno Blast','keno','play',5,0,0,NEWDAY],
@@ -1124,7 +1123,6 @@ var SUQ=(function(){
     ['tw2','m','Solve a Trail Word','trail','win',1,0,0,NEWDAY],
     ['ck3','h','Win a game of Checkers','checkers','win',1,0,0,NEWDAY],
     ['pd3','h','Win a game of Prospector\u2019s Dice','pdice','win',1,0,0,NEWDAY],
-    ['pk3','h','Collect $5,000 at Gold Strike Plinko','plinko','pay',5000,1,0,NEWDAY],
     ['cs1','e','Sit down for a game of Chess','chess','open',1,0,0,NEWDAY2],
     ['cs2','m','Finish a game of Chess','chess','over',1,0,0,NEWDAY2],
     ['cs3','h','Win a game of Chess','chess','win',1,0,0,NEWDAY2],
