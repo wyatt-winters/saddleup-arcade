@@ -1573,7 +1573,7 @@ function applySt(st,from){
     /* my bets: did they make the train? */
     S.forEach(function(s,i){var b=mine&&mine.b[i];
       if(s.st==='placed'&&s.round===R.id){if(b){s.st='riding';}else{bank+=s.bet;s.st='idle';note(i,'Missed the train: stake returned','');}}
-      if((s.st==='riding'||s.st==='pending')&&s.round===R.id&&b&&b.co){s.st='won';s.co=b.co;s.w=r2(s.bet*b.co);bank+=s.w;cashedFx(i);}});
+      if((s.st==='riding'||s.st==='pending')&&s.round===R.id&&b&&b.co){s.st='won';s.co=b.co;s.w=r2(s.bet*b.co);var b1=bank;bank+=s.w;if(bank===b1)try{window.suQ&&suQ('pay',s.w);}catch(e){}cashedFx(i);}});
   }
   if(st.ph==='crash'&&crashSeen!==R.id){crashSeen=R.id;
     S.forEach(function(s,i){if((s.st==='riding'||s.st==='pending'||s.st==='placed')&&s.round===R.id){
@@ -1586,7 +1586,7 @@ function applySt(st,from){
 }
 function place(i,auto){
   var s=S[i];if(bank<s.amt||s.amt<=0){if(auto){s.st='idle';s.ab=false;note(i,'Auto bet stopped: not enough chips','r');}return false;}
-  if(R.ph==='bet'&&hNow()<R.be-120){bank=r2(bank-s.amt);s.bet=s.amt;s.co=0;s.w=0;s.st='placed';s.round=R.id;act('bet',{r:R.id,s:i,a:s.amt,x:s.ao?s.ax:0});SFX.chip();}
+  if(R.ph==='bet'&&hNow()<R.be-120){var b0=bank;bank=r2(bank-s.amt);/* a huge bankroll can't show a small bet (float precision): tell the quests directly */if(bank===b0)try{window.suQ&&suQ('bet',s.amt);}catch(e){}s.bet=s.amt;s.co=0;s.w=0;s.st='placed';s.round=R.id;act('bet',{r:R.id,s:i,a:s.amt,x:s.ao?s.ax:0});SFX.chip();}
   else{s.st='queued';}
   ui();return true;}
 function primary(i){
