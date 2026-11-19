@@ -1234,11 +1234,19 @@ var Live=(function(){
   function wwrite(a){try{localStorage.setItem(WKEY,JSON.stringify({amt:Math.round(a*100)/100,t:Date.now()}));}catch(e){}}
   function wallet(o){
     var last=null,inactive=false,timer=0,wasIdle=null;
+    /* quests + loan repayment get real bets and real payouts, worked out per round:
+       chips put down between rounds wait in pend (taking them back is a refund, not a payout);
+       when the round starts they become the wager; money coming back during the round is its return,
+       reported once when the round ends, and only when it's more than was staked */
+    var pend=0,rw=0,rx=0,rr=0,lastW=0,rrT=0;
+    function endRound(){var tw=rw+rx;payOut(rr,tw);lastW=tw;rw=0;rx=0;rr=0;}
+    function qpost(ev,n){if(!(n>0.004))return;try{if(parent!==window)parent.postMessage({arcade:'quest',ev:ev,n:Math.round(n*100)/100},'*');}catch(x){}}
+    function payOut(ret,wag){/* a payout is money back beyond the stake: pushes, surrenders and part-returns aren't wins */if(ret>0.004&&ret>wag+0.004)qpost('pay',ret);}
     function tick(){
       try{
         if(o.active&&!o.active()){inactive=true;return;}
         /* tell the arcade when money is in play, so it never offers a loan in the middle of a hand */
-        var idl=!!o.idle();if(idl!==wasIdle){wasIdle=idl;try{if(parent!==window)parent.postMessage({arcade:'widle',idle:idl},'*');}catch(x){}}
+        var idl=!!o.idle(),prev=wasIdle===null?idl:wasIdle;if(idl!==wasIdle){wasIdle=idl;try{if(parent!==window)parent.postMessage({arcade:'widle',idle:idl},'*');}catch(x){}}
         var b=o.get();if(typeof b!=='number'||!isFinite(b))return;
         var w=wread();
         if(last===null||inactive){
@@ -1248,15 +1256,23 @@ var Live=(function(){
         }
         var d=b-last;
         if(Math.abs(d)>0.004){
-          /* going from broke to a fresh stack is a rebuy (now a bank loan), not a payout */
-          var rebuy=d>=500&&last<5;
+          /* a rebuy button marks itself (window.__suRB = amount): that part is a bank loan, everything else is a bet or a payout.
+             (Guessing from "broke, then +$500" counted all-in wins as loans.) */
+          var rb=0;try{var f=window.__suRB;if(f&&f.t>Date.now()-15000&&d>0){rb=Math.min(f.n,d);window.__suRB=null;}}catch(x){}
           w=(w===null?b-d:w)+d;wwrite(w);last=b;
-          /* daily quests: money going onto the table is a bet, money coming back is a payout */
-          try{if(parent!==window)parent.postMessage(rebuy?{arcade:'rebuy',n:d}:{arcade:'quest',ev:d<0?'bet':'pay',n:Math.abs(d)},'*');}catch(x){}}
-        if(w!==null&&Math.abs(w-b)>0.004&&o.idle()){o.set(w);last=w;}
+          try{if(rb>0&&parent!==window)parent.postMessage({arcade:'rebuy',n:rb},'*');}catch(x){}
+          var rest=d-rb;
+          if(Math.abs(rest)>0.004){
+            if(prev){if(rest<0)pend+=-rest;else{var rf=Math.min(rest,pend);pend-=rf;payOut(rest-rf,lastW);}}
+            else{if(rest<0){if(rr>0.004)endRound();rx+=-rest;qpost('bet',-rest);}else{rr+=rest;rrT=Date.now();}}}}
+        /* round starts: the chips waiting on the table are the wager */
+        if(prev&&!idl){if(pend>0.004){rw+=pend;qpost('bet',pend);}pend=0;}
+        /* round over: extra stakes (doubles, raises, insurance) and the return */
+        if(!prev&&idl)endRound();
+        if(w!==null&&Math.abs(w-b)>0.004&&idl){o.set(w);last=w;}
       }catch(e){}
     }
-    timer=setInterval(tick,600);setTimeout(tick,50);
+    timer=setInterval(tick,150);setTimeout(tick,50);
     addEventListener('storage',function(e){if(e.key===WKEY)tick();});
     addEventListener('message',function(e){if(e.data&&e.data.arcade==='visible')setTimeout(tick,30);});
     return {tick:tick,
@@ -1760,6 +1776,11 @@ var LK=(function(){
     {id:'desert',name:'Desert Turquoise',req:null,pro:1,desc:'Southwestern walnut and turquoise',sl:'#6b3a1f',wr:'#5a3218',wp:'leather',fa:'#6b3a1f',pt:'#2fb3a7',rg:'#2fb3a7',inl:'diamond',ic:'#2fb3a7'},
     {id:'vortex',name:'Vortex X1',req:null,pro:1,desc:'Graphite and electric blue',sl:'#1b1e24',wr:'#101216',wp:'leather',fa:'#1b1e24',pt:'#1e7bff',rg:'#1e7bff',inl:'dots',ic:'#5aa2ff'},
     {id:'heritage',name:'Classic Heritage',req:null,pro:1,desc:'Rosewood and maple',sl:'#7a2e1a',wr:'#4a2f22',wp:'linen',fa:'#7a2e1a',pt:'#f1e3c0',rg:'#f1e3c0',inl:'diamond',ic:'#f1e3c0'},
+    /* Fan-tribute cues (art supplied by the publisher): a nod to the comics, not affiliated with or endorsed by DC or Warner Bros. */
+    {id:'dc_knight',name:'Dark Knight Tribute',req:null,pro:1,trib:1,desc:'Black and gold, a bat on the butt. Fan tribute: not affiliated with or endorsed by DC.',sl:'#111111',wr:'#1a1d24',wp:'leather',fa:'#111111',rg:'#d4a72c',metal:1},
+    {id:'dc_chaos',name:'Chaos Tribute',req:null,pro:1,trib:1,desc:'Purple, green and a grin. Fan tribute: not affiliated with or endorsed by DC.',sl:'#4b1d6b',wr:'#2a0f3d',wp:'leather',fa:'#4b1d6b',rg:'#7bd23a'},
+    {id:'dc_steel',name:'Man of Steel Tribute',req:null,pro:1,trib:1,desc:'Blue, red and a shield. Fan tribute: not affiliated with or endorsed by DC.',sl:'#173a7a',wr:'#0f2450',wp:'leather',fa:'#173a7a',rg:'#d4a72c'},
+    {id:'dc_legends',name:'Legends Tribute',req:null,pro:1,trib:1,desc:'Silver city skyline and the heroes. Fan tribute: not affiliated with or endorsed by DC.',sl:'#9aa0a6',wr:'#1a1a1a',wp:'leather',fa:'#9aa0a6',rg:'#d4a72c',metal:1},
     {id:'mesquite',name:'Mesquite',req:['g',3,'Play 3 games'],sl:'#5a2a17',wr:'#1b1410',wp:'linen',fa:'#7a3a1f',rg:'#d9c49a'},
     {id:'ebony',name:'Ebony Diamond',req:['w',3,'Win 3 games'],sl:'#141414',wr:'#2b2b2b',wp:'leather',fa:'#111111',pt:'#f1ead8',rg:'#cfd4dc',inl:'diamond',ic:'#f1ead8'},
     {id:'turq',name:'Turquoise Trail',req:['w',10,'Win 10 games'],sl:'#3a2516',wr:'#2fb3a7',wp:'linen',fa:'#3a2516',pt:'#2fb3a7',rg:'#d0d6dd',inl:'dots',ic:'#c7f2ee'},
@@ -1821,7 +1842,7 @@ function ballRGB(n,bx,by,bz){
 var CUECV={};
 var CUESC=0.72;/* unlockable cues drawn thinner to match the house cue */
 function cueCanvas(d){
-  if(!d||d.id==='house')return null;var ci=typeof CUEIMG!=='undefined'&&CUEIMG[d.id];if(ci&&ci._ok)return ci;if(CUECV[d.id])return CUECV[d.id];
+  if(!d)return null;var ci=typeof CUEIMG!=='undefined'&&CUEIMG[d.id];if(ci&&ci._ok)return ci;if(d.id==='house')return null;if(CUECV[d.id])return CUECV[d.id];
   var W=958,H=46,c=document.createElement('canvas');c.width=W;c.height=H;var g=c.getContext('2d'),cy=H/2;
   function half(x){/* radius along the cue: 20 at the butt, 15 at the joint, 9 at the tip */return x<566?20-5*(x/566):15-6*((x-566)/(W-566));}
   g.beginPath();g.moveTo(0,cy-half(0));for(var x=0;x<=W;x+=8)g.lineTo(x,cy-half(x));g.lineTo(W,cy-half(W));g.lineTo(W,cy+half(W));for(x=W;x>=0;x-=8)g.lineTo(x,cy+half(x));g.closePath();
@@ -1880,7 +1901,7 @@ var CUEIMG={},BSHEET={};
 function artImg(url,done){var im=new Image();im.crossOrigin='anonymous';im.onload=function(){im._ok=1;if(done)done();};im.src=url;return im;}
 /* the theme's own version first, then the Classic one */
 function artImg2(name,done){var tried=RACKDIR!==POOLART+'pool/',im=artImg(RACKDIR+name,done);im.onerror=function(){if(tried){tried=false;im.src=POOLART+'pool/'+name;}};return im;}
-LK.CUES.forEach(function(c){if(c.id!=='house')CUEIMG[c.id]=artImg2('cue_'+c.id+'.webp',function(){if(typeof renderLocker==='function'&&!$('locker').classList.contains('hide'))renderLocker();});});
+LK.CUES.forEach(function(c){CUEIMG[c.id]=artImg2('cue_'+c.id+'.webp',function(){if(typeof renderLocker==='function'&&!$('locker').classList.contains('hide'))renderLocker();});});
 LK.BALLS.forEach(function(b){if(b.id!=='classic'){var im=BSHEET[b.id]=artImg2('balls_'+b.id+'.webp',function(){texPrep(im);if(typeof spriteGen!=='undefined')spriteGen++;});}});
 /* the painted sheet as a texture: each ball is a straight-on picture of its face, wrapped onto the front and back halves of the sphere */
 function texPrep(im){try{var w=im.naturalWidth,h=im.naturalHeight;if(w<2048||h<128)return;var k=document.createElement('canvas');k.width=w;k.height=h;var g=k.getContext('2d');g.drawImage(im,0,0);
@@ -1993,7 +2014,7 @@ function draw(t){
     ctx.save();ctx.translate(cue.x,cue.y);ctx.rotate(VIEW.a);
     ctx.globalAlpha=VIEW.stroke?1-Math.max(0,strokeF-0.6)*2.5:1;
     ctx.fillStyle='rgba(0,0,0,0.3)';ctx.beginPath();ctx.moveTo(-R-pull+3,4);ctx.lineTo(-R-pull-CL+3,4+CT*0.4);ctx.lineTo(-R-pull-CL+3,4-CT*0.4+CT*0.2);ctx.closePath();ctx.fill();
-    var shp=G.players[VIEW.who>=0?VIEW.who:G.turn],myCue=shp&&shp.kind==='me'?cueCanvas(LK.cue()):(skOf(shp)&&skOf(shp).c?cueCanvas(skOf(shp).c):null);
+    var shp=G.players[VIEW.who>=0?VIEW.who:G.turn],myCue=shp&&shp.kind==='me'?cueCanvas(LK.cue()):(skOf(shp)&&skOf(shp).c?cueCanvas(skOf(shp).c):cueCanvas(LK.CUES[0]));
   var wantB=(skOf(shp)&&skOf(shp).b)||LK.balls();if(BSK&&BSK.id!==wantB.id)applyBallSkin(wantB);   /* your cue is yours; the regulars shoot the house cue */
     if(myCue){var cth=CT*CUESC;ctx.drawImage(myCue,-R-pull-CL,-cth/2,CL,cth);}else if(cueOk)ctx.drawImage(cueImg,-R-pull-CL,-CT/2,CL,CT);else{ctx.fillStyle='#d6b98a';ctx.fillRect(-R-pull-CL,-3,CL,6);}
     ctx.restore();ctx.globalAlpha=1;
@@ -2396,7 +2417,7 @@ bindSeg('optGuide',function(v){opt.guide=v;});
 bindSeg('optTalk',function(v){opt.talk=v==='1';});
 bindSeg('optSound',function(v){opt.sound=v==='1';});
 $('goBtn').addEventListener('click',function(){unlock();startSolo();});
-$('refill').addEventListener('click',function(){bank=1000;renderSetup();});
+$('refill').addEventListener('click',function(){window.__suRB={n:1000-bank,t:Date.now()};bank=1000;renderSetup();});
 
 /* ================= cue rack (locker) ================= */
 function recordLocker(w,mine){

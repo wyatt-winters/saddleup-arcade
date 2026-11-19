@@ -694,11 +694,19 @@ var Live=(function(){
   function wwrite(a){try{localStorage.setItem(WKEY,JSON.stringify({amt:Math.round(a*100)/100,t:Date.now()}));}catch(e){}}
   function wallet(o){
     var last=null,inactive=false,timer=0,wasIdle=null;
+    /* quests + loan repayment get real bets and real payouts, worked out per round:
+       chips put down between rounds wait in pend (taking them back is a refund, not a payout);
+       when the round starts they become the wager; money coming back during the round is its return,
+       reported once when the round ends, and only when it's more than was staked */
+    var pend=0,rw=0,rx=0,rr=0,lastW=0,rrT=0;
+    function endRound(){var tw=rw+rx;payOut(rr,tw);lastW=tw;rw=0;rx=0;rr=0;}
+    function qpost(ev,n){if(!(n>0.004))return;try{if(parent!==window)parent.postMessage({arcade:'quest',ev:ev,n:Math.round(n*100)/100},'*');}catch(x){}}
+    function payOut(ret,wag){/* a payout is money back beyond the stake: pushes, surrenders and part-returns aren't wins */if(ret>0.004&&ret>wag+0.004)qpost('pay',ret);}
     function tick(){
       try{
         if(o.active&&!o.active()){inactive=true;return;}
         /* tell the arcade when money is in play, so it never offers a loan in the middle of a hand */
-        var idl=!!o.idle();if(idl!==wasIdle){wasIdle=idl;try{if(parent!==window)parent.postMessage({arcade:'widle',idle:idl},'*');}catch(x){}}
+        var idl=!!o.idle(),prev=wasIdle===null?idl:wasIdle;if(idl!==wasIdle){wasIdle=idl;try{if(parent!==window)parent.postMessage({arcade:'widle',idle:idl},'*');}catch(x){}}
         var b=o.get();if(typeof b!=='number'||!isFinite(b))return;
         var w=wread();
         if(last===null||inactive){
@@ -708,15 +716,23 @@ var Live=(function(){
         }
         var d=b-last;
         if(Math.abs(d)>0.004){
-          /* going from broke to a fresh stack is a rebuy (now a bank loan), not a payout */
-          var rebuy=d>=500&&last<5;
+          /* a rebuy button marks itself (window.__suRB = amount): that part is a bank loan, everything else is a bet or a payout.
+             (Guessing from "broke, then +$500" counted all-in wins as loans.) */
+          var rb=0;try{var f=window.__suRB;if(f&&f.t>Date.now()-15000&&d>0){rb=Math.min(f.n,d);window.__suRB=null;}}catch(x){}
           w=(w===null?b-d:w)+d;wwrite(w);last=b;
-          /* daily quests: money going onto the table is a bet, money coming back is a payout */
-          try{if(parent!==window)parent.postMessage(rebuy?{arcade:'rebuy',n:d}:{arcade:'quest',ev:d<0?'bet':'pay',n:Math.abs(d)},'*');}catch(x){}}
-        if(w!==null&&Math.abs(w-b)>0.004&&o.idle()){o.set(w);last=w;}
+          try{if(rb>0&&parent!==window)parent.postMessage({arcade:'rebuy',n:rb},'*');}catch(x){}
+          var rest=d-rb;
+          if(Math.abs(rest)>0.004){
+            if(prev){if(rest<0)pend+=-rest;else{var rf=Math.min(rest,pend);pend-=rf;payOut(rest-rf,lastW);}}
+            else{if(rest<0){if(rr>0.004)endRound();rx+=-rest;qpost('bet',-rest);}else{rr+=rest;rrT=Date.now();}}}}
+        /* round starts: the chips waiting on the table are the wager */
+        if(prev&&!idl){if(pend>0.004){rw+=pend;qpost('bet',pend);}pend=0;}
+        /* round over: extra stakes (doubles, raises, insurance) and the return */
+        if(!prev&&idl)endRound();
+        if(w!==null&&Math.abs(w-b)>0.004&&idl){o.set(w);last=w;}
       }catch(e){}
     }
-    timer=setInterval(tick,600);setTimeout(tick,50);
+    timer=setInterval(tick,150);setTimeout(tick,50);
     addEventListener('storage',function(e){if(e.key===WKEY)tick();});
     addEventListener('message',function(e){if(e.data&&e.data.arcade==='visible')setTimeout(tick,30);});
     return {tick:tick,
