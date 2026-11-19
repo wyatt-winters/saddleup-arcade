@@ -183,7 +183,9 @@ h1 span{display:block;color:var(--green)}
 .banner{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%) scale(.6);opacity:0;z-index:20;pointer-events:none;text-align:center;font:400 clamp(26px,7cqw,56px) Rye,Georgia,serif;color:#fde68a;text-shadow:0 0 18px rgba(253,230,138,.9),0 4px 0 #7c2d12;white-space:nowrap;transition:transform .35s cubic-bezier(.2,.9,.3,1.4),opacity .3s}
 .banner.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
 .banner small{display:block;font:800 clamp(12px,2.6cqw,18px) Inter,sans-serif;color:#fff;letter-spacing:.08em;text-shadow:0 2px 6px #000}
-.leds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.leds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.led b.r{color:#f87171}
+@media (max-width:420px){.leds{gap:5px}.led{padding:5px 3px}.led em{font-size:8px;letter-spacing:.08em}}
 .led{text-align:center;padding:6px;border-radius:10px;background:#050505;border:1px solid #3b2a14}
 .led em{display:block;font-style:normal;font-size:9px;font-weight:900;letter-spacing:.14em;color:#f5d58a}
 .led b{font:900 clamp(15px,3.4cqw,22px) ui-monospace,Menlo,monospace;color:#fde68a;white-space:nowrap}
@@ -558,7 +560,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
       <svg class="lines" id="lines"></svg>
       <div class="banner" id="banner"></div>
     </div>
-    <div class="leds"><div class="led"><em>WIN</em><b id="lWin">$0</b></div><div class="led"><em>TOTAL BET</em><b id="lBet">$25</b></div><div class="led"><em>BANKROLL</em><b class="g" id="lBank">$1,000</b></div></div>
+    <div class="leds"><div class="led"><em>WIN</em><b id="lWin">$0</b></div><div class="led"><em>TOTAL BET</em><b id="lBet">$25</b></div><div class="led"><em>SESSION</em><b id="lNet" title="What you've won or lost on the Stagecoach since you sat down">$0</b></div><div class="led"><em>BANKROLL</em><b class="g" id="lBank">$1,000</b></div></div>
     <div class="ctl">
       <button class="btn" type="button" id="bInfo" aria-label="How to play">i</button>
       <div class="betbox"><button type="button" id="bDn" aria-label="Lower bet">&minus;</button><span><em>TOTAL BET</em><b id="betV">$25</b></span><button type="button" id="bUp" aria-label="Raise bet">+</button></div>
@@ -1238,12 +1240,12 @@ function giftHTML(x){var b=bet();
   var g=x.kind==='green';return '<div class="sy gift'+(g?' green':'')+'"><img alt="" src="'+(g?A.green:A.gold)+'"><span class="val">'+(x.jp!==undefined?E.JPN[x.jp]:money(x.v*b))+'</span></div>';}
 /* ---------- state ---------- */
 var BETS=[25,50,100,250,500,1000,2500,5000,10000,25000,50000,100000],ROWS=3,MAXR=T.maxRows;
-var st={bank:1000,betI:0,busy:false,auto:false,won:0,spins:0};
+var st={bank:1000,betI:0,busy:false,auto:false,won:0,spins:0,net:0};/* net: spins only, so loans and gifts never count as winnings */
 try{var wa=Live.walletAmount();if(typeof wa==='number'&&isFinite(wa)&&wa>=0)st.bank=wa;}catch(e){}
 try{var pb=+localStorage.getItem('su_coach_bet');if(pb>=0&&pb<BETS.length)st.betI=pb;}catch(e){}
 try{Live.wallet({get:function(){return st.bank;},set:function(x){st.bank=x;hud();},idle:function(){return !st.busy;},active:function(){return true;}});}catch(e){}
 function bet(){return BETS[st.betI];}
-function hud(){$('lBank').textContent=money(st.bank);$('lBet').textContent=money(bet());$('betV').textContent=money(bet());
+function hud(){$('lBank').textContent=money(st.bank);var nE=$('lNet');if(nE){var n=Math.round(st.net*100)/100;nE.textContent=(n>0?'+':n<0?'\u2212':'')+money(Math.abs(n));nE.className=n>0?'g':n<0?'r':'';}$('lBet').textContent=money(bet());$('betV').textContent=money(bet());
   $('jps').innerHTML=E.JPN.map(function(n,i){return '<div class="jp j'+i+'" id="jp'+i+'"><em>'+n+'</em><b>'+money(T.jp[i][0]*bet())+'</b></div>';}).join('');
   $('bDn').disabled=st.busy||st.betI===0;$('bUp').disabled=st.busy||st.betI===BETS.length-1;$('bSpin').disabled=st.busy&&!st.auto;$('bSpin').textContent=st.auto?'Stop':'Spin';$('bAuto').classList.toggle('on',st.auto);}
 /* ---------- grid ---------- */
@@ -1340,7 +1342,7 @@ async function runBonus(g,res){var b=bet(),R=res.bonus;
 async function spin(){
   if(st.busy)return;var b=bet();
   if(st.bank<b){$('msg').textContent='Not enough in the bankroll for this bet. Lower the bet.';st.auto=false;hud();return;}
-  st.busy=true;ac();st.bank=Math.round((st.bank-b)*100)/100;st.spins++;q('bet');hud();
+  st.busy=true;ac();st.bank=Math.round((st.bank-b)*100)/100;st.net=Math.round((st.net-b)*100)/100;st.spins++;q('bet');hud();
   clearMarks();$('stage').classList.remove('bonus');showRows(3);
   for(var r=0;r<MAXR;r++)for(var c=0;c<5;c++)cells[r][c].classList.remove('locked','inb','et','eb','el','er','lockrow');
   var res=E.spin(),g=res.grid;
@@ -1351,7 +1353,7 @@ async function spin(){
   var bw=0;
   if(res.bonus){if(win>0)await sleep(900);bw=await runBonus(g,res);$('msg').innerHTML='Stagecoach Spins paid <b>'+money(bw)+'</b>';SFX.big();await banner(money(bw),'Stagecoach Spins total',1800);}
   var tot=Math.round((win+bw)*100)/100;
-  if(tot>0){st.bank=Math.round((st.bank+tot)*100)/100;st.won+=tot;q('pay');if(tot>=b*20)q('win');}
+  if(tot>0){st.bank=Math.round((st.bank+tot)*100)/100;st.net=Math.round((st.net+tot)*100)/100;st.won+=tot;q('pay');if(tot>=b*20)q('win');}
   $('lWin').textContent=money(tot);
   if(res.bonus){await sleep(600);$('stage').classList.remove('bonus');showRows(3);for(var r3=0;r3<MAXR;r3++)for(var c3=0;c3<5;c3++)cells[r3][c3].classList.remove('locked','inb','et','eb','el','er','lockrow');for(var c4=0;c4<5;c4++)for(var r4=0;r4<3;r4++)put(c4,r4,symHTML(g[c4][r4]));}
   st.busy=false;hud();
@@ -1379,7 +1381,7 @@ $('bInfo').onclick=help;
 $('bQuests').onclick=function(){try{parent.postMessage({arcade:'nav',to:'quests'},'*');}catch(e){}};
 addEventListener('keydown',function(e){if(e.code==='Space'&&!e.target.closest('input,select,textarea')){e.preventDefault();$('bSpin').click();}});
 buildGrid(3);var g0=E.spin().grid;for(var c0=0;c0<5;c0++)for(var r0=0;r0<3;r0++)put(c0,r0,symHTML(g0[c0][r0]));hud();
-window.__coach_dbg={state:function(){return {bank:st.bank,bet:bet(),busy:st.busy,auto:st.auto,spins:st.spins};},fast:function(v){FAST=!!v;},spin:spin,
+window.__coach_dbg={state:function(){return {bank:st.bank,bet:bet(),busy:st.busy,auto:st.auto,spins:st.spins,net:st.net};},fast:function(v){FAST=!!v;},spin:spin,
   setBank:function(v){st.bank=v;hud();},
   /* play a scripted spin: force(fn) replaces the next engine spin result */
   force:function(fn){var o=E.spin;E.spin=function(){E.spin=o;return fn();};},E:E,help:help};
