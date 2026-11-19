@@ -561,8 +561,8 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 <body>
 <div class="wrap">
   <span class="pill"><i></i>Arcade &#xb7; Daily Wheel</span>
-  <h1>Spin the Lucky Spur.<span>First spin's on the house.</span></h1>
-  <p class="sub">Every day you get <b>one free spin</b>. Want another go? The next spin costs <b>$100</b>, every spin after that <b>doubles</b>. Paid spins <b>never lose money</b>: the worst slice gives your stake back, and the prizes grow with the price. The price resets at midnight. Winnings go straight into your casino bankroll.</p>
+  <h1>Spin the Lucky Spur.<span>First five spins are on the house.</span></h1>
+  <p class="sub">Every day you get <b>five free spins</b>. Want another go? The next spin costs <b>$100</b>, every spin after that <b>doubles</b>. Paid spins <b>never lose money</b>: the worst slice gives your stake back, and the prizes grow with the price. The price resets at midnight. Winnings go straight into your casino bankroll.</p>
   <div id="felt" class="wheelstage">
     <div class="stage">
       <div class="wheelbox pull" id="wbox">
@@ -588,7 +588,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
       <div class="hist" id="hist"></div>
     </div>
   </div>
-  <p class="rules"><b>How it works:</b> one free spin a day, then $100, $200, $400 and so on. On a paid spin every slice is a multiple of what you paid, from 1&#xd7; (your money back, the worst you can do) up to the 100&#xd7; jackpot, and the panel shows your odds. The free spin pays the base prizes, up to the <b>$25,000</b> jackpot. Mystery slots reveal a surprise cash prize. Pull the wheel down or tap Spin.</p>
+  <p class="rules"><b>How it works:</b> five free spins a day, then $100, $200, $400 and so on. Every rebirth makes free-spin prizes 50% bigger. On a paid spin every slice is a multiple of what you paid, from 1&#xd7; (your money back, the worst you can do) up to the 100&#xd7; jackpot, and the panel shows your odds. The free spin pays the base prizes, up to the <b>$25,000</b> jackpot. Mystery slots reveal a surprise cash prize. Pull the wheel down or tap Spin.</p>
 </div>
 <script>
 /* ===== shared playing-card renderer (Saddle Up AI theme) ===== */
@@ -1140,7 +1140,11 @@ var SKEY='su_wheel_day_v1',st;
 function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function load(){try{st=JSON.parse(localStorage.getItem(SKEY)||'null');}catch(e){st=null;}if(!st||st.d!==today())st={d:today(),n:0,won:0,hist:[]};}
 function save(){try{localStorage.setItem(SKEY,JSON.stringify(st));}catch(e){}}
-function costOf(n){return n===0?0:100*Math.pow(2,n-1);}
+var FREE=5;/* five free spins a day, then the paid ladder */
+function costOf(n){return n<FREE?0:100*Math.pow(2,n-FREE);}
+/* rebirth: every rebirth makes free-spin prizes 50% bigger */
+function rbN(){try{var r=JSON.parse(localStorage.getItem('su_rebirth')||'null');return r&&r.n>0?Math.floor(r.n):0;}catch(e){return 0;}}
+function RBM(){return 1+0.5*rbN();}
 /* paid spins: every slice is a multiple of what you paid, never less than 1x (worst case you break even) */
 var PAIDX={100:1,250:1.25,500:1.5,750:2,1000:3,2500:5,5000:10,10000:25,25000:100};
 var PAIDW={100:17.25,250:3.5,500:8/3,750:4.5,1000:1,2500:0.9,5000:0.45,10000:0.12,25000:0.03};
@@ -1223,12 +1227,12 @@ function fanfare(big){var a=ac();if(!a)return;var notes=big?[523,659,784,1047,13
 function ui(){
   $('sBank').textContent=money(bank);$('sWon').textContent=money(st.won);
   var c=costOf(st.n),btn=$('spinBtn');
-  $('cLab').textContent=st.n===0?"Today's spin":'Spin #'+(st.n+1)+' today';
+  $('cLab').textContent=st.n<FREE?'Free spin '+(st.n+1)+' of '+FREE:'Spin #'+(st.n+1)+' today';
   $('cVal').textContent=c===0?'FREE':money(c);$('cVal').classList.toggle('free',c===0);
   btn.classList.toggle('free',c===0);
   btn.textContent=spinning?'Spinning\u2026':c===0?'Spin free':(bank<c?'Not enough chips':'Spin for '+money(c));
   btn.disabled=spinning||bank<c;
-  var lad='';for(var i=0;i<6;i++){var cc=costOf(i);lad+='<i class="'+(i<st.n?'done':i===st.n?'now':'')+'">'+(cc===0?'Free':cc>=1000?'$'+(cc/1000)+'k':'$'+cc)+'</i>';}
+  var lad='';for(var i=Math.max(0,Math.min(st.n-2,FREE-1));i<Math.max(0,Math.min(st.n-2,FREE-1))+6;i++){var cc=costOf(i);lad+='<i class="'+(i<st.n?'done':i===st.n?'now':'')+'">'+(cc===0?'Free '+(i+1):cc>=1000?'$'+(cc/1000)+'k':'$'+cc)+'</i>';}
   $('ladder').innerHTML=lad;
   var h=st.hist.slice(-8).reverse().map(function(x){return '<div><span>Spin #'+x.n+(x.c?' \u00b7 '+money(x.c):' \u00b7 free')+'</span>'+(x.mb||(x.c&&x.v===x.c)?'<b class="mb">Money back</b>':'<b class="'+(x.v-x.c>=2500?'big':'')+'">+'+money(x.v-x.c)+'</b>')+'</div>';}).join('');
   $('hist').innerHTML=h||'<div class="none">No spins yet today</div>';
@@ -1237,12 +1241,12 @@ function ui(){
 }
 /* the slices keep showing what THIS spin pays until the reveal is over; then they switch to the next spin's prizes */
 var lastN=-1;function relabel(){if(spinning||st.n===lastN)return;lastN=st.n;var c=costOf(st.n);
-  SEG.forEach(function(x,i){if(!LBL[i]||x.m)return;var v=c?Math.round(c*PAIDX[x.v]):x.v;var t=(c&&PAIDX[x.v]===1)?'MONEY BACK':c?'+'+short(v-c):short(v);if(x.j){if(LBL2){LBL2.textContent=t;LBL2.setAttribute('font-size',t.length>7?17:t.length>6?19:t.length>5?21:24);}return;}LBL[i].textContent=t;LBL[i].setAttribute('font-size',t==='MONEY BACK'?20:t.length>6?26:t.length>5?30:36);});
-  var pm=$('pmul');if(pm){if(!c)pm.textContent='Free spin: base prizes';else{var o=oddsPaid();pm.innerHTML='Worst case: your '+money(c)+' back<br>Win more than you paid: '+Math.round(o.up*100)+'% \u00b7 5\u00d7 or more: '+(o.big*100).toFixed(1)+'%';}}}
+  SEG.forEach(function(x,i){if(!LBL[i]||x.m)return;var v=c?Math.round(c*PAIDX[x.v]):x.v;if(!c)v=Math.round(v*RBM());var t=(c&&PAIDX[x.v]===1)?'MONEY BACK':c?'+'+short(v-c):short(v);if(x.j){if(LBL2){LBL2.textContent=t;LBL2.setAttribute('font-size',t.length>7?17:t.length>6?19:t.length>5?21:24);}return;}LBL[i].textContent=t;LBL[i].setAttribute('font-size',t==='MONEY BACK'?20:t.length>6?26:t.length>5?30:36);});
+  var pm=$('pmul');if(pm){if(!c)pm.textContent=rbN()?'Free spin: prizes \u00d7'+RBM()+' (rebirth '+rbN()+')':'Free spin: base prizes';else{var o=oddsPaid();pm.innerHTML='Worst case: your '+money(c)+' back<br>Win more than you paid: '+Math.round(o.up*100)+'% \u00b7 5\u00d7 or more: '+(o.big*100).toFixed(1)+'%';}}}
 function countdown(){var n=new Date(),m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1),s=Math.max(0,Math.floor((m-n)/1000));
   if(st.d!==today()){load();ui();}
   var t=String(Math.floor(s/3600)).padStart(2,'0')+':'+String(Math.floor(s%3600/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
-  $('cSub').textContent=st.n===0?'Free spin ready':'Free spin & prices reset in '+t;}
+  $('cSub').textContent=st.n===0?FREE+' free spins ready':st.n<FREE?(FREE-st.n)+' free spin'+(FREE-st.n>1?'s':'')+' left \u00b7 resets in '+t:'Free spins & prices reset in '+t;}
 setInterval(countdown,1000);countdown();
 function msg(t){$('msg').textContent=t||'';}
 /* ---------- spin ---------- */
@@ -1267,6 +1271,7 @@ function done(k,c,spinNo){
   var s=SEG[k],v=s.v,label='You won',pm=pmult(spinNo-1);
   if(c>0){var X=s.m?MYSTX[pickW(MYSTX,function(m){return m[1];})][0]:PAIDX[s.v];v=Math.round(c*X);if(s.m)label='Mystery \u00d7'+X;else if(X===1)label='Money back';}
   else if(s.m){v=MYST[pickW(MYST,function(m){return m[1];})][0];label='Mystery prize';}
+  if(c===0)v=Math.round(v*RBM());
   if(s.j)label='JACKPOT!';
   var mb=c>0&&v===c;
   /* "Won today" counts what you actually won: on a paid spin that's the payout minus what the spin cost; money back adds nothing */

@@ -281,6 +281,8 @@ html.fs #acTxt{display:none!important}
       <button class="tab ctab" type="button" id="tab-bingo" aria-haspopup="menu" aria-expanded="false" title="Bingo Hall games"><img class="gi" alt="" src="https://saddleup-arcade.vercel.app/art/ic_bingo.webp"><span class="lg">Bingo Hall</span><span class="sm">Bingo</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
       <button class="tab ctab qtab" type="button" id="qTop" title="Daily quests: earn trading cards"><img class="gi" alt="" src="https://saddleup-arcade.vercel.app/art/ic_quests.webp"><span class="lg">Daily Quests</span><span class="sm">Quests</span><i id="qTopBd"></i></button>
       <button class="tab ctab qtab" type="button" id="cTop" title="Your trading card collection"><img class="gi" alt="" src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2064%2064%22%3E%3Crect%20x=%228%22%20y=%2212%22%20width=%2230%22%20height=%2242%22%20rx=%224%22%20fill=%22%237f1d1d%22%20stroke=%22%23f2d27e%22%20stroke-width=%223%22%20transform=%22rotate%28-12%2023%2033%29%22/%3E%3Crect%20x=%2224%22%20y=%228%22%20width=%2230%22%20height=%2242%22%20rx=%224%22%20fill=%22%231e293b%22%20stroke=%22%23f2d27e%22%20stroke-width=%223%22/%3E%3Ccircle%20cx=%2239%22%20cy=%2224%22%20r=%227%22%20fill=%22%23fde68a%22/%3E%3Cpath%20d=%22M28%2044c2-8%2020-8%2022%200%22%20fill=%22%23fde68a%22/%3E%3C/svg%3E"><span class="lg">Cards</span><span class="sm">Cards</span><i id="cTopBd"></i></button>
+      <button class="tab ctab qtab" type="button" id="wTop" title="Lucky Spur Wheel: 5 free spins a day"><img class="gi" alt="" src="https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae40047736386d0dc63e712.webp"><span class="lg">Lucky Wheel</span><span class="sm">Wheel</span><i id="wTopBd"></i></button>
+      <button class="tab ctab qtab" type="button" id="rTop" title="Rebirth"><span class="gi rTopB" id="rTopI" aria-hidden="true">🌱</span><span class="lg" id="rTopL">Rebirth</span><span class="sm">Rebirth</span><i id="rTopBd"></i></button>
     </div>
     <button class="fsbtn acbtn" id="acBtn" type="button" aria-haspopup="dialog"><span class="acf" id="acFace">👤</span><span id="acTxt">Save wallet</span></button>
     <button class="fsbtn acbtn bkbtn" id="bkBtn" type="button" aria-haspopup="dialog" title="Bank: loans and sending money"><span class="acf" id="bkFace">🏦</span><span id="bkTxt">Bank</span><i class="bk-dot" id="bkDot" hidden></i></button>
@@ -701,7 +703,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'ece35275ff'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/'https://saddleup-arcade.vercel.app/'/*GBASE*/,GVER=/*GVER*/'293cc4bd17'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}
@@ -948,7 +950,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     else if(d.arcade==='quest'&&d.ev){if(window.__money){if(d.ev==='bet')__money.onBet(k,+d.n||0);else if(d.ev==='pay')__money.onPay(k,+d.n||0);}questEv(k,String(d.ev),+d.n||1);}return;}}});
   /* daily quests: every game reports what you do; the shell keeps the tally */
   var lastWin={};
-  function questEv(g,ev,n){try{if(ev==='win'){var t=Date.now();if(lastWin[g]&&t-lastWin[g]<4000)return;lastWin[g]=t;}try{if(ev==='win'&&window.__suCards)__suCards.win(g);}catch(e){}if(SUQ.record(g,ev,n)){var got=SUQ.autoClaim();try{window.__suCards&&__suCards.quests(got);}catch(e){}questPing();
+  function questEv(g,ev,n){try{if(ev==='win'){var t=Date.now();if(lastWin[g]&&t-lastWin[g]<4000)return;lastWin[g]=t;}try{if(ev==='win'&&window.__suCards)__suCards.win(g);}catch(e){}try{window.__rb&&__rb.ev(g,ev,n);}catch(e){}if(SUQ.record(g,ev,n)){var got=SUQ.autoClaim();try{window.__suCards&&__suCards.quests(got);}catch(e){}questPing();
     if(got.length&&frames[g])got.forEach(function(x,i){setTimeout(function(){post(frames[g],{arcade:'qdone',txt:x.txt,tier:x.tier});},i*2600);});}}catch(e){}}
   try{var got0=SUQ.autoClaim();setTimeout(function(){try{window.__suCards&&__suCards.quests(got0);}catch(e){}},0);}catch(e){}
   function questPing(){for(var k in frames)post(frames[k],{arcade:'quests'});qCount();}
@@ -1182,7 +1184,7 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
      House loans live in su_loans (part of the save). Player gifts and loans go through the arcade_* money functions.
      Anyone who owes money (to the bank or a player) is a ghost. 30% of every win pays loans down, players first. */
   (function(){
-    var RATE=0.30,INT=0.10,CAP=10000,LKEY='su_loans',QKEY='arc_repayq';
+    var RATE=0.30,INT=0.10,CAP=10000*(1+(function(){try{var r=JSON.parse(localStorage.getItem('su_rebirth')||'null');return r&&r.n>0?Math.floor(r.n):0;}catch(e){return 0;}})()),LKEY='su_loans',QKEY='arc_repayq';
     var M={owe:[],lent:[],offers:[],inbox:[],recent:[]},S={},Q={},qT=0,pollT=0,toastT=0,toastAmt=0;
     function r2(x){return Math.round(x*100)/100;}
     function money(n){var neg=n<0,a=Math.abs(r2(n)),t=(a%1?a.toFixed(2):String(a)).replace(/\B(?=(\d{3})+(?!\d))/g,',');
@@ -1340,6 +1342,147 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
     addEventListener('storage',function(e){if(e.key===LKEY||e.key==='su_casino_wallet')paint();});
     setInterval(paint,4000);paint();setTimeout(function(){poll();flush();},2500);
     window.__money={onBet:onBet,onPay:onPay,gameRebuy:gameRebuy,bankLoan:bankLoan,open:open,close:close,poll:poll,debt:debt,ghost:ghost,payDown:payDown,state:function(){return {M:M,L:L(),Q:Q,S:S,debt:debt(),ghost:ghost(),wallet:wget()};}};
+  })();
+
+  /* ===== Rebirth: reach every goal for the next level, then start over with a new title and bigger perks =====
+     Saved in su_rebirth (part of the account save). Counters in "run" restart at every rebirth; cards count for life. */
+  (function(){
+    var KEY='su_rebirth';
+    var TITLES=['Greenhorn','Drifter','Wrangler','Gunslinger','Outlaw','Sheriff','Marshal','Cattle Baron','Gold King','Legend of the West'];
+    var ICONS=['🌱','🎒','🪢','🔫','🏴','⭐','🎖️','🐂','👑','🏆'];
+    /* requirements to EARN rebirth n (index n) */
+    var REQ=[null,
+      {bank:1e6, wins:25, games:6, quests:5, cards:8, spins:5},
+      {bank:1e7, wins:50, games:10,quests:10,cards:12,wager:5e6, pool:2},
+      {bank:1e8, wins:100,games:14,quests:15,cards:15,wager:5e7, spins:15,pool:4},
+      {bank:1e9, wins:150,games:18,quests:20,cards:18,wager:5e8, pool:6},
+      {bank:1e10,wins:200,games:22,quests:30,cards:21,wager:5e9, spins:30,pool:8},
+      {bank:1e11,wins:275,games:25,quests:40,cards:24,wager:5e10,pool:10},
+      {bank:1e12,wins:350,games:28,quests:50,cards:26,wager:5e11,spins:50,pool:12},
+      {bank:1e13,wins:450,games:30,quests:60,cards:28,wager:5e12,pool:15},
+      {bank:1e14,wins:600,games:32,quests:75,cards:28,wager:5e13,spins:75,pool:20}];
+    var START=[1000,5000,10000,25000,50000,100000,250000,500000,1e6,2.5e6];
+    function req(n){if(n<REQ.length)return REQ[n];var k=n-9;return {bank:1e14*Math.pow(10,k),wins:600+100*k,games:32,quests:75+10*k,cards:28,wager:5e13*Math.pow(10,k),spins:75+10*k,pool:20+3*k};}
+    function startOf(n){return n<START.length?START[n]:2.5e6*Math.pow(2,n-9);}
+    function capOf(n){return 10000*(1+n);}
+    function title(n){return n<TITLES.length?TITLES[n]:TITLES[TITLES.length-1]+' '+(n-TITLES.length+2);}
+    function icon(n){return ICONS[Math.min(n,ICONS.length-1)];}
+    function stars(n){return n>0?'★'+n:'';}
+    var LBL={bank:['💰','Bankroll of'],debt:['🏦','No unpaid loans'],wins:['🏅','Win games'],games:['🎮','Play different games'],quests:['📜','Finish daily quests'],cards:['🃏','Collect different trading cards'],wager:['🎲','Wager in total'],spins:['🎡','Spin the Lucky Wheel'],pool:['🎱','Win at Pool']};
+    var ORDER=['bank','debt','wins','games','quests','cards','wager','spins','pool'];
+    var PLAYEV={bet:1,over:1,win:1,spin:1,pay:1,play:1},NOTG={floor:1,parlor:1,quests:1};
+    function rd(){var r=null;try{r=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){}r=r&&typeof r==='object'?r:{};
+      r.n=Math.max(0,Math.floor(+r.n||0));r.run=r.run&&typeof r.run==='object'?r.run:{};var u=r.run;
+      ['w','q','s','p','b'].forEach(function(k){u[k]=+u[k]||0;});u.g=Array.isArray(u.g)?u.g:[];r.hist=Array.isArray(r.hist)?r.hist:[];return r;}
+    function wr(r){try{localStorage.setItem(KEY,JSON.stringify(r));}catch(e){}}
+    function wallet(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');return v&&typeof v.amt==='number'?v.amt:0;}catch(e){return 0;}}
+    function cardsOwned(){try{var s=JSON.parse(localStorage.getItem('su_cards')||'null');if(!s||!s.c)return 0;var n=0;for(var k in s.c)if(s.c[k]&&(s.c[k].n>0||s.c[k].s>0||s.c[k].g>0))n++;return n;}catch(e){return 0;}}
+    function debt(){try{return window.__money?__money.debt():0;}catch(e){return 0;}}
+    function fmt(v){var a=Math.abs(v),U=[[1e45,'Qd'],[1e42,'Td'],[1e39,'Dd'],[1e36,'Ud'],[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M'],[1e3,'K']];
+      for(var i=0;i<U.length;i++)if(a>=U[i][0]){var x=Math.round(a/U[i][0]*10)/10;return '$'+(x%1?x.toFixed(1):String(x))+U[i][1];}return '$'+Math.round(a);}
+    /* where you stand on each goal for the next rebirth */
+    function status(){var r=rd(),n=r.n+1,q=req(n),u=r.run,out=[];
+      ORDER.forEach(function(k){if(k!=='debt'&&q[k]==null)return;var have,need=q[k],txt;
+        if(k==='bank')have=wallet();else if(k==='debt'){have=debt()>0.004?0:1;need=1;}else if(k==='wins')have=u.w;else if(k==='games')have=u.g.length;
+        else if(k==='quests')have=u.q;else if(k==='cards')have=cardsOwned();else if(k==='wager')have=u.b;else if(k==='spins')have=u.s;else have=u.p;
+        var money=k==='bank'||k==='wager';
+        txt=k==='debt'?(have?'Paid up':'You owe '+fmt(debt())):(money?fmt(Math.min(have,need))+' / '+fmt(need):Math.min(have,need)+' / '+need);
+        out.push({k:k,ic:LBL[k][0],lbl:k==='debt'?LBL[k][1]:LBL[k][1]+(money?' '+fmt(need):' ('+need+')'),have:have,need:need,done:have>=need,pct:Math.max(0,Math.min(1,need?have/need:1)),txt:txt});});
+      return {r:r,n:n,list:out,ready:out.every(function(x){return x.done;})};}
+    /* ---- counters: the shell passes every game event here ---- */
+    var dirty=0;
+    function ev(g,e,n){if(!PLAYEV[e]||NOTG[g])return;var r=rd(),u=r.run,ch=0;
+      if(u.g.indexOf(g)<0){u.g.push(g);ch=1;}
+      if(e==='win'){u.w++;ch=1;if(g==='pool')u.p++;}
+      if(e==='spin'){u.s++;ch=1;}
+      if(e==='bet'&&n>1){u.b+=n;ch=1;}
+      if(ch){wr(r);dirty=1;}}
+    function quests(got){var k=(got||[]).filter(function(x){return x.tier!=='v';}).length;if(!k)return;var r=rd();r.run.q+=k;wr(r);dirty=1;}
+    try{if(window.__suCards&&__suCards.quests){var oq=__suCards.quests;__suCards.quests=function(got){try{quests(got);}catch(e){}return oq.apply(this,arguments);};}}catch(e){}
+    /* ---- styles ---- */
+    var css=document.createElement('style');css.textContent=[
+      '#rbOv{position:fixed;inset:0;z-index:9500;background:rgba(5,8,16,.86);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:14px;font-family:Inter,system-ui,sans-serif;color:#e2e8f0}',
+      '#rbOv.on{display:flex}',
+      '#rbOv .rbc{position:relative;width:100%;max-width:560px;max-height:calc(100vh - 28px);overflow:auto;border-radius:18px;padding:20px 18px 18px;background:linear-gradient(180deg,#24120a,#120a06);border:2px solid #c6a75e;box-shadow:inset 0 0 34px rgba(242,210,126,.12),0 20px 50px rgba(0,0,0,.6)}',
+      '#rbOv .rbx{position:absolute;top:10px;right:12px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(242,210,126,.4);background:rgba(0,0,0,.35);color:#f2d27e;font-size:18px;cursor:pointer}',
+      '#rbOv h2{margin:0;font:400 26px Rye,Georgia,serif;color:#f2d27e;text-align:center;letter-spacing:.04em}',
+      '#rbOv .rbnow{display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0 2px;font-weight:800;font-size:15px}',
+      '#rbOv .rbnow .tt{font:400 20px Rye,Georgia,serif;color:#fde68a}',
+      '#rbOv .rbsub{text-align:center;color:#cbd5e1;font-size:13px;line-height:1.5;margin:4px 0 14px}',
+      '#rbOv h3{margin:16px 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#f2d27e}',
+      '#rbOv .rq{display:grid;grid-template-columns:26px 1fr auto;gap:4px 10px;align-items:center;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.04);margin-bottom:6px;border:1px solid rgba(255,255,255,.06)}',
+      '#rbOv .rq.ok{border-color:rgba(52,211,153,.45);background:rgba(16,185,129,.08)}',
+      '#rbOv .rq .ic{font-size:18px;text-align:center;grid-row:span 2}',
+      '#rbOv .rq .l{font-weight:700;font-size:13.5px}',
+      '#rbOv .rq .v{font-weight:800;font-size:12.5px;color:#fde68a;font-variant-numeric:tabular-nums;white-space:nowrap}',
+      '#rbOv .rq.ok .v{color:#6ee7b7}',
+      '#rbOv .rq .bar{grid-column:2 / span 2;height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}',
+      '#rbOv .rq .bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#c6a75e,#fde68a)}',
+      '#rbOv .rq.ok .bar i{background:linear-gradient(90deg,#059669,#6ee7b7)}',
+      '#rbOv .pk{display:grid;grid-template-columns:1fr 1fr;gap:6px}',
+      '#rbOv .pk div{padding:8px 10px;border-radius:10px;background:rgba(242,210,126,.07);border:1px solid rgba(242,210,126,.2);font-size:12.5px;line-height:1.35}',
+      '#rbOv .pk b{display:block;color:#fde68a;font-size:14px}',
+      '#rbOv .lad{display:flex;flex-wrap:wrap;gap:6px}',
+      '#rbOv .lad span{padding:5px 9px;border-radius:100px;font-size:12px;font-weight:700;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#94a3b8}',
+      '#rbOv .lad span.got{color:#fde68a;border-color:rgba(242,210,126,.45);background:rgba(242,210,126,.1)}',
+      '#rbOv .lad span.me{color:#04221a;background:linear-gradient(180deg,#fde68a,#c6a75e);border-color:#fde68a}',
+      '#rbOv .go{width:100%;min-height:52px;margin-top:16px;border:0;border-radius:14px;font:900 17px Inter,sans-serif;color:#2a1a05;background:linear-gradient(180deg,#fde68a,#f2d27e 45%,#b8892c);box-shadow:0 5px 0 #7c5a1e;cursor:pointer}',
+      '#rbOv .go:disabled{filter:grayscale(.8) brightness(.6);cursor:not-allowed;box-shadow:none}',
+      '#rbOv .go.warn{background:linear-gradient(180deg,#fca5a5,#ef4444 50%,#b91c1c);color:#fff;box-shadow:0 5px 0 #7f1d1d}',
+      '#rbOv .note{margin-top:8px;text-align:center;font-size:12px;color:#94a3b8;line-height:1.45}',
+      '#rbOv .boom{text-align:center;padding:24px 6px}#rbOv .boom .big{font-size:64px;line-height:1}#rbOv .boom h2{margin-top:10px}',
+      '.rTopB{font-size:17px;line-height:1;width:22px;text-align:center}',
+      '@media (max-width:430px){#rbOv .pk{grid-template-columns:1fr}}'
+    ].join('\n');document.head.appendChild(css);
+    var ov=document.createElement('div');ov.id='rbOv';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','Rebirth');document.body.appendChild(ov);
+    var confirmAt=0;
+    function perks(n){return '<div><b>'+icon(n)+' '+title(n)+'</b>New title</div>'+
+      '<div><b>'+fmt(startOf(n))+'</b>Starting bankroll (now '+fmt(startOf(n-1))+')</div>'+
+      '<div><b>×'+(1+0.5*n)+' wheel prizes</b>Free Lucky Wheel spins pay more (now ×'+(1+0.5*(n-1))+')</div>'+
+      '<div><b>'+fmt(capOf(n))+' bank limit</b>The bank lends you more (now '+fmt(capOf(n-1))+')</div>'+
+      '<div><b>'+(n+4)+'-card pack</b>A boosted trading card pack</div>'+
+      '<div><b>'+stars(n)+' badge</b>Shown on your Rebirth button</div>';}
+    function render(){var S=status(),r=S.r,n=S.n,h='<button type="button" class="rbx" aria-label="Close">✕</button>';
+      h+='<h2>Rebirth</h2><div class="rbnow"><span style="font-size:26px">'+icon(r.n)+'</span><span class="tt">'+title(r.n)+'</span>'+(r.n?'<span style="color:#f2d27e">'+stars(r.n)+'</span>':'')+'</div>';
+      h+='<div class="rbsub">Hit every goal below, then start over as a <b style="color:#fde68a">'+title(n)+'</b>. Your bankroll resets; your cards, skins, cues, ball sets and quests stay. Win, play and quest counts start fresh after each rebirth.</div>';
+      h+='<h3>Goals for rebirth '+n+'</h3>';
+      S.list.forEach(function(x){h+='<div class="rq'+(x.done?' ok':'')+'"><span class="ic">'+(x.done?'✅':x.ic)+'</span><span class="l">'+x.lbl+'</span><span class="v">'+x.txt+'</span><span class="bar"><i style="width:'+Math.round(x.pct*100)+'%"></i></span></div>';});
+      h+='<h3>What you get</h3><div class="pk">'+perks(n)+'</div>';
+      h+='<h3>Titles</h3><div class="lad">';for(var i=0;i<TITLES.length;i++)h+='<span class="'+(i===r.n?'me':i<r.n?'got':'')+'">'+ICONS[i]+' '+TITLES[i]+'</span>';if(r.n>=TITLES.length)h+='<span class="me">'+icon(r.n)+' '+title(r.n)+'</span>';h+='</div>';
+      var arm=confirmAt&&Date.now()-confirmAt<8000;
+      h+='<button type="button" class="go'+(arm?' warn':'')+'" id="rbGo2"'+(S.ready?'':' disabled')+'>'+(S.ready?(arm?'Tap again: reset my '+fmt(wallet())+' to '+fmt(startOf(n)):'Rebirth as '+title(n)):'Goals left: '+S.list.filter(function(x){return !x.done;}).length)+'</button>';
+      h+='<div class="note">'+(S.ready?'Finish any hand in progress first. Rebirth can’t be undone.':'Keep playing: everything counts from any game.')+'</div>';
+      var old=ov.querySelector('.rbc'),sc=old?old.scrollTop:0;ov.innerHTML='<div class="rbc">'+h+'</div>';ov.querySelector('.rbc').scrollTop=sc;
+      ov.querySelector('.rbx').onclick=close;var g=ov.querySelector('#rbGo2');if(g)g.onclick=go;}
+    function open(){confirmAt=0;render();ov.classList.add('on');}
+    function close(){ov.classList.remove('on');confirmAt=0;}
+    ov.addEventListener('click',function(e){if(e.target===ov)close();});
+    addEventListener('keydown',function(e){if(e.key==='Escape'&&ov.classList.contains('on'))close();});
+    function go(){var S=status();if(!S.ready)return render();
+      var w=WIDLE[active];if(w&&!w.idle){var nt=ov.querySelector('.note');if(nt){nt.textContent='Finish the hand you’re playing first, then rebirth.';nt.style.color='#fca5a5';}return;}
+      if(!confirmAt||Date.now()-confirmAt>8000){confirmAt=Date.now();render();return;}
+      var r=S.r,n=S.n;r.hist.push({n:n,t:Date.now(),from:Math.round(wallet())});r.n=n;r.run={w:0,q:0,s:0,p:0,b:0,g:[]};wr(r);
+      try{localStorage.setItem('su_casino_wallet',JSON.stringify({amt:startOf(n),t:Date.now()}));}catch(e){}
+      try{var c=JSON.parse(localStorage.getItem('su_cards')||'null')||{};c.packs=Array.isArray(c.packs)?c.packs:[];c.packs.push({n:n+4,why:'Rebirth '+n+': you are now a '+title(n),b:1,t:Date.now()});localStorage.setItem('su_cards',JSON.stringify(c));}catch(e){}
+      ov.innerHTML='<div class="rbc"><div class="boom"><div class="big">'+icon(n)+'</div><h2>'+title(n)+'</h2><div class="rbsub">Rebirth '+n+' complete. You start over with '+fmt(startOf(n))+', ×'+(1+0.5*n)+' wheel prizes, a '+fmt(capOf(n))+' bank limit and a '+(n+4)+'-card pack waiting in Cards.</div></div></div>';
+      try{if(window.suBanner)suBanner('Rebirth!',title(n),2600);}catch(e){}
+      var done=function(){setTimeout(function(){location.reload();},2600);};
+      try{var a=window.__acct;if(a&&a.tok&&a.tok()){var p=a.push(true);if(p&&p.then)p.then(done,done);else done();}else done();}catch(e){done();}}
+    /* ---- the top-bar buttons ---- */
+    var rb=document.getElementById('rTop'),wb=document.getElementById('wTop');
+    if(rb)rb.addEventListener('click',function(e){e.stopPropagation();open();});
+    if(wb)wb.addEventListener('click',function(e){e.stopPropagation();show('wheel',true);});
+    var wasReady=null;
+    function paint(){var r=rd();
+      if(rb){var l=document.getElementById('rTopL');if(l)l.textContent=r.n?title(r.n)+' '+stars(r.n):'Rebirth';var ic=document.getElementById('rTopI');if(ic)ic.textContent=icon(r.n);
+        rb.title=r.n?'Rebirth: you are a '+title(r.n)+' ('+r.n+' rebirth'+(r.n>1?'s':'')+')':'Rebirth: start over with a new title and bigger perks';
+        var S=status(),bd=document.getElementById('rTopBd');if(bd){bd.textContent=S.ready?'!':'';bd.classList.toggle('on',S.ready);}
+        if(S.ready&&wasReady===false){try{if(window.suBanner)suBanner('Rebirth ready','Become a '+title(S.n),2600);}catch(e){}}wasReady=S.ready;}
+      if(wb){wb.classList.toggle('on',active==='wheel');var left=5;try{var d=JSON.parse(localStorage.getItem('su_wheel_day_v1')||'null'),t=new Date(),k=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');if(d&&d.d===k)left=Math.max(0,5-(+d.n||0));}catch(e){}
+        var wbd=document.getElementById('wTopBd');if(wbd){wbd.textContent=left?String(left):'';wbd.classList.toggle('on',left>0);wbd.style.background=left?'#10b981':'';}}
+      if(ov.classList.contains('on')&&(dirty||1)){dirty=0;var f=document.activeElement;if(!f||f.id!=='rbGo2'||!confirmAt)render();}}
+    setInterval(paint,3000);setTimeout(paint,600);addEventListener('storage',function(e){if(e.key===KEY||e.key==='su_wheel_day_v1')paint();});
+    window.__rb={ev:ev,quests:quests,open:open,status:status,title:function(){return title(rd().n);},level:function(){return rd().n;},paint:paint};
   })();
 
   if(skin!=='western'&&!ONLY_SKIN)loader(skin,function(done){show(start,false);var f=frames[active];if(f)f.addEventListener('load',function(){setTimeout(done,250);},{once:true});else done();});
