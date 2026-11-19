@@ -2038,6 +2038,59 @@ function spawnMe(near){if(me){removePerson(me);me=null;}var nm=Live.me().name;
   if(near&&near.seats[0]){var s=near.seats[Math.floor(near.seats.length/2)],ay=aisleFor(s,near.y);place(me,s.x,(s.y+ay)/2,180);}
   else{place(me,LAY.door.x,H-40,0);me.atDoor=true;}}
 
+/* ---------- WASD: walk yourself around the floor (arrow keys too). Walk up to a table, the bar, the wheel or a door and press E ---------- */
+var KEYS={},kRaf=0,kLast=0,kNear=null,kHintEl=null,kTold=false;
+function kKey(e){var c=e.code;return c==='KeyW'||c==='ArrowUp'?'w':c==='KeyA'||c==='ArrowLeft'?'a':c==='KeyS'||c==='ArrowDown'?'s':c==='KeyD'||c==='ArrowRight'?'d':null;}
+function kTyping(e){var t=e.target;return !!(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.isContentEditable));}
+function kHeld(){return KEYS.w||KEYS.a||KEYS.s||KEYS.d;}
+function kRects(){var out=[];for(var id in TB){var T=TB[id],b=T.geo.box,sh=.72;
+    out.push({x:T.x+b[0]*T.s+b[2]*T.s*(1-sh)/2,y:T.y+b[1]*T.s+b[3]*T.s*(1-sh)/2,w:b[2]*T.s*sh,h:b[3]*T.s*sh});}
+  if(WHEEL)out.push({x:WHEEL.x-WHEEL.r*.9,y:WHEEL.y-WHEEL.r*.9,w:WHEEL.r*1.8,h:WHEEL.r*1.8});return out;}
+function kBlocked(x,y,R){var top=(LAY.bar?LAY.bar.ty:120)+28;if(x<R||x>W-R||y<top||y>H-R)return true;
+  var rs=kRects();for(var i=0;i<rs.length;i++){var r=rs[i];if(x>r.x-R&&x<r.x+r.w+R&&y>r.y-R&&y<r.y+r.h+R)return true;}return false;}
+/* what's within reach: the closest table, the bar, the wheel, the parlor or the bingo door */
+function kSpots(){var o=[],m=60;
+  for(var id in TB){var T=TB[id],b=T.geo.box;o.push({k:'t',T:T,name:T.kind.name,x0:T.x+b[0]*T.s-m,y0:T.y+b[1]*T.s-m,x1:T.x+(b[0]+b[2])*T.s+m,y1:T.y+(b[1]+b[3])*T.s+m,cx:T.x,cy:T.y});}
+  if(WHEEL)o.push({k:'w',name:'the Lucky Wheel',x0:WHEEL.x-WHEEL.r*1.6,y0:WHEEL.y-WHEEL.r*1.6,x1:WHEEL.x+WHEEL.r*1.6,y1:WHEEL.y+WHEEL.r*1.6,cx:WHEEL.x,cy:WHEEL.y});
+  if(BAR&&LAY.bar)o.push({k:'b',name:'the bar',x0:LAY.bar.x-LAY.bar.w/2,y0:0,x1:LAY.bar.x+LAY.bar.w/2,y1:LAY.bar.ty+80,cx:LAY.bar.x,cy:LAY.bar.ty});
+  if(PARL)o.push({k:'p',name:'the Game Parlor',x0:PARL.x-90,y0:H-130,x1:PARL.x+90,y1:H,cx:PARL.x,cy:H-40});
+  if(LAY.bingo)o.push({k:'g',name:'the Bingo Hall',x0:LAY.bingo.x-LAY.bingo.w/2-40,y0:LAY.bingo.y-LAY.bingo.w-40,x1:LAY.bingo.x+LAY.bingo.w/2+40,y1:LAY.bingo.y+40,cx:LAY.bingo.x,cy:LAY.bingo.y});
+  return o;}
+function kFindNear(){if(!me)return null;var best=null,bd=1e9;kSpots().forEach(function(s){if(me.x>=s.x0&&me.x<=s.x1&&me.y>=s.y0&&me.y<=s.y1){var d=Math.hypot(me.x-s.cx,me.y-s.cy);if(d<bd){bd=d;best=s;}}});return best;}
+function kHint(s){if(!kHintEl){kHintEl=document.createElement('div');kHintEl.id='kHint';
+    kHintEl.style.cssText='position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:60;padding:9px 16px;border-radius:100px;background:rgba(10,15,28,.88);border:1px solid rgba(242,210,126,.5);color:#fde68a;font:800 14px Inter,system-ui,sans-serif;pointer-events:none;box-shadow:0 8px 20px rgba(0,0,0,.4);transition:opacity .2s;opacity:0;white-space:nowrap';
+    document.body.appendChild(kHintEl);}
+  if(s){var verb=s.k==='t'?(s.T.kind.soon?'Look at ':'Play '):s.k==='b'?'Visit ':s.k==='w'?'Spin ':'Enter ';kHintEl.innerHTML='Press <b style="color:#fff;background:#c6a75e;color:#1c1208;border-radius:5px;padding:1px 7px;margin:0 3px">E</b> '+verb+esc(s.name.replace(/^the /,s.k==='b'||s.k==='w'?'the ':''));kHintEl.style.opacity='1';}
+  else kHintEl.style.opacity='0';}
+function kAct(){var s=kNear;if(!s)return;KEYS={};kHint(null);
+  if(s.k==='t')go(s.T);else if(s.k==='w')goWheel();else if(s.k==='b')openBar();else if(s.k==='p')goParlor();
+  else if(s.k==='g'){try{parent.postMessage({arcade:'nav',to:'bingo'},'*');}catch(e){}}}
+function kStep(now){kRaf=0;if(!me||going){kLast=0;return;}var dt=kLast?Math.min(.05,(now-kLast)/1000):0;kLast=now;
+  var vx=(KEYS.d?1:0)-(KEYS.a?1:0),vy=(KEYS.s?1:0)-(KEYS.w?1:0);
+  if(vx||vy){var n=Math.hypot(vx,vy),sp=W*.2,dx=vx/n*sp*dt,dy=vy/n*sp*dt,R=16*PS;
+    var nx=me.x+dx,ny=me.y+dy;if(kBlocked(nx,me.y,R))nx=me.x;if(kBlocked(nx,ny,R))ny=me.y;
+    var na=Math.atan2(vx,-vy)*180/Math.PI,da=((na-me.a+540)%360)-180;me.a+=da*Math.min(1,dt*14);
+    if(nx!==me.x||ny!==me.y){place(me,nx,ny);me.g.classList.add('walking');me.stepD=(me.stepD||0)+Math.hypot(nx-me.x||dx,ny-me.y||dy);if(me.stepD>15*PS){me.stepD=0;me.foot=!me.foot;print(me);}}
+    else place(me,me.x,me.y);
+    /* the camera follows you, zoomed in enough to see where you're going */
+    var cw=Math.min(cam.w,W/1.9),ch=cw*H/W,tx=me.x-cw/2,ty=me.y-ch/2,k=Math.min(1,dt*6);
+    cancelAnimationFrame(camAnim);cam=clampCam({x:cam.x+(tx-cam.x)*k,y:cam.y+(ty-cam.y)*k,w:cam.w+(cw-cam.w)*k,h:cam.h+(ch-cam.h)*k});applyCam();
+    kRaf=requestAnimationFrame(kStep);}
+  else{me.g.classList.remove('walking');kLast=0;}
+  var nn=kFindNear();if(nn!==kNear||(nn&&!kHintEl)){kNear=nn;kHint(nn);}}
+function kStart(){if(going)return;if(!me)spawnMe(null);
+  if(me.seat)stand(me);if(me.path){me.path=null;me.done=null;}me.atDoor=false;me.g.classList.add('show');
+  if(MODE!=='desk'){try{openLobby(false);}catch(e){}}try{closeBar();hidePatron();select(null);}catch(e){}
+  if(!kTold){kTold=true;feed('<b>W A S D</b> to walk · <b>E</b> to sit down at whatever you’re next to','live');}
+  if(!kRaf){kLast=0;kRaf=requestAnimationFrame(kStep);}}
+addEventListener('keydown',function(e){if(kTyping(e)||e.ctrlKey||e.metaKey||e.altKey)return;if(!running)return;var k=kKey(e);
+  if(k){e.preventDefault();if(!KEYS[k]){KEYS[k]=1;kStart();}return;}
+  if((e.code==='KeyE'||(e.key==='Enter'&&kNear&&document.activeElement===document.body))&&kNear&&!going){e.preventDefault();kAct();}});
+addEventListener('keyup',function(e){var k=kKey(e);if(k)KEYS[k]=0;});
+addEventListener('blur',function(){KEYS={};});
+window.__kdbg=function(){return {me:me?[Math.round(me.x),Math.round(me.y),Math.round(me.a)]:null,near:kNear&&kNear.name,going:going,hint:kHintEl&&kHintEl.style.opacity};};
+addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='visible'&&!d.on){KEYS={};kHint(null);}});
+
 /* ---------- build / layout ---------- */
 function build(name){
   stopTimers();cancelAnimationFrame(rafId);awake=false;
