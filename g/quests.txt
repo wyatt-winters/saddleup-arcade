@@ -1051,7 +1051,7 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
    Progress is written by the arcade shell (it hears every game), payouts are trading cards (cards_collect.js). */
 var SUQ=(function(){
   var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','coach'];
-  var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','chess','checkers','pdice','trail','wrangler','ironclads','sudoku','drop4','freecell','survey','pwheel'];
+  var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','chess','checkers','pdice','trail','wrangler','ironclads','sudoku','drop4','freecell','survey','pwheel','showcase'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
   /* quests added later join the rotation from NEWDAY, so a day's picks never change mid-day */
