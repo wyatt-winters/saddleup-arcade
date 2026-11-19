@@ -1775,7 +1775,12 @@ var LK=(function(){
 
 /* ---- ball colours: one function used by the table sprites and the locker previews ---- */
 var BSK=null,BPAL=[],BCREAM=[246,243,230];
-function applyBallSkin(){BSK=LK.balls();var cr=BSK.cr?hexRgb(BSK.cr):[246,243,230];BCREAM=cr;BPAL=[];
+/* live tables: each player's cue and ball set travel with their aim and shots, so you see what your opponent plays with */
+var PSK={};function mySk(){return {c:LK.S.cue,b:LK.S.balls};}
+function findSk(L,id){for(var i=0;i<L.length;i++)if(L[i].id===id)return L[i];return null;}
+function noteSk(from,sk){if(!from||!sk||typeof sk!=='object')return;PSK[from]={c:findSk(LK.CUES,String(sk.c)),b:findSk(LK.BALLS,String(sk.b))};}
+function skOf(p){return p&&p.kind==='remote'&&PSK[p.id]?PSK[p.id]:null;}
+function applyBallSkin(it){BSK=it||LK.balls();var cr=BSK.cr?hexRgb(BSK.cr):[246,243,230];BCREAM=cr;BPAL=[];
   for(var n=0;n<16;n++){var h=BSK.p16?BSK.p16[n]:BSK.pal?BSK.pal[n>8?n-8:n]:ballCol(n);BPAL.push(hexRgb(h));}
   if(typeof spriteGen!=='undefined')spriteGen++;}
 function ballRGB(n,bx,by,bz){
@@ -1967,7 +1972,8 @@ function draw(t){
     ctx.save();ctx.translate(cue.x,cue.y);ctx.rotate(VIEW.a);
     ctx.globalAlpha=VIEW.stroke?1-Math.max(0,strokeF-0.6)*2.5:1;
     ctx.fillStyle='rgba(0,0,0,0.3)';ctx.beginPath();ctx.moveTo(-R-pull+3,4);ctx.lineTo(-R-pull-CL+3,4+CT*0.4);ctx.lineTo(-R-pull-CL+3,4-CT*0.4+CT*0.2);ctx.closePath();ctx.fill();
-    var shp=G.players[VIEW.who>=0?VIEW.who:G.turn],myCue=shp&&shp.kind==='me'?cueCanvas(LK.cue()):null;   /* your cue is yours; the regulars shoot the house cue */
+    var shp=G.players[VIEW.who>=0?VIEW.who:G.turn],myCue=shp&&shp.kind==='me'?cueCanvas(LK.cue()):(skOf(shp)&&skOf(shp).c?cueCanvas(skOf(shp).c):null);
+  var wantB=(skOf(shp)&&skOf(shp).b)||LK.balls();if(BSK&&BSK.id!==wantB.id)applyBallSkin(wantB);   /* your cue is yours; the regulars shoot the house cue */
     if(myCue){var cth=CT*CUESC;ctx.drawImage(myCue,-R-pull-CL,-cth/2,CL,cth);}else if(cueOk)ctx.drawImage(cueImg,-R-pull-CL,-CT/2,CL,CT);else{ctx.fillStyle='#d6b98a';ctx.fillRect(-R-pull-CL,-3,CL,6);}
     ctx.restore();ctx.globalAlpha=1;
   }
@@ -2016,7 +2022,7 @@ function fire(shot,fromRemote){
   var sp=Math.sqrt(shot.vx*shot.vx+shot.vy*shot.vy);
   VIEW.a=Math.atan2(shot.vy,shot.vx);VIEW.strokeP=vToPow(sp);VIEW.stroke=now();VIEW.p=0;
   SFX.cue(VIEW.strokeP);hideSpin();setPow(0);
-  if(G.live&&!fromRemote&&LV.L)LV.L.send('shot',{gid:G.gid,k:G.shotNo,call:G.call,cx:shot.cx,cy:shot.cy,vx:shot.vx,vy:shot.vy,sx:shot.sx||0,sy:shot.sy||0});
+  if(G.live&&!fromRemote&&LV.L)LV.L.send('shot',{sk:mySk(),gid:G.gid,k:G.shotNo,call:G.call,cx:shot.cx,cy:shot.cy,vx:shot.vx,vy:shot.vy,sx:shot.sx||0,sy:shot.sy||0});
   AIM.sx=0;AIM.sy=0;renderSpin();
   hud();
   if(turbo){var S=SIMRUN;S.ev.live=false;for(var k=0;k<MAXSTEPS;k++){if(!step(S))break;}S.ev.live=true;S.ev.pocketed.forEach(function(n){G.pocketOrder.push(n);});finishRun();}
@@ -2510,7 +2516,7 @@ addEventListener('message',function(e){var d=e.data;if(!d||d.arcade!=='visible')
 var LV={L:null,enabled:true,roster:[],peer:null,peerBusy:false,out:null,inc:null,graceT:0,rem:null,aimT:0,chat:null,settled:false,paid:{},wsT:0};
 function liveOn(){return LV.L&&LV.enabled&&LV.L.status==='live'&&!!LV.peer;}
 function gidNew(){return Math.random().toString(36).slice(2,9);}
-function liveLobby(to){if(LV.L&&LV.peer)LV.L.send('lobby',{busy:busy()},to||null);renderSetup();}
+function liveLobby(to){if(LV.L&&LV.peer)LV.L.send('lobby',{busy:busy(),sk:mySk()},to||null);renderSetup();}
 function liveOffer(){
   if(LV.ct){liveOfferCT();return;}
   var box=$('lbox');if(!liveOn()||G.phase!=='setup'&&G.phase!=='over'){box.classList.add('hide');return;}
@@ -2573,7 +2579,7 @@ function buildPlayers(names){var me=LV.L?LV.L.me.id:'',bots=G.bots||[];
     return {name:safeName(names[s])||'Guest',kind:mine?'me':(bot&&G.auth===me&&!G.watch)?'bot':'remote',col:mine?'#10b981':SEATCOL[s],id:id,skill:bot?'normal':undefined,key:bot?'hank':undefined,reg:bot};});}
 var lastAimSend=0,aimQ=0;
 function sendAim(){if(!G.live||!LV.L||!isMyTurn())return;var t=Date.now();if(t-lastAimSend<90){clearTimeout(aimQ);aimQ=setTimeout(sendAim,95);return;}lastAimSend=t;var c=G.balls[0];
-  LV.L.send('aim',{gid:G.gid,k:G.shotNo,call:G.call,a:AIM.a,p:AIM.p,cx:G.bih?c.x:null,cy:G.bih?c.y:null});}
+  LV.L.send('aim',{sk:mySk(),gid:G.gid,k:G.shotNo,call:G.call,a:AIM.a,p:AIM.p,cx:G.bih?c.x:null,cy:G.bih?c.y:null});}
 function peerLeft(){
   if(G.live&&busy()){clearTimeout(LV.graceT);toast('Opponent disconnected \u2026 waiting');
     LV.graceT=setTimeout(function(){if(G.live&&busy()&&!LV.peer){G.phase='over';G.winner=G.mySeat;G.reason='Opponent left the table';endGame();}},15000);}
@@ -2621,7 +2627,7 @@ function bindRoom(L,ct){
   L.on('msg:aim',function(d,from){if(!G.watch)onAim(d,from);});
   L.on('msg:shot',function(d,from){if(!G.watch)onShot(d,from);});
   if(ct){bindCT(L);return;}
-  L.on('msg:lobby',function(d,from){if(!LV.peer||from!==LV.peer.id)return;LV.peerBusy=!!(d&&d.busy);renderSetup();});
+  L.on('msg:lobby',function(d,from){noteSk(from,d&&d.sk);if(!LV.peer||from!==LV.peer.id)return;LV.peerBusy=!!(d&&d.busy);renderSetup();});
   L.on('msg:invite',function(d,from){if(!d||!LV.peer||from!==LV.peer.id)return;if(busy()){L.send('decline',{gid:d.gid,busy:1},from);return;}
     LV.inc={gid:String(d.gid).slice(0,12),mode:d.mode==='9'?'9':'8',stake:Math.min(1e12,Math.max(0,Math.floor(+d.stake)||0))};LV.out=null;SFX.turn();renderSetup();toast(safeName(LV.peer.name)+' challenges you');});
   L.on('msg:cancel',function(d){if(LV.inc&&d&&d.gid===LV.inc.gid){LV.inc=null;renderSetup();}});
@@ -2759,9 +2765,9 @@ function stopWatch(quiet){if(W.ch){W.ch.stop();W.ch=null;}if(!G.watch)return;G.w
     G.balls=rackBalls(opt.mode==='ct'?'8':opt.mode);$('res').classList.add('hide');$('setup').classList.remove('hide');renderSetup();hud();}}
 $('wstop').addEventListener('click',function(){stopWatch();});
 
-function onAim(d,from){if(!d||!G.live||d.gid!==G.gid||d.k!==G.shotNo)return;var p=G.players[G.turn];if(p.kind!=='remote'||p.id!==from)return;
+function onAim(d,from){noteSk(from,d&&d.sk);if(!d||!G.live||d.gid!==G.gid||d.k!==G.shotNo)return;var p=G.players[G.turn];if(p.kind!=='remote'||p.id!==from)return;
   if(needCall()){var cl=Math.round(+d.call);G.call=cl>=0&&cl<=5?cl:-1;}LV.rem={a:+d.a||0,p:clamp(+d.p||0,0,1),cx:d.cx==null?null:+d.cx,cy:d.cy==null?null:+d.cy};}
-function onShot(d,from){if(!d||!G.live||d.gid!==G.gid||d.k!==G.shotNo||G.phase!=='aim')return;var p=G.players[G.turn];if(p.kind!=='remote'||p.id!==from)return;
+function onShot(d,from){noteSk(from,d&&d.sk);if(!d||!G.live||d.gid!==G.gid||d.k!==G.shotNo||G.phase!=='aim')return;var p=G.players[G.turn];if(p.kind!=='remote'||p.id!==from)return;
   var sp=Math.sqrt(d.vx*d.vx+d.vy*d.vy);if(!(sp<=MAXV+1))return;LV.rem=null;
   var cx=+d.cx,cy=+d.cy;if(!G.bih){cx=G.balls[0].x;cy=G.balls[0].y;}
   var cl2=Math.round(+d.call);fire({call:cl2>=0&&cl2<=5?cl2:-1,cx:cx,cy:cy,vx:+d.vx,vy:+d.vy,sx:clamp(+d.sx||0,-1,1),sy:clamp(+d.sy||0,-1,1)},true);}
