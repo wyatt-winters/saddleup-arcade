@@ -1393,7 +1393,7 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 'use strict';
 var $=function(id){return document.getElementById(id);};
 var root=document.documentElement,felt=$('felt'),stage=$('stage'),tbox=$('tbox'),cv=$('cv'),ctx=cv.getContext('2d');
-/* amounts of $1M and up show short (26.9B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.round(n/U[i][0]*10)/10;if(x>=1000&&i>0){i--;x=Math.round(n/U[i][0]*10)/10;}t=x.toFixed(1)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?(e[+-]?\d+)?/,t);}
+/* amounts of $1M and up show short (26.9B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e45,'Qd'],[1e42,'Td'],[1e39,'Dd'],[1e36,'Ud'],[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.round(n/U[i][0]*10)/10;if(x>=1000&&i>0){i--;x=Math.round(n/U[i][0]*10)/10;}t=x.toFixed(1)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.[\d,]+)?(e[+-]?\d+)?/i,t);}
 function money(a,b,c){return __suBig(money0(a,b,c),a);}
 function money0(v){v=Math.round(v*100)/100;return '$'+(v%1?v.toFixed(2):String(v)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -1793,6 +1793,7 @@ function ballRGB(n,bx,by,bz){
 
 /* ---- cues: drawn in code at the same 958x46 shape as the house cue art (butt left, tip right) ---- */
 var CUECV={};
+var CUESC=0.72;/* unlockable cues drawn thinner to match the house cue */
 function cueCanvas(d){
   if(!d||d.id==='house')return null;var ci=typeof CUEIMG!=='undefined'&&CUEIMG[d.id];if(ci&&ci._ok)return ci;if(CUECV[d.id])return CUECV[d.id];
   var W=958,H=46,c=document.createElement('canvas');c.width=W;c.height=H;var g=c.getContext('2d'),cy=H/2;
@@ -1967,7 +1968,7 @@ function draw(t){
     ctx.globalAlpha=VIEW.stroke?1-Math.max(0,strokeF-0.6)*2.5:1;
     ctx.fillStyle='rgba(0,0,0,0.3)';ctx.beginPath();ctx.moveTo(-R-pull+3,4);ctx.lineTo(-R-pull-CL+3,4+CT*0.4);ctx.lineTo(-R-pull-CL+3,4-CT*0.4+CT*0.2);ctx.closePath();ctx.fill();
     var shp=G.players[VIEW.who>=0?VIEW.who:G.turn],myCue=shp&&shp.kind==='me'?cueCanvas(LK.cue()):null;   /* your cue is yours; the regulars shoot the house cue */
-    if(myCue)ctx.drawImage(myCue,-R-pull-CL,-CT/2,CL,CT);else if(cueOk)ctx.drawImage(cueImg,-R-pull-CL,-CT/2,CL,CT);else{ctx.fillStyle='#d6b98a';ctx.fillRect(-R-pull-CL,-3,CL,6);}
+    if(myCue){var cth=CT*CUESC;ctx.drawImage(myCue,-R-pull-CL,-cth/2,CL,cth);}else if(cueOk)ctx.drawImage(cueImg,-R-pull-CL,-CT/2,CL,CT);else{ctx.fillStyle='#d6b98a';ctx.fillRect(-R-pull-CL,-3,CL,6);}
     ctx.restore();ctx.globalAlpha=1;
   }
 }
@@ -2389,7 +2390,7 @@ function renderLkBtn(){var n=LK.unseen();$('lkNew').classList.toggle('hide',!n);
 var LKF={kind:'cue',id:null};
 function cueVertical(it){var W=32,H=472,k=document.createElement('canvas');k.width=W;k.height=H;k.style.width='16px';k.style.height='192px';var g=k.getContext('2d');
   g.translate(W/2,H);g.rotate(-Math.PI/2);var cc=cueCanvas(it);
-  if(cc)g.drawImage(cc,0,-W/2,H,W);else if(cueOk)g.drawImage(cueImg,0,-W/2,H,W);else{g.fillStyle='#d6b98a';g.fillRect(0,-5,H,10);}return k;}
+  if(cc)g.drawImage(cc,0,-W*CUESC/2,H,W*CUESC);else if(cueOk)g.drawImage(cueImg,0,-W/2,H,W);else{g.fillStyle='#d6b98a';g.fillRect(0,-5,H,10);}return k;}
 function trayBalls(it,box){var sh=BSHEET[it.id];
   if(sh&&sh._ok){var pos0=[[1,0,0],[9,-1,1],[2,1,1],[10,-2,2],[8,0,2],[3,2,2]],sz0=20;pos0.forEach(function(p){var k=document.createElement('canvas');k.width=k.height=sz0*2;k.style.width=k.style.height=sz0+'px';
       var g=k.getContext('2d');g.drawImage(sh,p[0]*128+4,4,120,120,0,0,sz0*2,sz0*2);k.style.left=(39-sz0/2+p[1]*10.5)+'px';k.style.top=(6+p[2]*18)+'px';box.appendChild(k);});return;}

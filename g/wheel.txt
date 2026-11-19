@@ -1121,7 +1121,7 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 <script>
 (function(){'use strict';
 var $=function(i){return document.getElementById(i);};
-var UNITS=[[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']];
+var UNITS=[[1e45,'Qd'],[1e42,'Td'],[1e39,'Dd'],[1e36,'Ud'],[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']];
 function unitFmt(a,dig,sig,from){for(var i=from||0;i<UNITS.length;i++){if(a>=UNITS[i][0]||i===from){var x=a/UNITS[i][0],t=Math.round(x*Math.pow(10,dig))/Math.pow(10,dig);if(t>=1000&&i>0)return unitFmt(a,dig,sig,i-1);return t.toFixed(dig)+UNITS[i][1];}}return null;}
 /* a million and up shows as 26.9B / 1.5M so huge numbers stay readable */
 function money(n){n=Math.round(n);var a=Math.abs(n),u=a>=1e6?unitFmt(a,1,false):null;return (n<0?'-$':'$')+(u||a.toLocaleString('en-US'));}

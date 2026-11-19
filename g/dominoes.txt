@@ -1374,7 +1374,7 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
 
 var $=function(id){return document.getElementById(id);};
 var root=document.documentElement,felt=$('felt'),stage=$('stage'),blay=$('blay');
-/* amounts of $1M and up show short (26.9B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.round(n/U[i][0]*10)/10;if(x>=1000&&i>0){i--;x=Math.round(n/U[i][0]*10)/10;}t=x.toFixed(1)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?(e[+-]?\d+)?/,t);}
+/* amounts of $1M and up show short (26.9B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e45,'Qd'],[1e42,'Td'],[1e39,'Dd'],[1e36,'Ud'],[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.round(n/U[i][0]*10)/10;if(x>=1000&&i>0){i--;x=Math.round(n/U[i][0]*10)/10;}t=x.toFixed(1)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.[\d,]+)?(e[+-]?\d+)?/i,t);}
 function money(a,b,c){return __suBig(money0(a,b,c),a);}
 function money0(n){n=Math.round(n);return (n<0?'-$':'$')+String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 function smoney(a,b){return __suBig(smoney0(a,b),a);}

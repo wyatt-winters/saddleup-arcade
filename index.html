@@ -748,7 +748,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   var box=document.getElementById('frames'),frames={},heights={},active=null;
   var SRC={};
   /* games load on demand: each game's page is its own file next to the app (inline copies still work too) */
-  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'47b411a486'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
+  var GBASE=/*GBASE*/''/*GBASE*/,GVER=/*GVER*/'ece35275ff'/*GVER*/,FA_V=/*FA*/null/*FA*/,LIVE_V=/*LIVE*/null/*LIVE*/,PEND={};
   function prepSrc(t){t=t.replace(/<\\u002fscript/g,'<'+'/script');
     try{t=t.split('/*FA*/'+'null/*FA*/').join(JSON.stringify(FA_V).replace(/</g,'\\u003c'));}catch(e){}
     try{t=t.split('/*LIVE*/'+'null/*LIVE*/').join(LIVE_V&&LIVE_V.url?JSON.stringify(LIVE_V).replace(/</g,'\\u003c'):'null');}catch(e){}
@@ -921,7 +921,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   /* ---------- casino dropdown ---------- */
   var CAS={plinko:1,vpoker:1,coach:1,keno:0,floor:1,wheel:1,crash:1,derby:1,pool:1,backgammon:1,bj:1,holdem:1,bacc:1,war:1,craps:1,roul:1,slots:1},cbtn=document.getElementById('tab-casino'),cmenu=document.getElementById('cmenu');
   function placeMenu(){var r=cbtn.getBoundingClientRect(),w=Math.max(220,cmenu.offsetWidth);var left=Math.min(Math.max(8,r.left),innerWidth-w-8);cmenu.style.left=left+'px';cmenu.style.top=Math.round(r.bottom+6)+'px';cmenu.style.setProperty('--cmt',Math.round(r.bottom+6)+'px');}
-  function walletTxt(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');if(v&&typeof v.amt==='number'){var n=Math.round(v.amt*100)/100,a=Math.abs(n),t=(a%1?a.toFixed(2):String(a)).replace(/\B(?=(\d{3})+(?!\d))/g,',');if(a>=1e6){var U=[[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']];for(var i=0;i<U.length;i++)if(a>=U[i][0]){var x=Math.round(a/U[i][0]*10)/10;if(x>=1000&&i>0){i--;x=Math.round(a/U[i][0]*10)/10;}t=x.toFixed(1)+U[i][1];break;}}return 'Casino \u00b7 '+(n<0?'-':'')+'$'+t+' bankroll';}}catch(e){}return 'Casino';}
+  function walletTxt(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');if(v&&typeof v.amt==='number'){var n=Math.round(v.amt*100)/100,a=Math.abs(n),t=(a%1?a.toFixed(2):String(a)).replace(/\B(?=(\d{3})+(?!\d))/g,',');if(a>=1e6){var U=[[1e45,'Qd'],[1e42,'Td'],[1e39,'Dd'],[1e36,'Ud'],[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']];for(var i=0;i<U.length;i++)if(a>=U[i][0]){var x=Math.round(a/U[i][0]*10)/10;if(x>=1000&&i>0){i--;x=Math.round(a/U[i][0]*10)/10;}t=x.toFixed(1)+U[i][1];break;}}return 'Casino \u00b7 '+(n<0?'-':'')+'$'+t+' bankroll';}}catch(e){}return 'Casino';}
   function openMenu(on){if(on)cmenu.querySelector('.chead').textContent=walletTxt();cmenu.classList.toggle('open',on);cbtn.setAttribute('aria-expanded',on?'true':'false');if(on){placeMenu();var c=cmenu.querySelector('.tab.on')||cmenu.querySelector('.tab');if(c)setTimeout(function(){try{c.focus();}catch(e){}},20);}}
   cbtn.addEventListener('click',function(e){e.stopPropagation();openMenu(!cmenu.classList.contains('open'));});
   document.addEventListener('click',function(e){if(cmenu.classList.contains('open')&&!cmenu.contains(e.target)&&e.target!==cbtn)openMenu(false);});
@@ -1116,7 +1116,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     function setMeta(m){ls(META,JSON.stringify(m));}
     function snap(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('su_')===0&&!EXCL[k])o[k]=localStorage.getItem(k);}}catch(e){}return o;}
     function bank(o){try{var v=JSON.parse(o.su_casino_wallet||'null');if(v&&typeof v.amt==='number')return Math.max(0,Math.min(1e8,Math.round(v.amt*100)/100));}catch(e){}return null;}
-    /* amounts of $1M and up show short (26.9B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.round(n/U[i][0]*10)/10;if(x>=1000&&i>0){i--;x=Math.round(n/U[i][0]*10)/10;}t=x.toFixed(1)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.\d+)?(e[+-]?\d+)?/,t);}
+    /* amounts of $1M and up show short (26.9B) so huge bankrolls stay readable */function __suBig(s,n){n=Math.abs(+n);if(!(n>=1e6)||!isFinite(n))return s;var U=[[1e45,'Qd'],[1e42,'Td'],[1e39,'Dd'],[1e36,'Ud'],[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']],t='';for(var i=0;i<U.length;i++)if(n>=U[i][0]){var x=Math.round(n/U[i][0]*10)/10;if(x>=1000&&i>0){i--;x=Math.round(n/U[i][0]*10)/10;}t=x.toFixed(1)+U[i][1];break;}return String(s).replace(/\d[\d,]*(\.[\d,]+)?(e[+-]?\d+)?/i,t);}
 function money(a,b,c){return __suBig(money0(a,b,c),a);}
 function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
     function nm(){return (ls('su_live_name')||'').slice(0,18);}
@@ -1233,7 +1233,7 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
     var M={owe:[],lent:[],offers:[],inbox:[],recent:[]},S={},Q={},qT=0,pollT=0,toastT=0,toastAmt=0;
     function r2(x){return Math.round(x*100)/100;}
     function money(n){var neg=n<0,a=Math.abs(r2(n)),t=(a%1?a.toFixed(2):String(a)).replace(/\B(?=(\d{3})+(?!\d))/g,',');
-      if(a>=1e6){var U=[[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']];for(var i=0;i<U.length;i++)if(a>=U[i][0]){var x=Math.round(a/U[i][0]*10)/10;if(x>=1000&&i>0){i--;x=Math.round(a/U[i][0]*10)/10;}t=x.toFixed(1)+U[i][1];break;}}
+      if(a>=1e6){var U=[[1e45,'Qd'],[1e42,'Td'],[1e39,'Dd'],[1e36,'Ud'],[1e33,'Dc'],[1e30,'No'],[1e27,'Oc'],[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']];for(var i=0;i<U.length;i++)if(a>=U[i][0]){var x=Math.round(a/U[i][0]*10)/10;if(x>=1000&&i>0){i--;x=Math.round(a/U[i][0]*10)/10;}t=x.toFixed(1)+U[i][1];break;}}
       return (neg?'-$':'$')+t;}
     function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
     function L(){try{var o=JSON.parse(localStorage.getItem(LKEY)||'null');if(o&&typeof o==='object')return {bank:+o.bank||0,n:+o.n||0,paid:+o.paid||0};}catch(e){}return {bank:0,n:0,paid:0};}
