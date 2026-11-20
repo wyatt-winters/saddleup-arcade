@@ -1801,6 +1801,7 @@ var LK=(function(){
     {id:'dc_chaos',name:'Chaos Tribute',req:null,pro:1,trib:1,desc:'Purple, green and a grin. Fan tribute: not affiliated with or endorsed by DC.',sl:'#4b1d6b',wr:'#2a0f3d',wp:'leather',fa:'#4b1d6b',rg:'#7bd23a'},
     {id:'dc_steel',name:'Man of Steel Tribute',req:null,pro:1,trib:1,desc:'Blue, red and a shield. Fan tribute: not affiliated with or endorsed by DC.',sl:'#173a7a',wr:'#0f2450',wp:'leather',fa:'#173a7a',rg:'#d4a72c'},
     {id:'dc_legends',name:'Legends Tribute',req:null,pro:1,trib:1,desc:'Silver city skyline and the heroes. Fan tribute: not affiliated with or endorsed by DC.',sl:'#9aa0a6',wr:'#1a1a1a',wp:'leather',fa:'#9aa0a6',rg:'#d4a72c',metal:1},
+    {id:'tr_wasteland',name:'Wasteland Cue',req:null,pro:1,trib:1,desc:"Hazard yellow, chipped paint and a grinning mask. Fan tribute: not affiliated with or endorsed by Gearbox Software or 2K.",sl:'#111111',wr:'#1a1a1a',wp:'leather',fa:'#111111',rg:'#d98a1c'},
     {id:'tr_legends',name:"Legends Alliance Cue",req:null,pro:1,trib:1,desc:"The league painted round the forearm. Fan tribute: not affiliated with or endorsed by DC.",sl:'#111111',wr:'#1a1a1a',wp:'leather',fa:'#111111',rg:'#d4a72c'},
     {id:'tr_vigil',name:"Night Vigil Cue",req:null,pro:1,trib:1,desc:"A moonlit gothic skyline in black and bronze. Fan tribute: not affiliated with or endorsed by DC.",sl:'#111111',wr:'#1a1a1a',wp:'leather',fa:'#111111',rg:'#d4a72c'},
     {id:'tr_tomorrow',name:"Man of Tomorrow Cue",req:null,pro:1,trib:1,desc:"Red, blue and a gold star. Fan tribute: not affiliated with or endorsed by DC.",sl:'#111111',wr:'#1a1a1a',wp:'leather',fa:'#111111',rg:'#d4a72c'},
@@ -1816,6 +1817,7 @@ var LK=(function(){
   ];
   var BALLS=[
     {id:'classic',name:'Classic',req:null},
+    {id:'tr_wasteland',name:'Wasteland Edition',req:null,pro:1,trib:1,desc:"Weathered vault-hunter paint, one manufacturer per ball. Pairs with the Wasteland cue. Fan tribute: not affiliated with or endorsed by Gearbox Software or 2K.",cr:'#f2ecdc',p16:["#f5f0e2", "#ee9902", "#0b5b7c", "#c8180f", "#6c246b", "#ee5303", "#4a6302", "#6e0304", "#bd3a42", "#a67a58", "#043a40", "#62284a", "#ad3e72", "#e46405", "#165b67", "#ac4c04"]},
     {id:'tr_party',name:'Neon Party',req:null,pro:1,glow:0.25,desc:'Arcade-bright lightning, checkers, stars and neon slime.',cr:'#f6f1e6',p16:["#eec19e", "#fbc003", "#0742ce", "#f70884", "#780e8a", "#fb5502", "#b4ef03", "#7f5f2b", "#547e88", "#facc07", "#0835b9", "#f237a0", "#6a09ac", "#fb6b06", "#b2e50a", "#b5044f"]},
     /* Fan-tribute sets (art supplied by the publisher): a nod to the comics, not affiliated with or endorsed by DC or Warner Bros. */
     {id:'tr_heroes',name:"Heroes Tribute",req:null,pro:1,trib:1,desc:"The heroes, one emblem per ball. Pairs with the Dark Knight Tribute cue. Fan tribute: not affiliated with or endorsed by DC.",cr:'#f2ecdc',p16:["#f5f0e2", "#554552", "#794b10", "#552e07", "#8d220c", "#424536", "#777140", "#6b4f4b", "#6e4913", "#9a6316", "#044c8d", "#763e0d", "#5f373a", "#56512d", "#06284e", "#ad4e22"]},
