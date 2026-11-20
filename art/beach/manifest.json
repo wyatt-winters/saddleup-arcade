@@ -601,15 +601,6 @@
      "current": "https://saddleup-arcade.vercel.app/art/table_pdice.webp"
     },
     {
-     "name": "table_pin",
-     "size": [
-      1100,
-      628
-     ],
-     "transparent": true,
-     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9d952d82bd47fc3ab0.webp"
-    },
-    {
      "name": "table_roul",
      "size": [
       1100,
@@ -2827,78 +2818,6 @@
      "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad96c9d5b7168d29fa2d.webp"
     },
     {
-     "name": "pinball_backglass",
-     "size": [
-      1099,
-      839
-     ],
-     "transparent": true,
-     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad96c9d5b7168d29fa61.webp"
-    },
-    {
-     "name": "pinball_barrel",
-     "size": [
-      503,
-      512
-     ],
-     "transparent": true,
-     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9536aa4a07e8755880.webp"
-    },
-    {
-     "name": "pinball_flipper",
-     "size": [
-      512,
-      165
-     ],
-     "transparent": true,
-     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad94736386d0dc764c24.webp"
-    },
-    {
-     "name": "pinball_frame",
-     "size": [
-      550,
-      1100
-     ],
-     "transparent": true,
-     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad9d09f888e023f07960.webp"
-    },
-    {
-     "name": "pinball_playfield",
-     "size": [
-      600,
-      1075
-     ],
-     "transparent": false,
-     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8f09f888e023f07580.webp"
-    },
-    {
-     "name": "pinball_saucer",
-     "size": [
-      506,
-      512
-     ],
-     "transparent": true,
-     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad8fd542268bb4d41428.webp"
-    },
-    {
-     "name": "pinball_sling",
-     "size": [
-      512,
-      504
-     ],
-     "transparent": true,
-     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad953ee2a25c8e0a0007.webp"
-    },
-    {
-     "name": "pinball_target",
-     "size": [
-      497,
-      512
-     ],
-     "transparent": true,
-     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ada19dc70f82b6224c64.webp"
-    },
-    {
      "name": "pl_dynamite",
      "size": [
       128,
@@ -3289,15 +3208,6 @@
      ],
      "transparent": true,
      "current": "https://saddleup-arcade.vercel.app/art/ic_pdice.webp"
-    },
-    {
-     "name": "ic_pinball",
-     "size": [
-      192,
-      188
-     ],
-     "transparent": true,
-     "current": "https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae4ad929dc70f82b62248ce.webp"
     },
     {
      "name": "ic_plinko",
