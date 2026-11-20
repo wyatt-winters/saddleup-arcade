@@ -306,7 +306,13 @@ html.fs .felt.m-port .phud{gap:84px}
 html.fs .felt.m-port{padding:6px 4px}
 html.fs.fsnarrow .wrap{padding:6px 4px!important}
 /* phone landscape: players column left, table centre, power + spin column right */
-.felt.m-short .stage{grid-template-columns:var(--lw) var(--tw) var(--sw);grid-template-rows:auto auto;grid-template-areas:"hud tbox side" "bar tbox side";gap:8px;align-items:start}
+.felt.m-full .stage{grid-template-columns:var(--tw);grid-template-areas:"hud" "tbox" "bar";gap:8px}
+.felt.m-full .side,.m-full .slab{display:none}
+.m-full .pow{position:absolute;right:calc(var(--tw)*0.012);top:24%;height:52%;width:42px;min-height:0;z-index:12;background:rgba(15,23,42,.72)}
+.m-full .sbtn{width:44px;height:44px}.m-full .nud button{width:40px;height:44px}
+.m-full .pc{padding:4px 12px 4px 4px}.m-full .pc.r{padding:4px 4px 4px 12px}.m-full .av{width:44px;height:44px}
+.m-full{padding:6px 12px}
+.m-short .stage{grid-template-columns:var(--lw) var(--tw) var(--sw);grid-template-rows:auto auto;grid-template-areas:"hud tbox side" "bar tbox side";gap:8px;align-items:start}
 .felt.m-short .tbox{align-self:center;grid-row:1 / 3}
 .felt.m-short .side{grid-row:1 / 3;height:var(--th);align-self:center;gap:8px}
 .felt.m-short .phud{flex-direction:column;align-items:stretch;height:auto;gap:5px;padding-left:22px}
@@ -1736,6 +1742,12 @@ function layout(){
   var short=fs&&vh<520&&vw>vh,port,s,lw=0,sw=84;
   if(fs)port=!short&&vw<760&&vh>vw;else port=Math.min(vw,1040)-32<640;
   var mode=short?'short':port?'port':'wide';
+  /* on a landscape screen, put the players, score and buttons beside the table instead of above and below it whenever that makes the table bigger */
+  if(mode==='wide'&&fs&&vw>vh){var sW=Math.min(((vw-24-20)-84-10)/ART_W,(vh-16-16-84-54-20)/ART_H),
+      lw2=Math.round(clamp(vw*0.15,150,200)),sS=Math.min((vw-24-16-lw2-92-16)/ART_W,(vh-12-12-8)/ART_H);
+    /* or: power slider on the table's own right rail, spin and fine aim in the bottom bar, slimmer header: the table takes the full width */
+    var sF=Math.min((vw-24)/ART_W,(vh-12-12-58-54-16)/ART_H);
+    if(sS>sW*1.02&&sS>=sF)mode='short';else if(sF>sW*1.02)mode='full';}
   if(mode==='wide'){
     var hudH=fs?84:64,barH=54,gap=10,availW=(fs?vw-24-20:Math.min(vw,1040)-32-24)-sw-gap;s=availW/ART_W;
     if(fs)s=Math.min(s,(vh-16-16-hudH-barH-2*gap)/ART_H);
@@ -1743,15 +1755,17 @@ function layout(){
   } else if(mode==='port'){
     sw=0;var aw=fs?vw-8-8:Math.min(vw,1040)-32-24;s=aw/ART_H;
     if(fs)s=Math.min(s,(vh-12-12-52-52-12)/ART_W);
+  } else if(mode==='full'){
+    sw=0;s=Math.min((vw-24)/ART_W,(vh-12-12-58-54-16)/ART_H);stage.style.setProperty('--hudh','58px');
   } else {
     lw=Math.round(clamp(vw*0.17,150,190));sw=92;var aw2=vw-24-16-lw-sw-16,ah=vh-12-12-8;s=Math.min(aw2/ART_W,ah/ART_H);
   }
   s=Math.max(0.3,Math.floor(s*1000)/1000);
   var tw=Math.round((port?ART_H:ART_W)*s),th=Math.round((port?ART_W:ART_H)*s);
-  if(mode!==MODE){felt.classList.remove('m-wide','m-port','m-short');felt.classList.add('m-'+mode);
+  if(mode!==MODE){felt.classList.remove('m-wide','m-port','m-short','m-full');felt.classList.add('m-'+mode);
     /* phone portrait: power bar sits on the table's right rail, spin + fine aim go to the thumb dock */
     var pw=$('pow');
-    if(mode==='port'){tbox.appendChild(pw);var bar=$('bar');bar.insertBefore($('nud'),bar.firstChild);bar.insertBefore($('spinBtn'),bar.firstChild);}
+    if(mode==='port'||mode==='full'){tbox.appendChild(pw);var bar=$('bar');bar.insertBefore($('nud'),bar.firstChild);bar.insertBefore($('spinBtn'),bar.firstChild);}
     else{var sd=$('side');sd.insertBefore(pw,sd.firstChild);sd.insertBefore($('spinBtn'),sd.children[2]);sd.insertBefore($('nud'),sd.children[4]);}
     MODE=mode;}
   stage.style.setProperty('--tw',tw+'px');stage.style.setProperty('--th',th+'px');stage.style.setProperty('--sw',sw+'px');stage.style.setProperty('--lw',lw+'px');
