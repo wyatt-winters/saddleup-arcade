@@ -306,7 +306,8 @@ html.fs .felt.m-port .phud{gap:84px}
 html.fs .felt.m-port{padding:6px 4px}
 html.fs.fsnarrow .wrap{padding:6px 4px!important}
 /* phone landscape: players column left, table centre, power + spin column right */
-.felt.m-full .stage{grid-template-columns:var(--tw);grid-template-areas:"hud" "tbox" "bar";gap:8px}
+.felt.sideways::after{content:"Turn your phone upright to play";position:absolute;left:50%;top:6px;transform:translateX(-50%);z-index:30;padding:6px 14px;border-radius:100px;background:rgba(15,23,42,.92);border:1px solid var(--gold);color:var(--gold2);font:800 12px Inter,sans-serif;white-space:nowrap;pointer-events:none}
+.m-full .stage{grid-template-columns:var(--tw);grid-template-areas:"hud" "tbox" "bar";gap:8px}
 .felt.m-full .side,.m-full .slab{display:none}
 .m-full .pow{position:absolute;right:calc(var(--tw)*0.012);top:24%;height:52%;width:42px;min-height:0;z-index:12;background:rgba(15,23,42,.72)}
 .m-full .sbtn{width:44px;height:44px}.m-full .nud button{width:40px;height:44px}
@@ -1741,6 +1742,11 @@ function layout(){
   var fs=root.classList.contains('fs'),vw=innerWidth,vh=fs?(window.__fsvh||innerHeight):innerHeight;
   var short=fs&&vh<520&&vw>vh,port,s,lw=0,sw=84;
   if(fs)port=!short&&vw<760&&vh>vw;else port=Math.min(vw,1040)-32<640;
+  /* phones always get the upright layout, even turned sideways (the sideways layout is cramped); we also ask the browser to stay upright */
+  var phone=false;try{phone=matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<=600;}catch(e){}
+  if(phone){port=true;short=false;
+    try{if(!layout._lk&&screen.orientation&&screen.orientation.lock){layout._lk=1;screen.orientation.lock('portrait').catch(function(){});}}catch(e){}}
+  felt.classList.toggle('sideways',phone&&vw>vh);
   var mode=short?'short':port?'port':'wide';
   /* on a landscape screen, put the players, score and buttons beside the table instead of above and below it whenever that makes the table bigger */
   if(mode==='wide'&&fs&&vw>vh){var sW=Math.min(((vw-24-20)-84-10)/ART_W,(vh-16-16-84-54-20)/ART_H),
