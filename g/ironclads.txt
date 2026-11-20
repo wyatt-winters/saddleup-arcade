@@ -240,7 +240,11 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   function addWN(){if(document.querySelector('.su-wn'))return;var q=document.querySelector('.su-q');if(!q)return;var r=document.createElement('div');r.className='row su-wn';
     r.innerHTML='<button type="button" class="su-navb su-qb su-wnb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13v14H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v8a2 2 0 0 1-2 2"/><path d="M7 9h7M7 13h7M7 16h4"/></svg>What’s New<i></i></button>';
     q.parentNode.insertBefore(r,q.nextSibling);
-    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'whatsnew'},'*');}catch(x){}});wpaint();}
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'whatsnew'},'*');}catch(x){}});wpaint();addRM();}
+  function addRM(){if(document.querySelector('.su-rm'))return;var w=document.querySelector('.su-wn');if(!w)return;var r=document.createElement('div');r.className='row su-rm';
+    r.innerHTML='<button type="button" class="su-navb su-qb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></svg>Roadmap</button>';
+    w.parentNode.insertBefore(r,w.nextSibling);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'roadmap'},'*');}catch(x){}});}
   try{parent.postMessage({arcade:'qask'},'*');}catch(x){}setTimeout(function(){try{parent.postMessage({arcade:'qask'},'*');}catch(x){}},1500);
   addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='qcount'){qn=+d.n||0;wn=+d.news||0;if(!d.self)setTimeout(function(){addWN();wpaint();},0);if(d.self){var q=document.querySelector('.su-q');if(q)q.remove();return;}addQ();qpaint();}});
   function addAcct(){
