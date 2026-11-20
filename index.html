@@ -934,7 +934,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       var id=/\/media\/([0-9a-f]{24})\.webp$/.exec(w);if(id)s=s.split("m('"+id[1]+"')").join(JSON.stringify(n));
       if(P[i][2]&&s.indexOf(n+'","r":')>=0){var parts=s.split(n+'","r":');for(var j=1;j<parts.length;j++)parts[j]=parts[j].replace(/^[0-9.]+/,String(P[i][2]));s=parts.join(n+'","r":');}}
     s=s.replace(/<html\b/i,'<html data-skin="'+(K.base||skin)+'"'+(K.base?' data-season="'+skin+'"':'')+' data-game="'+gid+'"');
-    s=s.replace('</head>','<style id=\'su-app\'>html.fs .wrap{padding:0!important;max-width:none!important}html.fs .felt{border-radius:0!important;border-left-width:0!important;border-right-width:0!important;border-top-width:0!important;border-bottom-width:0!important}</style></head>');if(K.css)s=s.replace('</head>','<style id="su-skin-'+skin+'">'+K.css+'</style></head>');
+    s=s.replace('</head>','<style id=\'su-app\'>html.fs .wrap{padding:0!important;max-width:none!important}@media (min-width:1150px){html:not(.fs) .wrap{max-width:min(1760px,96vw)!important}html[data-game=coach]:not(.fs) .wrap{max-width:min(1250px,96vw)!important}html[data-game=keno]:not(.fs) .wrap{max-width:min(1350px,96vw)!important}}html.fs .felt{border-radius:0!important;border-left-width:0!important;border-right-width:0!important;border-top-width:0!important;border-bottom-width:0!important}</style></head>');if(K.css)s=s.replace('</head>','<style id="su-skin-'+skin+'">'+K.css+'</style></head>');
     return s;
   }
   /* a menu icon whose picture is missing falls back to its built-in drawing every time (the theme swap can re-point it at the missing file) */

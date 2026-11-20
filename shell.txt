@@ -887,6 +887,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       var id=/\/media\/([0-9a-f]{24})\.webp$/.exec(w);if(id)s=s.split("m('"+id[1]+"')").join(JSON.stringify(n));
       if(P[i][2]&&s.indexOf(n+'","r":')>=0){var parts=s.split(n+'","r":');for(var j=1;j<parts.length;j++)parts[j]=parts[j].replace(/^[0-9.]+/,String(P[i][2]));s=parts.join(n+'","r":');}}
     s=s.replace(/<html\b/i,'<html data-skin="'+(K.base||skin)+'"'+(K.base?' data-season="'+skin+'"':'')+' data-game="'+gid+'"');
+    s=s.replace('</head>','<style id=\'su-wide\'>@media (min-width:1150px){html:not(.fs) .wrap{max-width:min(1760px,96vw)!important}html[data-game=coach]:not(.fs) .wrap{max-width:min(1250px,96vw)!important}html[data-game=keno]:not(.fs) .wrap{max-width:min(1350px,96vw)!important}}</style></head>');
     if(K.css)s=s.replace('</head>','<style id="su-skin-'+skin+'">'+K.css+'</style></head>');
     return s;
   }
