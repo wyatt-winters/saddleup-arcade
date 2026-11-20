@@ -202,7 +202,7 @@ button.dg.slot.on:not(:disabled){color:#1a1206}
 .roll .dg i{font:900 clamp(30px,6vw,52px)/1 "Courier New",monospace;font-style:normal;color:#ffcf4a;min-width:.62em;text-align:center;padding:6px 4px;border-radius:6px;background:linear-gradient(#000,#1b0c05 50%,#000);text-shadow:0 0 12px rgba(255,180,40,.9)}
 .roll .dg i.sep{background:none;padding:6px 0;min-width:.35em}
 .roll .dg i.land{animation:land .28s ease-out}@keyframes land{0%{transform:translateY(-30%);filter:brightness(2)}100%{transform:none}}
-.applause{position:absolute;right:12px;top:58px;z-index:38;font:900 12px Inter,system-ui,sans-serif;letter-spacing:.2em;color:#7a3b07;background:#3b1208;border:2px solid #7a3b07;padding:5px 10px;border-radius:6px;opacity:.4;transition:opacity .2s,box-shadow .2s}
+.applause{position:static;margin-left:auto;margin-right:10px;font:900 12px Inter,system-ui,sans-serif;letter-spacing:.2em;color:#7a3b07;background:#3b1208;border:2px solid #7a3b07;padding:5px 10px;border-radius:6px;opacity:.4;transition:opacity .2s,box-shadow .2s}
 .applause.on{background:#ffcf4a;color:#5a1a05;opacity:1;box-shadow:0 0 18px #ffcf4a;animation:apl .35s steps(2) infinite}@keyframes apl{50%{background:#fff3b0}}
 #vStage{position:relative;overflow:hidden}
 #vStage .crt{position:absolute;top:0;bottom:0;width:51%;z-index:30;pointer-events:none;background:repeating-linear-gradient(90deg,#7a0d14 0 14px,#a3151f 14px 26px,#5e0910 26px 34px);box-shadow:inset 0 -30px 40px rgba(0,0,0,.5),0 0 30px rgba(0,0,0,.6);transition:transform 1.1s cubic-bezier(.6,0,.2,1)}
@@ -213,6 +213,44 @@ button.dg.slot.on:not(:disabled){color:#1a1206}
 @keyframes shine{to{background-position:300% 0}}
 .itm.reveal{animation:pop .6s cubic-bezier(.2,1.6,.4,1)}@keyframes pop{0%{transform:scale(.6) rotateY(90deg);opacity:0}100%{transform:none;opacity:1}}
 .pod.win{animation:podw .5s ease-in-out 3}@keyframes podw{50%{transform:translateY(-8px) scale(1.08);filter:brightness(1.4)}}
+
+/* ===== roomy landscape layout (wide screens) ===== */
+@media (min-width:900px){
+  .wrap{max-width:min(1500px,96vw);padding:20px 24px 28px}
+  #felt{padding:26px 34px 34px;min-height:min(78vh,760px);display:flex;flex-direction:column;gap:18px}
+  .host{padding:14px 22px;min-height:72px}.host b{font-size:20px}.host span{font-size:15px}
+  .hostimg{width:78px;height:78px}
+  .scores{gap:12px}.who{min-width:110px;padding:7px 16px;font-size:15px}
+  .v{gap:28px;flex:1;justify-content:center}
+  /* Bidders' Row: the prize centre stage, podiums spread wide below */
+  #vRow{gap:34px}
+  .bidItem .itm{padding:22px 40px 24px;gap:10px;flex-direction:column;text-align:center}
+  .bidItem .em3.pr3{width:220px;height:220px}
+  .bidItem .itm b{font-size:24px}.bidItem .itm .pr{font-size:30px}
+  .bidRow{gap:clamp(18px,3vw,48px);width:100%;justify-content:space-evenly}
+  .bidRow .pod{min-width:170px;padding:14px 22px 16px;flex-direction:column;gap:6px}
+  .bidRow .pod em{font-size:14px;letter-spacing:.14em}.bidRow .pod b{font-size:30px}
+  .bidbox input{width:240px;padding:14px 18px;font-size:19px}.bidbox .go{padding:14px 30px;font-size:17px}
+  /* pricing games get the full stage */
+  #vStage{gap:18px;padding:10px 0}
+  #vStage h2{font-size:clamp(30px,3.4vw,46px)}#vStage .how{font-size:16px;max-width:760px;text-align:center}
+  .gprop{max-height:170px}
+  .gArea{gap:22px;max-width:1200px}
+  .gArea .itm{padding:16px 26px}.gArea .em3.pr3{width:140px;height:140px}
+  /* Big Wheel: wheel on the left, contestants stacked on the right */
+  .wheelWrap{gap:clamp(30px,6vw,90px);flex-wrap:nowrap}
+  #bigwheel{width:300px!important;height:450px!important}
+  .wRow{display:flex;flex-direction:column;gap:16px}.wRow .pod{min-width:240px;padding:14px 22px}.wRow .pod b{font-size:26px}
+  .wBtns{gap:18px}.wBtns .go{padding:14px 34px;font-size:18px}
+  /* the Showcase: the two packages side by side, full width */
+  .scBody{gap:34px;flex-wrap:wrap}
+  .pkg{flex:1 1 420px;max-width:620px;padding:20px 22px;gap:12px}
+  .pkg h3{font-size:24px}
+  .pkg .itm{padding:10px 16px}.pkg .em3.pr3{width:90px;height:90px}
+  #scAct{flex-basis:100%;display:flex;justify-content:center;gap:18px}
+  .door{max-width:640px;gap:20px;padding:40px 10px}.sclogo{width:min(760px,92%)}
+  #vEnd h2{font-size:clamp(34px,4vw,54px)}.endP{font-size:18px}
+}
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
 html.fs,html.fs body{height:100%;overflow:hidden!important}
@@ -571,10 +609,10 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   <h1>Come on down, partner!<span>Saddle Up Showcase.</span></h1>
   <p class="sub">A full pricing game show, and the only way in is a <b>rebirth</b>: every rebirth earns <b>one entry</b>. Bid from Bidders&rsquo; Row, play <b>pricing games</b> on stage, spin the <b>Big Wheel</b> and bid on a <b>Showcase</b>. <b>10%</b> of every prize&rsquo;s retail value goes into your casino bankroll.</p>
   <div id="felt">
-    <div class="top" data-optbtn><span class="ttl">Saddle Up Showcase</span><span class="paidw">Bankroll: <b id="paid">$0.00</b></span></div>
+    <div class="top" data-optbtn><span class="ttl">Saddle Up Showcase</span><span class="applause" id="aplSign">APPLAUSE</span><span class="paidw">Bankroll: <b id="paid">$0.00</b></span></div>
     <div class="host" id="host"></div>
     <div class="scores" id="scores"></div>
-    <div class="flash" id="flash"></div><div class="applause" id="aplSign">APPLAUSE</div>
+    <div class="flash" id="flash"></div>
 
     <section id="vGate" class="v">
       <div class="door">
