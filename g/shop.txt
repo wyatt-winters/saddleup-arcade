@@ -38,7 +38,7 @@ h1 span{display:block;color:var(--green)}
 .kface{flex:0 0 auto;width:58px;height:58px;border-radius:50%;border:3px solid var(--trim);background:center 8%/cover no-repeat url('https://saddleup-arcade.vercel.app/art/cast/chuck_portrait.webp'),#1a0f08;box-shadow:0 4px 10px rgba(0,0,0,.5)}
 .kline{background:var(--card);color:var(--ink);border-radius:14px;padding:10px 14px;font-size:14.5px;line-height:1.45;position:relative;border:1px solid rgba(255,255,255,.12)}
 .kline:before{content:"";position:absolute;left:-8px;top:18px;border:8px solid transparent;border-right-color:var(--card);border-left:0}
-.shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1.8vw,22px);padding:20px 16px 26px;border-radius:14px;
+.shelf{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(10px,1.8vw,22px);padding:20px 16px 26px;border-radius:14px;
   background:linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.05) 70%,transparent),linear-gradient(0deg,var(--wood2) 0 18px,var(--wood) 18px 26px,transparent 26px);box-shadow:inset 0 -26px 0 -8px rgba(0,0,0,.25)}
 .slot{display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--card);color:var(--ink);border-radius:16px;padding:14px 12px 14px;border:1px solid rgba(255,255,255,.12);box-shadow:0 10px 22px rgba(0,0,0,.45)}
 .slot.sold{opacity:.55}
@@ -67,8 +67,9 @@ h1 span{display:block;color:var(--green)}
 .flash{position:absolute;left:50%;top:14px;transform:translateX(-50%) translateY(-8px);z-index:20;background:#065f46;color:#ecfdf5;border:1px solid #34d399;border-radius:100px;padding:8px 18px;font-weight:800;font-size:14px;opacity:0;pointer-events:none;transition:.25s}
 .flash.on{opacity:1;transform:translateX(-50%)}.flash.bad{background:#7f1d1d;border-color:#f87171;color:#fee2e2}
 .fly{position:fixed;z-index:50;width:60px;aspect-ratio:2/3;background:center/100% 100% no-repeat;pointer-events:none;transition:transform .8s cubic-bezier(.5,-.3,.5,1),opacity .8s}
-@media (max-width:820px){.shelf{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:1180px){.shelf{grid-template-columns:repeat(3,1fr)}}@media (max-width:820px){.shelf{grid-template-columns:repeat(2,1fr)}}
 @media (min-width:1150px){#felt{min-height:min(80vh,760px);padding:24px 30px 30px}.pk{width:min(160px,80%)}}
+.slot.bin .pk{filter:sepia(.7) saturate(.6) brightness(.9);position:relative}.slot.bin .stamp{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-14deg);padding:4px 10px;border:3px solid #b91c1c;color:#b91c1c;background:rgba(255,245,220,.85);font:900 15px/1 Georgia,serif;letter-spacing:.12em;border-radius:6px;filter:none}.stock.inf{color:#34d399!important}
 </style>
 
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
@@ -450,7 +451,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     </div>
     <div class="flash" id="flash"></div>
   </div>
-  <p class="rules"><b>How it works:</b> four kinds of packs, from a 1-card Single to the 5-card Bounty Pack. Every day at midnight the shelves restock with a random number of each, the same for everyone in the saloon. Pick how many you want with the slider or the buttons (up to what&rsquo;s left on the shelf) and buy them all at once. Prices grow with your rebirth level. Bought packs go straight into your Cards, ready to open.</p>
+  <p class="rules"><b>How it works:</b> the <b>Bargain Bin</b> never runs out, so buy as many as you like, but its cards are almost always common (silver about 1 in 25, gold 1 in 200, holographic 1 in 2,000). The four real packs, from the 1-card Single to the 5-card Bounty Pack, have far better odds but limited stock: every day at midnight the shelves restock with a random number of each, the same for everyone in the saloon. Rarity matters: a silver copy is worth 3 collection points, gold 7 and holographic 21, and your best rarity of a regular multiplies their daily table bonus up to ×10. Prices grow with your rebirth level. Bought packs go straight into your Cards, ready to open.</p>
 </div>
 
 <script>
@@ -476,7 +477,8 @@ function fmt(v){var a=Math.abs(v),U=[[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']]
 function wget(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');if(v&&typeof v.amt==='number')return v.amt;localStorage.setItem('su_casino_wallet',JSON.stringify({amt:1000,t:Date.now()}));return 1000;}catch(e){return 0;}}
 function wset(a){try{localStorage.setItem('su_casino_wallet',JSON.stringify({amt:Math.round(a*100)/100,t:Date.now()}));}catch(e){}}
 /* the four packs: card count, base price at rebirth 0, and the daily stock range */
-var PACKS=[{n:1,name:'Single',base:250,lo:6,hi:24},{n:2,name:'Duo Pack',base:450,lo:4,hi:14},{n:3,name:'Trio Pack',base:650,lo:2,hi:9},{n:5,name:'Bounty Pack',base:1000,lo:0,hi:4}];
+var PACKS=[{id:9,n:1,name:'Bargain Bin',base:150,inf:1,nerf:1},{id:1,n:1,name:'Single',base:250,lo:6,hi:24},{id:2,n:2,name:'Duo Pack',base:450,lo:4,hi:14},{id:3,n:3,name:'Trio Pack',base:650,lo:2,hi:9},{id:5,n:5,name:'Bounty Pack',base:1000,lo:0,hi:4}];
+var MAXQ=999;
 function price(p){return Math.round(p.base*startOf(rbN())/1000);}
 /* the day's stock: the same for everyone, picked from the date */
 function dayKey(){var t=new Date();return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');}
@@ -485,30 +487,32 @@ function stockFor(p,day){var r=(hash(day+'|'+p.n+'|saddleup-shop')%100000)/10000
 var KEY='su_shop_v1';
 function rd(){var d=dayKey(),s=null;try{s=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){}if(!s||s.d!==d)s={d:d,b:{}};return s;}
 function wr(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
-function left(p){var s=rd();return Math.max(0,stockFor(p,s.d)-(+s.b[p.n]||0));}
+function left(p){if(p.inf)return Infinity;var s=rd();return Math.max(0,stockFor(p,s.d)-(+s.b[p.id]||0));}
+/* how many you could take home right now: the shelf, the bankroll and a sane cap */
+function cap(p){var L=left(p),a=Math.floor(wget()/price(p));return Math.max(1,Math.min(MAXQ,L,a||1));}
 /* pack art for the theme you're in */
 function packArt(n){var sk=document.documentElement.getAttribute('data-season')||'';return 'https://saddleup-arcade.vercel.app/art/packs/'+(sk==='goofy'?'goofy_':'')+'pack_'+n+'.webp';}
 var QTY={};
-var LINES=['Fresh stock came in this morning. Take a look, partner.','Packs go fast around here. When a shelf is empty, it’s empty till tomorrow.','Feeling lucky? The Bounty Packs hide the shiniest cards.','Every pack you buy waits in your Cards until you open it.'];
+var LINES=['Fresh stock came in this morning. Take a look, partner.','Packs go fast around here. When a shelf is empty, it’s empty till tomorrow.','Feeling lucky? The Bounty Packs hide the shiniest cards.','Every pack you buy waits in your Cards until you open it.','The Bargain Bin never runs dry, but don’t expect much shine in there.'];
 function say(t){$('kline').textContent=t;}
 function flash(t,bad){var f=$('flash');f.textContent=t;f.className='flash'+(bad?' bad':'');void f.offsetWidth;f.classList.add('on');clearTimeout(f._t);f._t=setTimeout(function(){f.classList.remove('on');},2400);}
 function owned(){try{var c=JSON.parse(localStorage.getItem('su_cards')||'null');return c&&Array.isArray(c.packs)?c.packs.length:0;}catch(e){return 0;}}
 function restockText(){var t=new Date(),m=new Date(t.getFullYear(),t.getMonth(),t.getDate()+1),ms=m-t,h=Math.floor(ms/3600000),mm=Math.floor(ms%3600000/60000);return 'Restocks in '+h+'h '+mm+'m';}
 function render(){var bank=wget();$('bank').textContent=fmt(bank);$('restock').textContent=restockText();
   var n=owned();$('owned').innerHTML=n?'You have <b>'+n+'</b> unopened pack'+(n===1?'':'s')+' in your Cards.':'No unopened packs yet.';$('openCards').disabled=!n;$('openCards').innerHTML='Open packs'+(n?' <span style="display:inline-block;min-width:20px;padding:1px 6px;margin-left:4px;border-radius:999px;background:#7f1d1d;color:#fff;font-size:12px;font-weight:800;line-height:18px">'+n+'</span>':'');
-  $('shelf').innerHTML=PACKS.map(function(p){var L=left(p),pr=price(p),q=Math.max(L?1:0,Math.min(QTY[p.n]||1,L)),cost=q*pr,afford=Math.floor(bank/pr);QTY[p.n]=q;
-    return '<div class="slot'+(L?'':' sold')+'" data-n="'+p.n+'"><div class="pk" style="background-image:url('+packArt(p.n)+')"></div><h3>'+p.name+'</h3><div class="ct">'+p.n+' card'+(p.n>1?'s':'')+' per pack</div>'+
-      '<div class="price">'+fmt(pr)+'</div><div class="stock'+(L===0?' out':L<=2?' lo':'')+'">'+(L?L+' in stock':'Sold out today')+'</div>'+
-      (L?'<div class="qty"><button type="button" data-a="-">−</button><input type="range" min="1" max="'+L+'" value="'+q+'" aria-label="How many"><button type="button" data-a="+">+</button><b>'+q+'</b></div>'+
-      '<div class="qq">'+[1,5,10].filter(function(x){return x<L;}).map(function(x){return '<button type="button" data-q="'+x+'">'+x+'</button>';}).join('')+'<button type="button" data-q="'+L+'">All '+L+'</button></div>'+
+  $('shelf').innerHTML=PACKS.map(function(p){var L=left(p),pr=price(p),afford=Math.floor(bank/pr),M=p.inf?Math.max(1,Math.min(MAXQ,afford)):L,q=Math.max(L?1:0,Math.min(QTY[p.id]||1,M)),cost=q*pr;QTY[p.id]=q;
+    return '<div class="slot'+(L?'':' sold')+(p.nerf?' bin':'')+'" data-n="'+p.id+'"><div class="pk" style="background-image:url('+packArt(p.n)+')">'+(p.nerf?'<span class="stamp">BARGAIN</span>':'')+'</div><h3>'+p.name+'</h3><div class="ct">'+(p.nerf?'1 card · rare pulls are very rare':p.n+' card'+(p.n>1?'s':'')+' per pack')+'</div>'+
+      '<div class="price">'+fmt(pr)+'</div><div class="stock'+(L===0?' out':L<=2?' lo':'')+(p.inf?' inf':'')+'">'+(p.inf?'Always in stock':L?L+' in stock':'Sold out today')+'</div>'+
+      (L?'<div class="qty"><button type="button" data-a="-">−</button><input type="range" min="1" max="'+M+'" value="'+q+'" aria-label="How many"><button type="button" data-a="+">+</button><b>'+q+'</b></div>'+
+      '<div class="qq">'+(p.inf?[1,10,50,100]:[1,5,10]).filter(function(x){return x<M;}).map(function(x){return '<button type="button" data-q="'+x+'">'+x+'</button>';}).join('')+'<button type="button" data-q="'+M+'">'+(p.inf?'Max '+M:'All '+L)+'</button></div>'+
       '<button type="button" class="go" data-buy="1"'+(afford<1?' disabled':'')+'>Buy '+q+' for '+fmt(cost)+'</button>':'<button type="button" class="go" disabled>Back tomorrow</button>')+'</div>';}).join('');}
-function setQ(n,q){var p=PACKS.filter(function(x){return x.n===n;})[0],L=left(p);QTY[n]=Math.max(1,Math.min(L,q));render();}
-function buy(n){var p=PACKS.filter(function(x){return x.n===n;})[0],L=left(p),q=Math.min(QTY[n]||1,L),pr=price(p),cost=q*pr,bank=wget();
+function setQ(n,q){var p=PACKS.filter(function(x){return x.id===n;})[0];QTY[n]=Math.max(1,Math.min(p.inf?cap(p):left(p),q));render();}
+function buy(n){var p=PACKS.filter(function(x){return x.id===n;})[0],L=left(p),q=Math.min(QTY[n]||1,L,MAXQ),pr=price(p),cost=q*pr,bank=wget();
   if(!L){flash('Sold out for today',true);return;}
   if(cost>bank+0.004){var can=Math.floor(bank/pr);if(can<1){flash('Not enough in your bankroll',true);say('Come back when your pockets are a little heavier, partner.');return;}
     QTY[n]=can;render();flash('You can afford '+can+'. Tap Buy again.',true);return;}
-  wset(bank-cost);var s=rd();s.b[n]=(+s.b[n]||0)+q;wr(s);
-  try{var c=JSON.parse(localStorage.getItem('su_cards')||'null')||{};c.packs=Array.isArray(c.packs)?c.packs:[];for(var i=0;i<q;i++)c.packs.push({n:p.n,why:'Bought at the Card Shop: '+p.name,b:0,t:Date.now()});localStorage.setItem('su_cards',JSON.stringify(c));}catch(e){}
+  wset(bank-cost);if(!p.inf){var s=rd();s.b[n]=(+s.b[n]||0)+q;wr(s);}
+  try{var c=JSON.parse(localStorage.getItem('su_cards')||'null')||{};c.packs=Array.isArray(c.packs)?c.packs:[];for(var i=0;i<q;i++)c.packs.push(p.nerf?{n:1,why:'Bargain Bin pick',b:-1,nf:1,t:Date.now()}:{n:p.n,why:'Bought at the Card Shop: '+p.name,b:0,t:Date.now()});localStorage.setItem('su_cards',JSON.stringify(c));}catch(e){}
   try{parent.postMessage({arcade:'cardsChanged'},'*');}catch(e){}
   var el=document.querySelector('.slot[data-n="'+n+'"] .pk'),to=$('openCards');
   if(el&&to){var a=el.getBoundingClientRect(),b=to.getBoundingClientRect();for(var k=0;k<Math.min(q,6);k++)(function(k){var f=document.createElement('div');f.className='fly';f.style.backgroundImage='url('+packArt(n)+')';f.style.left=(a.left+a.width/2-30)+'px';f.style.top=(a.top+20)+'px';document.body.appendChild(f);
