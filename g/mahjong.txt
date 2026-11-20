@@ -750,7 +750,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
 (function(){
-  var LIST=/*SKINLIST*/[["anime", "Classic"], ["xmas", "Christmas"], ["beach", "Beach"], ["comic", "Comic"], ["wasteland", "Wasteland"], ["vegas", "Showgirl"], ["pirate", "Pirate"], ["goofy", "Goofy"], ["real", "Hyper-Real"]]/*SKINLIST*/;
+  var LIST=/*SKINLIST*/[["anime", "Classic"], ["xmas", "Christmas"], ["beach", "Beach"], ["comic", "Comic"], ["wasteland", "Wasteland"], ["vegas", "Showgirl"], ["pirate", "Pirate"], ["goofy", "Goofy"], ["real", "Hyper-Real"], ["badlands", "Badlands"]]/*SKINLIST*/;
   if(LIST.length<2)return;
   var cur=document.documentElement.getAttribute('data-season')||document.documentElement.getAttribute('data-skin')||'western';
   /* a styled dropdown: the list opens over the page and always fits the part of the screen you can see; the secret Showgirl theme stays out until it's unlocked */

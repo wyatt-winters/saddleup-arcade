@@ -641,7 +641,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 
 /* art skin control (Western plus every extra skin) in every game's Options: the shell rebuilds the games with the chosen art */
 (function(){
-  var LIST=/*SKINLIST*/[["anime", "Classic"], ["xmas", "Christmas"], ["beach", "Beach"], ["comic", "Comic"], ["wasteland", "Wasteland"], ["vegas", "Showgirl"], ["pirate", "Pirate"], ["goofy", "Goofy"], ["real", "Hyper-Real"]]/*SKINLIST*/;
+  var LIST=/*SKINLIST*/[["anime", "Classic"], ["xmas", "Christmas"], ["beach", "Beach"], ["comic", "Comic"], ["wasteland", "Wasteland"], ["vegas", "Showgirl"], ["pirate", "Pirate"], ["goofy", "Goofy"], ["real", "Hyper-Real"], ["badlands", "Badlands"]]/*SKINLIST*/;
   if(LIST.length<2)return;
   var cur=document.documentElement.getAttribute('data-season')||document.documentElement.getAttribute('data-skin')||'western';
   /* a styled dropdown: the list opens over the page and always fits the part of the screen you can see; the secret Showgirl theme stays out until it's unlocked */
@@ -1396,6 +1396,7 @@ SKIN_ART.pirate={L:1100,A:596,colL:131,colR:603.5,pw:61.8,pwR:56.7,colLT:128,pwT
 SKIN_ART.vegas={L:1100,A:596,colL:175,colR:604,pw:58.2,pwR:53.8,colLT:194,pwT:55.2,colRT:603,pwRT:52.2,y0:86,y1:476,barX:515,barW:50,
     trayX:935,trayW:62,trayTop:[92,268],trayBot:[300,476],cubeX:74,cubeY:[150,290,430],halfL:[146,497],halfR:[577,893],cd:46,cap:4,cube:38,die:40};
 /* Christmas, Goofy and Hyper-Real boards use the Classic board's point layout */
+SKIN_ART.badlands={L:1100,A:596,colL:134,colR:604,pw:62.8,pwR:57,y0:76,y1:488,barX:535,barW:50,trayX:985,trayW:70,trayTop:[80,280],trayBot:[300,490],cubeX:60,cubeY:[150,298,446],halfL:[100,495],halfR:[570,920],cd:48,cap:4,cube:38,die:40};
 ['xmas','goofy','real'].forEach(function(k){if(!SKIN_ART[k])SKIN_ART[k]=Object.assign({},SKIN_ART.anime);});
 (function(){var se=document.documentElement.getAttribute('data-season')||'',sk=document.documentElement.getAttribute('data-skin')||'';
   if(SKIN_ART[se])ART=SKIN_ART[se];else if(SKIN_ART[sk])ART=SKIN_ART[sk];})();
