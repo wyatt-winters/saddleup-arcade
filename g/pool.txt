@@ -2070,12 +2070,13 @@ function drawSprite(n){
       var e1=w2s(-M[2]*sx2,-M[5]*sx2),e2=w2s(M[1],M[4]),cp=w2s(qx,qy),k2=rr*0.40/29;
       c1.save();c1.setTransform(e1.x*k2,e1.y*k2,e2.x*k2,e2.y*k2,ctr+cp.x*rr,ctr+cp.y*rr);c1.drawImage(dc,-30,-30,60,60);c1.restore();}
     c1.setTransform(1,0,0,1,0,0);lightLayer(c1,sz);c.save();c.globalCompositeOperation='source-atop';c.drawImage(lay2,0,0);c.restore();}
-  if(n>0&&DS){var lay=DLAY.c||(DLAY.c=document.createElement('canvas'));if(lay.width!==sz){lay.width=sz;lay.height=sz;}var c0=c;c=lay.getContext('2d');c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,sz,sz);
+  /* every set gets its number spot drawn in code, so a theme's ball art can never leave the numbers off */
+  if(n>0&&!TX){var lay=DLAY.c||(DLAY.c=document.createElement('canvas'));if(lay.width!==sz){lay.width=sz;lay.height=sz;}var c0=c;c=lay.getContext('2d');c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,sz,sz);
     for(var sg2=1;sg2>=-1;sg2-=2){var pz=M[8]*sg2;if(pz<0.12)continue;var px=M[2]*sg2,py=M[5]*sg2;
       var ex=w2s(M[0]*sg2,M[3]*sg2),ey=w2s(M[1],M[4]),cpos=w2s(px,py),k=rr*0.47/29;
       c.save();
       c.setTransform(ex.x*k,ex.y*k,ey.x*k,ey.y*k,ctr+cpos.x*rr,ctr+cpos.y*rr);
-      c.beginPath();c.arc(0,0,28,0,Math.PI*2);c.clip();var dk=(DS.naturalWidth||2048)/2048;c.drawImage(DS,(n*128+34)*dk,34*dk,60*dk,60*dk,-30,-30,60,60);c.restore();}
+      c.beginPath();c.arc(0,0,28,0,Math.PI*2);c.clip();c.drawImage(numDisc(n),-30,-30,60,60);c.restore();}
     c.setTransform(1,0,0,1,0,0);lightLayer(c,sz);c=c0;c.save();c.globalCompositeOperation='source-atop';c.drawImage(lay,0,0);c.restore();}
   /* light: two table lamps overhead (a key light top-left, a softer one top-right), the felt bouncing green from below,
      a Fresnel rim, contact darkening, and the set's material (gloss, metal, glass, gem facets, glow) */
