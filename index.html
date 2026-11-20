@@ -1592,6 +1592,7 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
       '#rbOv .pk{display:grid;grid-template-columns:1fr 1fr;gap:6px}',
       '#rbOv .pk div{padding:8px 10px;border-radius:10px;background:rgba(242,210,126,.07);border:1px solid rgba(242,210,126,.2);font-size:12.5px;line-height:1.35}',
       '#rbOv .pk b{display:block;color:#fde68a;font-size:14px}',
+      '#rbOv .pk.now div{background:rgba(16,185,129,.09);border-color:rgba(52,211,153,.35)}','#rbOv .pk.now b{color:#6ee7b7}',
       '#rbOv .lad{display:flex;flex-wrap:wrap;gap:6px}',
       '#rbOv .lad span{padding:5px 9px;border-radius:100px;font-size:12px;font-weight:700;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#94a3b8}',
       '#rbOv .lad span.got{color:#fde68a;border-color:rgba(242,210,126,.45);background:rgba(242,210,126,.1)}',
@@ -1606,6 +1607,14 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
     ].join('\n');document.head.appendChild(css);
     var ov=document.createElement('div');ov.id='rbOv';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','Rebirth');document.body.appendChild(ov);
     var confirmAt=0,openWhy={};
+    /* what you have right now, at the rebirth level you're on */
+    function buffsNow(n){var sc=0;try{var r=rd();sc=Math.max(0,n-Math.floor(+r.scUsed||0));}catch(e){}
+      return '<div><b>'+icon(n)+' '+title(n)+(n?' '+stars(n):'')+'</b>'+(n?'Rebirth level '+n:'No rebirths yet')+'</div>'+
+      '<div><b>'+fmt(startOf(n))+'</b>Starting bankroll after a reset</div>'+
+      '<div><b>×'+(1+0.5*n)+' wheel prizes</b>Free Lucky Wheel spins pay '+(n?(1+0.5*n)+' times the base prize':'the base prize')+'</div>'+
+      '<div><b>'+fmt(capOf(n))+' bank limit</b>The most the bank will lend you</div>'+
+      '<div><b>×'+(1+n)+' Dollar Guy gifts</b>His paid-forward and kindness gifts are '+(n?(1+n)+' times bigger':'at their base size')+'</div>'+
+      '<div><b>'+sc+' Showcase entr'+(sc===1?'y':'ies')+'</b>'+(n?'Unused trips to the Saddle Up Showcase':'Your first rebirth earns one')+'</div>';}
     function perks(n){return '<div><b>'+icon(n)+' '+title(n)+'</b>New title</div>'+
       '<div><b>'+fmt(startOf(n))+'</b>Starting bankroll (now '+fmt(startOf(n-1))+')</div>'+
       '<div><b>×'+(1+0.5*n)+' wheel prizes</b>Free Lucky Wheel spins pay more (now ×'+(1+0.5*(n-1))+')</div>'+
@@ -1616,9 +1625,10 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
     function render(){var S=status(),r=S.r,n=S.n,h='<button type="button" class="rbx" aria-label="Close">✕</button>';
       h+='<h2>Rebirth</h2><div class="rbnow"><span style="font-size:26px">'+icon(r.n)+'</span><span class="tt">'+title(r.n)+'</span>'+(r.n?'<span style="color:#f2d27e">'+stars(r.n)+'</span>':'')+'</div>';
       h+='<div class="rbsub">Hit every goal below, then start over as a <b style="color:#fde68a">'+title(n)+'</b>. Your bankroll resets; your cards, skins, cues, ball sets and quests stay. Win, play and quest counts start fresh after each rebirth.</div>';
+      h+='<h3>Your buffs now</h3><div class="pk now">'+buffsNow(r.n)+'</div>';
       h+='<h3>Goals for rebirth '+n+'</h3>';
       S.list.forEach(function(x){h+='<div class="rq'+(x.done?' ok':'')+(openWhy[x.k]?' why':'')+'" data-k="'+x.k+'" tabindex="0" title="'+WHY[x.k].replace(/"/g,'&quot;')+'"><span class="ic">'+(x.done?'✅':x.ic)+'</span><span class="l">'+x.lbl+' <i class="qi" aria-hidden="true">?</i></span><span class="v">'+x.txt+'</span><span class="bar"><i style="width:'+Math.round(x.pct*100)+'%"></i></span><span class="wy">'+WHY[x.k]+'</span></div>';});
-      h+='<h3>What you get</h3><div class="pk">'+perks(n)+'</div>';
+      h+='<h3>What rebirth '+n+' gives you</h3><div class="pk">'+perks(n)+'</div>';
       h+='<h3>Titles</h3><div class="lad">';for(var i=0;i<TITLES.length;i++)h+='<span class="'+(i===r.n?'me':i<r.n?'got':'')+'">'+ICONS[i]+' '+TITLES[i]+'</span>';if(r.n>=TITLES.length)h+='<span class="me">'+icon(r.n)+' '+title(r.n)+'</span>';h+='</div>';
       var arm=confirmAt&&Date.now()-confirmAt<8000;
       h+='<button type="button" class="go'+(arm?' warn':'')+'" id="rbGo2"'+(S.ready?'':' disabled')+'>'+(S.ready?(arm?'Tap again: reset my '+fmt(wallet())+' to '+fmt(startOf(n)):'Rebirth as '+title(n)):'Goals left: '+S.list.filter(function(x){return !x.done;}).length)+'</button>';
