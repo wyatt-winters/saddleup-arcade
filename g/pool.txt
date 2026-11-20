@@ -1465,18 +1465,20 @@ var ART_W=848,ART_H=416;
 var SKIN_TBL={anime:[-2.67,-9.53,853.1,435.1],beach:[-51.85,-25.91,944.7,488.5],comic:[-20.92,-1.30,884.8,430.8],pirate:[-2.73,-10.46,854.0,436.2],wasteland:[-17.7,6.24,884.8,411.5]};   /* wasteland: noses (91,65)-(1006,490) */   /* pirate: noses (75,83)-(1023,484) */   /* beach: 1100x566 art, noses (125,92)-(982,450) */
 var NEON_TBL=SKIN_TBL[document.documentElement.getAttribute('data-season')||'']||SKIN_TBL[document.documentElement.getAttribute('data-skin')||'']||null;
 var PF={x0:55.5,y0:53.5,x1:791.5,y1:362.5};          /* cushion noses */
-var R=9,D2=2*R;
+/* balls are drawn a third larger than regulation for a bigger, clearer table; pockets and jaws grow with them */
+var R=12,D2=2*R;
 var HEAD_X=230.5,FOOT={x:616.5,y:208},HEAD={x:165,y:208};
-var POCKETS=[{x:48.8,y:48.2,r:17},{x:423.7,y:35.6,r:17},{x:799.3,y:47.5,r:17},{x:47.8,y:367.5,r:17},{x:423.7,y:380.3,r:17},{x:799.3,y:367.7,r:17}];
+var POCKETS=[{x:48.8,y:48.2,r:22},{x:423.7,y:35.6,r:21},{x:799.3,y:47.5,r:22},{x:47.8,y:367.5,r:22},{x:423.7,y:380.3,r:21},{x:799.3,y:367.7,r:22}];
 /* where a shot should be aimed to drop in each pocket (a little inside the jaws) */
 POCKETS.forEach(function(p,i){var side=i===1||i===4;var tx=side?p.x:p.x+(p.x<ART_W/2?9:-9),ty=side?p.y+(p.y<200?14:-14):p.y+(p.y<200?9:-9);p.ax=tx;p.ay=ty;p.side=side;});
 var SEGS=[];
 function sg(ax,ay,bx,by){var dx=bx-ax,dy=by-ay;SEGS.push({ax:ax,ay:ay,dx:dx,dy:dy,l2:dx*dx+dy*dy});}
 (function(){var T=PF.y0,B=PF.y1,L=PF.x0,Rr=PF.x1;
-  sg(68,40,85,T);sg(85,T,400.5,T);sg(400.5,T,402,40);sg(446,40,447,T);sg(447,T,763,T);sg(763,T,780,40);
-  sg(66,376,83,B);sg(83,B,400.5,B);sg(400.5,B,402,376);sg(446,376,447,B);sg(447,B,766,B);sg(766,B,783,376);
-  sg(41,70,L,81);sg(L,81,L,335);sg(L,335,41,347);
-  sg(806,70,Rr,81);sg(Rr,81,Rr,336);sg(Rr,336,806,347);})();
+  /* corner jaws opened up for the bigger balls (mouth about two balls wide) */
+  sg(73,40,90,T);sg(90,T,398.5,T);sg(398.5,T,400,40);sg(448,40,449,T);sg(449,T,758,T);sg(758,T,775,40);
+  sg(71,376,88,B);sg(88,B,398.5,B);sg(398.5,B,400,376);sg(448,376,449,B);sg(449,B,761,B);sg(761,B,778,376);
+  sg(41,75,L,86);sg(L,86,L,330);sg(L,330,41,342);
+  sg(806,75,Rr,86);sg(Rr,86,Rr,331);sg(Rr,331,806,342);})();
 
 /* ================= physics: fixed step, only + - * / sqrt so every browser gets the same result ================= */
 var DT=1/480,MU=118,KD=0.2,VSTOP=4,E_BALL=0.95,E_RAIL=0.76,RAIL_T=0.95,MAXV=2050,MAXSTEPS=480*16,SPIN_DECAY=0.9984;
@@ -1814,6 +1816,7 @@ var LK=(function(){
   ];
   var BALLS=[
     {id:'classic',name:'Classic',req:null},
+    {id:'tr_party',name:'Neon Party',req:null,pro:1,glow:0.25,desc:'Arcade-bright lightning, checkers, stars and neon slime.',cr:'#f6f1e6',p16:["#eec19e", "#fbc003", "#0742ce", "#f70884", "#780e8a", "#fb5502", "#b4ef03", "#7f5f2b", "#547e88", "#facc07", "#0835b9", "#f237a0", "#6a09ac", "#fb6b06", "#b2e50a", "#b5044f"]},
     /* Fan-tribute sets (art supplied by the publisher): a nod to the comics, not affiliated with or endorsed by DC or Warner Bros. */
     {id:'tr_heroes',name:"Heroes Tribute",req:null,pro:1,trib:1,desc:"The heroes, one emblem per ball. Pairs with the Dark Knight Tribute cue. Fan tribute: not affiliated with or endorsed by DC.",cr:'#f2ecdc',p16:["#f5f0e2", "#554552", "#794b10", "#552e07", "#8d220c", "#424536", "#777140", "#6b4f4b", "#6e4913", "#9a6316", "#044c8d", "#763e0d", "#5f373a", "#56512d", "#06284e", "#ad4e22"]},
     {id:'tr_villains',name:"Villains Tribute",req:null,pro:1,trib:1,desc:"The rogues gallery, with a riddle on the cue ball. Pairs with the Chaos Tribute cue. Fan tribute: not affiliated with or endorsed by DC.",cr:'#f2ecdc',p16:["#836271", "#9e555d", "#950a1a", "#453149", "#512152", "#666314", "#3f512d", "#753671", "#575062", "#6c363d", "#967651", "#a56353", "#6e3a86", "#457fa9", "#616c35", "#8b5d12"]},
@@ -1962,10 +1965,12 @@ function texPrep(im){try{var w=im.naturalWidth,h=im.naturalHeight;if(w<2048||h<1
   for(var n=1;n<16;n++){var x0=Math.floor(n*cw),x;for(x=0;x<cw/2;x++)if(d[(cy*w+x0+x)*4+3]>140)break;rs.push(cw/2-x);}
   rs.sort(function(a,b){return a-b;});im._px=d;im._w=w;im._cw=cw;im._ch=h;im._r=Math.max(20,rs[Math.floor(rs.length/2)]-1);}catch(e){im._px=null;}}
 function texRGB(sh,n,bx,by,bz){var s=bz>=0?1:-1,u=bx*s,v=by,q=Math.sqrt(u*u+v*v);if(q>0.78){u*=0.78/q;v*=0.78/q;}   /* stay off the painting's outline and baked edge shadow */
-  var r=sh._r*0.985,cx=n*sh._cw+sh._cw/2,cy=sh._ch/2,
-    x=Math.round(cx+u*r),y=Math.round(cy+v*r),o=(y*sh._w+x)*4,d=sh._px;
-  if(d[o+3]<120){x=Math.round(cx+u*r*0.94);y=Math.round(cy+v*r*0.94);o=(y*sh._w+x)*4;}
-  return [d[o],d[o+1],d[o+2]];}
+  var r=sh._r*0.985,cx=n*sh._cw+sh._cw/2-0.5,cy=sh._ch/2-0.5,d=sh._px,W=sh._w;
+  var fx=cx+u*r,fy=cy+v*r,x0=Math.floor(fx),y0=Math.floor(fy),o=(y0*W+x0)*4;
+  if(d[o+3]<120){fx=cx+u*r*0.94;fy=cy+v*r*0.94;x0=Math.floor(fx);y0=Math.floor(fy);o=(y0*W+x0)*4;}
+  /* bilinear: no stair-steps when the texture is magnified */
+  var tx=fx-x0,ty=fy-y0,o2=o+4,o3=o+W*4,o4=o3+4,a=(1-tx)*(1-ty),b=tx*(1-ty),c=(1-tx)*ty,e=tx*ty;
+  return [d[o]*a+d[o2]*b+d[o3]*c+d[o4]*e|0,d[o+1]*a+d[o2+1]*b+d[o3+1]*c+d[o4+1]*e|0,d[o+2]*a+d[o2+2]*b+d[o3+2]*c+d[o4+2]*e|0];}
 function discSheet(){var b=BSK&&BSHEET[BSK.id];return b&&b._ok?b:(ballsOk?ballsImg:null);}
 
 applyBallSkin();
@@ -1999,7 +2004,14 @@ function litPx(r,g,b,nx,ny,nz,M,out){r/=255;g/=255;b/=255;var lum=0.3*r+0.59*g+0
 function lightLayer(c,sz){var ctr=sz/2,rr=sz/2-1;c.save();c.globalCompositeOperation='source-atop';
   var g1=c.createRadialGradient(ctr-rr*0.35,ctr-rr*0.45,rr*0.05,ctr,ctr,rr*1.05);g1.addColorStop(0,'rgba(0,0,0,0)');g1.addColorStop(0.6,'rgba(0,0,0,0.12)');g1.addColorStop(1,'rgba(0,0,0,0.55)');c.fillStyle=g1;c.fillRect(0,0,sz,sz);
   var hx=ctr+L1[0]*rr*0.5,hy=ctr+L1[1]*rr*0.5,g2=c.createRadialGradient(hx,hy,0,hx,hy,rr*0.22);g2.addColorStop(0,'rgba(255,255,255,0.95)');g2.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=g2;c.fillRect(0,0,sz,sz);c.restore();}
-var DLAY={};
+var DLAY={},NUMD={};
+/* a crisp cream number spot, drawn in code (used on the painted sets) */
+function numDisc(n){if(NUMD[n])return NUMD[n];var c=document.createElement('canvas');c.width=c.height=120;var g=c.getContext('2d');
+  var gr=g.createRadialGradient(52,48,6,60,60,56);gr.addColorStop(0,'#fffdf6');gr.addColorStop(0.75,'#f2ead6');gr.addColorStop(1,'#d9cdb0');
+  g.fillStyle=gr;g.beginPath();g.arc(60,60,55,0,7);g.fill();g.lineWidth=3;g.strokeStyle='rgba(40,28,14,.55)';g.stroke();
+  g.fillStyle='#14100c';g.font='900 '+(n>9?54:64)+'px Inter,Arial,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(String(n),60,64);
+  if(n===6||n===9){g.fillRect(40,94,40,5);}
+  return NUMD[n]=c;}
 function drawSprite(n){
   var sp=SPR[n],rp=R*SC*DPR,sz=Math.max(8,Math.ceil(rp*2)+2);
   if(!sp.c){sp.c=document.createElement('canvas');}
@@ -2015,6 +2027,14 @@ function drawSprite(n){
   var ctr=sz/2,rr=sz/2-1;
   /* the painted number discs, carried round as the ball rolls */
   var DS=TX?null:discSheet();
+  /* painted sets (photo textures) carry their number where the artist put it; give them a clean number spot on each side too,
+     on the ball's left and right so a number always comes round as it rolls */
+  if(n>0&&TX){var lay2=DLAY.c||(DLAY.c=document.createElement('canvas'));if(lay2.width!==sz){lay2.width=sz;lay2.height=sz;}var c1=lay2.getContext('2d');c1.setTransform(1,0,0,1,0,0);c1.clearRect(0,0,sz,sz);
+    var dc=numDisc(n);
+    for(var sx2=1;sx2>=-1;sx2-=2){var qz=M[6]*sx2;if(qz<0.12)continue;var qx=M[0]*sx2,qy=M[3]*sx2;
+      var e1=w2s(-M[2]*sx2,-M[5]*sx2),e2=w2s(M[1],M[4]),cp=w2s(qx,qy),k2=rr*0.40/29;
+      c1.save();c1.setTransform(e1.x*k2,e1.y*k2,e2.x*k2,e2.y*k2,ctr+cp.x*rr,ctr+cp.y*rr);c1.drawImage(dc,-30,-30,60,60);c1.restore();}
+    c1.setTransform(1,0,0,1,0,0);lightLayer(c1,sz);c.save();c.globalCompositeOperation='source-atop';c.drawImage(lay2,0,0);c.restore();}
   if(n>0&&DS){var lay=DLAY.c||(DLAY.c=document.createElement('canvas'));if(lay.width!==sz){lay.width=sz;lay.height=sz;}var c0=c;c=lay.getContext('2d');c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,sz,sz);
     for(var sg2=1;sg2>=-1;sg2-=2){var pz=M[8]*sg2;if(pz<0.12)continue;var px=M[2]*sg2,py=M[5]*sg2;
       var ex=w2s(M[0]*sg2,M[3]*sg2),ey=w2s(M[1],M[4]),cpos=w2s(px,py),k=rr*0.47/29;
@@ -2043,6 +2063,13 @@ function drawTable(){
   if(tableOk){if(NEON_TBL)ctx.drawImage(tableImg,NEON_TBL[0],NEON_TBL[1],NEON_TBL[2],NEON_TBL[3]);else ctx.drawImage(tableImg,0,0,ART_W,ART_H);}
   else{ctx.fillStyle='#16110e';ctx.fillRect(0,0,ART_W,ART_H);ctx.fillStyle='#6e1622';ctx.fillRect(PF.x0-12,PF.y0-12,PF.x1-PF.x0+24,PF.y1-PF.y0+24);
     ctx.fillStyle='#000';POCKETS.forEach(function(p){ctx.beginPath();ctx.arc(p.x,p.y,19,0,7);ctx.fill();});}
+  /* pockets sized for the bigger balls: a deep drop with a leather liner, the far inside wall catching the lamp */
+  POCKETS.forEach(function(p){var r=p.r+5,g=ctx.createRadialGradient(p.x-1.5,p.y-2,0,p.x,p.y,r);
+    g.addColorStop(0,'#000');g.addColorStop(0.55,'#030201');g.addColorStop(0.8,'rgba(48,22,10,.96)');g.addColorStop(0.93,'rgba(70,34,14,.7)');g.addColorStop(1,'rgba(70,34,14,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,r,0,7);ctx.fill();
+    var w=ctx.createLinearGradient(p.x-r,p.y-r,p.x+r,p.y+r);w.addColorStop(0,'rgba(0,0,0,0)');w.addColorStop(0.62,'rgba(0,0,0,0)');w.addColorStop(1,'rgba(150,92,52,.55)');
+    ctx.strokeStyle=w;ctx.lineWidth=2.4;ctx.beginPath();ctx.arc(p.x,p.y,p.r-1,-0.3,Math.PI*0.8);ctx.stroke();
+    ctx.strokeStyle='rgba(0,0,0,.55)';ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(p.x,p.y,p.r+1,Math.PI*0.95,Math.PI*1.75);ctx.stroke();});
 }
 function lw(px){return px/SC;}
 function draw(t){
@@ -2923,7 +2950,7 @@ function onChat(m,mine){
 function potAngle(n,pi){var o=G.balls[n],p=POCKETS[pi],c=G.balls[0],dx=p.ax-o.x,dy=p.ay-o.y,d=Math.hypot(dx,dy),gx=o.x-dx/d*D2,gy=o.y-dy/d*D2;return Math.atan2(gy-c.y,gx-c.x);}
 window.__pool_dbg={
   lk:function(){return {LK:LK,openLocker:openLocker,recordLocker:recordLocker,applyBallSkin:applyBallSkin,endGame:endGame};},
-  _in:function(){return {G:G,planShot:planShot,cloneBalls:cloneBalls,fire:fire,nearestPlace:nearestPlace,HEAD:HEAD,SPR:SPR,ctLeft:ctLeft,bank:function(){return bank;}};},
+  _in:function(){return {G:G,simulate:simulate,POCKETS:POCKETS,planShot:planShot,cloneBalls:cloneBalls,fire:fire,nearestPlace:nearestPlace,HEAD:HEAD,SPR:SPR,ctLeft:ctLeft,bank:function(){return bank;}};},
   state:function(){return {call:G.call,callEight:G.callEight,needCall:needCall(),phase:G.phase,mode:G.mode,turn:G.turn,mySeat:G.mySeat,myTurn:isMyTurn(),groups:G.groups.slice(),open:G.open,breakShot:G.breakShot,bih:G.bih,kitchen:G.kitchen,shotNo:G.shotNo,
     winner:G.winner,reason:G.reason,stake:G.stake,bank:bank,live:G.live,gid:G.gid,waitSync:G.waitSync,players:G.players.map(function(p){return {name:p.name,kind:p.kind,skill:p.skill||null};}),
     balls:G.balls.map(function(o){return {n:o.n,x:Math.round(o.x*100)/100,y:Math.round(o.y*100)/100,on:o.on};}),pocketed:G.pocketOrder.slice(),last:G.lastEv||null,lastRes:G.lastRes||null,layout:{mode:MODE,scale:SC,w:cv.clientWidth,h:cv.clientHeight}};},
