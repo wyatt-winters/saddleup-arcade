@@ -2330,7 +2330,19 @@ function scoreResult(res,seat,skill,cd){
 function planShot(balls,seat,skill,done){
   var list=candidates(balls,seat,skill),best=null,i=0;
   function run(){var t0=now();while(i<list.length&&(turbo||now()-t0<10)){var cd=list[i++],sh={vx:Math.cos(cd.a)*cd.v,vy:Math.sin(cd.a)*cd.v,sx:cd.sx,sy:cd.sy},res=simulate(balls,sh);cd.score=scoreResult(res,seat,skill,cd);if(!best||cd.score>best.score)best=cd;}
-    if(i<list.length){setTimeout(run,0);return;}done(best);}
+    if(i<list.length){setTimeout(run,0);return;}robust();}
+  /* the shot that actually goes off has the bot's aim and power wobble in it, and the bigger pockets punish a cue ball that only just misses:
+     re-check the leading shots with that wobble and steer clear of any that scratch or foul when slightly off */
+  function robust(){var P=OPP[skill]||{err:0.01,perr:0.1};if(!best||G.breakShot){done(best);return;}
+    var top=list.filter(function(c){return c.score!=null;}).sort(function(x,y){return y.score-x.score;}).slice(0,skill==='hard'?8:5),k=0,
+      offs=[[1,0],[-1,0],[0,1],[0,-1],[0.6,0.6],[-0.6,-0.6]];
+    function more(){var t0=now();while(k<top.length&&(turbo||now()-t0<12)){var cd=top[k++],sum=0,bad=0;
+        offs.forEach(function(o){var a=cd.a+o[0]*P.err*1.2,v=clamp(cd.v*(1+o[1]*P.perr*1.2),60,MAXV),res=simulate(balls,{vx:Math.cos(a)*v,vy:Math.sin(a)*v,sx:cd.sx,sy:cd.sy}),sc=scoreResult(res,seat,skill,cd);
+          if(res.ev.scratch)bad+=2;else if(sc<=-1000)bad++;});
+        cd.rob=cd.score-bad*350;}
+      if(k<top.length){setTimeout(more,0);return;}
+      var pick=top.reduce(function(m,c){return c.rob!=null&&(!m||c.rob>m.rob)?c:m;},null);done(pick||best);}
+    more();}
   run();
 }
 function placeCandidates(seat){
