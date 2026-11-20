@@ -2092,7 +2092,7 @@ function showBanner(lines,showdown){
   var t,s='';
   var tot=lines.reduce(function(a,l){return a+l.amount;},0);
   var all=lines.every(function(l){return l.names.length===1&&l.names[0]===lines[0].names[0];});
-  if(all){var w=lines[0].names[0];t=(w==='You'?'You win ':w+' wins ')+money(tot);if(w==='You'&&typeof suBanner==='function')suBanner(showdown&&lines[0].hand?'Winner!':'Pot is yours','+'+money(tot));s=lines[0].hand?'<em>'+lines[0].hand+'</em>':(showdown?'':'Everyone else folded');}
+  if(all){var w=lines[0].names[0];t=(w==='You'?'You win ':w+' wins ')+money(tot);if(w==='You')try{window.suQ&&window.suQ('win');}catch(e){}if(w==='You'&&typeof suBanner==='function')suBanner(showdown&&lines[0].hand?'Winner!':'Pot is yours','+'+money(tot));s=lines[0].hand?'<em>'+lines[0].hand+'</em>':(showdown?'':'Everyone else folded');}
   else{t=lines.length===1&&lines[0].names.length>1?'Split pot':'Pots awarded';
     s=lines.map(function(l){return l.label+' '+money(l.amount)+': <em>'+l.names.join(' &amp; ')+'</em>'+(l.hand?' &middot; '+l.hand:'');}).join('<br>');}
   $('bnT').textContent=t;$('bnS').innerHTML=s;

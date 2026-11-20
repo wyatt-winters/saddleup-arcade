@@ -2465,7 +2465,7 @@ function endGame(){
   if(!G.settled){G.settled=true;if(G.stake>0&&mine){pay=pot();bank+=pay;}}
   G.inPlay=false;
   renderBank();hud();
-  if(mine||(G.players[w]&&G.players[w].guest)){SFX.win();if(typeof suBanner==='function')suBanner(G.mode==='9'?'Nine down!':G.mode==='ct'?'Last one standing!':'Winner!',G.stake?'+'+money(pot()):'Game won');talk('botLose',1,true);}
+  if(mine)try{window.suQ&&window.suQ('win');}catch(e){}if(mine||(G.players[w]&&G.players[w].guest)){SFX.win();if(typeof suBanner==='function')suBanner(G.mode==='9'?'Nine down!':G.mode==='ct'?'Last one standing!':'Winner!',G.stake?'+'+money(pot()):'Game won');talk('botLose',1,true);}
   else if(G.watch){SFX.turn();}
   else{SFX.lose();talk('botWin',w>0?w:1,true);}
   try{recordLocker(w,mine);}catch(e){}

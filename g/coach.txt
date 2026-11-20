@@ -1394,7 +1394,7 @@ async function spin(){
   var bw=0;
   if(res.bonus){if(win>0)await sleep(900);bw=await runBonus(g,res);$('msg').innerHTML='Stagecoach Spins paid <b>'+money(bw)+'</b>';SFX.big();await banner(money(bw),'Stagecoach Spins total',1800);}
   var tot=Math.round((win+bw)*100)/100;
-  if(tot>0){st.bank=Math.round((st.bank+tot)*100)/100;st.net=Math.round((st.net+tot)*100)/100;st.won+=tot;if(tot>=b*20)q('win');}
+  if(tot>0){st.bank=Math.round((st.bank+tot)*100)/100;st.net=Math.round((st.net+tot)*100)/100;st.won+=tot;if(tot>b)q('win');}
   $('lWin').textContent=money(tot);
   if(res.bonus){await sleep(600);$('stage').classList.remove('bonus');showRows(3);for(var r3=0;r3<MAXR;r3++)for(var c3=0;c3<5;c3++)cells[r3][c3].classList.remove('locked','inb','et','eb','el','er','lockrow');for(var c4=0;c4<5;c4++)for(var r4=0;r4<3;r4++)put(c4,r4,symHTML(g[c4][r4]));}
   st.busy=false;hud();

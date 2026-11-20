@@ -2255,7 +2255,7 @@ async function doRoll(){
   /* your result */
   var mine=null;r.list.forEach(function(x){if(x.pl===me)mine=x;});
   var msg=composeMsg(call,mine,r);setMsg(msg);
-  if(mine&&mine.net>0){big=Math.max(big,mine.net);SFX.win();var se=seatEl[YOU];if(se){se.el.classList.add('won');after(1400,function(){se.el.classList.remove('won');});}}
+  if(mine&&mine.net>0)try{window.suQ&&window.suQ('win');}catch(e){}if(mine&&mine.net>0){big=Math.max(big,mine.net);SFX.win();var se=seatEl[YOU];if(se){se.el.classList.add('won');after(1400,function(){se.el.classList.remove('won');});}}
   else if(mine&&mine.net<0&&!r.out7)SFX.lose();
   logRoll(sp,r,mine);
   botReact(r);

@@ -2057,7 +2057,7 @@ function checkMoney(){
   if(G.phase==='over'&&!ESC.done){ESC.done=true;
     if(ms>=0){var iw=G.win===ms;if(iw)record.w++;else record.l++;
       if(ESC.amt){var pot=ESC.amt*G.n;if(iw){bank+=pot;if(pot-ESC.amt>best)best=pot-ESC.amt;}}
-      if(iw&&typeof suBanner==='function')suBanner('You Win!',ESC.amt?smoney(ESC.amt*(G.n-1)):(G.mode==='classic'?G.seats[ms].score+' points':G.seats[ms].score+' total'));}}
+      if(iw)try{window.suQ&&window.suQ('win');}catch(e){}if(iw&&typeof suBanner==='function')suBanner('You Win!',ESC.amt?smoney(ESC.amt*(G.n-1)):(G.mode==='classic'?G.seats[ms].score+' points':G.seats[ms].score+' total'));}}
   hud();
 }
 

@@ -2803,7 +2803,7 @@ async function spin(){
   }catch(e){console.error(e);}
   var tot=r2(spinWin+fsWin+jpWin+(st.extra||0));
   if(tot>0){st.stats.hits++;st.stats.won=r2(st.stats.won+tot);if(tot>st.big)st.big=tot;if(tot>=b*5)logMine(tot,b,spinWin,fsWin,jpTier);}
-  st.lastWin=tot;st.busy=false;st.hurry=false;hud();setButtons();renderStats();
+  if(tot>b)try{window.suQ&&window.suQ('win');}catch(e){}st.lastWin=tot;st.busy=false;st.hurry=false;hud();setButtons();renderStats();
   if(tot>0&&!st.fs)winAmt(tot,fsWin?'Total win':'Win');
   reactToMe(tot/b,fsWin>0||jpTier>=0);
   checkBroke();

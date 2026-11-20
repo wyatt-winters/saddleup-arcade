@@ -1485,7 +1485,7 @@ function finishAll(){
   else if(you.tie)small+=' Tie bet lost.';
   hist.push(netMe>0?'w':r==='s'?'s':netMe<0?'l':'t');hist=hist.slice(-24);
   sess+=netMe;res(big,cls);msg(small+(netMe?' <b>'+(netMe>0?'+':'')+money(netMe)+'</b> this hand.':''));
-  if(netMe>0)sWin(r==='wt'||netMe>=you.ante*3);else if(netMe<0)sLose();
+  if(netMe>0)try{window.suQ&&window.suQ('win');}catch(e){}if(netMe>0)sWin(r==='wt'||netMe>=you.ante*3);else if(netMe<0)sLose();
   save();ui();
 }
 addEventListener('keydown',function(e){if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;if(e.key===' '||e.key==='Enter'){if(phase==='tie')return;e.preventDefault();$('bDeal').click();}

@@ -2495,7 +2495,7 @@ function onHandEnd(){
   var r=G.res,ms=mySeat();if(!r)return;
   if(r.w<0){SFX.wall();logLine('Wall game &ndash; nobody wins','l');var b=[0,1,2,3].filter(function(x){return G.seats[x].kind==='bot';});if(b.length)botSay(pick(b),'wall',0.6);}
   else{var h=HANDS[r.h];logLine(esc(nameOf(r.w))+' &middot; '+esc(h.name)+' ('+r.val+(r.jl?', jokerless':'')+') '+(r.how==='self'?'self-drawn':'off '+esc(nameOf(r.by))),r.w===ms?'w':'l');
-    if(r.w===ms){SFX.win();if(typeof suBanner==='function')suBanner('Mah Jongg!',pts(r.pay[ms])+' points \u00b7 '+h.name);}else{if(ms>=0)SFX.lose();botSay(r.w,'mj',0.9);}
+    if(r.w===ms){try{window.suQ&&window.suQ('win');}catch(e){}SFX.win();if(typeof suBanner==='function')suBanner('Mah Jongg!',pts(r.pay[ms])+' points \u00b7 '+h.name);}else{if(ms>=0)SFX.lose();botSay(r.w,'mj',0.9);}
     TRK=-1;cardSig='';}
   if(G.phase==='over'){var iw=G.win===ms;logLine((iw?'You win':esc(nameOf(G.win))+' wins')+' the game','h');
     if(G.seats[G.win].kind==='bot')botSay(G.win,'win',0.8);else{for(var i=0;i<4;i++)if(G.seats[i].kind==='bot'){botSay(i,'lose',0.7);break;}}}

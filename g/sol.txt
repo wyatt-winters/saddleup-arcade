@@ -1036,7 +1036,7 @@ function autoFinish(){
 }
 function checkWin(){
   if(won)return;if(found.every(function(f){return f.length===13;})){
-    won=true;stopTimer();tick();msg('');var nb=best[drawN]===null||elapsed<best[drawN];if(nb)best[drawN]=elapsed;
+    won=true;try{window.suQ&&window.suQ('win');}catch(e){}stopTimer();tick();msg('');var nb=best[drawN]===null||elapsed<best[drawN];if(nb)best[drawN]=elapsed;
     var bonus=elapsed>30?Math.round(700000/elapsed):0;score+=bonus;hud();
     [523,659,784,1047,1319,1568].forEach(function(f,i){tone(f,0.16,'square',0.04,i*0.08);});
     setTimeout(function(){

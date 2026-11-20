@@ -1283,7 +1283,7 @@ function endGame(why){
   if(!G||G.over)return;G.over=true;clearTimeout(autoT);clearInterval(clockT);busy=false;
   var m=mine().length,t=theirs().length,r=m>t?'w':m<t?'l':'d';
   pref.rec[r]=(pref.rec[r]||0)+1;savePref();
-  $('ovTitle').textContent=r==='w'?'You win!':r==='l'?oppName()+' wins':'It\u2019s a draw';
+  if(r==='w')try{window.suQ&&window.suQ('win');}catch(e){}$('ovTitle').textContent=r==='w'?'You win!':r==='l'?oppName()+' wins':'It\u2019s a draw';
   $('ovScore').textContent=m+' \u2013 '+t;
   $('ovSub').textContent=why==='all'?(r==='w'?'You took every card in the deck.':oppName()+' took every card.'):why==='quick'?(r==='w'?'First to 40 cards.':oppName()+' reached 40 first.'):why==='left'?oppName()+' left the parlor.':'Time\u2019s up. Most cards wins.';
   $('ovRounds').textContent=G.n;$('ovWars').textContent=G.wars;$('ovRec').textContent=(pref.rec.w||0)+'\u2013'+(pref.rec.l||0);

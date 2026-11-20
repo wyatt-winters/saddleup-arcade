@@ -1161,7 +1161,7 @@ function win(){
   if(nb){best[layKey]=elapsed;saveBest();}
   hud();msg('');
   [523,659,784,1047,1319,1568].forEach(function(f,i){tone(f,0.16,'square',0.04,i*0.08);});
-  setTimeout(function(){try{suBanner('Corral Cleared!',fmtT(elapsed)+' \u00b7 '+score+' pts',2300);}catch(e){}confetti();},SPD?450/SPD:0);
+  try{window.suQ&&window.suQ('win');}catch(e){}setTimeout(function(){try{suBanner('Corral Cleared!',fmtT(elapsed)+' \u00b7 '+score+' pts',2300);}catch(e){}confetti();},SPD?450/SPD:0);
   setTimeout(function(){if(!won)return;
     showOv(nb?'New best':'Cleared',LAYOUTS[layKey].name+' cleared','Cleared in <b>'+fmtT(elapsed)+'</b> &middot; score <b>'+score+'</b>'+(bonus?' (time bonus '+bonus+')':'')+
       '<br>Best on '+LAYOUTS[layKey].name+': <b>'+fmtT(best[layKey])+'</b>',[['Deal again','',newGame]]);},SPD?2900/SPD:0);

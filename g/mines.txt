@@ -711,7 +711,7 @@ function check(){
     flags=M;hud();
     var t=elapsed,nb=best[diff]===null||t<best[diff];if(nb)best[diff]=t;hud();
     [523,659,784,1047].forEach(function(f,k){tone(f,0.14,'square',0.04,k*0.08);});
-    showOv('Claim cleared','No bites.<span>The claim is yours.</span>',
+    try{window.suQ&&window.suQ('win');}catch(e){}showOv('Claim cleared','No bites.<span>The claim is yours.</span>',
       DIFFS[diff].name+' cleared in <b>'+fmtT(t)+'</b>'+(nb?' &middot; new best this visit':' &middot; best <b>'+fmtT(best[diff])+'</b>')+'.');
   }
 }

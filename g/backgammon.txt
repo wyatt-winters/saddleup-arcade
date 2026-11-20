@@ -2169,7 +2169,7 @@ async function finish(w,mult,how){
   var kind=mult===3?'Backgammon':mult===2?'Gammon':'Single game',iw=ppIw(w);
   logLine(esc(safeName(nameOf(w)))+' wins: '+kind+(how==='drop'?' (cube dropped)':how==='resign'?' (resigned)':'')+' \u00d7 cube '+S.cube+' = '+pts+' pt'+(pts>1?'s':''),iw?'w':'l');
   if(S.pp&&!iw)SFX.win();
-  else if(iw){SFX.win();if(typeof suBanner==='function')suBanner(mult===3?'Backgammon!':mult===2?'Gammon!':'You Win!',S.stake?smoney(S.stake*pts):pts+' point'+(pts>1?'s':''));botTalk('lose',0.8);}
+  else if(iw){try{window.suQ&&window.suQ('win');}catch(e){}SFX.win();if(typeof suBanner==='function')suBanner(mult===3?'Backgammon!':mult===2?'Gammon!':'You Win!',S.stake?smoney(S.stake*pts):pts+' point'+(pts>1?'s':''));botTalk('lose',0.8);}
   else{SFX.lose();botTalk('win',0.8);}
   say(iw?'<b>You win</b> \u2013 '+kind.toLowerCase()+'!':'<b>'+esc(safeName(nameOf(w)))+'</b> wins \u2013 '+kind.toLowerCase()+'.');
   await wait(turbo?0:1500);if(g!==S.gen)return;
@@ -2455,7 +2455,7 @@ async function applyState(st,fast){
   else if(st.phase==='propose'&&st.prop){if(!LV.prop||sheetKind!=='gprop'){LV.prop=st.prop;showSheet('gprop');}}
   else if(st.phase==='over'&&st.result){S.result=st.result;if(S.settled!==S.gid){settle();var iw=st.result.winner===ME,pts=st.result.points;
       logLine(esc(safeName(S.names[st.result.winner]))+' wins '+pts+' pt'+(pts>1?'s':''),iw?'w':'l');
-      if(iw){SFX.win();if(typeof suBanner==='function')suBanner(st.result.mult===3?'Backgammon!':st.result.mult===2?'Gammon!':'You Win!',S.stake?smoney(S.stake*pts):pts+' point'+(pts>1?'s':''));}else SFX.lose();
+      if(iw){try{window.suQ&&window.suQ('win');}catch(e){}SFX.win();if(typeof suBanner==='function')suBanner(st.result.mult===3?'Backgammon!':st.result.mult===2?'Gammon!':'You Win!',S.stake?smoney(S.stake*pts):pts+' point'+(pts>1?'s':''));}else SFX.lose();
       say(iw?'<b>You win!</b>':'<b>'+esc(S.names[st.result.winner])+'</b> wins.');
       setTimeout(function(){if(LV.mode==='guest'&&S.phase==='over')showSheet('over');},turbo?0:1500);}}
   else if(sheetKind&&st.phase!=='over')hideSheet();

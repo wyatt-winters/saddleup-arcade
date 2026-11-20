@@ -985,7 +985,7 @@ function afterSpin(){if(!G||busy)return;
   /* out of spins: pay the ladder */
   var x=LAD[L]||0,pay=Math.round(x*G.bet*100)/100,total=G.won+pay;bank+=pay;net+=total-G.bet;games++;
   $('stG').textContent=games;$('stN').textContent=(net>=0?'+':'')+money(net);
-  if(pay>0){sWin(x>=6);if(x>=3)bang(L>=12?'FULL CARD!':'BINGO!',L+' lines \u00b7 '+money(pay));msg('<b>'+L+' lines!</b> The ladder pays <b>'+money(pay)+'</b>'+(G.won?' plus '+money(G.won)+' in coins':'')+'.');}
+  if(total>G.bet)try{window.suQ&&window.suQ('win');}catch(e){}if(pay>0){sWin(x>=6);if(x>=3)bang(L>=12?'FULL CARD!':'BINGO!',L+' lines \u00b7 '+money(pay));msg('<b>'+L+' lines!</b> The ladder pays <b>'+money(pay)+'</b>'+(G.won?' plus '+money(G.won)+' in coins':'')+'.');}
   else msg(L+' line'+(L===1?'':'s')+'. '+(G.won?'You picked up '+money(G.won)+' in coins.':'No ladder win this card.')+' Tap Start for a new card.');
   G=null;render();}
 function bang(t,s){$('bangB').textContent=t;$('bangTxt').textContent=s;$('bang').classList.add('on');setTimeout(function(){$('bang').classList.remove('on');},2800);}

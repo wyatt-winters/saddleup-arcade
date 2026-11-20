@@ -1325,7 +1325,7 @@ function done(k,c,spinNo){
   $('reveal').classList.add('on');
   var big=gain>=Math.max(2500,c*4);fanfare(big);confetti(big?140:50);
   try{if(window.suBanner&&gain>=1000)suBanner(s.j?'Jackpot!':big?'Big Win!':'Winner!','+'+money(gain),2400);}catch(e){}
-  var net=v-c;msg(s.m?'The mystery slot paid '+money(v)+'!':net>0?'Nice spin! Up '+money(net)+'.':net===0?'Broke even on that one.':'The wheel giveth\u2026 down '+money(-net)+' on that spin.');
+  if(v>c)try{window.suQ&&window.suQ('win');}catch(e){}var net=v-c;msg(s.m?'The mystery slot paid '+money(v)+'!':net>0?'Nice spin! Up '+money(net)+'.':net===0?'Broke even on that one.':'The wheel giveth\u2026 down '+money(-net)+' on that spin.');
   setTimeout(function(){$('reveal').classList.remove('on');lightMode='idle';spinning=false;ui();},2600);
   ui();
 }

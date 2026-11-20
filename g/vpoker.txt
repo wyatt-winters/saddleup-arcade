@@ -1176,7 +1176,7 @@ function draw(){if(busy||phase!=='dealt')return;busy=true;var idx=[];for(var i=0
   [].forEach.call($('hand').children,function(s,i){if(!held[i]){var o=s.querySelector('.card');if(o)o.classList.add('down');}s.querySelector('.held').textContent='';s.classList.remove('h','win');});
   setTimeout(function(){reveal(idx,function(){var r=evalHand(hand,pref.v),won=r>=0?pays(VAR[pref.v].rows[r],pref.coins)*pref.coin:0;
     hands++;net+=won-stake;if(r>=0&&(best<0||r<best))best=r;lastWin=won;
-    if(won){bank+=won;$('res').className='res';$('res').textContent=VAR[pref.v].rows[r][0]+' \u00b7 '+money(won);markWin(r);celebrate(r);}
+    if(won>stake)try{window.suQ&&window.suQ('win');}catch(e){}if(won){bank+=won;$('res').className='res';$('res').textContent=VAR[pref.v].rows[r][0]+' \u00b7 '+money(won);markWin(r);celebrate(r);}
     else{$('res').className='res lose';$('res').textContent='No win \u00b7 tap Deal';}
     drawPT(r);hud();$('sH').textContent=hands;$('sN').textContent=(net>=0?'+':'')+money(net);$('sB').textContent=best>=0?VAR[pref.v].rows[best][0]:'-';
     busy=false;controls();msg(won?'Nice hand!':'Hold the good ones next time.');});},idx.length?260:0);}

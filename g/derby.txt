@@ -2241,7 +2241,7 @@ function showPodium(res){if(!RM||!F)return;var o=RM.ord,h=function(i){return F.h
   $('pod').innerHTML=html;var y=$('pyou');
   if(res){var net=r2(res.pay-res.stake),pend=MB.filter(function(b){return b.st==='dd';}).length;y.className='pyou '+(net>0?'g':net<0&&!pend?'r':'');
     y.textContent=(res.pay>0?'You collect '+m2(res.pay)+' ('+smoney(net)+')':'Your tickets: '+smoney(-res.stake))+(pend?' \u00b7 Daily Double alive for next race':'');
-    if(res.pay>0)SFX.win(net>=500);
+    if(net>0)try{window.suQ&&window.suQ('win');}catch(e){}if(res.pay>0)SFX.win(net>=500);
     try{if(window.suBanner&&net>0&&(net>=Math.max(250,res.stake*5)))suBanner(net>=Math.max(2000,res.stake*15)?'Huge Win!':'Big Win!','+'+money(net)+' on Race '+R.id,2600);}catch(e){}}
   else{y.className='pyou';y.textContent='Winner: #'+o[0]+' '+h(0).name+' at '+h(0).frac;}
   clearTimeout(podT);var wait=Math.max(0,(R.re-hNow())+1700/R.sp);podT=setTimeout(function(){if(R.ph==='result')$('pod').classList.add('on');},wait);}

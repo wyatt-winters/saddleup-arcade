@@ -1001,7 +1001,7 @@ function onState(st,self){
 function hitsOf(picks,balls,k){var set={};for(var i=0;i<k;i++)set[balls[i]]=1;return picks.filter(function(n){return set[n];}).length;}
 function settle(st){var D=drawOf(st.seed),h=hitsOf(locked.picks,D.balls,20),x=(PAY[locked.picks.length]||{})[h]||0,m=locked.blast?D.mult:1,win=Math.round(locked.bet*x*m*100)/100;
   q('play');
-  if(win>0){bank+=win;net+=win-locked.cost;hud();sWin(x*m>=20);bang(win>=locked.cost*20?'BIG WIN!':'WINNER!',h+' of '+locked.picks.length+' hit'+(m>1?' \u00b7 Blast '+m+'\u00d7':'')+' \u00b7 '+money(win));
+  if(win>locked.cost)try{window.suQ&&window.suQ('win');}catch(e){}if(win>0){bank+=win;net+=win-locked.cost;hud();sWin(x*m>=20);bang(win>=locked.cost*20?'BIG WIN!':'WINNER!',h+' of '+locked.picks.length+' hit'+(m>1?' \u00b7 Blast '+m+'\u00d7':'')+' \u00b7 '+money(win));
     msg('<b>'+h+' of '+locked.picks.length+'</b> hit'+(m>1?' with a <b>'+m+'\u00d7 Blast</b>':'')+'. You win <b>'+money(win)+'</b>!');}
   else{net-=locked.cost;msg(h+' of '+locked.picks.length+' hit. No win this draw.');}
   var d=document.createElement('div');d.innerHTML='Draw '+st.round+': '+h+'/'+locked.picks.length+(m>1?' \u00b7 '+m+'\u00d7':'')+' \u00b7 '+(win?'<b>+'+money(win)+'</b>':'\u2212'+money(locked.cost));$('hist').insertBefore(d,$('hist').firstChild);

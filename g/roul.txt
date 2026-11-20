@@ -1937,7 +1937,7 @@ async function runSpin(){
   var res=await settle(win,quick);
   var r=res.me;setMsg(netMsg(win,r));
   if(r.net>bigWin)bigWin=r.net;
-  if(r.net>0){(r.net>=onTable0(r)*3&&r.net>=100?SFX.big:SFX.win)();SEATS[2].el.classList.add('won');after(1600,function(){SEATS[2].el.classList.remove('won');});}else if(r.net<0)SFX.lose();
+  if(r.net>0)try{window.suQ&&window.suQ('win');}catch(e){}if(r.net>0){(r.net>=onTable0(r)*3&&r.net>=100?SFX.big:SFX.win)();SEATS[2].el.classList.add('won');after(1600,function(){SEATS[2].el.classList.remove('won');});}else if(r.net<0)SFX.lose();
   logSpin(win,r);hud();renderSeats();renderStats();
   botReact(win,res);
   await wait(quick?500:1100);

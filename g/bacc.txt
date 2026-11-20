@@ -2920,7 +2920,7 @@ async function resolve(){
   /* the hand's result, one net line */
   ST.hands++;if(net>0)ST.w++;else if(net<0)ST.l++;if(net>ST.big)ST.big=net;
   var lead=rt+'.',brk='<small>('+parts.map(esc).join(' \u00b7 ')+')</small>';
-  if(net>0){msg(lead+' You win <b>'+money(net)+'</b>'+(parts.length>1?' net':'')+brk);x.nat&&cine?SFX.natural():SFX.win();setTimeout(function(){suBanner(x.w==='T'?'Tie Pays!':x.nat?'Natural!':'Winner!','+'+money(net));},cine?700:0);}
+  if(net>0)try{window.suQ&&window.suQ('win');}catch(e){}if(net>0){msg(lead+' You win <b>'+money(net)+'</b>'+(parts.length>1?' net':'')+brk);x.nat&&cine?SFX.natural():SFX.win();setTimeout(function(){suBanner(x.w==='T'?'Tie Pays!':x.nat?'Natural!':'Winner!','+'+money(net));},cine?700:0);}
   else if(net<0){msg(lead+' You lose <b>'+money(-net)+'</b>'+(parts.length>1?' net':'')+brk,true);SFX.lose();}
   else msg(lead+' <b>Even</b> on the coup.'+brk);
   if(net>0)$('mySeat').classList.add('won');sched(function(){$('mySeat').classList.remove('won');},2200);

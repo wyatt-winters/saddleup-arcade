@@ -1638,7 +1638,7 @@ function primary(i){
   else if(s.st==='riding'&&R.ph==='ride'){s.st='pending';act('co',{r:R.id,s:i,m:curM()});ui();
     setTimeout(function(){if(s.st==='pending'&&R.ph==='ride'&&s.round===R.id){s.st='riding';ui();}},2500);}
 }
-function cashedFx(i){var s=S[i];SFX.cash(s.co>=5);note(i,'Cashed out '+xs(s.co)+': '+smoney(s.w-s.bet),'g');FX.cashout(i,s.co);
+function cashedFx(i){var s=S[i];if(s.w>s.bet)try{window.suQ&&window.suQ('win');}catch(e){}SFX.cash(s.co>=5);note(i,'Cashed out '+xs(s.co)+': '+smoney(s.w-s.bet),'g');FX.cashout(i,s.co);
   try{if(window.suBanner&&(s.co>=10||s.w-s.bet>=Math.max(500,s.bet*4)))suBanner(s.co>=25?'Huge Win!':'Big Win!','+'+money(s.w-s.bet)+' at '+xs(s.co),2400);}catch(e){}}
 
 /* =====================================================================

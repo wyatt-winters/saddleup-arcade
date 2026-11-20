@@ -2416,7 +2416,7 @@ async function settle(){
   }
   var brk=parts.length?'<br><span style="font-size:13px;font-weight:600;color:var(--muted)">'+parts.join(' &middot; ')+'</span>':'';
   var bigWin=hands.some(function(h){return (isBJ(h)&&(!dBJ||R.sp))||!!bonus21(h);});
-  if(handNet>0){msg(dtxt+' You win <b>'+money(handNet)+'</b>'+(parts.length?' total':'')+'.'+brk);bigWin?SFX.bj():SFX.win();suBanner(hands.some(function(h){return isBJ(h);})?'Blackjack!':handNet>=bet*3?'Big Win!':'Winner!','+'+money(handNet));}
+  if(handNet>0)try{window.suQ&&window.suQ('win');}catch(e){}if(handNet>0){msg(dtxt+' You win <b>'+money(handNet)+'</b>'+(parts.length?' total':'')+'.'+brk);bigWin?SFX.bj():SFX.win();suBanner(hands.some(function(h){return isBJ(h);})?'Blackjack!':handNet>=bet*3?'Big Win!':'Winner!','+'+money(handNet));}
   else if(handNet<0){msg(dtxt+' You lose <b>'+money(-handNet)+'</b>'+(parts.length?' net':'')+'.'+brk,true);SFX.lose();}
   else msg(dtxt+(parts.length?' <b>Even</b> on the hand.':' <b>Push.</b> Your bet comes back.')+brk);
   if(handNet>ST.big)ST.big=handNet;
@@ -3066,7 +3066,7 @@ var MP=(function(){
       s.note=dtxt+(all>0?' You win <b>'+money(all)+'</b>'+(parts.length?' total':'')+'.':all<0?' You lose <b>'+money(-all)+'</b>'+(parts.length?' net':'')+'.':(parts.length?' <b>Even</b> on the hand.':' <b>Push.</b> Your bet comes back.'))+brk;
       s.noteBad=all<0;s.lastNet=all;if(all>s.st.big)s.st.big=all;
       lines.push({id:s.id,name:s.name,net:all});
-      if(s.id===me().id){if(all>0)SFX.win();else if(all<0)SFX.lose();}
+      if(s.id===me().id){if(all>0){try{window.suQ&&window.suQ('win');}catch(e){}}if(all>0)SFX.win();else if(all<0)SFX.lose();}
     });
     (function(){var bs=players.filter(isBot);if(!bs.length)return;
       if(dx>21&&!dBJ){var hk=bs.filter(function(b){return botKey(b)==='never';})[0];talk(hk||pick(bs),'dbust',0.55,500);return;}
