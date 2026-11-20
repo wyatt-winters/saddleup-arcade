@@ -1979,8 +1979,21 @@ LK.BALLS.forEach(function(b){if(b.id!=='classic'&&!b.proc){var im=BSHEET[b.id]=a
 function texPrep(im){try{var w=im.naturalWidth,h=im.naturalHeight;if(w<2048||h<128)return;var k=document.createElement('canvas');k.width=w;k.height=h;var g=k.getContext('2d');g.drawImage(im,0,0);
   var d=g.getImageData(0,0,w,h).data,cw=w/16,cy=Math.floor(h/2),rs=[];
   for(var n=1;n<16;n++){var x0=Math.floor(n*cw),x;for(x=0;x<cw/2;x++)if(d[(cy*w+x0+x)*4+3]>140)break;rs.push(cw/2-x);}
-  rs.sort(function(a,b){return a-b;});im._px=d;im._w=w;im._cw=cw;im._ch=h;im._r=Math.max(20,rs[Math.floor(rs.length/2)]-1);}catch(e){im._px=null;}}
-function texRGB(sh,n,bx,by,bz){var s=bz>=0?1:-1,u=bx*s,v=by,q=Math.sqrt(u*u+v*v);if(q>0.78){u*=0.78/q;v*=0.78/q;}   /* stay off the painting's outline and baked edge shadow */
+  rs.sort(function(a,b){return a-b;});im._px=d;im._w=w;im._cw=cw;im._ch=h;im._r=Math.max(20,rs[Math.floor(rs.length/2)]-1);
+  /* each ball's own body colour, read from a ring just inside the painting's edge (the decals feather into it) */
+  im._base=[];for(var bn=0;bn<16;bn++){var R0=[],G0=[],B0=[];for(var k=0;k<72;k++){var an=k/72*Math.PI*2,rr2=im._r*0.7,px=Math.round(bn*cw+cw/2+Math.cos(an)*rr2),py=Math.round(h/2+Math.sin(an)*rr2),o=(py*w+px)*4;
+      if(d[o+3]<200)continue;if(Math.abs(Math.sin(an))>0.5&&bn>8)continue;R0.push(d[o]);G0.push(d[o+1]);B0.push(d[o+2]);}
+    if(R0.length<8){im._base.push(null);continue;}[R0,G0,B0].forEach(function(a){a.sort(function(x,y){return x-y;});});var m=R0.length>>1;im._base.push([R0[m],G0[m],B0[m]]);}
+}catch(e){im._px=null;}}
+/* painted sets: the artwork is a decal on the front and back of the ball, feathered into the ball's own colour round the middle,
+   so there's no smeared rim or hard seam as it rolls (stripes keep their cream caps) */
+function texBase(n,by,sh){var cr=BCREAM||[246,243,230],own=sh&&sh._base&&sh._base[n];if(n===0)return own||BPAL[0]||cr;if(n>8&&(by>0.56||by<-0.56))return cr;return own||BPAL[n]||[128,128,128];}
+function texRGB(sh,n,bx,by,bz){var s=bz>=0?1:-1,u=bx*s,v=by,q=Math.sqrt(u*u+v*v);
+  var a=q<=0.6?1:q>=0.82?0:(function(t){return t*t*(3-2*t);})((0.82-q)/0.22);
+  if(a<=0)return texBase(n,by,sh);
+  var tc=texPix(sh,n,u,v,q);if(a>=1)return tc;var b=texBase(n,by,sh);
+  return [b[0]+(tc[0]-b[0])*a|0,b[1]+(tc[1]-b[1])*a|0,b[2]+(tc[2]-b[2])*a|0];}
+function texPix(sh,n,u,v,q){if(q>0.78){u*=0.78/q;v*=0.78/q;}
   var r=sh._r*0.985,cx=n*sh._cw+sh._cw/2-0.5,cy=sh._ch/2-0.5,d=sh._px,W=sh._w;
   var fx=cx+u*r,fy=cy+v*r,x0=Math.floor(fx),y0=Math.floor(fy),o=(y0*W+x0)*4;
   if(d[o+3]<120){fx=cx+u*r*0.94;fy=cy+v*r*0.94;x0=Math.floor(fx);y0=Math.floor(fy);o=(y0*W+x0)*4;}
