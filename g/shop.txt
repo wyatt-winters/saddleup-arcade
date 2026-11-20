@@ -208,9 +208,14 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   function addQ(){if(document.querySelector('.su-q'))return;var r=document.createElement('div');r.className='row su-q';
     r.innerHTML='<button type="button" class="su-navb su-qb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h10l3 3v15H6z"/><path d="M9 9h7M9 13h7M9 17h4"/></svg>Daily Quests<i></i></button>';
     if(!put(r,true))return;
-    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'nav',to:'quests'},'*');}catch(x){}});qpaint();}
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'nav',to:'quests'},'*');}catch(x){}});qpaint();addWN();}
+  var wn=0;function wpaint(){var i=document.querySelector('.su-wnb i');if(!i)return;i.textContent=wn>9?'9+':String(wn);i.classList.toggle('on',wn>0);}
+  function addWN(){if(document.querySelector('.su-wn'))return;var q=document.querySelector('.su-q');if(!q)return;var r=document.createElement('div');r.className='row su-wn';
+    r.innerHTML='<button type="button" class="su-navb su-qb su-wnb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13v14H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v8a2 2 0 0 1-2 2"/><path d="M7 9h7M7 13h7M7 16h4"/></svg>What’s New<i></i></button>';
+    q.parentNode.insertBefore(r,q.nextSibling);
+    r.querySelector('button').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();try{document.documentElement.classList.remove('fsopt-open');}catch(x){}try{parent.postMessage({arcade:'whatsnew'},'*');}catch(x){}});wpaint();}
   try{parent.postMessage({arcade:'qask'},'*');}catch(x){}setTimeout(function(){try{parent.postMessage({arcade:'qask'},'*');}catch(x){}},1500);
-  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='qcount'){qn=+d.n||0;if(d.self){var q=document.querySelector('.su-q');if(q)q.remove();return;}addQ();qpaint();}});
+  addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='qcount'){qn=+d.n||0;wn=+d.news||0;if(!d.self)setTimeout(function(){addWN();wpaint();},0);if(d.self){var q=document.querySelector('.su-q');if(q)q.remove();return;}addQ();qpaint();}});
   function addAcct(){
     if(document.querySelector('.su-acct'))return;
     var r=document.createElement('div');r.className='row su-acct';r.innerHTML='<span>Account</span><button type="button" class="su-acctb"></button>';
@@ -482,7 +487,7 @@ function flash(t,bad){var f=$('flash');f.textContent=t;f.className='flash'+(bad?
 function owned(){try{var c=JSON.parse(localStorage.getItem('su_cards')||'null');return c&&Array.isArray(c.packs)?c.packs.length:0;}catch(e){return 0;}}
 function restockText(){var t=new Date(),m=new Date(t.getFullYear(),t.getMonth(),t.getDate()+1),ms=m-t,h=Math.floor(ms/3600000),mm=Math.floor(ms%3600000/60000);return 'Restocks in '+h+'h '+mm+'m';}
 function render(){var bank=wget();$('bank').textContent=fmt(bank);$('restock').textContent=restockText();
-  var n=owned();$('owned').innerHTML=n?'You have <b>'+n+'</b> unopened pack'+(n===1?'':'s')+' in your Cards.':'No unopened packs yet.';$('openCards').disabled=!n;
+  var n=owned();$('owned').innerHTML=n?'You have <b>'+n+'</b> unopened pack'+(n===1?'':'s')+' in your Cards.':'No unopened packs yet.';$('openCards').disabled=!n;$('openCards').innerHTML='Open packs'+(n?' <span style="display:inline-block;min-width:20px;padding:1px 6px;margin-left:4px;border-radius:999px;background:#7f1d1d;color:#fff;font-size:12px;font-weight:800;line-height:18px">'+n+'</span>':'');
   $('shelf').innerHTML=PACKS.map(function(p){var L=left(p),pr=price(p),q=Math.max(L?1:0,Math.min(QTY[p.n]||1,L)),cost=q*pr,afford=Math.floor(bank/pr);QTY[p.n]=q;
     return '<div class="slot'+(L?'':' sold')+'" data-n="'+p.n+'"><div class="pk" style="background-image:url('+packArt(p.n)+')"></div><h3>'+p.name+'</h3><div class="ct">'+p.n+' card'+(p.n>1?'s':'')+' per pack</div>'+
       '<div class="price">'+fmt(pr)+'</div><div class="stock'+(L===0?' out':L<=2?' lo':'')+'">'+(L?L+' in stock':'Sold out today')+'</div>'+
