@@ -181,6 +181,38 @@ button.dg.slot.on:not(:disabled){color:#1a1206}
 .tix .em3.lg{width:110px;height:110px}
 .confet{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:30;animation:confet 2.6s ease-in forwards}
 @keyframes confet{0%{transform:translateY(-35%) scale(1.05);opacity:0}12%{opacity:1}80%{opacity:1}100%{transform:translateY(25%) scale(1.1);opacity:0}}
+
+/* ===== showmanship: name calls, price rolls, curtains, applause sign, chasing lights ===== */
+#felt{position:relative}
+.call{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .25s}
+.call.on{opacity:1}
+.call:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 40% 55% at 50% 50%,rgba(255,230,150,.28),rgba(0,0,0,.72) 70%)}
+.call .beam{position:absolute;top:-10%;width:34%;height:130%;background:linear-gradient(180deg,rgba(255,240,190,.55),rgba(255,240,190,0) 85%);clip-path:polygon(42% 0,58% 0,100% 100%,0 100%);mix-blend-mode:screen;transform-origin:50% 0}
+.call .beam.l{left:2%;animation:beamL 1.6s ease-in-out infinite alternate}.call .beam.r{right:2%;animation:beamR 1.6s ease-in-out infinite alternate}
+@keyframes beamL{from{transform:rotate(24deg)}to{transform:rotate(-8deg)}}
+@keyframes beamR{from{transform:rotate(-24deg)}to{transform:rotate(8deg)}}
+.call b{position:relative;font:400 clamp(34px,8vw,76px) Rye,Georgia,serif;color:#ffe08a;letter-spacing:.04em;text-align:center;line-height:1.05;padding:0 12px;
+  text-shadow:0 0 18px rgba(255,190,60,.85),0 4px 0 #7a3b07,0 8px 22px rgba(0,0,0,.8);animation:callIn .55s cubic-bezier(.2,1.6,.4,1) both}
+.call span{position:relative;margin-top:10px;font:700 clamp(15px,2.6vw,22px) Inter,system-ui,sans-serif;color:#fff;background:rgba(0,0,0,.55);border:1px solid rgba(255,224,138,.5);padding:6px 16px;border-radius:999px;animation:callIn .55s .15s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes callIn{from{transform:scale(.3) rotate(-6deg);opacity:0}to{transform:none;opacity:1}}
+.call.bad b{color:#cbd5e1;text-shadow:0 4px 0 #334155,0 8px 22px rgba(0,0,0,.8)}
+.roll{position:fixed;left:50%;top:45%;transform:translate(-50%,-50%);z-index:8999;padding:40px 70px;background:radial-gradient(closest-side,rgba(0,0,0,.82),rgba(0,0,0,.55) 60%,rgba(0,0,0,0));display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.roll em{font:800 12px Inter,system-ui,sans-serif;letter-spacing:.24em;color:#ffe08a;font-style:normal;text-shadow:0 2px 6px #000}
+.roll .dg{display:flex;gap:5px;padding:10px 12px;border-radius:12px;background:linear-gradient(#2a0f05,#120603);border:3px solid #e8c35f;box-shadow:0 0 0 3px rgba(0,0,0,.5),0 0 30px rgba(255,190,60,.45),inset 0 0 20px rgba(0,0,0,.8)}
+.roll .dg i{font:900 clamp(30px,6vw,52px)/1 "Courier New",monospace;font-style:normal;color:#ffcf4a;min-width:.62em;text-align:center;padding:6px 4px;border-radius:6px;background:linear-gradient(#000,#1b0c05 50%,#000);text-shadow:0 0 12px rgba(255,180,40,.9)}
+.roll .dg i.sep{background:none;padding:6px 0;min-width:.35em}
+.roll .dg i.land{animation:land .28s ease-out}@keyframes land{0%{transform:translateY(-30%);filter:brightness(2)}100%{transform:none}}
+.applause{position:absolute;right:12px;top:58px;z-index:38;font:900 12px Inter,system-ui,sans-serif;letter-spacing:.2em;color:#7a3b07;background:#3b1208;border:2px solid #7a3b07;padding:5px 10px;border-radius:6px;opacity:.4;transition:opacity .2s,box-shadow .2s}
+.applause.on{background:#ffcf4a;color:#5a1a05;opacity:1;box-shadow:0 0 18px #ffcf4a;animation:apl .35s steps(2) infinite}@keyframes apl{50%{background:#fff3b0}}
+#vStage{position:relative;overflow:hidden}
+#vStage .crt{position:absolute;top:0;bottom:0;width:51%;z-index:30;pointer-events:none;background:repeating-linear-gradient(90deg,#7a0d14 0 14px,#a3151f 14px 26px,#5e0910 26px 34px);box-shadow:inset 0 -30px 40px rgba(0,0,0,.5),0 0 30px rgba(0,0,0,.6);transition:transform 1.1s cubic-bezier(.6,0,.2,1)}
+#vStage .crt.l{left:0}#vStage .crt.r{right:0}
+#vStage .crt:after{content:"";position:absolute;left:0;right:0;bottom:0;height:16px;background:repeating-linear-gradient(90deg,#e8c35f 0 6px,#a8802a 6px 12px)}
+#vStage.open .crt.l{transform:translateX(-102%)}#vStage.open .crt.r{transform:translateX(102%)}
+.top .ttl{background:linear-gradient(90deg,#ffe08a,#fff6d0,#ffcf4a,#ffe08a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shine 4s linear infinite}
+@keyframes shine{to{background-position:300% 0}}
+.itm.reveal{animation:pop .6s cubic-bezier(.2,1.6,.4,1)}@keyframes pop{0%{transform:scale(.6) rotateY(90deg);opacity:0}100%{transform:none;opacity:1}}
+.pod.win{animation:podw .5s ease-in-out 3}@keyframes podw{50%{transform:translateY(-8px) scale(1.08);filter:brightness(1.4)}}
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
 html.fs,html.fs body{height:100%;overflow:hidden!important}
@@ -542,7 +574,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     <div class="top" data-optbtn><span class="ttl">Saddle Up Showcase</span><span class="paidw">Bankroll: <b id="paid">$0.00</b></span></div>
     <div class="host" id="host"></div>
     <div class="scores" id="scores"></div>
-    <div class="flash" id="flash"></div>
+    <div class="flash" id="flash"></div><div class="applause" id="aplSign">APPLAUSE</div>
 
     <section id="vGate" class="v">
       <div class="door">
@@ -559,7 +591,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
       <div class="bidbox off" id="bidBox"><input type="number" inputmode="numeric" min="1" id="bidIn" placeholder="Your bid" aria-label="Your bid"><button type="button" class="go" id="bidGo">Bid</button></div>
     </section>
 
-    <section id="vStage" class="v hide">
+    <section id="vStage" class="v hide"><div class="crt l"></div><div class="crt r"></div>
       <img class="gprop" id="gProp" alt="" src=""><h2 id="gName"></h2>
       <p class="how" id="gHow"></p>
       <div id="gArea" class="gArea"></div>
@@ -876,12 +908,38 @@ function board(){var h='';S.people.filter(function(p){return p.me||p.stage||p.ro
   $('paid').textContent=money(S.paid,true);}
 /* ---------- the show ---------- */
 var HALVES=2,STAGE=3;
+/* ---------- showmanship ---------- */
+function noise(d,f0,f1,v,delay,q){var c=ac();if(!c)return;var t=c.currentTime+(delay||0),n=Math.floor(c.sampleRate*d),b=c.createBuffer(1,n,c.sampleRate),x=b.getChannelData(0);
+  for(var i=0;i<n;i++)x[i]=(Math.random()*2-1)*(Math.random()<.45?1:.25);var s=c.createBufferSource();s.buffer=b;var fl=c.createBiquadFilter();fl.type='bandpass';fl.Q.value=q||0.8;
+  fl.frequency.setValueAtTime(f0,t);fl.frequency.linearRampToValueAtTime(f1||f0,t+d);var g=c.createGain();g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(v,t+0.08);g.gain.linearRampToValueAtTime(v*0.8,t+d*0.7);g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+  s.connect(fl);fl.connect(g);g.connect(c.destination);s.start(t);s.stop(t+d+0.05);}
+SFX.applause=function(big){var d=big?3.2:2;for(var k=0;k<(big?18:10);k++)noise(0.09,1800+Math.random()*1800,0,0.05+Math.random()*0.05,Math.random()*d*0.8,3);noise(d,2200,1600,big?0.12:0.08,0,0.6);
+  var a=$('aplSign');if(a){a.classList.add('on');clearTimeout(a._t);a._t=setTimeout(function(){a.classList.remove('on');},d*1000);}};
+SFX.fanfare=function(){[[392,0],[523,.14],[659,.28],[784,.42],[659,.62],[784,.76],[1047,.92]].forEach(function(n){tone(n[0],n[1]>=.9?0.9:0.22,'sawtooth',0.07,n[1]);tone(n[0]*2,n[1]>=.9?0.9:0.22,'triangle',0.05,n[1]);});tone(130,1.2,'triangle',0.12,0.9);};
+SFX.trombone=function(){[[294,0,.4],[277,.42,.4],[262,.84,.4],[247,1.26,1.1]].forEach(function(n){tone(n[0],n[2],'sawtooth',0.09,n[1]);tone(n[0]*1.005,n[2],'sawtooth',0.06,n[1]);});};
+SFX.drum=function(d){for(var t=0;t<d;t+=0.045)tone(180+Math.random()*30,0.05,'triangle',0.05+t/d*0.08,t);};
+SFX.whoosh=function(){noise(0.5,400,2400,0.12,0,0.7);};
+var CALL_T=0;
+function bigCall(t,sub,ms,bad){var f=document.body,c=$('callBox');if(!c){c=document.createElement('div');c.id='callBox';c.className='call';f.appendChild(c);}
+  c.className='call'+(bad?' bad':'');c.innerHTML='<i class="beam l"></i><i class="beam r"></i><b>'+t+'</b>'+(sub?'<span>'+sub+'</span>':'');void c.offsetWidth;c.classList.add('on');
+  clearTimeout(CALL_T);CALL_T=setTimeout(function(){c.classList.remove('on');},ms||2200);}
+/* the actual retail price, rolled up digit by digit under a drum roll */
+function priceRoll(price,done){var f=document.body,txt=money(price),box=document.createElement('div');box.className='roll';
+  box.innerHTML='<em>ACTUAL RETAIL PRICE</em><div class="dg">'+txt.split('').map(function(ch){return /[0-9]/.test(ch)?'<i>0</i>':'<i class="sep">'+ch+'</i>';}).join('')+'</div>';f.appendChild(box);
+  var cells=[].slice.call(box.querySelectorAll('.dg i')).filter(function(x){return !x.classList.contains('sep');}),want=txt.replace(/[^0-9]/g,'').split(''),k=0,spin=setInterval(function(){cells.forEach(function(c,i){if(i>=k)c.textContent=Math.floor(Math.random()*10);});},55);
+  SFX.drum(0.5+want.length*0.28);
+  (function nx(){if(k>=cells.length){clearInterval(spin);tone(1568,0.3,'triangle',0.14);setTimeout(function(){box.remove();done();},900);return;}
+    later(function(){cells[k].textContent=want[k];cells[k].classList.add('land');tone(880+k*90,0.08,'square',0.05);k++;nx();},k===0?600:280);})();}
+var NICE=['Yeehaw!','Now we’re cookin’!','Look at that!','Ring the bell!','Holy smokes!'];
+var SAD=['Ooh, so close!','Not this time, partner','The barn door swings shut','Tough break!'];
+function oneOf(a){return a[Math.floor(Math.random()*a.length)];}
 function startShow(){clearT();useEntry();q('play');
   S={people:[],half:0,stage:[],played:{},paid:0,me:null,log:[],finalists:[],bidNo:0};
   S.me={n:'You',col:'#34d399',me:true,won:0,row:true};S.people.push(S.me);
   for(var i=0;i<3;i++){var b=mkBot();b.row=true;}
   board();host('Come on in, partner!','You’re in Bidders’ Row with three regulars. Closest bid without going over wins.');
-  later(nextBid,1600);}
+  SFX.fanfare();SFX.applause(true);bigCall('COME ON DOWN!','You’re the next contestant on the Saddle Up Showcase!',2600);
+  later(nextBid,3000);}
 function rowPeople(){return S.people.filter(function(p){return p.row;});}
 function stageOf(h){return S.people.filter(function(p){return p.stageHalf===h;});}
 /* ---------- One Bid ---------- */
@@ -891,7 +949,7 @@ function nextBid(){var onStage=stageOf(S.half),meOn=S.me.stageHalf===S.half;
   /* the last spot of each half is saved for you, so every entry plays two pricing games */
   if(onStage.length===STAGE-1&&!meOn){host('One spot left on stage…','and it’s yours! Come on up.');S.me.row=false;S.me.stageHalf=S.half;board();return later(function(){toStage(S.me,null);},1700);}
   var it=item('M');BID={it:it,bids:{},order:shuffle(rowPeople())};S.bidNo++;view('vRow');
-  $('bidItem').innerHTML=card(it);$('bidRow').innerHTML=BID.order.map(function(p,i){return '<div class="pod" id="pod'+i+'" style="--c:'+p.col+'"><em>'+esc(p.n)+'</em><b>&nbsp;</b></div>';}).join('');
+  $('bidItem').innerHTML=card(it,null,'reveal');SFX.whoosh();$('bidRow').innerHTML=BID.order.map(function(p,i){return '<div class="pod" id="pod'+i+'" style="--c:'+p.col+'"><em>'+esc(p.n)+'</em><b>&nbsp;</b></div>';}).join('');
   host('Up for bids: '+esc(it.n)+'!','Bid in whole dollars. Closest without going over wins it.');bidStep(0,null);}
 function bidStep(i,cap){if(i>=BID.order.length)return later(function(){revealBid(cap);},700);
   var p=BID.order[i];
@@ -908,15 +966,16 @@ function botBid(p,cap,i){var price=BID.it.p,b;
 function myBid(){if(!BID||!BID.wait)return;var v=Math.floor(+$('bidIn').value);var cap=BID.wait.cap;
   if(!(v>0)){flash('Enter a bid');return;}if(cap&&v>=cap){flash('Bid under '+money(cap));return;}if(taken(v)){flash('Someone already bid that');return;}
   BID.bids['You']=v;$('pod'+BID.wait.i).querySelector('b').textContent=money(v);$('bidBox').classList.add('off');var w=BID.wait;BID.wait=null;bidStep(w.i+1,w.cap);}
-function revealBid(cap){var price=BID.it.p,best=null,bv=-1;
+function revealBid(cap){if(!BID.rolled){BID.rolled=1;host('Let’s see the actual retail price…','');return priceRoll(BID.it.p,function(){revealBid(cap);});}BID.rolled=0;var price=BID.it.p,best=null,bv=-1;
   BID.order.forEach(function(p){var b=BID.bids[p.n];if(b!=null&&b<=price&&b>bv){bv=b;best=p;}});
   $('bidItem').innerHTML=card(BID.it,money(price));
-  if(!best){var low=Math.min.apply(null,Object.keys(BID.bids).map(function(k){return BID.bids[k];}));SFX.buzz();
+  if(!best){bigCall('EVERYBODY OVER!','Bid again, lower this time',1800,true);var low=Math.min.apply(null,Object.keys(BID.bids).map(function(k){return BID.bids[k];}));SFX.buzz();
     host('Everybody overbid! The price is '+money(price)+'.','Bid again, all under '+money(low)+'.');BID.bids={};
     BID.order.forEach(function(p,i){$('pod'+i).querySelector('b').innerHTML='&nbsp;';});BID.it.p=price;return later(function(){bidStep(0,low);},2200);}
   var perfect=bv===price;best.won+=BID.it.p+(perfect?500:0);best.row=false;best.stageHalf=S.half;
   BID.order.forEach(function(p,i){if(p===best)$('pod'+i).classList.add('win');});
-  if(best.me){SFX.win();payout(BID.it.p+(perfect?500:0));}else SFX.ding();
+  if(best.me){SFX.win();SFX.applause(perfect);payout(BID.it.p+(perfect?500:0));bigCall(perfect?'PERFECT BID!':'COME ON UP!',perfect?'$500 bonus for hitting it on the nose!':'You won the '+esc(BID.it.n)+'!',2300);}
+  else{SFX.ding();SFX.applause(false);bigCall(esc(best.n).toUpperCase()+', COME ON UP!',perfect?'A perfect bid!':'',1800);}
   host((best.me?'You win':esc(best.n)+' wins')+' the '+esc(BID.it.n)+'!',(perfect?'A perfect bid! $500 bonus. ':'')+'Price: '+money(price)+'.');
   board();var b=best;
   later(function(){if(!b.me){var n=mkBot();n.row=true;board();}toStage(b,BID.it);},2600);}
@@ -924,9 +983,9 @@ function revealBid(cap){var price=BID.it.p,best=null,bv=-1;
 function toStage(p,won){var pool=GAMES.filter(function(g){return !S.played[g.id];});if(!pool.length)pool=GAMES;var g=pick(pool);S.played[g.id]=1;
   if(!p.me){/* the regulars play theirs off camera */var ok=rf()<0.45,val=ok?g.botWin():0;p.won+=val;board();
     host(esc(p.n)+' plays '+g.name+'…',ok?'and wins '+money(val)+'!':'and comes up empty.');return later(nextBid,2600);}
-  view('vStage');$('gName').textContent=g.name;propSet(g.id);$('gHow').textContent=g.how;$('gArea').innerHTML='';
+  view('vStage');var vs=$('vStage');vs.classList.remove('open');void vs.offsetWidth;later(function(){vs.classList.add('open');SFX.whoosh();SFX.applause(false);},500);$('gName').textContent=g.name;propSet(g.id);$('gHow').textContent=g.how;$('gArea').innerHTML='';
   host('You’re playing '+g.name+'!','Good luck, partner.');
-  var fin=false;g.play($('gArea'),function(win,value,what){if(fin)return;fin=true;lockArea();if(win&&value>0){S.me.won+=value;payout(value);SFX.win();}else SFX.lose();board();
+  var fin=false;g.play($('gArea'),function(win,value,what){if(fin)return;fin=true;lockArea();if(win&&value>0){S.me.won+=value;payout(value);SFX.win();SFX.applause(true);bigCall(oneOf(NICE).toUpperCase(),'You won '+esc(what||money(value))+'!',2400);}else{SFX.trombone();bigCall(oneOf(SAD),'',1800,true);}board();
     $('gArea').insertAdjacentHTML('beforeend','<div class="res '+(win?'w':'l')+'">'+(win?'You won '+esc(what||money(value))+'!':'Not this time.')+'<button type="button" class="go" id="gNext">Continue</button></div>');
     $('gNext').onclick=function(){nextBid();};},{SFX:SFX,later:later,flash:flash});}
 function lockArea(){[].forEach.call($('gArea').querySelectorAll('button,input'),function(x){x.disabled=true;});[].forEach.call($('gArea').querySelectorAll('canvas'),function(x){x.style.pointerEvents='none';});}
@@ -956,7 +1015,7 @@ function wheelSpin(cb){wspin=true;ac();var start=wang,dist=WV.length*(1+rf()*1.2
   (function f(now){var p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,3);wang=start+dist*e;drawWheel();if(Math.floor(wang)!==last){last=Math.floor(wang);SFX.tick();}
     if(p<1)requestAnimationFrame(f);else{wspin=false;var v=WV[((Math.round(wang)%WV.length)+WV.length)%WV.length];cb(v);}})(t0);}
 var WH=null;
-function showdown(){var P=stageOf(S.half).sort(function(a,b){return a.won-b.won;});WH={P:P,i:0,res:{},lead:-1};view('vWheel');
+function showdown(){bigCall('THE BIG WHEEL!','Closest to a dollar goes to the Showcase',2200);SFX.fanfare();var P=stageOf(S.half).sort(function(a,b){return a.won-b.won;});WH={P:P,i:0,res:{},lead:-1};view('vWheel');
   host('Showdown at the Big Wheel!','Get as close to $1.00 as you can in one or two spins without going over.');wRow();later(wTurn,1500);}
 function wRow(){$('wRow').innerHTML=WH.P.map(function(p){var r=WH.res[p.n];return '<div class="pod'+(r&&r.out?' out':'')+'" style="--c:'+p.col+'"><em>'+esc(p.n)+'</em><b>'+(r?(r.out?'Over':(r.v===100?'$1.00':r.v+'¢')):'–')+'</b></div>';}).join('');}
 function wTurn(){if(WH.i>=WH.P.length)return wDone();var p=WH.P[WH.i],r=WH.res[p.n]={v:0,spins:0};wRow();
@@ -984,11 +1043,11 @@ function wDone(){var alive=WH.P.filter(function(p){return !WH.res[p.n].out&&S.fi
   if(!alive.length){var rest=WH.P.filter(function(p){return S.finalists.indexOf(p)<0;});win=[rest[rest.length-1]||WH.P[WH.P.length-1]];}
   if(win.length>1){host('A tie! One spin each to settle it.','');var best=-1,bw=null,k=0;(function tb(){if(k>=win.length){finishWheel(bw);return;}var p=win[k++];wheelSpin(function(v){if(v>best){best=v;bw=p;}host(esc(p.n)+': '+v+'¢','');later(tb,1200);});})();return;}
   finishWheel(win[0]);}
-function finishWheel(w){S.finalists.push(w);SFX.ding();host(esc(w.n)+(w.me?' are':' is')+' going to the Showcase!','');
+function finishWheel(w){S.finalists.push(w);SFX.ding();SFX.applause(true);if(w.me)SFX.fanfare();bigCall(w.me?'YOU’RE IN THE SHOWCASE!':esc(w.n).toUpperCase()+' ADVANCES!',w.me?'Off to the big finale':'',2400,!w.me);host(esc(w.n)+(w.me?' are':' is')+' going to the Showcase!','');
   later(function(){S.half++;if(S.half<HALVES){S.me.row=true;host('Second half!','Back to Bidders’ Row.');later(nextBid,1600);}else showcase();},2600);}
 /* ---------- the Showcase ---------- */
 function mkShowcase(){var a=items('M',3);a.push(item(rf()<0.6?'C':'M'));return a;}
-function showcase(){var F=S.finalists;view('vShow');
+function showcase(){var F=S.finalists;view('vShow');bigCall('SHOWCASE SHOWDOWN!','',2200);SFX.fanfare();SFX.applause(true);
   if(F.indexOf(S.me)<0){host('The Showcase: '+esc(F[0].n)+' vs '+esc(F[1].n)+'.','You didn’t make it this time, but you keep everything you won.');$('scBody').innerHTML='';return later(function(){endShow();},3200);}
   var you=S.me,them=F[0]===S.me?F[1]:F[0],A=mkShowcase(),B=mkShowcase();SC={you:you,them:them,A:A,B:B};
   var tot=function(L){return L.reduce(function(s,x){return s+x.p;},0);};SC.tA=tot(A);SC.tB=tot(B);
@@ -1004,17 +1063,17 @@ function scBid(){var mine=SC.mine;$('pkg'+mine).classList.add('mine');
   $('scGo').onclick=function(){var v=Math.floor(+$('scIn').value);if(!(v>0)){flash('Enter a bid');return;}scReveal(v);};setTimeout(function(){$('scIn').focus();},30);}
 function scReveal(my){var mine=SC.mine,theirs=mine==='A'?'B':'A',mv=mine==='A'?SC.tA:SC.tB,tv=theirs==='A'?SC.tA:SC.tB;
   var tb=Math.round(tv*(0.78+rf()*0.32)/10)*10;
-  $('scAct').innerHTML='';host('The actual retail prices…','');
+  $('scAct').innerHTML='';host('The actual retail prices…','');SFX.drum(1.6);
   later(function(){var md=mv-my,td=tv-tb,mOk=md>=0,tOk=td>=0,win=null;
     if(mOk&&(!tOk||md<td))win=SC.you;else if(tOk&&(!mOk||td<md))win=SC.them;else if(mOk&&tOk&&md===td)win=SC.you;
     var dbl=win&&((win===SC.you?md:td)<=250);
     $('scAct').innerHTML='<div class="cmp"><div><em>You bid</em><b>'+money(my)+'</b><small>Actual '+money(mv)+(mOk?' · '+money(md)+' under':' · over!')+'</small></div><div><em>'+esc(SC.them.n)+' bid</em><b>'+money(tb)+'</b><small>Actual '+money(tv)+(tOk?' · '+money(td)+' under':' · over!')+'</small></div></div>';
-    if(win===SC.you){var val=mv+(dbl?tv:0);SC.you.won+=val;payout(val);SFX.win();host(dbl?'Within $250! You win BOTH showcases!':'You win your showcase!','Worth '+money(val)+'.');}
-    else if(win){SC.them.won+=tv+(dbl?mv:0);SFX.lose();host(esc(SC.them.n)+' wins the Showcase.','');}
+    if(win===SC.you){var val=mv+(dbl?tv:0);SC.you.won+=val;payout(val);SFX.win();SFX.fanfare();SFX.applause(true);bigCall(dbl?'YOU WIN BOTH SHOWCASES!':'YOU WIN THE SHOWCASE!',money(val)+' in prizes!',3400);host(dbl?'Within $250! You win BOTH showcases!':'You win your showcase!','Worth '+money(val)+'.');}
+    else if(win){SC.them.won+=tv+(dbl?mv:0);SFX.trombone();bigCall(esc(SC.them.n).toUpperCase()+' WINS IT','So close, partner',2400,true);host(esc(SC.them.n)+' wins the Showcase.','');}
     else{SFX.buzz();host('Both bids went over!','Nobody takes home a showcase.');}
     board();later(endShow,4200);},1600);}
 /* ---------- end of the show ---------- */
-function endShow(){view('vEnd');var me=S.me,best=S.people.slice().sort(function(a,b){return b.won-a.won;})[0];q('over');if(best.me)q('win');
+function endShow(){view('vEnd');SFX.applause(true);var me=S.me,best=S.people.slice().sort(function(a,b){return b.won-a.won;})[0];q('over');if(best.me)q('win');
   $('endT').textContent=best.me?'Biggest winner of the day!':'That’s the show!';
   $('endP').innerHTML='You won <b>'+money(me.won)+'</b> in prizes.<br><b>'+money(S.paid,true)+'</b> went into your casino bankroll (10% of the retail value).';
   host('Thanks for playing Saddle Up Showcase!','Rebirth again to earn another entry.');}
