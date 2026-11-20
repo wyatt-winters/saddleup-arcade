@@ -71,6 +71,23 @@ html.fs #felt{flex:1;min-height:0;overflow:auto}
 .nextq{margin:4px auto 0;padding:12px 26px;border-radius:100px;font:900 16px Inter,sans-serif;background:linear-gradient(180deg,#facc15,#d97706);color:#1a1206;box-shadow:0 4px 0 #78350f;animation:nqp 1.6s ease-in-out infinite}
 @keyframes nqp{50%{transform:scale(1.04)}}
 
+/* ===== realistic stage ===== */
+#felt{border:0;border-radius:18px;
+  background:
+   radial-gradient(ellipse 40% 55% at 50% -10%,rgba(255,244,214,.34),transparent 70%),
+   radial-gradient(ellipse 28% 70% at 15% -10%,rgba(255,226,170,.16),transparent 70%),
+   radial-gradient(ellipse 28% 70% at 85% -10%,rgba(255,226,170,.16),transparent 70%),
+   linear-gradient(180deg,rgba(0,0,0,0) 70%,rgba(0,0,0,.55) 100%),
+   repeating-linear-gradient(90deg,#2a1608 0,#4a2a12 20px,#6b3e1c 32px,#3e2210 48px,#1f1006 62px),#2a1608;
+  box-shadow:inset 0 0 0 4px #b8892f,inset 0 0 0 7px #3a2408,inset 0 0 0 9px #e8c35f,inset 0 40px 80px rgba(0,0,0,.5),0 22px 60px rgba(0,0,0,.6)}
+
+.board{background:linear-gradient(180deg,#0e2747,#04101f);border:0;box-shadow:inset 0 0 0 3px #e8c35f,inset 0 0 0 6px #4a2f08,inset 0 0 0 8px #f5d27a,inset 0 0 30px rgba(0,0,0,.75),0 14px 34px rgba(0,0,0,.6)}
+.slot{background:linear-gradient(180deg,#3d7bff 0%,#1f4fd1 45%,#163a9e 55%,#0f2a75 100%);border:1px solid #8fb6ff;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -6px 12px rgba(0,0,0,.35),0 3px 8px rgba(0,0,0,.45);position:relative;overflow:hidden}
+.slot::after{content:'';position:absolute;left:0;right:0;top:0;height:46%;background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0));pointer-events:none}
+.slot .n{background:radial-gradient(circle at 40% 35%,#22385e,#050b16);border:2px solid #cfe0ff;box-shadow:0 0 10px rgba(140,190,255,.7);color:#e9f1ff;text-shadow:0 0 6px rgba(160,200,255,.9)}
+.slot.on{background:linear-gradient(180deg,#fff6cf 0%,#f5d27a 45%,#d4a72c 55%,#b8862a 100%);border-color:#fff3c4;box-shadow:inset 0 1px 0 #fff,inset 0 -6px 12px rgba(120,70,0,.3),0 0 18px rgba(255,215,120,.55);animation:flip .45s ease}
+@keyframes flip{0%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
 html.fs,html.fs body{height:100%;overflow:hidden!important}
