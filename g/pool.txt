@@ -2069,7 +2069,7 @@ function drawSprite(n){
       var ex=w2s(M[0]*sg2,M[3]*sg2),ey=w2s(M[1],M[4]),cpos=w2s(px,py),k=rr*0.47/29;
       c.save();
       c.setTransform(ex.x*k,ex.y*k,ey.x*k,ey.y*k,ctr+cpos.x*rr,ctr+cpos.y*rr);
-      c.beginPath();c.arc(0,0,28,0,Math.PI*2);c.clip();c.drawImage(DS,n*128+34,34,60,60,-30,-30,60,60);c.restore();}
+      c.beginPath();c.arc(0,0,28,0,Math.PI*2);c.clip();var dk=(DS.naturalWidth||2048)/2048;c.drawImage(DS,(n*128+34)*dk,34*dk,60*dk,60*dk,-30,-30,60,60);c.restore();}
     c.setTransform(1,0,0,1,0,0);lightLayer(c,sz);c=c0;c.save();c.globalCompositeOperation='source-atop';c.drawImage(lay,0,0);c.restore();}
   /* light: two table lamps overhead (a key light top-left, a softer one top-right), the felt bouncing green from below,
      a Fresnel rim, contact darkening, and the set's material (gloss, metal, glass, gem facets, glow) */
@@ -2585,8 +2585,9 @@ function cueVertical(it){var W=32,H=472,k=document.createElement('canvas');k.wid
   g.translate(W/2,H);g.rotate(-Math.PI/2);var cc=cueCanvas(it);
   if(cc)g.drawImage(cc,0,-W*CUESC/2,H,W*CUESC);else if(cueOk)g.drawImage(cueImg,0,-W/2,H,W);else{g.fillStyle='#d6b98a';g.fillRect(0,-5,H,10);}return k;}
 function trayBalls(it,box){var sh=BSHEET[it.id];
-  if(sh&&sh._ok){var pos0=[[1,0,0],[9,-1,1],[2,1,1],[10,-2,2],[8,0,2],[3,2,2]],sz0=20;pos0.forEach(function(p){var k=document.createElement('canvas');k.width=k.height=sz0*2;k.style.width=k.style.height=sz0+'px';
-      var g=k.getContext('2d');g.drawImage(sh,p[0]*128+4,4,120,120,0,0,sz0*2,sz0*2);k.style.left=(39-sz0/2+p[1]*10.5)+'px';k.style.top=(6+p[2]*18)+'px';box.appendChild(k);});return;}
+  if(sh&&sh._ok){var pos0=[[1,0,0],[9,-1,1],[2,1,1],[10,-2,2],[8,0,2],[3,2,2]],sz0=20;pos0.forEach(function(p){var k=document.createElement('canvas');k.width=k.height=sz0*3;k.style.width=k.style.height=sz0+'px';
+      /* sheets come at any size (16 cells across): scale the crop to the cell */
+      var cw=(sh.naturalWidth||2048)/16,g=k.getContext('2d');g.imageSmoothingQuality='high';g.drawImage(sh,p[0]*cw+cw*4/128,cw*4/128,cw*120/128,cw*120/128,0,0,sz0*3,sz0*3);k.style.left=(39-sz0/2+p[1]*10.5)+'px';k.style.top=(6+p[2]*18)+'px';box.appendChild(k);});return;}
   var keep=BSK,save=BPAL,sc=BCREAM;BSK=it;applyPreviewPal(it);
   var pos=[[1,0,0],[9,-1,1],[2,1,1],[10,-2,2],[8,0,2],[3,2,2]],sz=20;
   pos.forEach(function(p){var c=ballPreview(p[0],sz);c.style.left=(39-sz/2+p[1]*10.5)+'px';c.style.top=(6+p[2]*18)+'px';box.appendChild(c);});
