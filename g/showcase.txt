@@ -168,6 +168,19 @@ button.dg.slot.on:not(:disabled){color:#1a1206}
 .pkg{background:linear-gradient(180deg,rgba(20,10,6,.75),rgba(8,4,2,.85));border:0;box-shadow:inset 0 0 0 2px #6b4a12,0 10px 26px rgba(0,0,0,.5)}
 .pkg.mine{box-shadow:inset 0 0 0 3px #facc15,0 0 30px rgba(250,204,21,.55)}
 
+
+/* ===== photo art: stage, host, props, prizes ===== */
+#felt{background:linear-gradient(180deg,rgba(10,5,3,.62),rgba(10,5,3,.38) 28%,rgba(10,5,3,.5) 70%,rgba(10,5,3,.78) 100%),url('https://saddleup-arcade.vercel.app/art/shows/sc/show_stage_western.webp') center 30%/cover no-repeat,#3b0a12}
+.em3.pr3{filter:drop-shadow(0 6px 10px rgba(0,0,0,.6)) drop-shadow(0 0 1px rgba(255,255,255,.25))}
+.bidItem .em3.pr3,.itm .em3.pr3{width:120px;height:120px}
+.host{display:flex;align-items:center;gap:12px;text-align:left}.host .ht{flex:1;min-width:0}
+.hostimg{flex:0 0 auto;width:62px;height:62px;border-radius:50%;object-fit:cover;object-position:50% 6%;background:#1a0f08;border:2px solid #e8c35f;box-shadow:0 0 0 3px rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.5)}
+.gprop{display:block;max-height:130px;max-width:min(320px,70%);margin:0 auto -4px;object-fit:contain;filter:drop-shadow(0 10px 16px rgba(0,0,0,.65))}.gprop[src='']{display:none}
+#vGate{width:100%;border-radius:16px;padding:14px 10px 22px;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.45)),url('https://saddleup-arcade.vercel.app/art/shows/sc/show_curtain.webp') center/cover no-repeat;box-shadow:inset 0 0 40px rgba(0,0,0,.6)}
+.sclogo{display:block;width:min(560px,92%);margin:0 auto 6px;filter:drop-shadow(0 0 18px rgba(255,200,90,.45)) drop-shadow(0 6px 10px rgba(0,0,0,.6))}
+.tix .em3.lg{width:110px;height:110px}
+.confet{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:30;animation:confet 2.6s ease-in forwards}
+@keyframes confet{0%{transform:translateY(-35%) scale(1.05);opacity:0}12%{opacity:1}80%{opacity:1}100%{transform:translateY(25%) scale(1.1);opacity:0}}
 </style>
 <style>.wrap{padding-top:12px!important}</style><style>:root{--su-word:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad790e8c5c884efe3e529e6.svg");--su-mark:url("https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ad79093c5c884efe3e51d61.svg")}.pill>i:first-child{width:22px!important;height:22px!important;border-radius:0!important;background:var(--su-mark) center/contain no-repeat!important;box-shadow:none!important;margin:-4px 0}</style><style>
 html.fs,html.fs body{height:100%;overflow:hidden!important}
@@ -533,7 +546,8 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 
     <section id="vGate" class="v">
       <div class="door">
-        <div class="tix"><img class="em3 lg" alt="" src="https://saddleup-arcade.vercel.app/art/shows/em/1f39f-fe0f.webp"> <b id="gN">0</b><small>entries</small></div>
+        <img class="sclogo" alt="Saddle Up Showcase" src="https://saddleup-arcade.vercel.app/art/shows/sc/show_logo_sign.webp">
+        <div class="tix"><img class="em3 lg" alt="" src="https://saddleup-arcade.vercel.app/art/shows/sc/show_ticket.webp"> <b id="gN">0</b><small>entries</small></div>
         <p id="gMsg"></p>
         <button type="button" class="go big" id="gStart">Raise the curtain</button>
       </div>
@@ -546,7 +560,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     </section>
 
     <section id="vStage" class="v hide">
-      <h2 id="gName"></h2>
+      <img class="gprop" id="gProp" alt="" src=""><h2 id="gName"></h2>
       <p class="how" id="gHow"></p>
       <div id="gArea" class="gArea"></div>
     </section>
@@ -583,6 +597,12 @@ var ART=(function(){var B='https://saddleup-arcade.vercel.app/art/',ok={},cbs=[]
 <script>
 var EMB='https://saddleup-arcade.vercel.app/art/shows/em/',EMAP={"☕": "2615", "🧂": "1f9c2", "🌶️": "1f336-fe0f", "🫘": "1fad8", "🍖": "1f356", "🥞": "1f95e", "🥜": "1f95c", "🌾": "1f33e", "🥫": "1f96b", "🥣": "1f963", "🧈": "1f9c8", "🧃": "1f9c3", "🌮": "1f32e", "🍯": "1f36f", "🌽": "1f33d", "🍚": "1f35a", "🍑": "1f351", "🍁": "1f341", "🧣": "1f9e3", "🧤": "1f9e4", "🔪": "1f52a", "🃏": "1f0cf", "🎵": "1f3b5", "🍳": "1f373", "🏮": "1f3ee", "🐴": "1f434", "🤠": "1f920", "🧴": "1f9f4", "👔": "1f454", "🧺": "1f9fa", "⭐": "2b50", "⚙️": "2699-fe0f", "🪢": "1faa2", "🎩": "1f3a9", "👛": "1f45b", "🍲": "1f372", "🧦": "1f9e6", "🐎": "1f40e", "🪑": "1fa91", "🎶": "1f3b6", "🎱": "1f3b1", "🚲": "1f6b2", "📺": "1f4fa", "🔒": "1f512", "♨️": "2668-fe0f", "⛱️": "26f1-fe0f", "🛋️": "1f6cb-fe0f", "🔭": "1f52d", "🪚": "1fa9a", "⚓": "2693", "🚜": "1f69c", "🥾": "1f97e", "🎸": "1f3b8", "⛺": "26fa", "🕰️": "1f570-fe0f", "⚡": "26a1", "🔥": "1f525", "🚣": "1f6a3", "🏋️": "1f3cb-fe0f", "💻": "1f4bb", "💎": "1f48e", "🕹️": "1f579-fe0f", "🔧": "1f527", "✈️": "2708-fe0f", "🛻": "1f6fb", "🚗": "1f697", "🚙": "1f699", "🚤": "1f6a4", "🚐": "1f690", "🏍️": "1f3cd-fe0f", "🏎️": "1f3ce-fe0f", "🚘": "1f698", "⛵": "26f5", "🎟️": "1f39f-fe0f", "🐍": "1f40d", "💵": "1f4b5", "🧗": "1f9d7", "🐷": "1f437", "🎲": "1f3b2", "🏆": "1f3c6", "💰": "1f4b0", "🎉": "1f389"};
 function emHtml(e,cls){var c=EMAP[e]||EMAP[e+'\ufe0f']||EMAP[String(e).replace(/\ufe0f/g,'')];return c?'<img class="em3'+(cls?' '+cls:'')+'" alt="" draggable="false" src="'+EMB+c+'.webp">':'<span class="em">'+e+'</span>';}
+var SCB='https://saddleup-arcade.vercel.app/art/shows/sc/',PN=null,PROP={drop:'golddrop',climb:'mesa',pitch:'horseshoe',lucky7:'lucky7',range:'range',ten:'tenshots',rattle:'rattlers',anynum:'numberdraw',clock:'clock',punch:'punchboard',dice:'dice',most:'pick',hilo:'shelf',squeeze:'squeeze',cards:'cards',toorich:'toorich',safe:'safe',bonus:'bonus',check:'check',line:'lineup'};
+function pslug(n){return 'prize_'+String(n).toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');}
+function inCat(n){if(!PN){PN={};try{for(var k in CAT)CAT[k].forEach(function(a){PN[a[0]]=1;});}catch(e){}}return PN[n];}
+function prHtml(it,cls){if(!it||!inCat(it.n))return emHtml(it&&it.e,cls);return '<img class="em3 pr3'+(cls?' '+cls:'')+'" alt="" draggable="false" src="'+SCB+pslug(it.n)+'.webp">';}
+function propSet(id){var el=document.getElementById('gProp');if(el)el.setAttribute('src',PROP[id]?SCB+'prop_'+PROP[id]+'.webp':'');}
+function confetti(){var f=document.getElementById('felt');if(!f)return;var c=document.createElement('img');c.className='confet';c.alt='';c.src=SCB+'show_confetti.webp';f.appendChild(c);setTimeout(function(){c.remove();},2700);}
 function emRep(e,n){var s='';for(var i=0;i<n;i++)s+=emHtml(e,'xs');return s;}
 /* Saddle Up Showcase: the prize catalog. Original items with realistic made-up retail prices (whole dollars, cents for groceries). */
 var CAT={
@@ -619,7 +639,7 @@ function money(n,c){return '$'+(c?Number(n).toLocaleString('en-US',{minimumFract
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function I(cat){var x=pick(CAT[cat]);return {n:x[0],e:x[1],p:x[2]};}
 function Is(cat,k){return shuffle(CAT[cat]).slice(0,k).map(function(x){return {n:x[0],e:x[1],p:x[2]};});}
-function card(it,price,extra){return '<div class="itm'+(extra?' '+extra:'')+'">'+emHtml(it.e)+'<b>'+esc(it.n)+'</b>'+(price!=null?'<span class="pr">'+price+'</span>':'')+'</div>';}
+function card(it,price,extra){return '<div class="itm'+(extra?' '+extra:'')+'">'+prHtml(it)+'<b>'+esc(it.n)+'</b>'+(price!=null?'<span class="pr">'+price+'</span>':'')+'</div>';}
 function H(el,html){el.innerHTML=html;return el;}
 function btn(t,cls,id){return '<button type="button" class="go'+(cls?' '+cls:'')+'"'+(id?' id="'+id+'"':'')+'>'+t+'</button>';}
 function $q(el,s){return el.querySelector(s);}
@@ -650,7 +670,7 @@ G.push({id:'drop',name:'Gold Drop',how:'Pick the right price on four small prize
 G.push({id:'climb',name:'Mesa Climber',how:'Guess the prices of three small prizes. The climber moves up the mesa one step for every dollar you’re off. Stay within 25 steps total and win the big prize.',
  botWin:function(){return I('M').p;},
  play:function(el,done,U){var L=Is('S',3).map(function(x){x.p=Math.min(x.p,79);return x;}),k=0,steps=0,big=I('M');
-  function draw(){var h='<p class="gtip">Prize: '+emHtml(big.e,'sm')+' <b>'+esc(big.n)+'</b> ('+money(big.p)+')</p><div class="mesa"><div class="climber" style="bottom:'+Math.min(100,steps*4)+'%">'+emHtml('🧗','climb')+'</div><div class="edge">⚠️ 25</div></div>';
+  function draw(){var h='<p class="gtip">Prize: '+prHtml(big,'sm')+' <b>'+esc(big.n)+'</b> ('+money(big.p)+')</p><div class="mesa"><div class="climber" style="bottom:'+Math.min(100,steps*4)+'%">'+emHtml('🧗','climb')+'</div><div class="edge">⚠️ 25</div></div>';
     if(k<L.length)h+=card(L[k])+'<div class="bidbox"><input type="number" inputmode="numeric" id="cIn" placeholder="Your price ($)"><button type="button" class="go" id="cGo">Climb</button></div>';H(el,h);
     var i=$q(el,'#cIn');if(i){setTimeout(function(){i.focus();},20);var go=function(){var v=Math.floor(+i.value);if(!(v>0))return;var off=Math.abs(v-L[k].p);U.flash(esc(L[k].n)+': '+money(L[k].p)+' (off by '+off+')');steps+=off;k++;
         if(steps>25){draw();U.SFX.buzz();return U.later(function(){done(false,0);},900);}draw();if(k>=L.length)U.later(function(){done(true,big.p,big.n);},900);};$q(el,'#cGo').onclick=go;i.onkeydown=function(e){if(e.key==='Enter')go();};}}
@@ -659,7 +679,7 @@ G.push({id:'climb',name:'Mesa Climber',how:'Guess the prices of three small priz
 G.push({id:'pitch',name:'Horseshoe Pitch',how:'Pick the six groceries from cheapest to priciest, one at a time. Each one you get in order moves you closer to the stake. Then pitch the horseshoe: a ringer wins the prize.',
  botWin:function(){return I('M').p;},
  play:function(el,done,U){var L=Is('G',6),order=L.slice().sort(function(a,b){return a.p-b.p;}),k=0,ok=true,big=I('M');
-  function pickStep(){H(el,'<p class="gtip">Tap the <b>'+(k?'next cheapest':'cheapest')+'</b> item. Distance: <b>'+(6-k)+'</b></p><div class="grid3">'+L.map(function(it,i){return '<button type="button" class="opt itmb'+(it.used?' used':'')+'" data-i="'+i+'"'+(it.used?' disabled':'')+'>'+emHtml(it.e,'md')+'<span>'+esc(it.n)+'</span>'+(it.used?'<small>'+money(it.p,true)+'</small>':'')+'</button>';}).join('')+'</div>');
+  function pickStep(){H(el,'<p class="gtip">Tap the <b>'+(k?'next cheapest':'cheapest')+'</b> item. Distance: <b>'+(6-k)+'</b></p><div class="grid3">'+L.map(function(it,i){return '<button type="button" class="opt itmb'+(it.used?' used':'')+'" data-i="'+i+'"'+(it.used?' disabled':'')+'>'+prHtml(it,'md')+'<span>'+esc(it.n)+'</span>'+(it.used?'<small>'+money(it.p,true)+'</small>':'')+'</button>';}).join('')+'</div>');
     $a(el,'.opt').forEach(function(b){b.onclick=function(){var it=L[+b.getAttribute('data-i')];it.used=1;if(it===order[k]){k++;U.SFX.ding();if(k>=5){order[5].used=1;k=6;return pitch();}pickStep();}else{U.SFX.buzz();U.flash('That one was '+money(it.p,true));pitch();}};});}
   function pitch(){var zone=0.08+k*0.05,pos=0,dir=1,run=true;H(el,'<p class="gtip">You got <b>'+k+'</b> in order. Stop the swing in the gold zone for a ringer!</p><div class="meter"><i class="zone" style="left:'+(50-zone*50)+'%;width:'+zone*100+'%"></i><i class="needle" id="ndl"></i></div>'+btn('Pitch!','','pGo'));
     var n=$q(el,'#ndl');(function mv(){if(!run)return;pos+=dir*0.018;if(pos>1||pos<0){dir*=-1;pos=Math.max(0,Math.min(1,pos));}n.style.left=pos*100+'%';requestAnimationFrame(mv);})();
@@ -710,7 +730,7 @@ G.push({id:'anynum',name:'Number Draw',how:'Call digits 0–9 one at a time to f
   if(rest[4]===0){var t=rest[4];rest[4]=rest[5];rest[5]=t;}
   var cd=[d0].concat(rest.slice(0,4)),pd=rest.slice(4,7),bd=rest.slice(7,9);car.p=+cd.join('');pz.p=+pd.join('');var bank=+bd.join('')/100,called={};called[d0]=1;
   var R=[{n:car.n,e:car.e,d:cd,v:car.p},{n:pz.n,e:pz.e,d:pd,v:pz.p},{n:'Piggy bank',e:'🐷',d:bd,v:bank,cents:1}];
-  function draw(){H(el,R.map(function(r){return '<div class="anyrow">'+emHtml(r.e)+'<b>'+esc(r.n)+'</b><span class="digs sm">'+(r.cents?'$0.':'$')+r.d.map(function(x){return '<span class="dg'+(called[x]?' on':'')+'">'+(called[x]?x:'?')+'</span>';}).join('')+'</span></div>';}).join('')+'<div class="keypad">'+[0,1,2,3,4,5,6,7,8,9].map(function(n){return '<button type="button" class="opt" data-n="'+n+'"'+(called[n]?' disabled':'')+'>'+n+'</button>';}).join('')+'</div>');
+  function draw(){H(el,R.map(function(r){return '<div class="anyrow">'+prHtml(r)+'<b>'+esc(r.n)+'</b><span class="digs sm">'+(r.cents?'$0.':'$')+r.d.map(function(x){return '<span class="dg'+(called[x]?' on':'')+'">'+(called[x]?x:'?')+'</span>';}).join('')+'</span></div>';}).join('')+'<div class="keypad">'+[0,1,2,3,4,5,6,7,8,9].map(function(n){return '<button type="button" class="opt" data-n="'+n+'"'+(called[n]?' disabled':'')+'>'+n+'</button>';}).join('')+'</div>');
     $a(el,'.keypad .opt').forEach(function(b){b.onclick=function(){called[+b.getAttribute('data-n')]=1;U.SFX.tick();for(var i=0;i<R.length;i++){if(R[i].d.every(function(x){return called[x];})){draw();var r=R[i];return U.later(function(){done(i<2,i<2?r.v:0,i<2?r.n:'');if(i===2)U.flash('The piggy bank: '+money(r.v,true));},700);}}draw();};});}
   draw();}});
 /* 9. Sundown Clock: 30 seconds to price two prizes with higher/lower hints */
@@ -747,13 +767,13 @@ G.push({id:'dice',name:'Dice Ranch',how:'The car’s price uses only the digits 
 G.push({id:'most',name:'Priciest Pick',how:'Three prizes. Pick the one that costs the most and you win all three.',
  botWin:function(){return Is('M',3).reduce(function(s,x){return s+x.p;},0);},
  play:function(el,done,U){var L=Is('M',3),best=L.slice().sort(function(a,b){return b.p-a.p;})[0],tot=L.reduce(function(s,x){return s+x.p;},0);
-  H(el,'<div class="grid3">'+L.map(function(it,i){return '<button type="button" class="opt itmb" data-i="'+i+'">'+emHtml(it.e,'md')+'<span>'+esc(it.n)+'</span>'+'</button>';}).join('')+'</div>');
+  H(el,'<div class="grid3">'+L.map(function(it,i){return '<button type="button" class="opt itmb" data-i="'+i+'">'+prHtml(it,'md')+'<span>'+esc(it.n)+'</span>'+'</button>';}).join('')+'</div>');
   $a(el,'.opt').forEach(function(b){b.onclick=function(){var it=L[+b.getAttribute('data-i')];U.flash(L.map(function(x){return x.n+' '+money(x.p);}).join(' · '));done(it===best,it===best?tot:0,'all three ('+money(tot)+')');};});}});
 /* 13. High-Low Shelf: pick the three priciest of six groceries */
 G.push({id:'hilo',name:'High-Low Shelf',how:'Six groceries. Put the three most expensive on the top shelf. Get all three right and win the prize.',
  botWin:function(){return I('M').p;},
  play:function(el,done,U){var L=Is('G',6),top=L.slice().sort(function(a,b){return b.p-a.p;}).slice(0,3),sel=[],big=I('M');
-  function draw(){H(el,'<p class="gtip">Prize: '+emHtml(big.e,'sm')+' '+esc(big.n)+' · Picked: <b>'+sel.length+'/3</b></p><div class="grid3">'+L.map(function(it,i){return '<button type="button" class="opt itmb'+(sel.indexOf(it)>=0?' sel':'')+'" data-i="'+i+'">'+emHtml(it.e,'md')+'<span>'+esc(it.n)+'</span>'+'</button>';}).join('')+'</div>');
+  function draw(){H(el,'<p class="gtip">Prize: '+prHtml(big,'sm')+' '+esc(big.n)+' · Picked: <b>'+sel.length+'/3</b></p><div class="grid3">'+L.map(function(it,i){return '<button type="button" class="opt itmb'+(sel.indexOf(it)>=0?' sel':'')+'" data-i="'+i+'">'+prHtml(it,'md')+'<span>'+esc(it.n)+'</span>'+'</button>';}).join('')+'</div>');
     $a(el,'.opt').forEach(function(b){b.onclick=function(){var it=L[+b.getAttribute('data-i')],j=sel.indexOf(it);if(j>=0)sel.splice(j,1);else if(sel.length<3)sel.push(it);U.SFX.tick();
       if(sel.length===3){var ok=sel.every(function(x){return top.indexOf(x)>=0;});U.flash(L.slice().sort(function(a,b){return b.p-a.p;}).map(function(x){return x.n+' '+money(x.p,true);}).join(' · '));return done(ok,ok?big.p:0,big.n);}draw();};});}
   draw();}});
@@ -792,7 +812,7 @@ G.push({id:'bonus',name:'Bonus Window',how:'Four small prizes, each with a wrong
  botWin:function(){return I('M').p;},
  play:function(el,done,U){var L=Is('S',4),bw=rnd(4),k=0,won=[],val=0,big=I('M');
   function draw(){if(k>=4){var gotBonus=won.indexOf(bw)>=0;H(el,'<div class="wins">'+L.map(function(x,i){return '<div class="win'+(won.indexOf(i)>=0?' got':'')+'">'+(i===bw?'⭐ BONUS':'Window '+(i+1))+'</div>';}).join('')+'</div>');var tot=val+(gotBonus?big.p:0);return done(tot>0,tot,(gotBonus?big.n+' + ':'')+won.length+' small prize'+(won.length===1?'':'s'));}
-    var it=L[k],shown=Math.max(3,it.p+(rf()<0.5?-1:1)*(4+rnd(20)));H(el,'<p class="gtip">Window '+(k+1)+' of 4 · Big prize: '+emHtml(big.e,'sm')+' '+esc(big.n)+'</p>'+card(it,money(shown))+'<div class="opts"><button type="button" class="opt" data-h="1">Higher</button><button type="button" class="opt" data-h="0">Lower</button></div>');
+    var it=L[k],shown=Math.max(3,it.p+(rf()<0.5?-1:1)*(4+rnd(20)));H(el,'<p class="gtip">Window '+(k+1)+' of 4 · Big prize: '+prHtml(big,'sm')+' '+esc(big.n)+'</p>'+card(it,money(shown))+'<div class="opts"><button type="button" class="opt" data-h="1">Higher</button><button type="button" class="opt" data-h="0">Lower</button></div>');
     $a(el,'.opt').forEach(function(b){b.onclick=function(){var hi=b.getAttribute('data-h')==='1',ok=hi?it.p>shown:it.p<shown;if(ok){won.push(k);val+=it.p;U.SFX.ding();}else U.SFX.buzz();U.flash(it.n+': '+money(it.p));k++;U.later(draw,800);};});}
   draw();}});
 /* 19. Write the Check: make the prize plus your check land between $5,000 and $6,000 */
@@ -805,7 +825,7 @@ G.push({id:'check',name:'Write the Check',how:'Write yourself a check. If the pr
 G.push({id:'line',name:'Line ’Em Up',how:'Put three prizes in order from cheapest to most expensive. Get the order right and win all three.',
  botWin:function(){return Is('M',3).reduce(function(s,x){return s+x.p;},0);},
  play:function(el,done,U){var L=Is('M',3),sel=[];
-  function draw(){H(el,'<p class="gtip">Tap them from <b>cheapest</b> to <b>priciest</b>.</p><div class="grid3">'+L.map(function(it,i){var n=sel.indexOf(i);return '<button type="button" class="opt itmb'+(n>=0?' sel':'')+'" data-i="'+i+'">'+(n>=0?'<i class="rank">'+(n+1)+'</i>':'')+emHtml(it.e,'md')+'<span>'+esc(it.n)+'</span>'+'</button>';}).join('')+'</div>');
+  function draw(){H(el,'<p class="gtip">Tap them from <b>cheapest</b> to <b>priciest</b>.</p><div class="grid3">'+L.map(function(it,i){var n=sel.indexOf(i);return '<button type="button" class="opt itmb'+(n>=0?' sel':'')+'" data-i="'+i+'">'+(n>=0?'<i class="rank">'+(n+1)+'</i>':'')+prHtml(it,'md')+'<span>'+esc(it.n)+'</span>'+'</button>';}).join('')+'</div>');
     $a(el,'.opt').forEach(function(b){b.onclick=function(){var i=+b.getAttribute('data-i');if(sel.indexOf(i)>=0)return;sel.push(i);U.SFX.tick();
       if(sel.length===3){var ok=sel.every(function(x,j){return j===0||L[sel[j-1]].p<=L[x].p;}),tot=L.reduce(function(s,x){return s+x.p;},0);U.flash(L.slice().sort(function(a,b){return a.p-b.p;}).map(function(x){return x.n+' '+money(x.p);}).join(' < '));return done(ok,ok?tot:0,'all three ('+money(tot)+')');}draw();};});}
   draw();}});
@@ -823,7 +843,7 @@ function money(n,c){return '$'+(c?Number(n).toLocaleString('en-US',{minimumFract
 function item(cat){var x=pick(CAT[cat]);return {n:x[0],e:x[1],p:x[2],cat:cat};}
 function items(cat,k){return shuffle(CAT[cat]).slice(0,k).map(function(x){return {n:x[0],e:x[1],p:x[2],cat:cat};});}
 /* a price with its own digits, near the catalog price (games that need special digits build their own) */
-function card(it,showPrice){return '<div class="itm">'+emHtml(it.e)+'<b>'+esc(it.n)+'</b>'+(showPrice!=null?'<span class="pr">'+showPrice+'</span>':'')+'</div>';}
+function card(it,showPrice){return '<div class="itm">'+prHtml(it)+'<b>'+esc(it.n)+'</b>'+(showPrice!=null?'<span class="pr">'+showPrice+'</span>':'')+'</div>';}
 /* ---------- sound ---------- */
 var AC=null;function ac(){try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){}return AC;}
 function tone(f,d,type,v,delay){var c=ac();if(!c)return;var t=c.currentTime+(delay||0),o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v||0.15,t+0.008);g.gain.exponentialRampToValueAtTime(0.0001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+0.05);}
@@ -839,7 +859,7 @@ function rbLevel(){return Math.floor(+rbState().n||0);}
 /* ---------- bankroll: 10% of every prize's retail value ---------- */
 var CUT=0.10;
 function wget(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');return v&&typeof v.amt==='number'?v.amt:0;}catch(e){return 0;}}
-function payout(value){var cash=Math.round(value*CUT*100)/100;if(cash<=0)return 0;
+function payout(value){var cash=Math.round(value*CUT*100)/100;if(cash<=0)return 0;confetti();
   try{localStorage.setItem('su_casino_wallet',JSON.stringify({amt:Math.round((wget()+cash)*100)/100,t:Date.now()}));}catch(e){}
   try{parent.postMessage({arcade:'quest',ev:'pay',n:cash},'*');}catch(e){}
   S.paid+=cash;flash('+'+money(cash)+' to your bankroll');return cash;}
@@ -850,7 +870,7 @@ var S=null,timers=[];
 function later(f,ms){timers.push(setTimeout(f,ms));}
 function clearT(){timers.forEach(clearTimeout);timers=[];}
 function mkBot(){var used={};S.people.forEach(function(p){used[p.n]=1;});var pool=REGS.filter(function(r){return !used[r[0]];});var r=pick(pool);var p={n:r[0],col:r[1],me:false,won:0,acc:0.18+rf()*0.22};S.people.push(p);return p;}
-function host(a,b){$('host').innerHTML='<b>'+a+'</b>'+(b?'<span>'+b+'</span>':'');}
+function host(a,b){$('host').innerHTML='<img class="hostimg" alt="" src="'+SCB+'show_host.webp"><div class="ht"><b>'+a+'</b>'+(b?'<span>'+b+'</span>':'')+'</div>';}
 function view(k){['vRow','vStage','vWheel','vShow','vEnd','vGate'].forEach(function(id){$(id).classList.toggle('hide',id!==k);});}
 function board(){var h='';S.people.filter(function(p){return p.me||p.stage||p.row;}).forEach(function(p){h+='<div class="who'+(p.me?' me':'')+'" style="--c:'+p.col+'"><em>'+esc(p.n)+'</em><b>'+money(p.won)+'</b></div>';});$('scores').innerHTML=h;
   $('paid').textContent=money(S.paid,true);}
@@ -904,7 +924,7 @@ function revealBid(cap){var price=BID.it.p,best=null,bv=-1;
 function toStage(p,won){var pool=GAMES.filter(function(g){return !S.played[g.id];});if(!pool.length)pool=GAMES;var g=pick(pool);S.played[g.id]=1;
   if(!p.me){/* the regulars play theirs off camera */var ok=rf()<0.45,val=ok?g.botWin():0;p.won+=val;board();
     host(esc(p.n)+' plays '+g.name+'…',ok?'and wins '+money(val)+'!':'and comes up empty.');return later(nextBid,2600);}
-  view('vStage');$('gName').textContent=g.name;$('gHow').textContent=g.how;$('gArea').innerHTML='';
+  view('vStage');$('gName').textContent=g.name;propSet(g.id);$('gHow').textContent=g.how;$('gArea').innerHTML='';
   host('You’re playing '+g.name+'!','Good luck, partner.');
   var fin=false;g.play($('gArea'),function(win,value,what){if(fin)return;fin=true;lockArea();if(win&&value>0){S.me.won+=value;payout(value);SFX.win();}else SFX.lose();board();
     $('gArea').insertAdjacentHTML('beforeend','<div class="res '+(win?'w':'l')+'">'+(win?'You won '+esc(what||money(value))+'!':'Not this time.')+'<button type="button" class="go" id="gNext">Continue</button></div>');
@@ -1012,7 +1032,7 @@ fit();gate();
 addEventListener('storage',function(e){if(e.key==='su_rebirth'&&!S)gate();});
 addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='visible'&&d.on&&(!S||$('vGate').classList.contains('hide')===false))gate();});
 window.__sc_dbg={state:function(){return S;},games:function(){return GAMES;},start:startShow,entries:entries,
-  play:function(id){var g=GAMES.filter(function(x){return x.id===id;})[0];view('vStage');$('gName').textContent=g.name;$('gHow').textContent=g.how;$('gArea').innerHTML='';var out=null;g.play($('gArea'),function(w,v,what){if(out)return;lockArea();out={w:w,v:v,what:what};window.__sc_last=out;},{SFX:SFX,later:later,flash:flash});return g;}};
+  play:function(id){var g=GAMES.filter(function(x){return x.id===id;})[0];view('vStage');$('gName').textContent=g.name;propSet(g.id);$('gHow').textContent=g.how;$('gArea').innerHTML='';var out=null;g.play($('gArea'),function(w,v,what){if(out)return;lockArea();out={w:w,v:v,what:what};window.__sc_last=out;},{SFX:SFX,later:later,flash:flash});return g;}};
 })();
 
 <\u002fscript>
