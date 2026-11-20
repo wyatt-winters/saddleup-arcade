@@ -557,11 +557,11 @@ function host(a,b){$('host').innerHTML='<img class="hostimg" alt="" src="'+SCB+'
 function flash(t){var f=$('flash');f.textContent=t;f.classList.remove('on');void f.offsetWidth;f.classList.add('on');setTimeout(function(){f.classList.remove('on');},2200);}
 var timers=[];function later(f,ms){timers.push(setTimeout(f,ms));}function clearT(){timers.forEach(clearTimeout);timers=[];}
 function view(k){['vGate','vPlay','vEnd'].forEach(function(id){$(id).classList.toggle('hide',id!==k);});}
-/* ---------- entries: one per rebirth, shared with the Saddle Up Showcase ---------- */
+/* ---------- entries: one per rebirth, from rebirths ---------- */
 function rbState(){var r=null;try{r=JSON.parse(localStorage.getItem('su_rebirth')||'null');}catch(e){}return r&&typeof r==='object'?r:{n:0};}
 function entries(){var r=rbState();return Math.max(0,Math.floor(+r.n||0)-Math.floor(+r.scUsed||0));}
 function useEntry(){var r=rbState();r.scUsed=Math.floor(+r.scUsed||0)+1;try{localStorage.setItem('su_rebirth',JSON.stringify(r));}catch(e){}}
-function wget(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');return v&&typeof v.amt==='number'?v.amt:0;}catch(e){return 0;}}
+function wget(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');if(v&&typeof v.amt==='number')return v.amt;localStorage.setItem('su_casino_wallet',JSON.stringify({amt:1000,t:Date.now()}));return 1000;}catch(e){return 0;}}
 function payout(value){var cash=Math.round(value*CUT*100)/100;if(cash<0.01)return 0;
   try{localStorage.setItem('su_casino_wallet',JSON.stringify({amt:Math.round((wget()+cash)*100)/100,t:Date.now()}));}catch(e){}
   try{parent.postMessage({arcade:'quest',ev:'pay',n:cash},'*');}catch(e){}
@@ -569,7 +569,7 @@ function payout(value){var cash=Math.round(value*CUT*100)/100;if(cash<0.01)retur
 /* ---------- the game ---------- */
 var G=null;
 function gate(){clearT();view('vGate');var n=entries();$('gN').textContent=n;$('gStart').disabled=!n;
-  $('gMsg').innerHTML=n?'You have <b>'+n+'</b> entr'+(n===1?'y':'ies')+'. One game per entry. Entries are shared with the Saddle Up Showcase.':'Every <b>rebirth</b> earns one entry. Reach your next rebirth to ride in.';
+  $('gMsg').innerHTML=n?'You have <b>'+n+'</b> entr'+(n===1?'y':'ies')+'. One game per entry.':'Every <b>rebirth</b> earns one entry. Reach your next rebirth to ride in.';
   host('Welcome to Saddlebag Showdown!',n?'Twenty-six saddlebags, one Cattle Baron, and one big decision.':'Come back after your next rebirth.');$('paid').textContent='$0.00';}
 function start(){clearT();useEntry();q('play');var vals=shuffle(VALUES);
   G={bag:{},mine:0,open:{},round:0,left:ROUNDS[0],offers:[],over:false};for(var i=1;i<=26;i++)G.bag[i]=vals[i-1];

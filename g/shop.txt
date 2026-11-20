@@ -465,7 +465,7 @@ function rbN(){try{var r=JSON.parse(localStorage.getItem('su_rebirth')||'null');
 var START=[1000,5000,10000,25000,50000,100000,250000,500000,1e6,2.5e6];
 function startOf(n){return n<START.length?START[n]:2.5e6*Math.pow(2,n-9);}
 function fmt(v){var a=Math.abs(v),U=[[1e15,'Qa'],[1e12,'T'],[1e9,'B'],[1e6,'M']];for(var i=0;i<U.length;i++)if(a>=U[i][0]){var x=Math.round(a/U[i][0]*100)/100;return '$'+x+U[i][1];}return '$'+Math.round(v).toLocaleString('en-US');}
-function wget(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');return v&&typeof v.amt==='number'?v.amt:0;}catch(e){return 0;}}
+function wget(){try{var v=JSON.parse(localStorage.getItem('su_casino_wallet')||'null');if(v&&typeof v.amt==='number')return v.amt;localStorage.setItem('su_casino_wallet',JSON.stringify({amt:1000,t:Date.now()}));return 1000;}catch(e){return 0;}}
 function wset(a){try{localStorage.setItem('su_casino_wallet',JSON.stringify({amt:Math.round(a*100)/100,t:Date.now()}));}catch(e){}}
 /* the four packs: card count, base price at rebirth 0, and the daily stock range */
 var PACKS=[{n:1,name:'Single',base:250,lo:6,hi:24},{n:2,name:'Duo Pack',base:450,lo:4,hi:14},{n:3,name:'Trio Pack',base:650,lo:2,hi:9},{n:5,name:'Bounty Pack',base:1000,lo:0,hi:4}];
