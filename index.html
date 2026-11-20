@@ -746,7 +746,7 @@ function ripPack(pk,res,Vs,done){
   var tier=pk.n>=5?5:pk.n>=3?3:pk.n>=2?2:1,NM={1:'Single',2:'Duo Pack',3:'Trio Pack',5:'Bounty Pack'},ST={1:'&#9733;',2:'&#9733;&#9733;',3:'&#9733;&#9733;&#9733;',5:'&#10022;'};
   var RK={c:0,s:1,g:2},order=res.map(function(r,i){return i;}).sort(function(a,b){return RK[res[a].p.r]-RK[res[b].p.r];});
   var best=res.reduce(function(m,r){return RK[r.p.r]>RK[m]?r.p.r:m;},'c');
-  var TY={1:13.6,2:12}[tier]||14,zig=rpZig(TY,26),topClip='polygon(0% 0%,100% 0%,'+zig.slice().reverse().map(function(p){return p[0]+'% '+p[1]+'%';}).join(',')+')',
+  var TY={1:13.6,2:12,3:11.4}[tier]||14,zig=rpZig(TY,26),topClip='polygon(0% 0%,100% 0%,'+zig.slice().reverse().map(function(p){return p[0]+'% '+p[1]+'%';}).join(',')+')',
       botClip='polygon('+zig.map(function(p){return p[0]+'% '+p[1]+'%';}).join(',')+',100% 100%,0% 100%)';
   var art='<div class="rp-art t'+tier+'"></div><div class="rp-crimp tp"></div><div class="rp-crimp bt"></div>',
       lbl='<div class="rp-lbl"><div class="br">SADDLE UP</div><div class="nm">'+NM[tier]+'</div><div class="ct">'+pk.n+' CARD'+(pk.n>1?'S':'')+'</div><div class="st">'+ST[tier]+'</div></div>',
