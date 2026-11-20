@@ -1486,7 +1486,7 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
     var ORDER=['bank','debt','wins','games','quests','cards','wager','spins','pool'];
     /* what each goal means: shown when you hover a goal (or tap it on a phone) */
     var WHY={bank:'Your bankroll at the moment you rebirth. Chips sitting on a table mid-hand don\u2019t count, so finish your hand first.',debt:'You can\u2019t rebirth while you owe the bank or another player. Pay off every loan first (30% of each win already goes to your loans automatically).',wins:'Every game you win since your last rebirth, in any game: a winning hand, spin or round in the casino, or a match won, puzzle solved or board cleared in the Parlor. On the Stagecoach only big wins (20\u00d7 your bet) count. One win per game every 4 seconds.',games:'How many different games you\u2019ve played since your last rebirth. Placing a bet or finishing a round counts; just opening a game doesn\u2019t. The Casino Floor and Parlor lobbies don\u2019t count.',quests:'Daily Quests you\u2019ve completed since your last rebirth. You get a fresh set every day, so this one fills over several days.',cards:'Different regulars whose trading card you own, in any theme. This one never resets when you rebirth.',wager:'The total you\u2019ve bet in casino games since your last rebirth, win or lose.',spins:'Lucky Wheel spins since your last rebirth, free or paid. You get 5 free spins every day.',pool:'Pool games you\u2019ve won since your last rebirth, against the regulars or a live player.'};
-    var PLAYEV={bet:1,over:1,win:1,spin:1,pay:1,play:1},NOTG={floor:1,parlor:1,quests:1};
+    var PLAYEV={bet:1,over:1,win:1,spin:1,pay:1,play:1},NOTG={floor:1,parlor:1,quests:1};var RBW={};
     function rd(){var r=null;try{r=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){}r=r&&typeof r==='object'?r:{};
       r.n=Math.max(0,Math.floor(+r.n||0));r.run=r.run&&typeof r.run==='object'?r.run:{};var u=r.run;
       ['w','q','s','p','b'].forEach(function(k){u[k]=+u[k]||0;});u.g=Array.isArray(u.g)?u.g:[];r.hist=Array.isArray(r.hist)?r.hist:[];return r;}
@@ -1509,7 +1509,11 @@ function money0(n){n=Math.round(n*100)/100;return '$'+(n%1?n.toFixed(2):String(n
     var dirty=0;
     function ev(g,e,n){if(!PLAYEV[e]||NOTG[g])return;var r=rd(),u=r.run,ch=0;
       if(u.g.indexOf(g)<0){u.g.push(g);ch=1;}
-      if(e==='win'){u.w++;ch=1;if(g==='pool')u.p++;}
+      /* a win is either a game's own 'win' or a casino payout ('pay' only fires when you get back more than you staked).
+         One result can send both, so a 'win' and a 'pay' from the same game within 5s count once; repeat payouts (spin after spin) each count. */
+      var t=Date.now(),L=RBW[g]||(RBW[g]={w:0,p:0,wf:0,pf:0});
+      if(e==='pay'){if(t-L.w<5000&&L.wf)L.wf=0;else if(t-L.p>700){u.w++;ch=1;if(g==='pool')u.p++;L.pf=1;}L.p=t;}
+      if(e==='win'){if(t-L.p<5000&&L.pf)L.pf=0;else{u.w++;ch=1;if(g==='pool')u.p++;L.wf=1;}L.w=t;}
       if(e==='spin'){u.s++;ch=1;}
       if(e==='bet'&&n>1){u.b+=n;ch=1;}
       if(ch){wr(r);dirty=1;}}
