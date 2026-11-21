@@ -1098,7 +1098,7 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
    Progress is written by the arcade shell (it hears every game), payouts are trading cards (cards_collect.js). */
 var SUQ=(function(){
   var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','coach'];
-  var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','chess','checkers','pdice','trail','wrangler','ironclads','sudoku','drop4','freecell','survey','pwheel'];
+  var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','spades','chess','checkers','pdice','trail','wrangler','ironclads','sudoku','drop4','freecell','survey','pwheel'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
   /* quests added later join the rotation from NEWDAY, so a day's picks never change mid-day */
@@ -1118,6 +1118,7 @@ var SUQ=(function(){
     ['so1','e','Sit down at Solitaire','sol','open',1],
     ['ms1','e','Sit down at Mahjong Solitaire','mjsol','open',1],
     ['cw1','e','Deal a game of Classic War','cwar','open',1],
+    ['sp1','e','Sit down at the Spades table','spades','open',1],
     ['mn1','e','Try a round of Minesweeper','mines','open',1],
     ['gr1','e','Work the sluice at Gold Rush','gold','open',1],
     ['bg1','e','Play a game of Bingo','bingo','play',1],
@@ -1139,6 +1140,7 @@ var SUQ=(function(){
     ['sp2','m','Finish a game of Spider Solitaire','spider','over',1],
     ['ms2','m','Finish a game of Mahjong Solitaire','mjsol','over',1],
     ['cw2','m','Finish a game of Classic War','cwar','over',1],
+    ['sp2','m','Play 3 hands of Spades','spades','hand',3],
     ['cw3','m','Win a war in Classic War','cwar','war',1],
     ['do2','m','Finish a game of Dominoes','dominoes','over',1],
     ['mn2','m','Clear a Minesweeper field','mines','win',1],
@@ -1153,6 +1155,7 @@ var SUQ=(function(){
     ['bk3','h','Win a game of Backgammon','backgammon','win',1],
     ['mj3','h','Win a hand of Mahjong','mahjong','win',1],
     ['cw4','h','Win a game of Classic War','cwar','win',1],
+    ['sp3','h','Win a game of Spades','spades','win',1],
     ['he3','h','Win 5 pots at Texas Hold\u2019em','holdem','pay',5],
     ['kn1','e','Play a draw of Keno Blast','keno','play',1,0,0,NEWDAY],
     ['bs1','e','Play a card of Bingo Spins','bspins','play',1,0,0,NEWDAY],
