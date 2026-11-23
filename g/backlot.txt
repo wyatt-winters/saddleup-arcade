@@ -598,7 +598,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 <div class="wrap">
   <span class="pill"><i></i>Game Parlor &#xb7; The Back Lot</span>
   <h1>Pitch it. Ring it. Sink it.<span>Out back behind the saloon.</span></h1>
-  <p class="sub">Three throwing games and ten throws a round. <b>Drag back and let go</b>: pull further for more power, and sideways to aim. Top the <b>daily high-score board</b> for each game.</p>
+  <p class="sub">Three throwing games and ten throws a round. <b>Swipe up to throw</b> (or pull back like a slingshot): a longer swipe throws harder, and angle it left or right to aim. Top the <b>daily high-score board</b> for each game.</p>
   <div id="lot">
     <div class="modes" id="modes"><button type="button" data-m="shoes" class="on">Horseshoes</button><button type="button" data-m="rings">Ring Toss</button><button type="button" data-m="pong">Beer Pong</button></div>
     <div class="stage">
@@ -609,7 +609,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     </div>
     <div class="board"><h3>Today&rsquo;s best <span id="bMode">Horseshoes</span></h3><ol id="lb"><li class="mut">Loading&hellip;</li></ol><p class="mine" id="mine"></p><small id="lbNote">Resets at midnight Central.</small></div>
   </div>
-  <p class="rules"><b>How to throw:</b> press anywhere on the lane, drag <b>down</b> to wind up (further = harder) and <b>left or right</b> to aim, then let go. <b>Horseshoes:</b> a ringer around the stake is 3, a leaner 2, a shoe within a hand of the stake 1. Watch the wind flag. <b>Ring Toss:</b> ring a bottle neck: front row 1, middle 2, back 3, the gold bottle 5. <b>Beer Pong:</b> sink a cup for 1. Bounce it off the table first for 2. Two in a row and you&rsquo;re heating up (next cup ×2), three and you&rsquo;re on fire (×3). Clear the rack for a 5-point bonus. Every game: 10 throws a round.</p>
+  <p class="rules"><b>How to throw:</b> <b>swipe up</b> on the lane to throw: a longer swipe throws harder, and angling it left or right aims. You can also pull <b>back</b> like a slingshot and let go. <b>Horseshoes:</b> a ringer around the stake is 3, a leaner 2, a shoe within a hand of the stake 1. Watch the wind flag. <b>Ring Toss:</b> ring a bottle neck: front row 1, middle 2, back 3, the gold bottle 5. <b>Beer Pong:</b> sink a cup for 1. Bounce it off the table first for 2. Two in a row and you&rsquo;re heating up (next cup ×2), three and you&rsquo;re on fire (×3). Clear the rack for a 5-point bonus. Every game: 10 throws a round.</p>
 </div>
 <script>
 (function(){'use strict';
@@ -684,8 +684,9 @@ addEventListener('message',function(e){var d=e.data;if(!d||d.arcade!=='lbres')re
 function pt(e){var r=cv.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top};}
 cv.addEventListener('pointerdown',function(e){if(!G||G.over||anim)return;drag={a:pt(e),b:pt(e)};try{cv.setPointerCapture(e.pointerId);}catch(x){}e.preventDefault();});
 cv.addEventListener('pointermove',function(e){if(drag){drag.b=pt(e);e.preventDefault();}});
-function aimOf(d){var dx=d.a.x-d.b.x,dy=d.b.y-d.a.y;return {ax:Math.max(-1,Math.min(1,dx/(W*.45))),p:Math.max(0,Math.min(1,dy/(H*.55))),dy:dy};}
-function up(e){if(!drag)return;var a=aimOf(drag);drag=null;if(a.dy<14){pop('Drag down to wind up');return;}throwIt(a.ax,a.p);}
+/* two ways to throw: swipe up (flick it forward) or pull back like a slingshot; whichever way you dragged further wins */
+function aimOf(d){var up=d.a.y-d.b.y,dn=d.b.y-d.a.y,fl=up>dn,dy=fl?up:dn,dx=fl?d.b.x-d.a.x:d.a.x-d.b.x;return {ax:Math.max(-1,Math.min(1,dx/(W*.45))),p:Math.max(0,Math.min(1,dy/(H*.42))),dy:dy};}
+function up(e){if(!drag)return;var a=aimOf(drag);drag=null;if(a.dy<14){pop('Swipe up to throw');return;}throwIt(a.ax,a.p);}
 cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',function(){drag=null;});
 /* ---------- realistic rendering: textures, light and shadow, drawn once per size into a cached backdrop ---------- */
 function rnd(a){return Math.random()*a;}
@@ -802,7 +803,7 @@ function drawAim(){if(!drag)return;var a=aimOf(drag),m=P(),z0=.3,zt=z0+a.p*m.D,x
   /* power meter */var bw=Math.min(240,W*.4),bx=W/2-bw/2,by=H-26;cx.fillStyle='rgba(0,0,0,.55)';cx.fillRect(bx-2,by-2,bw+4,14);var gr=cx.createLinearGradient(bx,0,bx+bw,0);gr.addColorStop(0,'#34d399');gr.addColorStop(.6,'#fde047');gr.addColorStop(1,'#ef4444');cx.fillStyle=gr;cx.fillRect(bx,by,bw*a.p,10);
   cx.fillStyle='#fff';cx.font='800 11px Inter,sans-serif';cx.textAlign='center';cx.fillText('POWER '+Math.round(a.p*100)+'%',W/2,by-6);
   cx.strokeStyle='rgba(255,255,255,.35)';cx.lineWidth=2;cx.beginPath();cx.moveTo(drag.a.x,drag.a.y);cx.lineTo(drag.b.x,drag.b.y);cx.stroke();}
-function hand(){if(!G||G.over||anim||drag)return;var p=proj(0,1.05,.3);cx.fillStyle='rgba(255,255,255,.75)';cx.font='800 '+Math.max(12,H*.028)+'px Inter,sans-serif';cx.textAlign='center';cx.shadowColor='rgba(0,0,0,.7)';cx.shadowBlur=6;cx.fillText(G.n?'':'Drag down, aim, let go',W/2,H*.9);cx.shadowBlur=0;}
+function hand(){if(!G||G.over||anim||drag)return;var p=proj(0,1.05,.3);cx.fillStyle='rgba(255,255,255,.75)';cx.font='800 '+Math.max(12,H*.028)+'px Inter,sans-serif';cx.textAlign='center';cx.shadowColor='rgba(0,0,0,.7)';cx.shadowBlur=6;cx.fillText(G.n?'':'Swipe up to throw (or pull back and let go)',W/2,H*.9);cx.shadowBlur=0;}
 function frame(){cx.clearRect(0,0,W,H);scene();drawProjectile();drawAim();hand();requestAnimationFrame(frame);}
 /* ---------- sound ---------- */
 var AC=null;function tone(f,d,ty,v,f2){try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();var t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type=ty||'triangle';o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(v||.06,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d);}catch(e){}}
