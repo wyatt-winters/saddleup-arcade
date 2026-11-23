@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Retro Handheld</title>
+<title>Retro Pocket</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Rye&display=swap" rel="stylesheet">
 <style>
@@ -571,240 +571,356 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 .chipi.g{--cc:#0f9d58}.chipi.n{--cc:#1f2937}.chipi.r{--cc:#c81e1e}
 </style>
 <style>
-#rh{display:flex;gap:18px;align-items:flex-start;justify-content:center;flex-wrap:wrap;margin-top:12px}
-.shelf{width:250px;background:rgba(255,255,255,.03);border:1px solid rgba(242,210,126,.25);border-radius:14px;padding:12px}
-.shelf h3{margin:0 0 8px;font:400 18px Rye,Georgia,serif;color:#f2d27e}
-.cart{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:8px;margin-bottom:6px;color:#e2e8f0;cursor:pointer;font:600 13px Inter,sans-serif}
-.cart.on{border-color:#f2d27e;background:rgba(242,210,126,.12)}.cart i{flex:none;width:34px;height:40px;border-radius:4px 4px 3px 3px;background:linear-gradient(180deg,#8b8f98,#5b5f68);position:relative;box-shadow:inset 0 -6px 0 rgba(0,0,0,.25)}
-.cart i::after{content:"";position:absolute;left:5px;right:5px;top:6px;height:18px;border-radius:2px;background:var(--lab,#d6b25e)}.cart b{display:block}.cart small{display:block;color:#94a3b8;font-weight:500;font-size:11.5px}
-.own{display:block;margin:10px 0 6px;padding:10px;border:1px dashed rgba(242,210,126,.5);border-radius:10px;cursor:pointer;text-align:center}.own span{font:800 14px Inter;color:#fde68a}.own small{display:block;color:#94a3b8;font-size:11px;margin-top:3px}
-.lnk{background:none;border:0;color:#93c5fd;font:600 12px Inter;cursor:pointer;padding:4px 0;text-decoration:underline}
-.hh{display:flex;flex-direction:column;align-items:center;gap:10px}
-.body{position:relative;width:min(400px,94vw);background:linear-gradient(160deg,#d8d4c8,#b9b4a6);border-radius:18px 18px 70px 18px;padding:22px 22px 30px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.18),0 18px 40px rgba(0,0,0,.55)}
-.bezel{position:relative;background:#4b4f5e;border-radius:10px 10px 40px 10px;padding:22px 30px 26px}
-.led{position:absolute;left:10px;top:46%;width:8px;height:8px;border-radius:50%;background:#3a1a1a}.led.on{background:#ef4444;box-shadow:0 0 8px #ef4444}
-#scr{display:block;width:100%;aspect-ratio:160/144;image-rendering:pixelated;image-rendering:crisp-edges;background:#8bac0f;border-radius:3px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.35)}
-.ins,.ptxt{position:absolute;left:30px;right:30px;top:22px;bottom:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0f380f;font:800 15px Inter;text-align:center;pointer-events:none}.ins span{font-weight:600;font-size:12px;opacity:.8}.ins.off{display:none}
-.ptxt{display:none;background:rgba(15,56,15,.5);color:#e0f8d0;font-size:18px}.ptxt.on{display:flex}
-.brand{margin:10px 0 6px 4px;font:900 italic 15px Inter,sans-serif;color:#2c2a8a;letter-spacing:.04em}.brand i{font-weight:400}
-.pad{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
-.dpad{position:relative;width:110px;height:110px;touch-action:none}.dpad i{position:absolute;background:#2b2b2f;box-shadow:0 3px 0 #111}.dpad .u,.dpad .d{left:37px;width:36px;height:38px}.dpad .u{top:0;border-radius:5px 5px 0 0}.dpad .d{bottom:0;border-radius:0 0 5px 5px}
-.dpad .l,.dpad .r{top:37px;width:38px;height:36px}.dpad .l{left:0;border-radius:5px 0 0 5px}.dpad .r{right:0;border-radius:0 5px 5px 0}.dpad .c{left:37px;top:37px;width:36px;height:36px;box-shadow:none}.dpad i.p{background:#444}
-.ab{display:flex;gap:16px;transform:rotate(-25deg);margin-right:6px}.ab button{width:56px;height:56px;border-radius:50%;border:0;background:#9b1d4a;color:#f8d7e3;font:900 17px Inter;box-shadow:0 4px 0 #5a0f2a;cursor:pointer;touch-action:none}.ab button.p,.ss button.p span{transform:translateY(3px);box-shadow:0 1px 0 #5a0f2a}
-.ss{display:flex;gap:24px;justify-content:center;margin-top:18px}.ss button{background:none;border:0;color:#2c2a8a;font:800 10px Inter;letter-spacing:.1em;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;transform:rotate(-25deg);touch-action:none}.ss button span{width:46px;height:12px;border-radius:8px;background:#6b6a72;box-shadow:0 3px 0 #3b3a40}
-.grill{position:absolute;right:26px;bottom:24px;display:flex;gap:7px;transform:rotate(-25deg)}.grill i{width:6px;height:44px;border-radius:3px;background:rgba(0,0,0,.25);box-shadow:inset 0 2px 2px rgba(0,0,0,.4)}
-.ctl{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.ctl button{font:700 12.5px Inter;color:#e2e8f0;background:rgba(255,255,255,.06);border:1px solid rgba(242,210,126,.3);border-radius:10px;padding:7px 10px;cursor:pointer}.ctl button:disabled{opacity:.45;cursor:default}.ctl button.on{background:rgba(242,210,126,.2);color:#fde68a}
+.hhw{max-width:1500px!important}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-right:190px;margin-top:24px}
+.top h1{margin:0!important;font-size:26px!important}.top h1 span{font-size:13px!important}
+.cons{display:flex;gap:6px;flex-wrap:wrap}
+.cons button{font:800 12.5px Inter,sans-serif;color:#e2e8f0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px 12px;cursor:pointer}
+.cons button.on{color:#140d05;background:var(--acc);border-color:var(--acc)}
+.cons button i{font-style:normal;opacity:.7;font-weight:600;margin-left:4px}
+#rh{display:flex;gap:16px;align-items:flex-start;margin-top:10px}
+.stage{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+.scrbox{position:relative;width:min(100%,calc((var(--vh,800px) - 200px) * var(--ar)));min-width:240px;aspect-ratio:var(--ar);background:#05070b;border-radius:14px;padding:10px;box-sizing:border-box;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--acc) 55%,transparent),0 20px 50px rgba(0,0,0,.6),inset 0 0 30px rgba(0,0,0,.9)}
+.scrbox::before{content:"";position:absolute;left:14px;top:-3px;right:14px;height:3px;border-radius:3px;background:var(--acc);opacity:.8}
+#scr{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;background:#0b0f14;border-radius:6px;outline:none}
+.ins,.ptxt{position:absolute;inset:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border-radius:6px;text-align:center;pointer-events:none;color:#e2e8f0;font:800 20px Inter,sans-serif}
+.ins{background:radial-gradient(ellipse at center,rgba(20,26,36,.92),rgba(5,7,11,.98))}.ins.off{display:none}
+.ins b{font-size:clamp(16px,2.4vw,26px)}.ins .sub{font:600 13px Inter;color:#94a3b8}
+.ins .mk b{font-size:12.5px;margin-right:3px}.ins .mk{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;max-width:90%;font:600 12.5px Inter;color:#cbd5e1}
+.ptxt{display:none;background:rgba(5,7,11,.55);font-size:28px}.ptxt small{font:600 13px Inter;color:#cbd5e1}.ptxt.on{display:flex}
+kbd{display:inline-block;min-width:18px;padding:2px 6px;border-radius:6px;background:#1e2633;border:1px solid #3a4658;border-bottom-width:3px;color:#f8fafc;font:800 11.5px Inter,sans-serif;text-align:center;line-height:1.35}
+.kstrip{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;font:600 12.5px Inter;color:#94a3b8}.kstrip span{white-space:nowrap}.kstrip b{color:#e2e8f0;margin-right:3px}
+.ctl{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.ctl button{font:700 12.5px Inter;color:#e2e8f0;background:rgba(255,255,255,.06);border:1px solid rgba(242,210,126,.3);border-radius:10px;padding:7px 10px;cursor:pointer}
+.ctl button:disabled{opacity:.45;cursor:default}.ctl button.on{background:rgba(242,210,126,.2);color:#fde68a}
 .vol{display:flex;align-items:center;gap:6px;color:#e2e8f0;font-size:14px}.vol input{width:90px}
-.keys{max-width:420px;text-align:center;font-size:12px;color:#94a3b8;margin:0}
-.sheet{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(5,8,16,.7);z-index:50}.sheet.on{display:flex}.sheet .box{background:#1c1410;border:2px solid #c9a43c;border-radius:16px;padding:16px 18px;width:min(92vw,520px);color:#e2e8f0;font-size:13.5px}
+.side{width:320px;flex:none;background:rgba(255,255,255,.03);border:1px solid rgba(242,210,126,.25);border-radius:14px;padding:10px;box-sizing:border-box}
+.tabs{display:flex;gap:4px;margin-bottom:10px}.tabs button{flex:1;font:800 12.5px Inter;color:#cbd5e1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:8px 4px;cursor:pointer;position:relative}
+.tabs button.on{color:#140d05;background:var(--acc);border-color:var(--acc)}
+.tabs em{font-style:normal;position:absolute;top:-6px;right:-4px;background:#0ea5e9;color:#fff;border-radius:999px;font:800 10px Inter;padding:1px 6px}.tabs em:empty{display:none}
+.side{display:block!important}.side section{display:none!important}.side section.on{display:block!important}
+.side h3{margin:8px 0 6px;font:800 13px Inter;color:#f2d27e;letter-spacing:.02em}
+.cart{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:7px 8px;margin-bottom:5px;color:#e2e8f0;cursor:pointer;font:600 13px Inter,sans-serif}
+.cart.on{border-color:var(--acc);background:rgba(242,210,126,.12)}.cart i{flex:none;width:28px;height:32px;border-radius:4px 4px 3px 3px;background:linear-gradient(180deg,#8b8f98,#5b5f68);position:relative;box-shadow:inset 0 -5px 0 rgba(0,0,0,.25)}
+.cart i::after{content:"";position:absolute;left:4px;right:4px;top:5px;height:14px;border-radius:2px;background:var(--lab,#d6b25e)}.cart span{min-width:0}.cart b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cart small{display:block;color:#94a3b8;font-weight:500;font-size:11.5px}
+.cart u{cursor:pointer}.cart small .cl{color:#7dd3fc;font-weight:700}
+.own{display:block;margin:8px 0;padding:10px;border:1px dashed rgba(242,210,126,.5);border-radius:10px;cursor:pointer;text-align:center}.own span{font:800 14px Inter;color:#fde68a}.own small{display:block;color:#94a3b8;font-size:11px;margin-top:3px}
+.gbq{width:100%;box-sizing:border-box;background:#0b0705;color:#f8fafc;border:1px solid rgba(242,210,126,.35);border-radius:8px;padding:7px 9px;font:600 12.5px Inter;margin-bottom:6px}
+.mlist{max-height:calc(var(--vh,800px) - 360px);min-height:160px;overflow:auto;padding-right:2px}
+.lnk{background:none;border:0;color:#93c5fd;font:600 12px Inter;cursor:pointer;padding:8px 0 0;text-decoration:underline}
+.cloud p{margin:0 0 8px;font-size:12.5px;color:#cbd5e1}.cloud .use{font-size:11.5px;color:#94a3b8;margin-bottom:8px}
+.cb{font:800 12.5px Inter;color:#04223a;background:linear-gradient(180deg,#7dd3fc,#0ea5e9);border:0;border-radius:9px;padding:8px 11px;cursor:pointer;margin:2px 4px 8px 0}.cb.g{color:#e2e8f0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15)}
+.cbar{height:8px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin:4px 0 6px}.cbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0ea5e9,#22d3ee);transition:width .2s}
+.err{color:#fca5a5!important}
+.kt{width:100%;border-collapse:collapse;font:600 13px Inter;color:#e2e8f0}.kt td{padding:6px 4px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:middle}.kt td:first-child{color:#94a3b8;width:42%}
+.knote{font-size:12px;color:#94a3b8;margin-top:8px}
+.touch{display:none;width:100%;max-width:560px;justify-content:space-between;align-items:center;gap:8px;user-select:none;-webkit-user-select:none}
+.touch .dpad{position:relative;width:120px;height:120px;touch-action:none;flex:none}.dpad i{position:absolute;background:#2b2f38;box-shadow:0 3px 0 #111}.dpad .u,.dpad .d{left:41px;width:38px;height:42px}.dpad .u{top:0;border-radius:6px 6px 0 0}.dpad .d{bottom:0;border-radius:0 0 6px 6px}
+.dpad .l,.dpad .r{top:41px;width:42px;height:38px}.dpad .l{left:0;border-radius:6px 0 0 6px}.dpad .r{right:0;border-radius:0 6px 6px 0}.dpad .c{left:41px;top:41px;width:38px;height:38px;box-shadow:none}.dpad i.p{background:#4b5563}
+.tmid{display:flex;flex-direction:column;gap:12px;align-items:center}.lr,.ss{display:flex;gap:10px}
+.lr button,.ss button{font:800 11px Inter;letter-spacing:.06em;color:#e2e8f0;background:#2b2f38;border:0;border-radius:999px;padding:8px 12px;box-shadow:0 3px 0 #111;touch-action:none}
+.ab{display:flex;gap:14px;transform:rotate(-20deg)}.ab button{width:62px;height:62px;border-radius:50%;border:0;background:var(--acc);color:#140d05;font:900 19px Inter;box-shadow:0 4px 0 rgba(0,0,0,.5);touch-action:none}
+.touch button.p{transform:translateY(3px);box-shadow:0 1px 0 #111}
+.lr{display:none}.isgba .lr{display:flex}
+@media (pointer:coarse){.touch{display:flex}.kstrip{display:none}}
+body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:min(100%,calc((var(--vh,800px) - 120px) * var(--ar)))}
+.sheet{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(5,8,16,.7);z-index:50}.sheet.on{display:flex}.sheet .box{background:#1c1410;border:2px solid #c9a43c;border-radius:16px;padding:16px 18px;width:min(92vw,560px);max-height:86vh;overflow:auto;color:#e2e8f0;font-size:13.5px}
 .sheet h2{margin:0 0 10px;font:400 22px Rye,Georgia,serif;color:#f2d27e}.sheet a{color:#93c5fd}.sheet .fine{color:#94a3b8;font-size:12px}.go{font:800 14px Inter;color:#1a1206;background:linear-gradient(180deg,#fde68a,#d6a73a);border:0;border-radius:10px;padding:9px 16px;cursor:pointer}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#111827;border:1px solid #f2d27e;color:#fde68a;border-radius:999px;padding:8px 16px;font:700 13px Inter;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}.toast.on{opacity:1}
-@media (max-width:760px){.shelf{width:100%;order:2}.hh{order:1}.keys{display:none}}
-.gbq{width:100%;box-sizing:border-box;background:#0b0705;color:#f8fafc;border:1px solid rgba(242,210,126,.35);border-radius:8px;padding:6px 9px;font:600 12.5px Inter;margin-bottom:6px}.mlist{max-height:360px;overflow:auto}
-.cloud{margin-top:10px;padding:10px;border-radius:10px;background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.3)}.cloud h3{font-size:14px!important;margin:0 0 6px!important;color:#7dd3fc!important}.cloud p{margin:0 0 6px;font-size:12px;color:#cbd5e1}
-.cloud .cb{font:800 12.5px Inter;color:#04223a;background:linear-gradient(180deg,#7dd3fc,#0ea5e9);border:0;border-radius:9px;padding:7px 10px;cursor:pointer;margin:2px 4px 6px 0}.cloud .cb.g{color:#e2e8f0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15)}.cloud .cb:disabled{opacity:.5}
-.cbar{height:8px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin:4px 0 6px}.cbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0ea5e9,#22d3ee);transition:width .2s}.cloud .use{font-size:11px;color:#94a3b8}.cart small .cl{color:#7dd3fc;font-weight:700}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#111827;border:1px solid #f2d27e;color:#fde68a;border-radius:999px;padding:8px 16px;font:700 13px Inter;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}.toast.on{opacity:1}
+@media (max-width:900px){.top{padding-right:0;padding-top:34px}#rh{flex-direction:column}.side{width:100%}.scrbox{width:100%}.cons{margin-left:0}.mlist{max-height:50vh}}
 
 </style>
 </head>
 <body>
-<div class="wrap">
-  <span class="pill"><i></i>Game Parlor &#xb7; Retro Handheld</span>
-  <h1>Retro Handheld<span>Pop in a cartridge and play.</span></h1>
+<div class="wrap hhw">
+  <div class="top">
+    <span class="pill"><i></i>Game Parlor &#xb7; Handhelds</span>
+    <h1 id="ttl"></h1>
+    <nav class="cons" id="cons" aria-label="Pick a handheld"></nav>
+  </div>
   <div id="rh">
-    <aside class="shelf">
-      <h3>Cartridge shelf</h3>
-      <div id="carts"></div>
-      <label class="own"><input type="file" id="romIn" accept=".gb,.gbc,.zip" multiple hidden><span>&#x1f4be; Load your own ROMs</span><small>A .gb or .gbc file, or a whole .zip pack. They stay on this device unless you back them up to your private cloud below.</small></label>
-      <div id="mine"></div>
-      <div id="cloud" class="cloud"></div>
-      <button type="button" class="lnk" id="credBtn">Credits &amp; licenses</button>
-    </aside>
-    <div class="hh">
-      <div class="body">
-        <div class="bezel"><div class="led" id="led"></div><canvas id="scr" width="160" height="144" aria-label="Game screen"></canvas><div class="ins" id="ins"><b>Pick a cartridge</b><span>or load your own ROM</span></div><div class="ptxt" id="ptxt">Paused</div></div>
-        <div class="brand">SADDLE&nbsp;UP <i>POCKET</i></div>
-        <div class="pad">
-          <div class="dpad" id="dpad"><i class="u" data-k="up"></i><i class="d" data-k="down"></i><i class="l" data-k="left"></i><i class="r" data-k="right"></i><i class="c"></i></div>
-          <div class="ab"><button type="button" class="b" data-k="b">B</button><button type="button" class="a" data-k="a">A</button></div>
-        </div>
-        <div class="ss"><button type="button" data-k="select"><span></span>SELECT</button><button type="button" data-k="start"><span></span>START</button></div>
-        <div class="grill"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <main class="stage">
+      <div class="scrbox" id="sbox">
+        <canvas id="scr" aria-label="Game screen" tabindex="0"></canvas>
+        <div class="ins" id="ins"></div>
+        <div class="ptxt" id="ptxt">Paused<small>press P or click Resume</small></div>
       </div>
+      <div class="kstrip" id="kstrip"></div>
       <div class="ctl">
         <button type="button" id="bPause">&#x275a;&#x275a; Pause</button>
         <button type="button" id="bSave">&#x1f4be; Save state</button>
         <button type="button" id="bLoad">&#x23ea; Load state</button>
         <button type="button" id="bPal" title="Change screen colours">&#x1f3a8; Colours</button>
         <button type="button" id="bFF" title="Hold to fast-forward">&#x23e9; Fast</button>
+        <button type="button" id="bBig" title="Big screen (F)">&#x26f6; Big screen</button>
         <label class="vol">&#x1f50a;<input type="range" id="vol" min="0" max="100" value="50" aria-label="Volume"></label>
       </div>
-      <p class="keys"><b>Keys:</b> arrows or WASD move &#xb7; <b>X</b> or <b>K</b> = A &#xb7; <b>Z</b> or <b>J</b> = B &#xb7; <b>Enter</b> = Start &#xb7; <b>Shift</b> = Select &#xb7; hold <b>Space</b> to fast-forward. Game controllers work too.</p>
-    </div>
+      <div class="touch" id="touch">
+        <div class="dpad" id="dpad"><i class="u"></i><i class="d"></i><i class="l"></i><i class="r"></i><i class="c"></i></div>
+        <div class="tmid"><div class="lr"><button type="button" data-k="l">L</button><button type="button" data-k="r">R</button></div><div class="ss"><button type="button" data-k="select">SELECT</button><button type="button" data-k="start">START</button></div></div>
+        <div class="ab"><button type="button" class="b" data-k="b">B</button><button type="button" class="a" data-k="a">A</button></div>
+      </div>
+    </main>
+    <aside class="side">
+      <div class="tabs" role="tablist"><button type="button" data-t="games" class="on">&#x1f3ae; Games</button><button type="button" data-t="cloud">&#x2601;&#xfe0f; Cloud<em id="cbadge"></em></button><button type="button" data-t="keys">&#x2328;&#xfe0f; Keys</button></div>
+      <section data-p="games" class="on">
+        <div id="carts"></div>
+        <label class="own"><input type="file" id="romIn" multiple hidden><span>&#x1f4be; Load your own ROMs</span><small id="ownTxt"></small></label>
+        <div id="sort"></div>
+        <div id="mine"></div>
+      </section>
+      <section data-p="cloud"><div id="cloud" class="cloud"></div></section>
+      <section data-p="keys"><div id="keys"></div></section>
+      <button type="button" class="lnk" id="credBtn">Credits &amp; licenses</button>
+    </aside>
   </div>
-  <div class="sheet" id="cred"><div class="box"><h2>Credits &amp; licenses</h2>
-    <p><b>Zip support:</b> fflate by Arjun Barrett, MIT License. <a href="https://saddleup-arcade.vercel.app/art/gb/licenses/fflate-MIT.txt" target="_blank" rel="noopener">License</a></p>
-    <p><b>Emulator:</b> binjgb by Ben Smith, MIT License. <a href="https://github.com/binji/binjgb" target="_blank" rel="noopener">Source</a> &#xb7; <a href="https://saddleup-arcade.vercel.app/art/gb/licenses/binjgb-MIT.txt" target="_blank" rel="noopener">License</a></p>
-    <p><b>Libbet and the Magic Floor</b> by Damian Yerrick, a port of Martin Korth's Magic Floor. zlib License. <a href="https://github.com/pinobatch/libbet" target="_blank" rel="noopener">Source</a> &#xb7; <a href="https://saddleup-arcade.vercel.app/art/gb/licenses/libbet-zlib.txt" target="_blank" rel="noopener">License</a></p>
-    <p><b>&#xb5;City</b> by Antonio Ni&#xf1;o D&#xed;az, GNU GPL v3. Built unmodified from <a href="https://github.com/AntonioND/ucity/tree/71fb08e7ca53fe4228e66316968d9c6bea3439ba" target="_blank" rel="noopener">this source</a> &#xb7; <a href="https://saddleup-arcade.vercel.app/art/gb/licenses/ucity-GPL-3.0.txt" target="_blank" rel="noopener">License</a></p>
-    <p class="fine">Game Boy and Game Boy Color are trademarks of Nintendo. This arcade isn't affiliated with or endorsed by Nintendo. Only load ROMs you have the right to play; your own files stay on your device, or in your private cloud library where only your account can reach them.</p>
+  <div class="sheet" id="cred"><div class="box"><h2>Credits &amp; licenses</h2><div id="credTxt"></div>
+    <p class="fine">Game Boy, Game Boy Color and Game Boy Advance are trademarks of Nintendo. This arcade isn't affiliated with or endorsed by Nintendo. Only load ROMs you have the right to play; your own files stay on your device, or in your private cloud library where only your account can reach them.</p>
     <button type="button" class="go" id="credX">Close</button></div></div>
 </div>
 <script>
 (function(){'use strict';
-/* Retro Handheld: runs Game Boy / Game Boy Color ROMs with binjgb (c) Ben Smith, MIT License.
-   The emulator glue below is adapted from binjgb's docs/simple.js (MIT). */
+/* Saddle Up handhelds: one page, three consoles (Pocket = .gb, Color = .gbc, Advance = .gba).
+   GB/GBC run on binjgb (c) Ben Smith, MIT License; the glue is adapted from binjgb's docs/simple.js (MIT).
+   GBA runs on GBA.js (c) Jeffrey Pfau, BSD 2-Clause License, with its own open replacement BIOS. */
+var CON={"id":"gb"};
 var $=function(i){return document.getElementById(i);};
 function q(ev){try{window.suQ&&window.suQ(ev);}catch(e){}}
-var B='https://saddleup-arcade.vercel.app/art/gb/';
-var CARTS=[{id:'libbet',name:'Libbet and the Magic Floor',sub:'Puzzle · roll over every tile',file:'roms/libbet.gb',lab:'#e9a23b'},
-           {id:'ucity',name:'µCity',sub:'City builder · Color',file:'roms/ucity.gbc',lab:'#4ab0e0'}];
+var A='https://saddleup-arcade.vercel.app/art/',B=A+'gb/';
+var CONS={gb:{name:'Retro Pocket',tag:'GB',acc:'#9bbc0f',w:160,h:144,ext:'.gb'},gbc:{name:'Retro Color',tag:'GBC',acc:'#c084fc',w:160,h:144,ext:'.gbc'},gba:{name:'Retro Advance',tag:'GBA',acc:'#60a5fa',w:240,h:160,ext:'.gba'}};
+var C=CONS[CON.id],ISGBA=CON.id==='gba';
+var CARTS=CON.id==='gb'?[{id:'libbet',name:'Libbet and the Magic Floor',sub:'Free homebrew · puzzle',file:'roms/libbet.gb',lab:'#e9a23b'}]:CON.id==='gbc'?[{id:'ucity',name:'µCity',sub:'Free homebrew · city builder',file:'roms/ucity.gbc',lab:'#4ab0e0'}]:[];
 var PALS=[79,16,0,32,48,64,8,24],SCREEN_W=160,SCREEN_H=144,TPS=4194304,AUDIO_FRAMES=4096,LAT=.1;
 var mod=null,em=null,cur=null,paused=false,ff=false,vol=.5,pal=0,played=0,playT=0;
 try{var pr=JSON.parse(localStorage.getItem('su_gb_pref')||'null');if(pr){vol=pr.vol!=null?pr.vol:vol;pal=pr.pal||0;}}catch(e){}
 function savePref(){try{localStorage.setItem('su_gb_pref',JSON.stringify({vol:vol,pal:pal}));}catch(e){}}
-function toast(t){var el=$('tst');if(!el){el=document.createElement('div');el.id='tst';el.className='toast';document.body.appendChild(el);}el.textContent=t;el.classList.add('on');clearTimeout(el.t);el.t=setTimeout(function(){el.classList.remove('on');},2200);}
-/* ---------- load the emulator ---------- */
-function loadMod(){return new Promise(function(res,rej){
-  if(window.Binjgb)return Binjgb({locateFile:function(p){return B+p;}}).then(function(m){mod=m;res(m);},rej);
-  var s=document.createElement('script');s.src=B+'binjgb.js';s.onload=function(){Binjgb({locateFile:function(p){return B+p;}}).then(function(m){mod=m;res(m);},rej);};s.onerror=function(){rej(new Error('emulator failed to load'));};document.head.appendChild(s);});}
+function toast(t){var el=$('tst');if(!el){el=document.createElement('div');el.id='tst';el.className='toast';document.body.appendChild(el);}el.textContent=t;el.classList.add('on');clearTimeout(el.t);el.t=setTimeout(function(){el.classList.remove('on');},2600);}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function loadScript(src){return new Promise(function(res,rej){var s=document.createElement('script');s.src=src;s.onload=res;s.onerror=function(){rej(new Error('The emulator didn\u2019t load. Check your connection and try again.'));};document.head.appendChild(s);});}
+
+/* ---------- page setup for this console ---------- */
+document.documentElement.style.setProperty('--acc',C.acc);document.documentElement.style.setProperty('--ar',C.w+'/'+C.h);
+if(ISGBA)document.body.classList.add('isgba');
+$('ttl').innerHTML=esc(C.name)+'<span>'+(ISGBA?'Plays Game Boy Advance (.gba) games.':CON.id==='gbc'?'Plays Game Boy Color (.gbc) games.':'Plays original Game Boy (.gb) games.')+'</span>';
+$('cons').innerHTML=['gb','gbc','gba'].map(function(id){return '<button type="button" data-g="'+id+'"'+(id===CON.id?' class="on"':'')+'>'+esc(CONS[id].name)+'<i>'+CONS[id].tag+'</i></button>';}).join('');
+$('cons').onclick=function(e){var b=e.target.closest('[data-g]');if(!b||b.classList.contains('on'))return;try{parent.__suShow(b.getAttribute('data-g'),true);}catch(x){}};
+var cv=$('scr');cv.width=C.w;cv.height=C.h;
+$('romIn').setAttribute('accept',ISGBA?'.gba,.zip':'.gb,.gbc,.zip');
+$('ownTxt').textContent='A '+(ISGBA?'.gba':'.gb or .gbc')+' file, or a whole .zip pack. Games for the other handhelds in a pack get sorted onto their shelves.';
+if(CON.id!=='gb')$('bPal').style.display='none';
+function fitVH(){var h=innerHeight;try{if(top.innerHeight)h=Math.min(top.innerHeight,Math.max(innerHeight,top.innerHeight));}catch(e){}document.documentElement.style.setProperty('--vh',h+'px');}
+fitVH();addEventListener('resize',fitVH);try{top.addEventListener('resize',fitVH);}catch(e){}
+
+/* ---------- keyboard guide ---------- */
+var KEYS={ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyX:'a',KeyK:'a',KeyZ:'b',KeyJ:'b',Enter:'start',ShiftLeft:'select',ShiftRight:'select',Backspace:'select'};
+if(ISGBA){KEYS.KeyQ='l';KEYS.KeyE='r';}
+var KG=[['Move','<kbd>&#x2191;</kbd><kbd>&#x2193;</kbd><kbd>&#x2190;</kbd><kbd>&#x2192;</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>'],['A button','<kbd>X</kbd> or <kbd>K</kbd>'],['B button','<kbd>Z</kbd> or <kbd>J</kbd>']]
+  .concat(ISGBA?[['L shoulder','<kbd>Q</kbd>'],['R shoulder','<kbd>E</kbd>']]:[])
+  .concat([['Start','<kbd>Enter</kbd>'],['Select','<kbd>Shift</kbd>'],['Fast-forward','hold <kbd>Space</kbd>'],['Pause','<kbd>P</kbd>'],['Big screen','<kbd>F</kbd>'],['Save / load state','<kbd>F5</kbd> / <kbd>F8</kbd>']]);
+$('keys').innerHTML='<h3>Your keyboard is the controller</h3><table class="kt">'+KG.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>';}).join('')+'</table><p class="knote">Game controllers work too: plug one in and press a button. On a phone or tablet, touch buttons show up under the screen.</p>';
+$('kstrip').innerHTML=['<b>Move</b><kbd>&#x2190;</kbd><kbd>&#x2191;</kbd><kbd>&#x2193;</kbd><kbd>&#x2192;</kbd>','<b>A</b><kbd>X</kbd>','<b>B</b><kbd>Z</kbd>'].concat(ISGBA?['<b>L</b><kbd>Q</kbd>','<b>R</b><kbd>E</kbd>']:[]).concat(['<b>Start</b><kbd>Enter</kbd>','<b>Select</b><kbd>Shift</kbd>','<b>Fast</b><kbd>Space</kbd>','<b>Pause</b><kbd>P</kbd>','<b>Big</b><kbd>F</kbd>']).map(function(s){return '<span>'+s+'</span>';}).join('');
+function insert(t,sub){var i=$('ins');i.classList.remove('off');i.innerHTML='<b>'+esc(t)+'</b>'+(sub?'<span class="sub">'+esc(sub)+'</span>':'')+'<div class="mk">'+$('kstrip').innerHTML+'</div>';}
+
+/* ---------- Game Boy / Color engine (binjgb) ---------- */
+function loadMod(){if(mod)return Promise.resolve(mod);return (window.Binjgb?Promise.resolve():loadScript(B+'binjgb.js')).then(function(){return Binjgb({locateFile:function(p){return B+p;}});}).then(function(m){return m;});}
 var AC=null;function actx(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}return AC;}
-function buf(ptr,size){return new Uint8Array(mod.HEAP8.buffer,ptr,size);}
-/* ---------- one running cartridge ---------- */
-function Emu(rom,key){var M=this.M=mod,size=(rom.byteLength+0x7fff)&~0x7fff,ac=actx();
-  this.key=key;this.rp=M._malloc(size);buf(this.rp,size).fill(0).set(new Uint8Array(rom));
+function buf(M,ptr,size){return new Uint8Array(M.HEAP8.buffer,ptr,size);}
+function Emu(M,rom,key){var size=(rom.byteLength+0x7fff)&~0x7fff,ac=actx();this.M=M;
+  this.key=key;this.rp=M._malloc(size);buf(M,this.rp,size).fill(0).set(new Uint8Array(rom));
   this.e=M._emulator_new_simple(this.rp,size,ac?ac.sampleRate:44100,AUDIO_FRAMES,2);
-  if(!this.e){M._free(this.rp);throw new Error('That file isn\u2019t a Game Boy ROM the emulator can read.');}
+  if(!this.e){M._free(this.rp);throw new Error('That file isn\u2019t a ROM the emulator can read.');}
   this.jp=M._joypad_new();M._emulator_set_default_joypad_callback(this.e,this.jp);
-  var cv=$('scr');this.ctx=cv.getContext('2d');this.img=this.ctx.createImageData(SCREEN_W,SCREEN_H);
+  this.ctx=cv.getContext('2d');this.img=this.ctx.createImageData(SCREEN_W,SCREEN_H);
   this.last=0;this.left=0;this.aStart=0;this.raf=0;
   var x=loadBytes('su_gb_ram_'+key);if(x)this.withFile(M._ext_ram_file_data_new(this.e),function(fp,b){if(b.byteLength===x.length){b.set(x);M._emulator_read_ext_ram(this.e,fp);}});
   this.setPal(PALS[pal]);}
-Emu.prototype.withFile=function(fp,cb){var M=this.M,b=buf(M._get_file_data_ptr(fp),M._get_file_data_size(fp)),r=cb.call(this,fp,b);M._file_data_delete(fp);M._free(fp);return r;};
+Emu.prototype.withFile=function(fp,cb){var M=this.M,b=buf(M,M._get_file_data_ptr(fp),M._get_file_data_size(fp)),r=cb.call(this,fp,b);M._file_data_delete(fp);M._free(fp);return r;};
 Emu.prototype.saveRam=function(){var M=this.M;var d=this.withFile(M._ext_ram_file_data_new(this.e),function(fp,b){M._emulator_write_ext_ram(this.e,fp);return new Uint8Array(b);});if(d.length)saveBytes('su_gb_ram_'+this.key,d);};
-Emu.prototype.saveState=function(){var M=this.M;var d=this.withFile(M._state_file_data_new(this.e),function(fp,b){M._emulator_write_state(this.e,fp);return new Uint8Array(b);});return saveBytes('su_gb_st_'+this.key,d);};
-Emu.prototype.loadState=function(){var M=this.M,x=loadBytes('su_gb_st_'+this.key);if(!x)return false;return this.withFile(M._state_file_data_new(this.e),function(fp,b){if(b.byteLength!==x.length)return false;b.set(x);M._emulator_read_state(this.e,fp);return true;});};
+Emu.prototype.saveState=function(){var M=this.M;var d=this.withFile(M._state_file_data_new(this.e),function(fp,b){M._emulator_write_state(this.e,fp);return new Uint8Array(b);});return Promise.resolve(saveBytes('su_gb_st_'+this.key,d));};
+Emu.prototype.loadState=function(){var M=this.M,x=loadBytes('su_gb_st_'+this.key);if(!x)return Promise.resolve(false);return Promise.resolve(this.withFile(M._state_file_data_new(this.e),function(fp,b){if(b.byteLength!==x.length)return false;b.set(x);M._emulator_read_state(this.e,fp);return true;}));};
 Emu.prototype.setPal=function(i){try{this.M._emulator_set_builtin_palette(this.e,i);}catch(e){}};
 Emu.prototype.joy=function(k,v){var f={up:'_set_joyp_up',down:'_set_joyp_down',left:'_set_joyp_left',right:'_set_joyp_right',a:'_set_joyp_A',b:'_set_joyp_B',start:'_set_joyp_start',select:'_set_joyp_select'}[k];if(f&&!this.dead)this.M[f](this.e,v?1:0);};
 Emu.prototype.runUntil=function(t){var M=this.M;while(true){var ev=M._emulator_run_until_f64(this.e,t);if(ev&1){this.img.data.set(new Uint8Array(M.HEAP8.buffer,M._get_frame_buffer_ptr(this.e),M._get_frame_buffer_size(this.e)));}if(ev&2)this.audio();if(ev&4)break;}if(M._emulator_was_ext_ram_updated(this.e))this.ramDirty=true;};
 Emu.prototype.audio=function(){var ac=AC;if(!ac||ac.state!=='running'||ff)return;var now=ac.currentTime,nl=now+LAT;this.aStart=this.aStart||nl;
-  if(this.aStart>=now){var b=ac.createBuffer(2,AUDIO_FRAMES,ac.sampleRate),c0=b.getChannelData(0),c1=b.getChannelData(1),A=new Uint8Array(this.M.HEAP8.buffer,this.M._get_audio_buffer_ptr(this.e),this.M._get_audio_buffer_capacity(this.e));for(var i=0;i<AUDIO_FRAMES;i++){c0[i]=A[2*i]*vol/255;c1[i]=A[2*i+1]*vol/255;}
+  if(this.aStart>=now){var b=ac.createBuffer(2,AUDIO_FRAMES,ac.sampleRate),c0=b.getChannelData(0),c1=b.getChannelData(1),Au=new Uint8Array(this.M.HEAP8.buffer,this.M._get_audio_buffer_ptr(this.e),this.M._get_audio_buffer_capacity(this.e));for(var i=0;i<AUDIO_FRAMES;i++){c0[i]=Au[2*i]*vol/255;c1[i]=Au[2*i+1]*vol/255;}
     var s=ac.createBufferSource();s.buffer=b;s.connect(ac.destination);s.start(this.aStart);this.aStart+=AUDIO_FRAMES/ac.sampleRate;}else this.aStart=nl;};
 Emu.prototype.frame=function(ms){var self=this;if(this.dead)return;this.raf=requestAnimationFrame(function(t){self.frame(t);});if(paused)return;
   var s=ms/1000,d=Math.max(s-(this.last||s),0);this.last=s;var dt=Math.min(d,5/60)*TPS*(ff?4:1),M=this.M,to=M._emulator_get_ticks_f64(this.e)+dt-this.left;this.runUntil(to);this.left=(M._emulator_get_ticks_f64(this.e)-to)|0;
   this.ctx.putImageData(this.img,0,0);played+=d;};
 Emu.prototype.start=function(){var self=this;this.last=0;this.raf=requestAnimationFrame(function(t){self.frame(t);});};
-Emu.prototype.destroy=function(){cancelAnimationFrame(this.raf);if(this.ramDirty){try{this.saveRam();}catch(e){}}this.dead=true;/* the whole emulator instance is dropped and a fresh one made for the next cartridge */};
+Emu.prototype.setPaused=function(p){if(!p)this.last=0;};Emu.prototype.setFF=function(){};Emu.prototype.setVol=function(){};
+Emu.prototype.ticks=function(){return this.M._emulator_get_ticks_f64(this.e);};
+Emu.prototype.destroy=function(){cancelAnimationFrame(this.raf);if(this.ramDirty){try{this.saveRam();}catch(e){}}this.dead=true;};
+
+/* ---------- Game Boy Advance engine (GBA.js) ---------- */
+var G=null,GBIOS=null,gbaCrash=false;
+function loadGBA(){if(G)return Promise.resolve(G);return Promise.all([window.GameBoyAdvance?Promise.resolve():loadScript(A+'gba/gbajs.js'),fetch(A+'gba/bios.bin').then(function(r){if(!r.ok)throw new Error('The emulator didn\u2019t load.');return r.arrayBuffer();})]).then(function(x){
+  GBIOS=x[1];GameBoyAdvanceKeypad.prototype.registerHandlers=function(){};GameBoyAdvanceKeypad.prototype.pollGamepads=function(){};
+  G=new GameBoyAdvance();G.keypad.eatInput=true;G.setLogger(function(l,m){if(l===1){try{console.warn('[gba]',m);}catch(e){}}});G.setBios(GBIOS);G.setCanvasDirect(cv);
+  var ad=G.video.drawCallback;G.video.drawCallback=function(){played+=1/60;};return G;});}
+function GBA(rom,key){this.key=key;this.running=false;G.pause();if(!G.setRom(rom))throw new Error('That file isn\u2019t a Game Boy Advance ROM the emulator can read.');
+  G.audio.masterVolume=vol;try{G.audio.context&&G.audio.context.resume();}catch(e){}}
+GBA.prototype.start=function(){if(this.running)return;this.running=true;G.throttle=16;G.runStable();};
+GBA.prototype.setPaused=function(p){if(p){this.running=false;G.pause();}else this.start();};
+GBA.prototype.setFF=function(v){G.throttle=v?0:16;};GBA.prototype.setVol=function(v){G.audio.masterVolume=v;};
+GBA.prototype.joy=function(k,v){var bit={a:0,b:1,select:2,start:3,right:4,left:5,up:6,down:7,r:8,l:9}[k];if(bit==null||this.dead)return;if(v)G.keypad.currentDown&=~(1<<bit);else G.keypad.currentDown|=(1<<bit);};
+GBA.prototype.saveState=function(){var self=this;try{var f=G.freeze();return dbPut('st:'+self.key,f).then(function(){return true;},function(){return false;});}catch(e){return Promise.resolve(false);}};
+GBA.prototype.loadState=function(){return dbGet('st:'+this.key).then(function(f){if(!f)return false;try{G.defrost(f);return true;}catch(e){return false;}});};
+GBA.prototype.setPal=function(){};GBA.prototype.ticks=function(){return G.cpu.cycles||played;};
+GBA.prototype.destroy=function(){this.running=false;this.dead=true;try{G.pause();if(G.mmu.save&&G.rom)G.storeSavedata();}catch(e){}G.keypad.currentDown=0x3FF;};
+addEventListener('error',function(e){if(ISGBA&&em&&/gba|ARM|mmu|undefined|null/i.test(String(e.message))){gbaCrash=true;}});
+
 /* ---------- saves: small byte arrays in localStorage (base64) ---------- */
 function saveBytes(k,u8){try{var s='',CH=0x8000;for(var i=0;i<u8.length;i+=CH)s+=String.fromCharCode.apply(null,u8.subarray(i,i+CH));localStorage.setItem(k,btoa(s));return true;}catch(e){return false;}}
 function loadBytes(k){try{var s=localStorage.getItem(k);if(!s)return null;var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}catch(e){return null;}}
-/* your own ROMs live only in this browser (IndexedDB), never on the server */
+/* your own ROMs live in this browser (IndexedDB); shared by all three handhelds */
 var DB=null;function db(){if(DB)return Promise.resolve(DB);return new Promise(function(res,rej){var r=indexedDB.open('su_gb',1);r.onupgradeneeded=function(){r.result.createObjectStore('roms');};r.onsuccess=function(){DB=r.result;res(DB);};r.onerror=function(){rej(r.error);};});}
-function dbPut(k,v){return db().then(function(d){return new Promise(function(res){var t=d.transaction('roms','readwrite');t.objectStore('roms').put(v,k);t.oncomplete=res;t.onerror=res;});});}
+function dbPut(k,v){return db().then(function(d){return new Promise(function(res,rej){var t=d.transaction('roms','readwrite');try{t.objectStore('roms').put(v,k);}catch(e){return rej(e);}t.oncomplete=res;t.onerror=function(){rej(t.error);};});});}
 function dbGet(k){return db().then(function(d){return new Promise(function(res){var r=d.transaction('roms').objectStore('roms').get(k);r.onsuccess=function(){res(r.result);};r.onerror=function(){res(null);};});});}
 function dbDel(k){return db().then(function(d){return new Promise(function(res){var t=d.transaction('roms','readwrite');t.objectStore('roms').delete(k);t.oncomplete=res;});});}
-function mine(){try{return JSON.parse(localStorage.getItem('su_gb_mine')||'[]');}catch(e){return [];}}
-function setMine(a){try{localStorage.setItem('su_gb_mine',JSON.stringify(a.slice(0,2000)));}catch(e){}}
-/* ---------- UI ---------- */
-function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-function shelf(){$('carts').innerHTML=CARTS.map(function(c){return '<button type="button" class="cart'+(cur===c.id?' on':'')+'" data-c="'+c.id+'" style="--lab:'+c.lab+'"><i></i><span><b>'+esc(c.name)+'</b><small>'+esc(c.sub)+'</small></span></button>';}).join('');
+function allMine(){try{return JSON.parse(localStorage.getItem('su_gb_mine')||'[]');}catch(e){return [];}}
+function setMine(a){try{localStorage.setItem('su_gb_mine',JSON.stringify(a.slice(0,4000)));}catch(e){}}
+function mine(){return allMine().filter(function(m){return m.t===CON.id;});}
+
+/* ---------- what kind of cartridge is this? ---------- */
+function isGb(u){return u.length>=0x150&&u[0x104]===0xCE&&u[0x105]===0xED&&u[0x106]===0x66;}
+function isGba(u){return u.length>=0xC0&&u[0xB2]===0x96&&u[3]===0xEA;}
+function kind(name,u){if(/\.gba$/i.test(name)||(!/\.(gb|gbc|sgb)$/i.test(name)&&isGba(u)))return isGba(u)?'gba':null;
+  if(!isGb(u))return null;if(/\.gbc$/i.test(name))return 'gbc';if(/\.(gb|sgb)$/i.test(name))return (u[0x143]===0xC0)?'gbc':'gb';return (u[0x143]&0x80)?'gbc':'gb';}
+function keyFor(name,u){var h=0,st=Math.max(1,Math.floor(u.length/40000));for(var i=0;i<u.length;i+=st)h=(h*31+u[i])>>>0;return (name.replace(/[^\w.-]/g,'').slice(0,24)||'rom')+'-'+h.toString(36)+'-'+u.length.toString(36);}
+/* older saves didn't record which handheld a ROM is for: sort them once, in the background */
+function sortOld(){var M=allMine(),todo=M.filter(function(m){return !m.t;});if(!todo.length){$('sort').innerHTML='';return;}var n=0;
+  function draw(){$('sort').innerHTML='<p style="font-size:12px;color:#cbd5e1;margin:6px 0 4px">Sorting your games onto the right handheld… '+n+' of '+todo.length+'</p><div class="cbar"><i style="width:'+Math.round(n/todo.length*100)+'%"></i></div>';}
+  draw();todo.reduce(function(p,m){return p.then(function(){return dbGet(m.k).then(function(ab){m.t=ab?(kind('',new Uint8Array(ab))||'gb'):'gb';n++;if(n%25===0){draw();setMine(M);shelf();}});});},Promise.resolve())
+  .then(function(){setMine(M);$('sort').innerHTML='';shelf();drawCloud();});}
+
+/* ---------- library ---------- */
+function shelf(){
+  $('carts').innerHTML=(CARTS.length?'<h3>Free homebrew cartridges</h3>':'')+CARTS.map(function(c){return '<button type="button" class="cart'+(cur===c.id?' on':'')+'" data-c="'+c.id+'" style="--lab:'+c.lab+'"><i></i><span><b>'+esc(c.name)+'</b><small>'+esc(c.sub)+'</small></span></button>';}).join('');
   var M=mine(),qy=(window.__gbq||'').toLowerCase(),L=qy?M.filter(function(m){return m.n.toLowerCase().indexOf(qy)>=0;}):M;
-  $('mine').innerHTML=M.length?'<h3 style="font-size:14px;margin:8px 0 6px">Your ROMs <small style="color:#94a3b8;font:600 11px Inter">('+M.length+')</small></h3>'+(M.length>6?'<input id="gbq" class="gbq" placeholder="Search your ROMs" value="'+esc(window.__gbq||'')+'">':'')+'<div class="mlist">'+L.slice(0,300).map(function(m){return '<button type="button" class="cart'+(cur==='u:'+m.k?' on':'')+'" data-u="'+esc(m.k)+'" style="--lab:#a78bfa"><i></i><span><b>'+esc(m.n)+'</b><small>'+(inCloud(m.k)?'<span class="cl">\u2601 In your cloud</span> \u00b7 ':'On this device \u00b7 ')+'<u data-del="'+esc(m.k)+'">remove</u></small></span></button>';}).join('')+(L.length>300?'<small style="color:#94a3b8">Search to see more…</small>':'')+'</div>':'';
+  $('mine').innerHTML='<h3>Your '+C.tag+' games ('+M.length+')</h3>'+(M.length>6?'<input id="gbq" class="gbq" placeholder="Search your games" value="'+esc(window.__gbq||'')+'">':'')+
+    (M.length?'<div class="mlist">'+L.slice(0,400).map(function(m){return '<button type="button" class="cart'+(cur==='u:'+m.k?' on':'')+'" data-u="'+esc(m.k)+'" style="--lab:'+C.acc+'"><i></i><span><b>'+esc(m.n)+'</b><small>'+(inCloud(m.k)?'<span class="cl">\u2601 In your cloud</span> \u00b7 ':'On this device \u00b7 ')+'<u data-del="'+esc(m.k)+'">remove</u></small></span></button>';}).join('')+(L.length>400?'<small style="color:#94a3b8">Search to see more…</small>':'')+'</div>'
+     :'<p style="font-size:12.5px;color:#94a3b8;margin:0">No '+C.tag+' games on this device yet. Load your own above'+(cloudOK()?', or grab them from the Cloud tab.':'.')+'</p>');
   var gq=$('gbq');if(gq){gq.oninput=function(){window.__gbq=gq.value;var p=gq.selectionStart;shelf();var g2=$('gbq');g2.focus();try{g2.setSelectionRange(p,p);}catch(e){}};}}
 $('carts').onclick=function(e){var b=e.target.closest('[data-c]');if(!b)return;var c=CARTS.filter(function(x){return x.id===b.getAttribute('data-c');})[0];
   insert('Loading '+c.name+'…');fetch(B+c.file).then(function(r){if(!r.ok)throw new Error('Couldn\u2019t load that cartridge.');return r.arrayBuffer();}).then(function(ab){boot(ab,c.id);}).catch(fail);};
-$('mine').onclick=function(e){var d=e.target.closest('[data-del]');if(d){e.stopPropagation();var k=d.getAttribute('data-del');dbDel(k);setMine(mine().filter(function(m){return m.k!==k;}));if(cur==='u:'+k)stop();shelf();return;}
+$('mine').onclick=function(e){var d=e.target.closest('[data-del]');if(d){e.stopPropagation();var k=d.getAttribute('data-del');dbDel(k);setMine(allMine().filter(function(m){return m.k!==k;}));if(cur==='u:'+k)stop();shelf();drawCloud();return;}
   var b=e.target.closest('[data-u]');if(!b)return;var k=b.getAttribute('data-u');insert('Loading…');dbGet(k).then(function(ab){if(!ab)throw new Error('That ROM isn\u2019t saved on this device any more.');boot(ab,'u:'+k);}).catch(fail);};
-/* load your own: single ROMs or whole .zip packs (zips inside zips too). Everything is unpacked here in the browser
-   and kept in this device's storage; nothing is sent anywhere. */
-var FF=null;function loadFF(){if(FF)return Promise.resolve(FF);return new Promise(function(res,rej){var s=document.createElement('script');s.src=B+'fflate.js';s.onload=function(){FF=window.fflate;res(FF);};s.onerror=function(){rej(new Error('Couldn’t open zip files right now.'));};document.head.appendChild(s);});}
-function romTitle(u,fallback){var t='';for(var j=0x134;j<0x143&&u[j];j++)t+=String.fromCharCode(u[j]);t=t.replace(/[^\x20-\x7e]/g,'').trim();return fallback||t||'Game';}
-function isRom(u){/* the Nintendo logo check bytes at 0x104 are always CE ED 66 66 */return u.length>=0x150&&u[0x104]===0xCE&&u[0x105]===0xED&&u[0x106]===0x66;}
-function keyFor(name,u){var h=0;for(var i=0;i<u.length;i+=97)h=(h*31+u[i])>>>0;return (name.replace(/[^\w.-]/g,'').slice(0,24)||'rom')+'-'+h.toString(36)+'-'+u.length.toString(36);}
+/* load your own: single ROMs or whole .zip packs (zips inside zips too), unpacked here in the browser */
+var FF=null;function loadFF(){if(FF)return Promise.resolve(FF);return loadScript(B+'fflate.js').then(function(){FF=window.fflate;return FF;},function(){throw new Error('Couldn\u2019t open zip files right now.');});}
 function unpack(name,u8,out,depth){if(/\.zip$/i.test(name)||(u8[0]===0x50&&u8[1]===0x4B)){if(depth>3)return;var files;try{files=FF.unzipSync(u8);}catch(e){return;}for(var n in files){var base=n.split('/').pop();if(!base||base.charAt(0)==='.')continue;unpack(base,files[n],out,depth+1);}}
-  else if(/\.(gb|gbc|sgb)$/i.test(name)&&isRom(u8))out.push({name:name.replace(/\.(gb|gbc|sgb)$/i,''),u:u8});}
+  else if(/\.(gb|gbc|sgb|gba)$/i.test(name)){var t=kind(name,u8);if(t)out.push({name:name.replace(/\.(gb|gbc|sgb|gba)$/i,''),u:u8,t:t});}}
 $('romIn').onchange=function(){var fs=[].slice.call(this.files||[]);this.value='';if(!fs.length)return;insert('Reading '+(fs.length>1?fs.length+' files':fs[0].name)+'…');
   var needZip=fs.some(function(f){return /\.zip$/i.test(f.name);}),found=[];
-  (needZip?loadFF():Promise.resolve()).then(function(){return fs.reduce(function(p,f){return p.then(function(){if(f.size>400*1024*1024)return;return f.arrayBuffer().then(function(ab){unpack(f.name,new Uint8Array(ab),found,0);});});},Promise.resolve());})
-  .then(function(){if(!found.length)throw new Error('No Game Boy ROMs found in that file.');var M=mine(),idx={};M.forEach(function(m){idx[m.k]=1;});var n=0;
-    return found.reduce(function(p,r){return p.then(function(){var k=keyFor(r.name,r.u);n++;if(n%10===0)insert('Saving '+n+' of '+found.length+'…');if(idx[k])return;idx[k]=1;M.push({k:k,n:r.name});return dbPut(k,r.u.slice().buffer);});},Promise.resolve())
+  (needZip?loadFF():Promise.resolve()).then(function(){return fs.reduce(function(p,f){return p.then(function(){if(f.size>1024*1024*1024)return;return f.arrayBuffer().then(function(ab){unpack(f.name,new Uint8Array(ab),found,0);});});},Promise.resolve());})
+  .then(function(){if(!found.length)throw new Error('No Game Boy, Color or Advance ROMs found in that file.');var M=allMine(),idx={};M.forEach(function(m){idx[m.k]=1;});var n=0,here=0,other={};
+    return found.reduce(function(p,r){return p.then(function(){var k=keyFor(r.name,r.u);n++;if(n%10===0)insert('Saving '+n+' of '+found.length+'…');if(r.t===CON.id)here++;else other[r.t]=(other[r.t]||0)+1;if(idx[k])return;idx[k]=1;M.push({k:k,n:r.name,t:r.t});return dbPut(k,r.u.slice().buffer);});},Promise.resolve())
     .then(function(){M.sort(function(a,b){return a.n.localeCompare(b.n);});setMine(M);shelf();drawCloud();
-      if(found.length===1){var k1=keyFor(found[0].name,found[0].u);return dbGet(k1).then(function(ab){boot(ab,'u:'+k1);});}
-      insert('Added '+found.length+' games');toast(found.length+' games added to Your ROMs on this device.');});})
+      var ot=Object.keys(other).map(function(t){return other[t]+' to '+CONS[t].name;}).join(', ');
+      var hereOnly=found.filter(function(r){return r.t===CON.id;});
+      if(hereOnly.length===1&&found.length===1){var k1=keyFor(found[0].name,found[0].u);return dbGet(k1).then(function(ab){boot(ab,'u:'+k1);});}
+      if(!em)insert(here?'Added '+here+' game'+(here>1?'s':''):'Pick a game',ot?'Also sorted '+ot+'.':'');
+      toast((here?here+' game'+(here>1?'s':'')+' added here. ':'')+(ot?'Sorted '+ot+'.':''));});})
   .catch(fail);};
 
 /* ---------- private cloud library: your ROMs in your own account, only you can reach them ---------- */
-var LIVE=/*LIVE*/null/*LIVE*/,CL={list:null,busy:false,prog:null,msg:''};
-function tok(){try{return localStorage.getItem('saddleup-arcade-tok')||'';}catch(e){return '';}}
+var LIVE=/*LIVE*/null/*LIVE*/,CL={list:null,busy:false,prog:null,msg:'',err:false};
+function tok(){try{var s=localStorage.getItem('saddleup-arcade-tok')||'';if(s.charAt(0)==='{'){var o=JSON.parse(s);return o&&o.t?String(o.t):'';}return s;}catch(e){return '';}}
 function cloudOK(){return !!(LIVE&&LIVE.url&&LIVE.key&&tok());}
-function ccall(action,o){o=o||{};o.token=tok();o.action=action;return fetch(LIVE.url.replace(/\/$/,'')+'/functions/v1/arcade-roms',{method:'POST',headers:{'content-type':'application/json','apikey':LIVE.key,'Authorization':'Bearer '+LIVE.key},body:JSON.stringify(o)}).then(function(r){return r.json();});}
-var CMSG={signed_out:'Sign in again to use your cloud library.',full:'Your cloud library is full (512 MB).',bad_file:'That file can’t go in the cloud.',not_found:'That game isn’t in your cloud any more.'};
+function ccall(action,o){o=o||{};o.token=tok();o.action=action;return fetch(LIVE.url.replace(/\/$/,'')+'/functions/v1/arcade-roms',{method:'POST',headers:{'content-type':'application/json','apikey':LIVE.key,'Authorization':'Bearer '+LIVE.key},body:JSON.stringify(o)}).then(function(r){return r.json().catch(function(){return {error:'server'};});});}
+var CMSG={signed_out:'Your sign-in ran out. Sign in again from the account button at the top of the arcade.',full:'Your cloud library is full (512 MB).',bad_file:'That file is too big for the cloud (32 MB max).',not_found:'That game isn\u2019t in your cloud any more.',not_uploaded:'The upload didn\u2019t finish. Try again.',server:'The cloud had a problem. Try again in a minute.'};
 function mb(n){return (n/1048576).toFixed(n<10485760?1:0)+' MB';}
-function cloudLoad(){if(!cloudOK()){drawCloud();return;}ccall('list').then(function(r){if(r&&r.roms){CL.list=r;}else if(r&&r.error){CL.msg=CMSG[r.error]||'';}drawCloud();shelf();}).catch(function(){CL.msg='Can’t reach your cloud right now.';drawCloud();});}
+function cloudLoad(){if(!cloudOK()){drawCloud();return;}ccall('list').then(function(r){if(r&&r.roms){CL.list=r;CL.msg='';CL.err=false;}else{CL.list=null;CL.msg=CMSG[(r&&r.error)]||'Couldn\u2019t open your cloud.';CL.err=true;}drawCloud();shelf();}).catch(function(){CL.msg='Can\u2019t reach your cloud right now. Check your connection.';CL.err=true;drawCloud();});}
+function myCloud(){return CL.list?CL.list.roms.filter(function(r){if(r.c)return r.c===CON.id;var m=allMine().filter(function(x){return x.k===r.k;})[0];return m?m.t===CON.id:true;}):[];}
 function inCloud(k){return !!(CL.list&&CL.list.roms.some(function(r){return r.k===k;}));}
-function drawCloud(){var el=$('cloud');if(!el)return;
-  if(!LIVE||!LIVE.url){el.style.display='none';return;}
-  if(!tok()){el.innerHTML='<h3>☁️ My cloud library</h3><p>Sign in to your arcade account to keep your ROMs in a private cloud library and play them on any device. Only you can see them.</p>';return;}
+function signIn(){try{var b=parent.document.getElementById('acBtn');if(b){b.click();return;}}catch(e){}toast('Use the account button at the top of the arcade to sign in.');}
+function drawCloud(){var el=$('cloud');if(!el)return;$('cbadge').textContent='';
+  if(!LIVE||!LIVE.url){el.innerHTML='<h3>My cloud library</h3><p>The cloud library isn\u2019t switched on for this copy of the arcade.</p>';return;}
+  if(!tok()){el.innerHTML='<h3>My cloud library</h3><p>Sign in to your arcade account to keep your '+C.tag+' games in a private cloud library and play them on any device. Only you can see them.</p><button type="button" class="cb" id="cSign">Sign in</button>';$('cSign').onclick=signIn;return;}
   var L=CL.list,M=mine(),up=M.filter(function(m){return !inCloud(m.k);});
-  var h='<h3>☁️ My cloud library'+(L?' ('+L.roms.length+')':'')+'</h3>';
-  if(!L){h+='<p>'+esc(CL.msg||'Loading…')+'</p>';el.innerHTML=h;return;}
-  h+='<div class="use">'+mb(L.used)+' of '+mb(L.quota)+' used · private to your account</div>';
-  if(CL.prog){h+='<div class="cbar"><i style="width:'+Math.round(CL.prog.d/CL.prog.n*100)+'%"></i></div><p>'+esc(CL.prog.t)+' ('+CL.prog.d+' of '+CL.prog.n+')</p>';}
-  else if(up.length)h+='<button type="button" class="cb" id="cUp">⬆ Upload '+up.length+' from this device</button>';
-  if(CL.msg&&!CL.prog)h+='<p>'+esc(CL.msg)+'</p>';
-  var here={};M.forEach(function(m){here[m.k]=1;});var only=L.roms.filter(function(r){return !here[r.k];});
-  if(only.length)h+='<p>'+only.length+' game'+(only.length>1?'s':'')+' in your cloud aren’t on this device yet:</p>'+(only.length>1&&!CL.prog?'<button type="button" class="cb g" id="cDownAll">⬇ Get all '+only.length+' on this device</button>':'')+'<div class="mlist">'+only.slice(0,300).map(function(r){return '<button type="button" class="cart" data-ck="'+esc(r.k)+'" style="--lab:#38bdf8"><i></i><span><b>'+esc(r.n)+'</b><small>In your cloud · '+mb(r.s)+' · <u data-cdel="'+esc(r.k)+'">delete from cloud</u></small></span></button>';}).join('')+'</div>';
-  else if(!up.length&&L.roms.length)h+='<p>Everything on this device is backed up in your cloud.</p>';
-  el.innerHTML=h;
-  var u=$('cUp');if(u)u.onclick=uploadAll;var da=$('cDownAll');if(da)da.onclick=function(){downAll(only);};}
-function uploadAll(){if(CL.busy)return;CL.busy=true;var up=mine().filter(function(m){return !inCloud(m.k);});CL.prog={n:up.length,d:0,t:'Uploading to your cloud'};CL.msg='';drawCloud();
+  var h='<h3>My cloud library \u00b7 '+C.tag+(L?' ('+myCloud().length+')':'')+'</h3>';
+  if(!L){h+='<p'+(CL.err?' class="err"':'')+'>'+esc(CL.msg||'Opening your cloud…')+'</p>'+(CL.err?'<button type="button" class="cb g" id="cRetry">Try again</button>':'');el.innerHTML=h;var rt=$('cRetry');if(rt)rt.onclick=function(){CL.msg='';drawCloud();cloudLoad();};return;}
+  h+='<div class="use">'+mb(L.used)+' of '+mb(L.quota)+' used across all handhelds \u00b7 private to your account</div>';
+  if(CL.prog){h+='<div class="cbar"><i style="width:'+Math.round(CL.prog.d/Math.max(1,CL.prog.n)*100)+'%"></i></div><p>'+esc(CL.prog.t)+' ('+CL.prog.d+' of '+CL.prog.n+')</p>';}
+  else if(up.length)h+='<button type="button" class="cb" id="cUp">\u2b06 Back up '+up.length+' game'+(up.length>1?'s':'')+' from this device</button>';
+  if(CL.msg&&!CL.prog)h+='<p class="err">'+esc(CL.msg)+'</p>';
+  var here={};allMine().forEach(function(m){here[m.k]=1;});var only=myCloud().filter(function(r){return !here[r.k];});
+  if(only.length){$('cbadge').textContent=only.length;h+='<p>'+(only.length>1?only.length+' games in your cloud aren\u2019t':'1 game in your cloud isn\u2019t')+' on this device yet. Tap one to play it.</p>'+(only.length>1&&!CL.prog?'<button type="button" class="cb g" id="cDownAll">\u2b07 Get all '+only.length+' on this device</button>':'')+'<div class="mlist">'+only.slice(0,400).map(function(r){return '<button type="button" class="cart" data-ck="'+esc(r.k)+'" style="--lab:#38bdf8"><i></i><span><b>'+esc(r.n)+'</b><small>In your cloud · '+mb(r.s)+' · <u data-cdel="'+esc(r.k)+'">delete from cloud</u></small></span></button>';}).join('')+'</div>';}
+  else if(!up.length&&M.length)h+='<p>Every '+C.tag+' game on this device is backed up in your cloud.</p>';
+  else if(!M.length&&!myCloud().length)h+='<p>Nothing here yet. Load some '+C.tag+' games on the Games tab, then back them up here.</p>';
+  el.innerHTML=h;var u=$('cUp');if(u)u.onclick=uploadAll;var da=$('cDownAll');if(da)da.onclick=function(){downAll(only);};}
+function uploadAll(){if(CL.busy)return;CL.busy=true;var up=mine().filter(function(m){return !inCloud(m.k);}),fails=0;CL.prog={n:up.length,d:0,t:'Backing up to your cloud'};CL.msg='';drawCloud();
   up.reduce(function(p,m){return p.then(function(){if(CL.stop)return;return dbGet(m.k).then(function(ab){if(!ab)return;var size=ab.byteLength;
-      return ccall('sign_upload',{k:m.k,name:m.n,size:size}).then(function(r){if(r.error){if(r.error==='full'){CL.stop=true;}throw new Error(CMSG[r.error]||'Upload failed');}
-        return fetch(r.url,{method:'PUT',headers:{'content-type':'application/octet-stream','x-upsert':'true'},body:ab}).then(function(x){if(!x.ok)throw new Error('Upload failed');return ccall('done',{k:m.k,name:m.n,size:size});});})
-      .then(function(r){if(r&&r.ok)CL.list.roms.push({k:m.k,n:m.n,s:size}),CL.list.used+=size;});}).catch(function(e){CL.msg=e.message;}).then(function(){CL.prog.d++;drawCloud();});});},Promise.resolve())
-  .then(function(){CL.busy=false;CL.stop=false;CL.prog=null;toast('Your ROMs are backed up in your private cloud.');cloudLoad();});}
-function fetchCloud(r){return ccall('download',{k:r.k}).then(function(x){if(x.error)throw new Error(CMSG[x.error]||'Couldn’t get that game.');return fetch(x.url);}).then(function(res){if(!res.ok)throw new Error('Couldn’t get that game.');return res.arrayBuffer();})
-  .then(function(ab){return dbPut(r.k,ab).then(function(){var M=mine().filter(function(m){return m.k!==r.k;});M.push({k:r.k,n:r.n});M.sort(function(a,b){return a.n.localeCompare(b.n);});setMine(M);return ab;});});}
+      return ccall('sign_upload',{k:m.k,name:m.n,size:size}).then(function(r){if(r.error){if(r.error==='full'||r.error==='signed_out')CL.stop=true;throw new Error(CMSG[r.error]||'Upload failed');}
+        return fetch(r.url,{method:'PUT',headers:{'content-type':'application/octet-stream','x-upsert':'true'},body:ab}).then(function(x){if(!x.ok)throw new Error('Upload failed (error '+x.status+').');return ccall('done',{k:m.k,name:m.n,size:size,con:CON.id});});})
+      .then(function(r){if(r&&r.ok){CL.list.roms.push({k:m.k,n:m.n,s:size,c:CON.id});CL.list.used+=size;}else if(r&&r.error)throw new Error(CMSG[r.error]||'Upload failed');});}).catch(function(e){fails++;CL.msg=e.message;}).then(function(){CL.prog.d++;drawCloud();});});},Promise.resolve())
+  .then(function(){CL.busy=false;CL.stop=false;CL.prog=null;var ok=up.length-fails;toast(fails?ok+' backed up, '+fails+' didn\u2019t make it.':'Your '+C.tag+' games are backed up in your private cloud.');shelf();cloudLoad();});}
+function fetchCloud(r){return ccall('download',{k:r.k}).then(function(x){if(x.error)throw new Error(CMSG[x.error]||'Couldn\u2019t get that game.');return fetch(x.url);}).then(function(res){if(!res.ok)throw new Error('Couldn\u2019t get that game.');return res.arrayBuffer();})
+  .then(function(ab){return dbPut(r.k,ab).then(function(){var M=allMine().filter(function(m){return m.k!==r.k;});M.push({k:r.k,n:r.n,t:r.c||kind('',new Uint8Array(ab))||CON.id});M.sort(function(a,b){return a.n.localeCompare(b.n);});setMine(M);return ab;});});}
 function downAll(list){if(CL.busy)return;CL.busy=true;CL.prog={n:list.length,d:0,t:'Copying to this device'};drawCloud();
-  list.reduce(function(p,r){return p.then(function(){return fetchCloud(r).catch(function(e){CL.msg=e.message;}).then(function(){CL.prog.d++;drawCloud();});});},Promise.resolve()).then(function(){CL.busy=false;CL.prog=null;shelf();drawCloud();});}
+  list.reduce(function(p,r){return p.then(function(){return fetchCloud(r).catch(function(e){CL.msg=e.message;}).then(function(){CL.prog.d++;drawCloud();});});},Promise.resolve()).then(function(){CL.busy=false;CL.prog=null;shelf();drawCloud();toast('Your cloud games are on this device now.');});}
 $('cloud').onclick=function(e){var d=e.target.closest('[data-cdel]');if(d){e.stopPropagation();var k=d.getAttribute('data-cdel');if(!confirmDel(k))return;ccall('delete',{k:k}).then(function(){cloudLoad();});return;}
   var b=e.target.closest('[data-ck]');if(!b||!CL.list)return;var r=CL.list.roms.filter(function(x){return x.k===b.getAttribute('data-ck');})[0];if(!r)return;insert('Getting '+r.n+' from your cloud…');fetchCloud(r).then(function(ab){shelf();drawCloud();boot(ab,'u:'+r.k);}).catch(fail);};
 function confirmDel(k){var b=document.querySelector('[data-cdel="'+k+'"]');if(b&&!b.__arm){b.__arm=1;b.textContent='tap again to delete';setTimeout(function(){b.__arm=0;b.textContent='delete from cloud';},3000);return false;}return true;}
-window.addEventListener('storage',function(e){if(e.key==='saddleup-arcade-tok'){CL.list=null;cloudLoad();}});
-function insert(t){var i=$('ins');i.classList.remove('off');i.innerHTML='<b>'+esc(t)+'</b>';}
-function fail(e){insert('Something went wrong');toast(e&&e.message?e.message:'That didn\u2019t work.');}
-function stop(){if(em){em.destroy();em=null;}cur=null;$('led').classList.remove('on');insert('Pick a cartridge');btns();}
-function boot(ab,key){actx();if(AC&&AC.state!=='running')AC.resume();if(em){em.destroy();em=null;}loadMod().then(function(m){mod=m;em=new Emu(ab,key.replace(/^u:/,'u_'));cur=key;paused=false;$('ptxt').classList.remove('on');em.start();
-  $('ins').classList.add('off');$('led').classList.add('on');shelf();btns();q('play');try{$('scr').focus();}catch(x){}}).catch(fail);}
+window.addEventListener('storage',function(e){if(e.key==='saddleup-arcade-tok'){CL.list=null;CL.msg='';cloudLoad();}});
+setInterval(function(){var t=tok();if(t!==CL.lastTok){CL.lastTok=t;CL.list=null;CL.msg='';cloudLoad();}},3000);CL.lastTok=tok();
+
+/* ---------- tabs ---------- */
+function tab(t){[].forEach.call(document.querySelectorAll('.tabs [data-t]'),function(b){b.classList.toggle('on',b.getAttribute('data-t')===t);});[].forEach.call(document.querySelectorAll('.side [data-p]'),function(s){s.classList.toggle('on',s.getAttribute('data-p')===t);});}
+document.querySelector('.tabs').onclick=function(e){var b=e.target.closest('[data-t]');if(b)tab(b.getAttribute('data-t'));};
+
+/* ---------- running a cartridge ---------- */
+function fail(e){insert('Something went wrong',e&&e.message?e.message:'That didn\u2019t work.');toast(e&&e.message?e.message:'That didn\u2019t work.');}
+function stop(){if(em){em.destroy();em=null;}cur=null;insert('Pick a game','Choose one from the list on the right.');btns();}
+function boot(ab,key){actx();if(AC&&AC.state!=='running')AC.resume();if(em){em.destroy();em=null;}var sk=key.replace(/^u:/,'u_');
+  (ISGBA?loadGBA().then(function(){return new GBA(ab,sk);}):loadMod().then(function(M){return new Emu(M,ab,sk);})).then(function(e){em=e;cur=key;paused=false;gbaCrash=false;$('ptxt').classList.remove('on');em.setVol(vol);em.start();
+  $('ins').classList.add('off');shelf();btns();q('play');try{cv.focus({preventScroll:true});}catch(x){}}).catch(fail);}
 function btns(){var on=!!em;['bPause','bSave','bLoad','bPal','bFF'].forEach(function(i){$(i).disabled=!on;});$('bPause').textContent=paused?'\u25b6 Resume':'\u275a\u275a Pause';}
-$('bPause').onclick=function(){if(!em)return;paused=!paused;$('ptxt').classList.toggle('on',paused);if(!paused)em.last=0;btns();};
-$('bSave').onclick=function(){if(em)toast(em.saveState()?'State saved on this device.':'Couldn\u2019t save: storage is full.');};
-$('bLoad').onclick=function(){if(em)toast(em.loadState()?'State loaded.':'No saved state for this game yet.');};
-$('bPal').onclick=function(){if(!em)return;pal=(pal+1)%PALS.length;em.setPal(PALS[pal]);savePref();toast('Screen colours '+(pal+1)+' of '+PALS.length+' (only for original Game Boy games)');};
-var bff=$('bFF');bff.addEventListener('pointerdown',function(){ff=true;bff.classList.add('on');});['pointerup','pointerleave','pointercancel'].forEach(function(ev){bff.addEventListener(ev,function(){ff=false;bff.classList.remove('on');});});
-$('vol').value=Math.round(vol*100);$('vol').oninput=function(){vol=this.value/100;savePref();};
+function setPause(p){if(!em)return;paused=p;$('ptxt').classList.toggle('on',paused);em.setPaused(paused);btns();}
+function setFF(v){ff=v;$('bFF').classList.toggle('on',v);if(em)em.setFF(v);}
+function doSave(){if(em)em.saveState().then(function(ok){toast(ok?'State saved on this device.':'Couldn\u2019t save: storage is full.');});}
+function doLoad(){if(em)em.loadState().then(function(ok){toast(ok?'State loaded.':'No saved state for this game yet.');});}
+function big(v){document.body.classList.toggle('big',v);$('bBig').classList.toggle('on',v);$('bBig').innerHTML=v?'&#x2715; Exit big screen':'&#x26f6; Big screen';fitVH();}
+$('bPause').onclick=function(){setPause(!paused);};$('bSave').onclick=doSave;$('bLoad').onclick=doLoad;
+$('bPal').onclick=function(){if(!em)return;pal=(pal+1)%PALS.length;em.setPal(PALS[pal]);savePref();toast('Screen colours '+(pal+1)+' of '+PALS.length+' (original Game Boy games only)');};
+$('bBig').onclick=function(){big(!document.body.classList.contains('big'));};
+var bff=$('bFF');bff.addEventListener('pointerdown',function(){setFF(true);});['pointerup','pointerleave','pointercancel'].forEach(function(ev){bff.addEventListener(ev,function(){setFF(false);});});
+$('vol').value=Math.round(vol*100);$('vol').oninput=function(){vol=this.value/100;if(em)em.setVol(vol);savePref();};
+$('credTxt').innerHTML=(ISGBA?'<p><b>Emulator:</b> GBA.js by Jeffrey Pfau, BSD 2-Clause License, with its open replacement BIOS. <a href="https://github.com/endrift/gbajs" target="_blank" rel="noopener">Source</a> &#xb7; <a href="'+B+'licenses/gbajs-BSD.txt" target="_blank" rel="noopener">License</a></p>'
+  :'<p><b>Emulator:</b> binjgb by Ben Smith, MIT License. <a href="https://github.com/binji/binjgb" target="_blank" rel="noopener">Source</a> &#xb7; <a href="'+B+'licenses/binjgb-MIT.txt" target="_blank" rel="noopener">License</a></p>')+
+  '<p><b>Zip support:</b> fflate by Arjun Barrett, MIT License. <a href="'+B+'licenses/fflate-MIT.txt" target="_blank" rel="noopener">License</a></p>'+
+  (CON.id==='gb'?'<p><b>Libbet and the Magic Floor</b> by Damian Yerrick, a port of Martin Korth\u2019s Magic Floor. zlib License. <a href="https://github.com/pinobatch/libbet" target="_blank" rel="noopener">Source</a> &#xb7; <a href="'+B+'licenses/libbet-zlib.txt" target="_blank" rel="noopener">License</a></p>':'')+
+  (CON.id==='gbc'?'<p><b>&#xb5;City</b> by Antonio Ni&#xf1;o D&#xed;az, GNU GPL v3. Built unmodified from <a href="https://github.com/AntonioND/ucity/tree/71fb08e7ca53fe4228e66316968d9c6bea3439ba" target="_blank" rel="noopener">this source</a> &#xb7; <a href="'+B+'licenses/ucity-GPL-3.0.txt" target="_blank" rel="noopener">License</a></p>':'');
 $('credBtn').onclick=function(){$('cred').classList.add('on');};$('credX').onclick=function(){$('cred').classList.remove('on');};
-/* ---------- controls: keyboard, on-screen buttons, game controllers ---------- */
-var KEYS={ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyX:'a',KeyK:'a',KeyZ:'b',KeyJ:'b',Enter:'start',ShiftLeft:'select',ShiftRight:'select',Backspace:'select'};
-function press(k,v){if(em)em.joy(k,v);var el=document.querySelector('[data-k="'+k+'"]');if(el)el.classList.toggle('p',!!v);}
-addEventListener('keydown',function(e){if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;if(e.code==='Space'){ff=true;e.preventDefault();return;}var k=KEYS[e.code];if(!k||!em)return;e.preventDefault();press(k,true);});
-addEventListener('keyup',function(e){if(e.code==='Space'){ff=false;return;}var k=KEYS[e.code];if(k)press(k,false);});
-addEventListener('blur',function(){['up','down','left','right','a','b','start','select'].forEach(function(k){press(k,false);});ff=false;});
-[].forEach.call(document.querySelectorAll('.ab [data-k],.ss [data-k]'),function(b){var k=b.getAttribute('data-k');
+
+/* ---------- controls: keyboard first, then controllers, touch buttons on phones ---------- */
+function press(k,v){if(em)em.joy(k,v);var el=document.querySelector('.touch [data-k="'+k+'"]');if(el)el.classList.toggle('p',!!v);}
+function typing(e){return /INPUT|SELECT|TEXTAREA/.test(e.target.tagName);}
+addEventListener('keydown',function(e){if(typing(e))return;
+  if(e.code==='Space'){setFF(true);e.preventDefault();return;}
+  if(e.code==='KeyP'&&!e.repeat){setPause(!paused);return;}
+  if(e.code==='KeyF'&&!e.repeat){big(!document.body.classList.contains('big'));return;}
+  if(e.code==='Escape'&&document.body.classList.contains('big')){big(false);return;}
+  if(e.code==='F5'){e.preventDefault();doSave();return;}if(e.code==='F8'){e.preventDefault();doLoad();return;}
+  var k=KEYS[e.code];if(!k||!em)return;e.preventDefault();if(!e.repeat)press(k,true);});
+addEventListener('keyup',function(e){if(e.code==='Space'){setFF(false);return;}var k=KEYS[e.code];if(k)press(k,false);});
+addEventListener('blur',function(){['up','down','left','right','a','b','start','select','l','r'].forEach(function(k){press(k,false);});setFF(false);});
+[].forEach.call(document.querySelectorAll('.touch [data-k]'),function(b){var k=b.getAttribute('data-k');
   b.addEventListener('pointerdown',function(e){e.preventDefault();b.setPointerCapture&&b.setPointerCapture(e.pointerId);press(k,true);});
   ['pointerup','pointercancel','lostpointercapture'].forEach(function(ev){b.addEventListener(ev,function(){press(k,false);});});});
-var dp=$('dpad'),dk={};function dpSet(e){var r=dp.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*2-1,y=(e.clientY-r.top)/r.height*2-1,n={up:y<-.3,down:y>.3,left:x<-.3,right:x>.3};for(var k in n)if(!!dk[k]!==n[k]){dk[k]=n[k];press(k,n[k]);}}
+var dp=$('dpad'),dk={};function dpSet(e){var r=dp.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*2-1,y=(e.clientY-r.top)/r.height*2-1,n={up:y<-.3,down:y>.3,left:x<-.3,right:x>.3};for(var k in n)if(!!dk[k]!==n[k]){dk[k]=n[k];press(k,n[k]);var el=dp.querySelector('.'+k.charAt(0));if(el)el.classList.toggle('p',n[k]);}}
 dp.addEventListener('pointerdown',function(e){e.preventDefault();dp.setPointerCapture&&dp.setPointerCapture(e.pointerId);dpSet(e);});dp.addEventListener('pointermove',function(e){if(e.buttons||e.pointerType==='touch')dpSet(e);});
-['pointerup','pointercancel','lostpointercapture'].forEach(function(ev){dp.addEventListener(ev,function(){for(var k in dk)if(dk[k]){dk[k]=false;press(k,false);}});});
+['pointerup','pointercancel','lostpointercapture'].forEach(function(ev){dp.addEventListener(ev,function(){for(var k in dk)if(dk[k]){dk[k]=false;press(k,false);}[].forEach.call(dp.querySelectorAll('i'),function(i){i.classList.remove('p');});});});
 var gpPrev={};function gpPoll(){requestAnimationFrame(gpPoll);var gs=navigator.getGamepads?navigator.getGamepads():[],g=null;for(var i=0;i<gs.length;i++)if(gs[i]){g=gs[i];break;}if(!g||!em)return;
-  var B2=function(i){return !!(g.buttons[i]&&g.buttons[i].pressed);},ax=g.axes[0]||0,ay=g.axes[1]||0,s={a:B2(0)||B2(1)&&false,b:B2(2)||B2(1),start:B2(9),select:B2(8),up:B2(12)||ay<-.5,down:B2(13)||ay>.5,left:B2(14)||ax<-.5,right:B2(15)||ax>.5};s.a=B2(0)||B2(3);
+  var P=function(i){return !!(g.buttons[i]&&g.buttons[i].pressed);},ax=g.axes[0]||0,ay=g.axes[1]||0,s={a:P(0)||P(3),b:P(1)||P(2),start:P(9),select:P(8),l:P(4)||P(6),r:P(5)||P(7),up:P(12)||ay<-.5,down:P(13)||ay>.5,left:P(14)||ax<-.5,right:P(15)||ax>.5};
   for(var k in s)if(s[k]!==!!gpPrev[k]){gpPrev[k]=s[k];press(k,s[k]);}}requestAnimationFrame(gpPoll);
 /* battery saves and play-time quest */
-setInterval(function(){if(em&&em.ramDirty){em.ramDirty=false;try{em.saveRam();}catch(e){}}if(em&&!paused&&played>=60&&!playT){playT=1;q('minute');}},2000);
-addEventListener('pagehide',function(){if(em&&em.ramDirty)try{em.saveRam();}catch(e){}});
-document.addEventListener('visibilitychange',function(){if(document.hidden&&em&&!paused){paused=true;$('ptxt').classList.add('on');btns();}});
-shelf();btns();q('open');cloudLoad();
-window.__gb_dbg={boot:function(i){$('carts').querySelectorAll('[data-c]')[i].click();},em:function(){return em;},frame:function(){return em?em.M._emulator_get_ticks_f64(em.e):0;}};
+setInterval(function(){if(em&&em.ramDirty){em.ramDirty=false;try{em.saveRam();}catch(e){}}if(em&&!paused&&played>=60&&!playT){playT=1;q('minute');}if(gbaCrash&&em){gbaCrash=false;toast('This game hit something the Advance emulator can\u2019t handle yet. Try a save state or another game.');}},2000);
+addEventListener('pagehide',function(){if(em&&em.ramDirty)try{em.saveRam();}catch(e){}if(ISGBA&&em)em.destroy();});
+document.addEventListener('visibilitychange',function(){if(document.hidden&&em&&!paused)setPause(true);});
+insert('Pick a game','Choose one from the list on the right, or load your own.');
+shelf();btns();q('open');sortOld();drawCloud();cloudLoad();
+window.__gb_dbg={boot:function(i){$('carts').querySelectorAll('[data-c]')[i].click();},em:function(){return em;},frame:function(){return em?em.ticks():0;},bootBytes:function(ab){boot(ab,'u:test');}};
 
 })();
 
