@@ -2249,7 +2249,7 @@ window.__floor_dbg={live:function(m){onLive(m);},tables:function(){var o={};for(
    Progress is written by the arcade shell (it hears every game), payouts are trading cards (cards_collect.js). */
 var SUQ=(function(){
   var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','coach'];
-  var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','spades','backlot','untangle','chess','checkers','pdice','trail','wrangler','ironclads','sudoku','drop4','freecell','survey','pwheel'];
+  var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','spades','untangle','chess','checkers','pdice','trail','wrangler','ironclads','sudoku','drop4','freecell','survey','pwheel'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
   /* quests added later join the rotation from NEWDAY, so a day's picks never change mid-day */
@@ -2272,10 +2272,6 @@ var SUQ=(function(){
     ['sp1','e','Sit down at the Spades table','spades','open',1],
     ['ut1','e','Solve an Untangle puzzle','untangle','solve',1],
     ['ut2','m','Solve 3 Untangle puzzles','untangle','solve',3],
-    ['bl1','e','Throw a round at the Back Lot','backlot','round',1],
-    ['bl2','m','Throw 3 ringers at Horseshoes','backlot','ringer',3],
-    ['bl3','m','Sink 6 cups at Beer Pong','backlot','cups',6],
-    ['bl4','h','Post a high score at the Back Lot','backlot','win',1],
     ['mn1','e','Try a round of Minesweeper','mines','open',1],
     ['gr1','e','Work the sluice at Gold Rush','gold','open',1],
     ['bg1','e','Play a game of Bingo','bingo','play',1],
