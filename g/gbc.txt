@@ -633,6 +633,7 @@ body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:mi
 #sbox:fullscreen #scr{border-radius:0;object-fit:contain;background:#000}#sbox:fullscreen #ejs{inset:0;width:100%;height:100%;border-radius:0}#sbox:fullscreen .ins,#sbox:fullscreen .ptxt{inset:0;border-radius:0}
 .fsx{display:none;position:absolute;top:12px;right:12px;z-index:5;font:800 13px Inter,sans-serif;color:#fff;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:7px 11px;cursor:pointer;opacity:.35;transition:opacity .2s}.fsx:hover{opacity:1}#sbox:fullscreen .fsx{display:block}
 .sync{font:600 12px Inter,sans-serif;color:#94a3b8;text-align:center;min-height:16px}.sync.offline{color:#fbbf24}.sync.saving,.sync.pending,.sync.checking{color:#7dd3fc}
+.consel{font:800 13px Inter,sans-serif;color:#140d05;background:var(--acc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23140d05' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center/14px;border:0;border-radius:999px;padding:8px 34px 8px 14px;cursor:pointer;appearance:none;-webkit-appearance:none}.consel option{color:#111;background:#fff}
 
 </style>
 </head>
@@ -752,8 +753,8 @@ function loadScript(src){return new Promise(function(res,rej){var s=document.cre
 document.documentElement.style.setProperty('--acc',C.acc);document.documentElement.style.setProperty('--ar',C.w+'/'+C.h);
 if(ISGBA)document.body.classList.add('isgba');
 $('ttl').innerHTML=esc(C.name)+'<span>'+(ISGBA?'Plays Game Boy Advance (.gba) games.':CON.id==='gbc'?'Plays Game Boy Color (.gbc) games.':'Plays original Game Boy (.gb) games.')+'</span>';
-$('cons').innerHTML=['gb','gbc','gba','psx'].map(function(id){return '<button type="button" data-g="'+id+'"'+(id===CON.id?' class="on"':'')+'>'+esc(CONS[id].name)+'<i>'+CONS[id].tag+'</i></button>';}).join('');
-$('cons').onclick=function(e){var b=e.target.closest('[data-g]');if(!b||b.classList.contains('on'))return;try{parent.__suShow(b.getAttribute('data-g'),true);}catch(x){}};
+$('cons').innerHTML='<select class="consel" id="consel" aria-label="Switch console">'+['gb','gbc','gba','psx'].map(function(id){return '<option value="'+id+'"'+(id===CON.id?' selected':'')+'>'+esc(CONS[id].name)+' ('+CONS[id].tag+')</option>';}).join('')+'</select>';
+$('consel').onchange=function(){var v=this.value;this.blur();try{parent.__suShow(v,true);}catch(x){}this.value=CON.id;};
 var cv=$('scr');cv.width=C.w;cv.height=C.h;
 $('romIn').setAttribute('accept',ISGBA?'.gba,.zip':'.gb,.gbc,.zip');
 $('ownTxt').textContent='A '+(ISGBA?'.gba':'.gb or .gbc')+' file, or a whole .zip pack. Games for the other handhelds in a pack get sorted onto their shelves.';
