@@ -589,6 +589,8 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   box-shadow:inset 0 0 0 1px rgba(0,0,0,.35),inset 0 2px 2px rgba(255,255,255,.45),0 2px 0 rgba(0,0,0,.45),0 3px 5px rgba(0,0,0,.4)!important;border:0!important}
 .chipi.g{--cc:#0f9d58}.chipi.n{--cc:#1f2937}.chipi.r{--cc:#c81e1e}
 </style>
+<style>/* breathing room: keep the GAMES tab off the marquee and give the reels space from the frame */
+div.cab,html.fs div.cab{margin-top:22px;padding:18px 20px 20px}div.cab .marq{padding:22px 10px 14px}div.cab .jps{margin-bottom:14px}@media (max-width:620px){div.cab,html.fs div.cab{margin-top:30px;padding:12px}div.cab .marq{padding:16px 6px 10px}}</style>
 </head>
 <body>
 <div class="wrap">
