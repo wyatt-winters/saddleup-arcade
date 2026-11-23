@@ -1527,7 +1527,7 @@ function decorArt(){
   el('rect',{class:'barhit',x:LAY.bar.x-LAY.bar.w/2-20,y:20,width:LAY.bar.w+40,height:LAY.bar.ty+90,fill:'transparent',style:'cursor:pointer;pointer-events:all'},layers.tables);
   LAY.stools.forEach(function(st,i){BAR.seats.push({x:st[0],y:st[1],a:st[2],occ:null,i:i,bar:true});});
   BAR.tender=mkPerson({name:'Whiskey Pete',art:STAFF.pete,col:'#7f1d1d',arm:'#f1f5f9',skin:pick(SKIN),hair:pick(HAIR),hat:pick(HATS),kind:'dealer'});place(BAR.tender,LAY.bar.x,LAY.bar.ty,180);
-  var c=LAY.cashier;if(c){var cs=mkPerson({name:'Opal',art:STAFF.opal,col:'#14532d',arm:'#f1f5f9',skin:pick(SKIN),hair:pick(HAIR),hat:null,kind:'dealer'});place(cs,c[0],c[1],c[2]);}
+  var c=LAY.cashier;if(c&&LAY.bg){var bm=/\/art\/([a-z]+)\/floor_bg/.exec(LAY.bg),CQ={xmas:[1560,485],beach:[1550,500],comic:[1478,492],wasteland:[1570,500],vegas:[1586,560],goofy:[1365,605],pirate:[1550,500],real:[1598,555],badlands:[1598,548]},q=(bm&&CQ[bm[1]])||[1560,485];c=[q[0],q[1],c[2]];}if(c){var cs=mkPerson({name:'Opal',art:STAFF.opal,col:'#14532d',arm:'#f1f5f9',skin:pick(SKIN),hair:pick(HAIR),hat:null,kind:'dealer'});place(cs,c[0],c[1],c[2]);}
 }
 function decor(){
   if(LAY.bg)return decorArt();

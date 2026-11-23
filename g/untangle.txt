@@ -571,7 +571,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 #ut .ust em{display:block;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#7dd3fc}
 #ut .ust b{font:900 22px/1.1 Inter,sans-serif;color:#f8fafc}
 #ut .ust.x b{color:#fb7185}#ut .ust.x.ok b{color:#38bdf8}
-#ut .ubtn{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+#ut .ubtn{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;align-items:center}.uopt{display:flex;gap:6px;align-items:center;margin-left:auto}.uopt:empty{display:none}@media(max-width:620px){.ubar{margin-top:30px}}
 #ut .ubtn button{padding:9px 14px;border-radius:10px;background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.35);color:#e0f2fe;font-weight:800;font-size:13px}
 #ut .ubtn button:hover{background:rgba(56,189,248,.25)}#ut .ubtn button:disabled{opacity:.4}
 #ut .ubtn button.on{background:#38bdf8;color:#04121f}
@@ -609,7 +609,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
       <div class="ust x"><em>Crossings</em><b id="uX">0</b></div>
       <div class="ust"><em>Swaps</em><b id="uMv">0</b></div>
       <div class="ust"><em>Time</em><b id="uT">0:00</b></div>
-      <div class="ubtn"><button type="button" id="bUndo" title="Undo last swap">Undo</button><button type="button" id="bHint" title="Show a good swap">Hint</button><button type="button" id="bMode">Daily</button><button type="button" id="bRe" title="New layout of this level">Reshuffle</button></div>
+      <div class="ubtn"><button type="button" id="bUndo" title="Undo last swap">Undo</button><button type="button" id="bHint" title="Show a good swap">Hint</button><button type="button" id="bMode">Daily</button><button type="button" id="bRe" title="New layout of this level">Reshuffle</button><span class="uopt" data-optbtn></span></div>
     </div>
     <div class="ubox"><svg id="usv" viewBox="0 0 1000 640" preserveAspectRatio="xMidYMid meet" aria-label="Puzzle board"><defs>
       <filter id="glow" filterUnits="userSpaceOnUse" x="-200" y="-200" width="1400" height="1300"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
