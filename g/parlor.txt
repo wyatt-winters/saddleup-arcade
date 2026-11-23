@@ -1298,11 +1298,11 @@ function chair(p,x,y,a,s,kind){var g=el('g',{transform:'translate('+x+' '+y+') r
 
 /* ---------- painted art: each drawn piece is tagged; once its image exists in the repo art/ folder the drawing hides and the image shows ---------- */
 var PL_ART=['pl_floor','pl_wall','pl_bookshelf','pl_piano','pl_fireplace','pl_rug','pl_rug_tall','pl_rug_oval','pl_armchair','pl_coffee','pl_chair','pl_stool','pl_lamp','pl_plant','pl_door','pl_sol','pl_spider','pl_mines','pl_gold','pl_dominoes','pl_boomtown','pl_mjsol','pl_mahjong'];
-var KEEP=['glow','hit','keep','fglow'],FLOOR_R=null,PAT=0;
+var KEEP=['glow','hit','keep','fglow'],FLOOR_R=null,PLAN=0;
 function artTag(g,name,x,y,w,h,o){g.setAttribute('data-art',name);g.__ab=[x,y,w,h,o||{}];if(ART.has(name))artApply(g);return g;}
 function artApply(g){if(g.__done)return;g.__done=1;var n=g.getAttribute('data-art'),b=g.__ab,o=b[4],before=null;
   [].slice.call(g.childNodes).forEach(function(c){var k=c.classList&&KEEP.some(function(z){return c.classList.contains(z);});if(k){if(!before&&!c.classList.contains('glow'))before=c;return;}if(c.style)c.style.display='none';});
-  var im;if(o.tile){var id='pla'+(++PAT),d=svg.querySelector('defs'),pt=el('pattern',{id:id,patternUnits:'userSpaceOnUse',x:b[0],y:b[1],width:o.tile,height:b[3]},d);
+  var im;if(o.tile){var id='pla'+(++PLAN),d=svg.querySelector('defs'),pt=el('pattern',{id:id,patternUnits:'userSpaceOnUse',x:b[0],y:b[1],width:o.tile,height:b[3]},d);
     el('image',{href:ART.url(n),x:0,y:0,width:o.tile,height:b[3],preserveAspectRatio:'none'},pt);im=el('rect',{x:b[0],y:b[1],width:b[2],height:b[3],fill:'url(#'+id+')'},g);}
   else im=el('image',{href:ART.url(n),x:b[0],y:b[1],width:b[2],height:b[3],preserveAspectRatio:o.par||'xMidYMid meet'},g);
   im.setAttribute('class','artimg');if(before)g.insertBefore(im,before);}
