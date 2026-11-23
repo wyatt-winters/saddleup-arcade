@@ -612,7 +612,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
       <div class="ubtn"><button type="button" id="bUndo" title="Undo last swap">Undo</button><button type="button" id="bHint" title="Show a good swap">Hint</button><button type="button" id="bMode">Daily</button><button type="button" id="bRe" title="New layout of this level">Reshuffle</button></div>
     </div>
     <div class="ubox"><svg id="usv" viewBox="0 0 1000 640" preserveAspectRatio="xMidYMid meet" aria-label="Puzzle board"><defs>
-      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="glow" filterUnits="userSpaceOnUse" x="-200" y="-200" width="1400" height="1300"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       <filter id="glow2" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       <radialGradient id="ng" cx="38%" cy="35%" r="65%"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#e0f2fe"/><stop offset="1" stop-color="#38bdf8"/></radialGradient>
       <radialGradient id="ngS" cx="38%" cy="35%" r="65%"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#fef3c7"/><stop offset="1" stop-color="#f59e0b"/></radialGradient>
