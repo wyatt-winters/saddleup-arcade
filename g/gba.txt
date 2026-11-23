@@ -629,6 +629,9 @@ body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:mi
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#111827;border:1px solid #f2d27e;color:#fde68a;border-radius:999px;padding:8px 16px;font:700 13px Inter;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}.toast.on{opacity:1}
 @media (max-width:900px){.top{padding-right:0;padding-top:34px}#rh{flex-direction:column}.side{width:100%}.scrbox{width:100%}.cons{margin-left:0}.mlist{max-height:50vh}}
 .find{display:block;text-align:center;text-decoration:none;font:800 14px Inter,sans-serif;color:#140d05;background:var(--acc);border-radius:10px;padding:10px;margin-bottom:8px;box-shadow:0 3px 0 rgba(0,0,0,.35)}.find:hover{filter:brightness(1.08)}
+#sbox:fullscreen{width:100vw;height:100vh;max-width:none;padding:0;border-radius:0;background:#000;box-shadow:none;aspect-ratio:auto}#sbox:fullscreen::before{display:none}
+#sbox:fullscreen #scr{border-radius:0;object-fit:contain;background:#000}#sbox:fullscreen #ejs{inset:0;width:100%;height:100%;border-radius:0}#sbox:fullscreen .ins,#sbox:fullscreen .ptxt{inset:0;border-radius:0}
+.fsx{display:none;position:absolute;top:12px;right:12px;z-index:5;font:800 13px Inter,sans-serif;color:#fff;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:7px 11px;cursor:pointer;opacity:.35;transition:opacity .2s}.fsx:hover{opacity:1}#sbox:fullscreen .fsx{display:block}
 
 </style>
 </head>
@@ -644,6 +647,7 @@ body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:mi
       <div class="scrbox" id="sbox">
         <canvas id="scr" aria-label="Game screen" tabindex="0"></canvas>
         <div class="ins" id="ins"></div>
+        <button type="button" class="fsx" id="fsx" title="Exit full screen (Esc)">&#x2715; Exit full screen</button>
         <div class="ptxt" id="ptxt">Paused<small>press P or click Resume</small></div>
       </div>
       <div class="kstrip" id="kstrip"></div>
@@ -653,7 +657,8 @@ body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:mi
         <button type="button" id="bLoad">&#x23ea; Load state</button>
         <button type="button" id="bPal" title="Change screen colours">&#x1f3a8; Colours</button>
         <button type="button" id="bFF" title="Hold to fast-forward">&#x23e9; Fast</button>
-        <button type="button" id="bBig" title="Big screen (F)">&#x26f6; Big screen</button>
+        <button type="button" id="bFS" class="fsb" title="Full screen">&#x26f6; Full screen</button>
+        <button type="button" id="bBig" title="Big screen (F)">&#x2b1c; Big screen</button>
         <label class="vol">&#x1f50a;<input type="range" id="vol" min="0" max="100" value="50" aria-label="Volume"></label>
       </div>
       <div class="touch" id="touch">
@@ -718,7 +723,7 @@ var KEYS={ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',K
 if(ISGBA){KEYS.KeyQ='l';KEYS.KeyE='r';}
 var KG=[['Move','<kbd>&#x2191;</kbd><kbd>&#x2193;</kbd><kbd>&#x2190;</kbd><kbd>&#x2192;</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>'],['A button','<kbd>X</kbd> or <kbd>K</kbd>'],['B button','<kbd>Z</kbd> or <kbd>J</kbd>']]
   .concat(ISGBA?[['L shoulder','<kbd>Q</kbd>'],['R shoulder','<kbd>E</kbd>']]:[])
-  .concat([['Start','<kbd>Enter</kbd>'],['Select','<kbd>Shift</kbd>'],['Fast-forward','hold <kbd>Space</kbd>'],['Pause','<kbd>P</kbd>'],['Big screen','<kbd>F</kbd>'],['Save / load state','<kbd>F5</kbd> / <kbd>F8</kbd>']]);
+  .concat([['Start','<kbd>Enter</kbd>'],['Select','<kbd>Shift</kbd>'],['Fast-forward','hold <kbd>Space</kbd>'],['Pause','<kbd>P</kbd>'],['Full screen','the &#x26f6; Full screen button (<kbd>Esc</kbd> exits)'],['Big screen','<kbd>F</kbd>'],['Save / load state','<kbd>F5</kbd> / <kbd>F8</kbd>']]);
 $('keys').innerHTML='<h3>Your keyboard is the controller</h3><table class="kt">'+KG.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>';}).join('')+'</table><p class="knote">Game controllers work too: plug one in and press a button. On a phone or tablet, touch buttons show up under the screen.</p>';
 $('kstrip').innerHTML=['<b>Move</b><kbd>&#x2190;</kbd><kbd>&#x2191;</kbd><kbd>&#x2193;</kbd><kbd>&#x2192;</kbd>','<b>A</b><kbd>X</kbd>','<b>B</b><kbd>Z</kbd>'].concat(ISGBA?['<b>L</b><kbd>Q</kbd>','<b>R</b><kbd>E</kbd>']:[]).concat(['<b>Start</b><kbd>Enter</kbd>','<b>Select</b><kbd>Shift</kbd>','<b>Fast</b><kbd>Space</kbd>','<b>Pause</b><kbd>P</kbd>','<b>Big</b><kbd>F</kbd>']).map(function(s){return '<span>'+s+'</span>';}).join('');
 function insert(t,sub){var i=$('ins');i.classList.remove('off');i.innerHTML='<b>'+esc(t)+'</b>'+(sub?'<span class="sub">'+esc(sub)+'</span>':'')+'<div class="mk">'+$('kstrip').innerHTML+'</div>';}
@@ -882,7 +887,7 @@ function setPause(p){if(!em)return;paused=p;$('ptxt').classList.toggle('on',paus
 function setFF(v){ff=v;$('bFF').classList.toggle('on',v);if(em)em.setFF(v);}
 function doSave(){if(em)em.saveState().then(function(ok){toast(ok?'State saved on this device.':'Couldn\u2019t save: storage is full.');});}
 function doLoad(){if(em)em.loadState().then(function(ok){toast(ok?'State loaded.':'No saved state for this game yet.');});}
-function big(v){document.body.classList.toggle('big',v);$('bBig').classList.toggle('on',v);$('bBig').innerHTML=v?'&#x2715; Exit big screen':'&#x26f6; Big screen';fitVH();}
+function big(v){document.body.classList.toggle('big',v);$('bBig').classList.toggle('on',v);$('bBig').innerHTML=v?'&#x2715; Exit big screen':'&#x2b1c; Big screen';fitVH();}
 $('bPause').onclick=function(){setPause(!paused);};$('bSave').onclick=doSave;$('bLoad').onclick=doLoad;
 $('bPal').onclick=function(){if(!em)return;pal=(pal+1)%PALS.length;em.setPal(PALS[pal]);savePref();toast('Screen colours '+(pal+1)+' of '+PALS.length+' (original Game Boy games only)');};
 $('bBig').onclick=function(){big(!document.body.classList.contains('big'));};
@@ -922,6 +927,18 @@ addEventListener('pagehide',function(){if(em&&em.ramDirty)try{em.saveRam();}catc
 document.addEventListener('visibilitychange',function(){if(document.hidden&&em&&!paused)setPause(true);});
 insert('Pick a game','Choose one from the list on the right, or load your own.');
 shelf();btns();q('open');sortOld();drawCloud();cloudLoad();
+
+/* ---------- full screen: just the game, edge to edge ---------- */
+function isFS(){return !!(document.fullscreenElement||document.webkitFullscreenElement);}
+function fsBtn(){var b=$('bFS');if(b)b.innerHTML=isFS()?'&#x2715; Exit full screen':'&#x26f6; Full screen';}
+function fullScreen(){var el=$('sbox');if(isFS()){(document.exitFullscreen||document.webkitExitFullscreen).call(document);return;}
+  var rq=el.requestFullscreen||el.webkitRequestFullscreen;var p=null;try{p=rq&&rq.call(el,{navigationUI:'hide'});}catch(e){p=Promise.reject(e);}
+  Promise.resolve(p).then(function(){try{var f=$('scr')||$('ejs');f&&f.focus({preventScroll:true});}catch(e){}},function(){
+    /* this browser won't let the game frame go full screen: fill the whole window with the big screen instead */
+    try{var d=top.document.documentElement;(d.requestFullscreen||d.webkitRequestFullscreen).call(d);}catch(e){}if(typeof big==='function')big(true);});}
+document.addEventListener('fullscreenchange',fsBtn);document.addEventListener('webkitfullscreenchange',fsBtn);
+$('bFS').onclick=fullScreen;$('fsx').onclick=function(e){e.stopPropagation();fullScreen();};
+addEventListener('keydown',function(e){if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;if(e.code==='KeyG'&&e.altKey){e.preventDefault();fullScreen();}});
 window.__gb_dbg={boot:function(i){$('carts').querySelectorAll('[data-c]')[i].click();},em:function(){return em;},frame:function(){return em?em.ticks():0;},bootBytes:function(ab){boot(ab,'u:test');}};
 
 })();
