@@ -577,7 +577,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 #ut .ubtn button.on{background:#38bdf8;color:#04121f}
 #ut .ubox{position:relative;border-radius:18px;overflow:hidden;border:1px solid rgba(56,189,248,.35);background:radial-gradient(ellipse at 50% 40%,#0b1b33 0%,#060d1c 60%,#03060f 100%);box-shadow:inset 0 0 80px rgba(56,189,248,.08),0 18px 50px rgba(0,0,0,.5)}
 #ut .ubox:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(56,189,248,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.06) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
-#usv{display:block;width:100%;height:auto;aspect-ratio:1000/640;touch-action:none;user-select:none;-webkit-user-select:none;position:relative}
+#usv{display:block;width:100%;height:auto;touch-action:none;user-select:none;-webkit-user-select:none;position:relative}
 #usv line{stroke-width:3.2;stroke-linecap:round;transition:stroke .25s}
 #usv line.ok{stroke:#38bdf8}#usv line.bad{stroke:#fb7185}
 #usv line.hint{stroke:#86efac;stroke-dasharray:8 8;stroke-width:3;animation:dash 1s linear infinite}
@@ -595,7 +595,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 #ut .wbox h2{margin:0;font:400 32px Rye,Georgia,serif;color:#7dd3fc;text-shadow:0 0 18px rgba(56,189,248,.6)}
 #ut .wbox p{color:#cbd5e1;font-size:14px}
 #ut .wst{display:flex;gap:8px;justify-content:center;margin-bottom:12px}#ut .wst div{background:rgba(255,255,255,.06);border-radius:10px;padding:6px 10px;font-size:11px;color:#94a3b8}#ut .wst b{display:block;font-size:20px;color:#fff}
-@media (max-width:760px){#usv{aspect-ratio:640/860}#ut .ust{min-width:0;padding:5px 9px}#ut .ust b{font-size:18px}#ut .ubtn{margin-left:0;width:100%}#ut .ubtn button{flex:1;padding:9px 6px}}
+@media (max-width:760px){#ut .ust{min-width:0;padding:5px 9px}#ut .ust b{font-size:18px}#ut .ubtn{margin-left:0;width:100%}#ut .ubtn button{flex:1;padding:9px 6px}}
 </style>
 </head>
 <body>
@@ -661,7 +661,9 @@ function countX(pts,E,slot){var bad=new Array(E.length).fill(0),tot=0;
 function lvlSpec(L){return {n:Math.min(36,4+L*2),d:Math.min(2.1,1.25+L*.07)};}
 /* ---------- board ---------- */
 var NODES=[],LINES=[],sel=-1,drag=null,anim=null,hintT=0;
-function fitView(){var w=svg.getBoundingClientRect().width||1000,portrait=w<760;VW=portrait?640:1000;VH=portrait?860:640;svg.setAttribute('viewBox','0 0 '+VW+' '+VH);}
+function fitView(){var w=svg.getBoundingClientRect().width||1000,portrait=w<760;VW=portrait?640:1000;VH=portrait?860:640;svg.setAttribute('viewBox','0 0 '+VW+' '+VH);sizeBoard();}
+/* keep the whole board on screen: never taller than the visible window (the drawing scales to fit inside) */
+function sizeBoard(){var w=svg.getBoundingClientRect().width||1000,vh=0;try{vh=window.top.innerHeight;}catch(e){}vh=vh||innerHeight;var h=Math.max(280,Math.min(w*VH/VW,vh-150));svg.style.height=Math.round(h)+'px';}
 function P(i){var s=G.pz.pts[i],m=46;return {x:m+s.x*(VW-2*m),y:m+s.y*(VH-2*m)};}
 function nodeXY(v){if(anim&&anim.pos[v])return anim.pos[v];return P(G.pz.slot[v]);}
 function build(){gL.innerHTML='';gN.innerHTML='';LINES=G.pz.E.map(function(){var l=document.createElementNS(NS,'line');l.setAttribute('filter','url(#glow)');gL.appendChild(l);return l;});
@@ -705,7 +707,7 @@ function hint(){if(!G||G.won||anim)return;var sl=G.pz.slot,best=null,bx=G.x;
 /* ---------- input: tap two nodes, or drag one onto another ---------- */
 svg.addEventListener('pointerdown',function(e){if(!G||G.won||anim)return;var p=svgPt(e),v=nodeAt(p,-1);if(v<0){sel=-1;draw();return;}
   drag={v:v,start:p,p:p,on:false,id:e.pointerId};try{svg.setPointerCapture(e.pointerId);}catch(x){}e.preventDefault();});
-svg.addEventListener('pointermove',function(e){if(!drag)return;var p=svgPt(e);if(!drag.on&&Math.hypot(p.x-drag.start.x,p.y-drag.start.y)>10)drag.on=true;if(drag.on){drag.p=p;draw();}});
+svg.addEventListener('pointermove',function(e){if(!drag)return;var p=svgPt(e);if(!drag.on&&Math.hypot(p.x-drag.start.x,p.y-drag.start.y)>10)drag.on=true;if(drag.on){p={x:Math.max(24,Math.min(VW-24,p.x)),y:Math.max(24,Math.min(VH-24,p.y))};drag.p=p;draw();}});
 svg.addEventListener('pointerup',function(e){if(!drag)return;var d=drag,p=svgPt(e);drag=null;
   if(d.on){var t=nodeAt(p,d.v);draw();if(t>=0)swap(d.v,t);return;}
   if(sel<0){sel=d.v;tone(660,.05,'sine',.03);draw();}else if(sel===d.v){sel=-1;draw();}else swap(sel,d.v);});
@@ -722,7 +724,7 @@ $('bHint').onclick=hint;
 $('bRe').onclick=function(){start(mode,true);};
 $('bMode').onclick=function(){start(mode==='daily'?'level':'daily');};
 $('bNext').onclick=function(){start(mode==='daily'?'level':'level');};
-addEventListener('resize',function(){if(!G)return;var w=svg.getBoundingClientRect().width,pv=VW;fitView();if(VW!==pv)draw();});
+addEventListener('resize',function(){try{sizeBoard();}catch(e){}if(!G)return;var w=svg.getBoundingClientRect().width,pv=VW;fitView();if(VW!==pv)draw();});
 /* sound */
 var AC=null;function tone(f,d,ty,v){try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();var t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type=ty||'sine';o.frequency.value=f;g.gain.setValueAtTime(v||.05,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d);}catch(e){}}
 q('open');start('level');
