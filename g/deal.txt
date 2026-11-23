@@ -469,7 +469,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 <div class="wrap">
   <span class="pill"><i></i>Arcade &#xb7; Game Parlor &#xb7; Game Shows</span>
   <h1>Twenty-six saddlebags.<span>Saddlebag Showdown.</span></h1>
-  <p class="sub">Pick a saddlebag and hold onto it. Open the others one by one, and every time the round ends <b>the Cattle Baron rings in with an offer</b> to buy your bag. <b>Shake on it</b> and take his money, or <b>ride on</b> and see what you&rsquo;re really holding. Every rebirth earns <b>one entry</b>; <b>10%</b> of what you win goes into your casino bankroll.</p>
+  <p class="sub">Pick a saddlebag and hold onto it. Open the others one by one, and every time the round ends <b>the Cattle Baron rings in with an offer</b> to buy your bag. <b>Shake on it</b> and take his money, or <b>ride on</b> and see what you&rsquo;re really holding. Every rebirth earns <b>one entry</b>, and <b>everything you win</b> goes straight into your casino bankroll.</p>
   <div id="felt">
     <div class="top" data-optbtn><span class="ttl">Saddlebag Showdown</span><span class="paidw">Bankroll: <b id="paid">$0.00</b></span></div>
     <div class="host" id="host"></div>
@@ -539,7 +539,7 @@ function money(v,c){if(v<1)return '$'+v.toFixed(2);return '$'+Math.round(v).toLo
 function cents(v){return '$'+(Math.round(v*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
 var VALUES=[0.01,1,5,10,25,50,75,100,200,300,400,500,750,1000,5000,10000,25000,50000,75000,100000,200000,300000,400000,500000,750000,1000000];
 var ROUNDS=[6,5,4,3,2,1,1,1,1];
-var CUT=0.10,SCB='https://saddleup-arcade.vercel.app/art/shows/sc/';
+var CUT=1,SCB='https://saddleup-arcade.vercel.app/art/shows/sc/';
 /* ---------- sound ---------- */
 var AC=null;function ac(){try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){}return AC;}
 function tone(f,d,type,v,delay){var c=ac();if(!c)return;var t=c.currentTime+(delay||0),o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v||0.15,t+0.008);g.gain.exponentialRampToValueAtTime(0.0001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+0.05);}
@@ -576,8 +576,12 @@ function payout(value){var cash=Math.round(value*CUT*100)/100;if(cash<0.01)retur
   $('paid').textContent=cents(cash);return cash;}
 /* ---------- the game ---------- */
 var G=null;
+/* make-good: Showdown used to pay only 10%, so every trip already taken comes back once */
+function makeGood(){try{if(localStorage.getItem('su_deal_fix1'))return 0;var r=rbState(),u=Math.floor(+r.scUsed||0);localStorage.setItem('su_deal_fix1','1');if(u<=0)return 0;r.scUsed=0;localStorage.setItem('su_rebirth',JSON.stringify(r));return u;}catch(e){return 0;}}
+var MG=makeGood();
 function gate(){clearT();view('vGate');var n=entries();$('gN').textContent=n;$('gStart').disabled=!n;
   $('gMsg').innerHTML=n?'You have <b>'+n+'</b> entr'+(n===1?'y':'ies')+'. One game per entry.':'Every <b>rebirth</b> earns one entry. Reach your next rebirth to ride in.';
+  if(MG)$('gMsg').innerHTML='<b>Payout fix:</b> Saddlebag Showdown now pays <b>100%</b> of what you win (it used to pay 10%). We gave back your '+MG+' past trip'+(MG===1?'':'s')+' so you can ride again for the full prize.<br>'+$('gMsg').innerHTML;
   host('Welcome to Saddlebag Showdown!',n?'Twenty-six saddlebags, one Cattle Baron, and one big decision.':'Come back after your next rebirth.');$('paid').textContent='$0.00';}
 function start(){clearT();useEntry();q('play');var vals=shuffle(VALUES);
   G={bag:{},mine:0,open:{},round:0,left:ROUNDS[0],offers:[],over:false};for(var i=1;i<=26;i++)G.bag[i]=vals[i-1];
@@ -645,7 +649,7 @@ function endTwo(swap){$('phone').classList.add('hide');if(swap){var t=G.mine;G.m
     bigCall(big?'YOU WIN '+money(v).toUpperCase()+'!':'IT HELD '+(v<1?cents(v):money(v)),big?'The other bag had '+money(o):'The other bag had '+money(o),2800,!big);later(finish,3000);},1900);}
 function finish(){var v=G.won,cash=payout(v);q('over');if(v>=100000)q('win');view('vEnd');
   $('endT').textContent=v>=500000?'A legendary payday!':v>=100000?'Big winner!':v>=10000?'Nice ride!':'That’s the show!';
-  $('endP').innerHTML='You leave with <b>'+(v<1?cents(v):money(v))+'</b>'+(G.how==='deal'?' from the Cattle Baron':' in your saddlebag')+'.<br><b>'+cents(cash)+'</b> went into your casino bankroll (10%).';
+  $('endP').innerHTML='You leave with <b>'+(v<1?cents(v):money(v))+'</b>'+(G.how==='deal'?' from the Cattle Baron':' in your saddlebag')+'.<br><b>'+cents(cash)+'</b> went straight into your casino bankroll.';
   host('Thanks for riding in!','Rebirth again to earn another entry.');}
 $('gStart').addEventListener('click',function(){if(entries()>0)start();});
 $('bags').addEventListener('click',function(e){var b=e.target.closest('.bag');if(b)pickBag(+b.getAttribute('data-i'));});
