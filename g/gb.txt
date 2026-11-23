@@ -601,6 +601,9 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#111827;border:1px solid #f2d27e;color:#fde68a;border-radius:999px;padding:8px 16px;font:700 13px Inter;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}.toast.on{opacity:1}
 @media (max-width:760px){.shelf{width:100%;order:2}.hh{order:1}.keys{display:none}}
 .gbq{width:100%;box-sizing:border-box;background:#0b0705;color:#f8fafc;border:1px solid rgba(242,210,126,.35);border-radius:8px;padding:6px 9px;font:600 12.5px Inter;margin-bottom:6px}.mlist{max-height:360px;overflow:auto}
+.cloud{margin-top:10px;padding:10px;border-radius:10px;background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.3)}.cloud h3{font-size:14px!important;margin:0 0 6px!important;color:#7dd3fc!important}.cloud p{margin:0 0 6px;font-size:12px;color:#cbd5e1}
+.cloud .cb{font:800 12.5px Inter;color:#04223a;background:linear-gradient(180deg,#7dd3fc,#0ea5e9);border:0;border-radius:9px;padding:7px 10px;cursor:pointer;margin:2px 4px 6px 0}.cloud .cb.g{color:#e2e8f0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15)}.cloud .cb:disabled{opacity:.5}
+.cbar{height:8px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin:4px 0 6px}.cbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0ea5e9,#22d3ee);transition:width .2s}.cloud .use{font-size:11px;color:#94a3b8}.cart small .cl{color:#7dd3fc;font-weight:700}
 
 </style>
 </head>
@@ -612,8 +615,9 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     <aside class="shelf">
       <h3>Cartridge shelf</h3>
       <div id="carts"></div>
-      <label class="own"><input type="file" id="romIn" accept=".gb,.gbc,.zip" multiple hidden><span>&#x1f4be; Load your own ROMs</span><small>A .gb or .gbc file, or a whole .zip pack. They stay on your device and are never uploaded.</small></label>
+      <label class="own"><input type="file" id="romIn" accept=".gb,.gbc,.zip" multiple hidden><span>&#x1f4be; Load your own ROMs</span><small>A .gb or .gbc file, or a whole .zip pack. They stay on this device unless you back them up to your private cloud below.</small></label>
       <div id="mine"></div>
+      <div id="cloud" class="cloud"></div>
       <button type="button" class="lnk" id="credBtn">Credits &amp; licenses</button>
     </aside>
     <div class="hh">
@@ -643,7 +647,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     <p><b>Emulator:</b> binjgb by Ben Smith, MIT License. <a href="https://github.com/binji/binjgb" target="_blank" rel="noopener">Source</a> &#xb7; <a href="https://saddleup-arcade.vercel.app/art/gb/licenses/binjgb-MIT.txt" target="_blank" rel="noopener">License</a></p>
     <p><b>Libbet and the Magic Floor</b> by Damian Yerrick, a port of Martin Korth's Magic Floor. zlib License. <a href="https://github.com/pinobatch/libbet" target="_blank" rel="noopener">Source</a> &#xb7; <a href="https://saddleup-arcade.vercel.app/art/gb/licenses/libbet-zlib.txt" target="_blank" rel="noopener">License</a></p>
     <p><b>&#xb5;City</b> by Antonio Ni&#xf1;o D&#xed;az, GNU GPL v3. Built unmodified from <a href="https://github.com/AntonioND/ucity/tree/71fb08e7ca53fe4228e66316968d9c6bea3439ba" target="_blank" rel="noopener">this source</a> &#xb7; <a href="https://saddleup-arcade.vercel.app/art/gb/licenses/ucity-GPL-3.0.txt" target="_blank" rel="noopener">License</a></p>
-    <p class="fine">Game Boy and Game Boy Color are trademarks of Nintendo. This arcade isn't affiliated with or endorsed by Nintendo. Only load ROMs you have the right to play; your own files never leave your device.</p>
+    <p class="fine">Game Boy and Game Boy Color are trademarks of Nintendo. This arcade isn't affiliated with or endorsed by Nintendo. Only load ROMs you have the right to play; your own files stay on your device, or in your private cloud library where only your account can reach them.</p>
     <button type="button" class="go" id="credX">Close</button></div></div>
 </div>
 <script>
@@ -705,7 +709,7 @@ function setMine(a){try{localStorage.setItem('su_gb_mine',JSON.stringify(a.slice
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function shelf(){$('carts').innerHTML=CARTS.map(function(c){return '<button type="button" class="cart'+(cur===c.id?' on':'')+'" data-c="'+c.id+'" style="--lab:'+c.lab+'"><i></i><span><b>'+esc(c.name)+'</b><small>'+esc(c.sub)+'</small></span></button>';}).join('');
   var M=mine(),qy=(window.__gbq||'').toLowerCase(),L=qy?M.filter(function(m){return m.n.toLowerCase().indexOf(qy)>=0;}):M;
-  $('mine').innerHTML=M.length?'<h3 style="font-size:14px;margin:8px 0 6px">Your ROMs <small style="color:#94a3b8;font:600 11px Inter">('+M.length+')</small></h3>'+(M.length>6?'<input id="gbq" class="gbq" placeholder="Search your ROMs" value="'+esc(window.__gbq||'')+'">':'')+'<div class="mlist">'+L.slice(0,300).map(function(m){return '<button type="button" class="cart'+(cur==='u:'+m.k?' on':'')+'" data-u="'+esc(m.k)+'" style="--lab:#a78bfa"><i></i><span><b>'+esc(m.n)+'</b><small>On this device only · <u data-del="'+esc(m.k)+'">remove</u></small></span></button>';}).join('')+(L.length>300?'<small style="color:#94a3b8">Search to see more…</small>':'')+'</div>':'';
+  $('mine').innerHTML=M.length?'<h3 style="font-size:14px;margin:8px 0 6px">Your ROMs <small style="color:#94a3b8;font:600 11px Inter">('+M.length+')</small></h3>'+(M.length>6?'<input id="gbq" class="gbq" placeholder="Search your ROMs" value="'+esc(window.__gbq||'')+'">':'')+'<div class="mlist">'+L.slice(0,300).map(function(m){return '<button type="button" class="cart'+(cur==='u:'+m.k?' on':'')+'" data-u="'+esc(m.k)+'" style="--lab:#a78bfa"><i></i><span><b>'+esc(m.n)+'</b><small>'+(inCloud(m.k)?'<span class="cl">\u2601 In your cloud</span> \u00b7 ':'On this device \u00b7 ')+'<u data-del="'+esc(m.k)+'">remove</u></small></span></button>';}).join('')+(L.length>300?'<small style="color:#94a3b8">Search to see more…</small>':'')+'</div>':'';
   var gq=$('gbq');if(gq){gq.oninput=function(){window.__gbq=gq.value;var p=gq.selectionStart;shelf();var g2=$('gbq');g2.focus();try{g2.setSelectionRange(p,p);}catch(e){}};}}
 $('carts').onclick=function(e){var b=e.target.closest('[data-c]');if(!b)return;var c=CARTS.filter(function(x){return x.id===b.getAttribute('data-c');})[0];
   insert('Loading '+c.name+'…');fetch(B+c.file).then(function(r){if(!r.ok)throw new Error('Couldn\u2019t load that cartridge.');return r.arrayBuffer();}).then(function(ab){boot(ab,c.id);}).catch(fail);};
@@ -724,10 +728,49 @@ $('romIn').onchange=function(){var fs=[].slice.call(this.files||[]);this.value='
   (needZip?loadFF():Promise.resolve()).then(function(){return fs.reduce(function(p,f){return p.then(function(){if(f.size>400*1024*1024)return;return f.arrayBuffer().then(function(ab){unpack(f.name,new Uint8Array(ab),found,0);});});},Promise.resolve());})
   .then(function(){if(!found.length)throw new Error('No Game Boy ROMs found in that file.');var M=mine(),idx={};M.forEach(function(m){idx[m.k]=1;});var n=0;
     return found.reduce(function(p,r){return p.then(function(){var k=keyFor(r.name,r.u);n++;if(n%10===0)insert('Saving '+n+' of '+found.length+'…');if(idx[k])return;idx[k]=1;M.push({k:k,n:r.name});return dbPut(k,r.u.slice().buffer);});},Promise.resolve())
-    .then(function(){M.sort(function(a,b){return a.n.localeCompare(b.n);});setMine(M);shelf();
+    .then(function(){M.sort(function(a,b){return a.n.localeCompare(b.n);});setMine(M);shelf();drawCloud();
       if(found.length===1){var k1=keyFor(found[0].name,found[0].u);return dbGet(k1).then(function(ab){boot(ab,'u:'+k1);});}
       insert('Added '+found.length+' games');toast(found.length+' games added to Your ROMs on this device.');});})
   .catch(fail);};
+
+/* ---------- private cloud library: your ROMs in your own account, only you can reach them ---------- */
+var LIVE=/*LIVE*/null/*LIVE*/,CL={list:null,busy:false,prog:null,msg:''};
+function tok(){try{return localStorage.getItem('saddleup-arcade-tok')||'';}catch(e){return '';}}
+function cloudOK(){return !!(LIVE&&LIVE.url&&LIVE.key&&tok());}
+function ccall(action,o){o=o||{};o.token=tok();o.action=action;return fetch(LIVE.url.replace(/\/$/,'')+'/functions/v1/arcade-roms',{method:'POST',headers:{'content-type':'application/json','apikey':LIVE.key,'Authorization':'Bearer '+LIVE.key},body:JSON.stringify(o)}).then(function(r){return r.json();});}
+var CMSG={signed_out:'Sign in again to use your cloud library.',full:'Your cloud library is full (512 MB).',bad_file:'That file can’t go in the cloud.',not_found:'That game isn’t in your cloud any more.'};
+function mb(n){return (n/1048576).toFixed(n<10485760?1:0)+' MB';}
+function cloudLoad(){if(!cloudOK()){drawCloud();return;}ccall('list').then(function(r){if(r&&r.roms){CL.list=r;}else if(r&&r.error){CL.msg=CMSG[r.error]||'';}drawCloud();shelf();}).catch(function(){CL.msg='Can’t reach your cloud right now.';drawCloud();});}
+function inCloud(k){return !!(CL.list&&CL.list.roms.some(function(r){return r.k===k;}));}
+function drawCloud(){var el=$('cloud');if(!el)return;
+  if(!LIVE||!LIVE.url){el.style.display='none';return;}
+  if(!tok()){el.innerHTML='<h3>☁️ My cloud library</h3><p>Sign in to your arcade account to keep your ROMs in a private cloud library and play them on any device. Only you can see them.</p>';return;}
+  var L=CL.list,M=mine(),up=M.filter(function(m){return !inCloud(m.k);});
+  var h='<h3>☁️ My cloud library'+(L?' ('+L.roms.length+')':'')+'</h3>';
+  if(!L){h+='<p>'+esc(CL.msg||'Loading…')+'</p>';el.innerHTML=h;return;}
+  h+='<div class="use">'+mb(L.used)+' of '+mb(L.quota)+' used · private to your account</div>';
+  if(CL.prog){h+='<div class="cbar"><i style="width:'+Math.round(CL.prog.d/CL.prog.n*100)+'%"></i></div><p>'+esc(CL.prog.t)+' ('+CL.prog.d+' of '+CL.prog.n+')</p>';}
+  else if(up.length)h+='<button type="button" class="cb" id="cUp">⬆ Upload '+up.length+' from this device</button>';
+  if(CL.msg&&!CL.prog)h+='<p>'+esc(CL.msg)+'</p>';
+  var here={};M.forEach(function(m){here[m.k]=1;});var only=L.roms.filter(function(r){return !here[r.k];});
+  if(only.length)h+='<p>'+only.length+' game'+(only.length>1?'s':'')+' in your cloud aren’t on this device yet:</p>'+(only.length>1&&!CL.prog?'<button type="button" class="cb g" id="cDownAll">⬇ Get all '+only.length+' on this device</button>':'')+'<div class="mlist">'+only.slice(0,300).map(function(r){return '<button type="button" class="cart" data-ck="'+esc(r.k)+'" style="--lab:#38bdf8"><i></i><span><b>'+esc(r.n)+'</b><small>In your cloud · '+mb(r.s)+' · <u data-cdel="'+esc(r.k)+'">delete from cloud</u></small></span></button>';}).join('')+'</div>';
+  else if(!up.length&&L.roms.length)h+='<p>Everything on this device is backed up in your cloud.</p>';
+  el.innerHTML=h;
+  var u=$('cUp');if(u)u.onclick=uploadAll;var da=$('cDownAll');if(da)da.onclick=function(){downAll(only);};}
+function uploadAll(){if(CL.busy)return;CL.busy=true;var up=mine().filter(function(m){return !inCloud(m.k);});CL.prog={n:up.length,d:0,t:'Uploading to your cloud'};CL.msg='';drawCloud();
+  up.reduce(function(p,m){return p.then(function(){if(CL.stop)return;return dbGet(m.k).then(function(ab){if(!ab)return;var size=ab.byteLength;
+      return ccall('sign_upload',{k:m.k,name:m.n,size:size}).then(function(r){if(r.error){if(r.error==='full'){CL.stop=true;}throw new Error(CMSG[r.error]||'Upload failed');}
+        return fetch(r.url,{method:'PUT',headers:{'content-type':'application/octet-stream','x-upsert':'true'},body:ab}).then(function(x){if(!x.ok)throw new Error('Upload failed');return ccall('done',{k:m.k,name:m.n,size:size});});})
+      .then(function(r){if(r&&r.ok)CL.list.roms.push({k:m.k,n:m.n,s:size}),CL.list.used+=size;});}).catch(function(e){CL.msg=e.message;}).then(function(){CL.prog.d++;drawCloud();});});},Promise.resolve())
+  .then(function(){CL.busy=false;CL.stop=false;CL.prog=null;toast('Your ROMs are backed up in your private cloud.');cloudLoad();});}
+function fetchCloud(r){return ccall('download',{k:r.k}).then(function(x){if(x.error)throw new Error(CMSG[x.error]||'Couldn’t get that game.');return fetch(x.url);}).then(function(res){if(!res.ok)throw new Error('Couldn’t get that game.');return res.arrayBuffer();})
+  .then(function(ab){return dbPut(r.k,ab).then(function(){var M=mine().filter(function(m){return m.k!==r.k;});M.push({k:r.k,n:r.n});M.sort(function(a,b){return a.n.localeCompare(b.n);});setMine(M);return ab;});});}
+function downAll(list){if(CL.busy)return;CL.busy=true;CL.prog={n:list.length,d:0,t:'Copying to this device'};drawCloud();
+  list.reduce(function(p,r){return p.then(function(){return fetchCloud(r).catch(function(e){CL.msg=e.message;}).then(function(){CL.prog.d++;drawCloud();});});},Promise.resolve()).then(function(){CL.busy=false;CL.prog=null;shelf();drawCloud();});}
+$('cloud').onclick=function(e){var d=e.target.closest('[data-cdel]');if(d){e.stopPropagation();var k=d.getAttribute('data-cdel');if(!confirmDel(k))return;ccall('delete',{k:k}).then(function(){cloudLoad();});return;}
+  var b=e.target.closest('[data-ck]');if(!b||!CL.list)return;var r=CL.list.roms.filter(function(x){return x.k===b.getAttribute('data-ck');})[0];if(!r)return;insert('Getting '+r.n+' from your cloud…');fetchCloud(r).then(function(ab){shelf();drawCloud();boot(ab,'u:'+r.k);}).catch(fail);};
+function confirmDel(k){var b=document.querySelector('[data-cdel="'+k+'"]');if(b&&!b.__arm){b.__arm=1;b.textContent='tap again to delete';setTimeout(function(){b.__arm=0;b.textContent='delete from cloud';},3000);return false;}return true;}
+window.addEventListener('storage',function(e){if(e.key==='saddleup-arcade-tok'){CL.list=null;cloudLoad();}});
 function insert(t){var i=$('ins');i.classList.remove('off');i.innerHTML='<b>'+esc(t)+'</b>';}
 function fail(e){insert('Something went wrong');toast(e&&e.message?e.message:'That didn\u2019t work.');}
 function stop(){if(em){em.destroy();em=null;}cur=null;$('led').classList.remove('on');insert('Pick a cartridge');btns();}
@@ -760,7 +803,7 @@ var gpPrev={};function gpPoll(){requestAnimationFrame(gpPoll);var gs=navigator.g
 setInterval(function(){if(em&&em.ramDirty){em.ramDirty=false;try{em.saveRam();}catch(e){}}if(em&&!paused&&played>=60&&!playT){playT=1;q('minute');}},2000);
 addEventListener('pagehide',function(){if(em&&em.ramDirty)try{em.saveRam();}catch(e){}});
 document.addEventListener('visibilitychange',function(){if(document.hidden&&em&&!paused){paused=true;$('ptxt').classList.add('on');btns();}});
-shelf();btns();q('open');
+shelf();btns();q('open');cloudLoad();
 window.__gb_dbg={boot:function(i){$('carts').querySelectorAll('[data-c]')[i].click();},em:function(){return em;},frame:function(){return em?em.M._emulator_get_ticks_f64(em.e):0;}};
 
 })();
