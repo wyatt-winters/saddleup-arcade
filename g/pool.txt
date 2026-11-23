@@ -1489,6 +1489,10 @@ var PF={x0:55.5,y0:53.5,x1:791.5,y1:362.5};          /* cushion noses */
 var R=12,D2=2*R;
 var HEAD_X=230.5,FOOT={x:616.5,y:208},HEAD={x:165,y:208};
 var POCKETS=[{x:48.8,y:48.2,r:22},{x:423.7,y:35.6,r:21},{x:799.3,y:47.5,r:22},{x:47.8,y:367.5,r:22},{x:423.7,y:380.3,r:21},{x:799.3,y:367.7,r:22}];
+/* some themes paint their pockets deeper into the rails: drop the balls (and draw the hole) where the art's hole is */
+(function(){var sk=document.documentElement.getAttribute('data-season')||'',PK={beach:[[31.5,36.2],null,[815.5,40.5],[29.7,370.3],null,[809.5,370.3]],badlands:[[36.1,42.1],null,[810.1,42.4],[35.4,373],null,[810.7,372.9]]}[sk];
+  /* corners only: the side pockets' jaws already line up with the art */
+  if(PK)PK.forEach(function(q,i){if(q){POCKETS[i].x=q[0];POCKETS[i].y=q[1];}});})();
 /* where a shot should be aimed to drop in each pocket (a little inside the jaws) */
 POCKETS.forEach(function(p,i){var side=i===1||i===4;var tx=side?p.x:p.x+(p.x<ART_W/2?9:-9),ty=side?p.y+(p.y<200?14:-14):p.y+(p.y<200?9:-9);p.ax=tx;p.ay=ty;p.side=side;});
 var SEGS=[];
