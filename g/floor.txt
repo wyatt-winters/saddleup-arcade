@@ -2258,7 +2258,7 @@ window.__floor_dbg={live:function(m){onLive(m);},tables:function(){var o={};for(
    Progress is written by the arcade shell (it hears every game), payouts are trading cards (cards_collect.js). */
 var SUQ=(function(){
   var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','coach'];
-  var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','spades','untangle','loop','fish','gb','gbc','gba','chess','checkers','pdice','trail','wrangler','ironclads','sudoku','drop4','freecell','survey','pwheel'];
+  var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','spades','untangle','loop','fish','gb','gbc','gba','psx','chess','checkers','pdice','trail','wrangler','ironclads','sudoku','drop4','freecell','survey','pwheel'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
   /* quests added later join the rotation from NEWDAY, so a day's picks never change mid-day */
@@ -2292,6 +2292,8 @@ var SUQ=(function(){
     ['rh4','m','Play a minute on the Retro Color','gbc','minute',1],
     ['rh5','e','Start a game on the Retro Advance','gba','play',1],
     ['rh6','m','Play a minute on the Retro Advance','gba','minute',1],
+    ['rs1','e','Start a game on the Retro Station','psx','play',1],
+    ['rs2','m','Play a minute on the Retro Station','psx','minute',1],
     ['mn1','e','Try a round of Minesweeper','mines','open',1],
     ['gr1','e','Work the sluice at Gold Rush','gold','open',1],
     ['bg1','e','Play a game of Bingo','bingo','play',1],

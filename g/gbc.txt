@@ -690,7 +690,7 @@ var $=function(i){return document.getElementById(i);};
 function q(ev){try{window.suQ&&window.suQ(ev);}catch(e){}}
 var A='https://saddleup-arcade.vercel.app/art/',B=A+'gb/';
 var CONS={gb:{name:'Retro Pocket',tag:'GB',acc:'#9bbc0f',w:160,h:144,ext:'.gb'},gbc:{name:'Retro Color',tag:'GBC',acc:'#c084fc',w:160,h:144,ext:'.gbc'},gba:{name:'Retro Advance',tag:'GBA',acc:'#60a5fa',w:240,h:160,ext:'.gba'}};
-var C=CONS[CON.id],ISGBA=CON.id==='gba';
+CONS.psx={name:'Retro Station',tag:'PS1'};var C=CONS[CON.id],ISGBA=CON.id==='gba';
 var CARTS=CON.id==='gb'?[{id:'libbet',name:'Libbet and the Magic Floor',sub:'Free homebrew · puzzle',file:'roms/libbet.gb',lab:'#e9a23b'}]:CON.id==='gbc'?[{id:'ucity',name:'µCity',sub:'Free homebrew · city builder',file:'roms/ucity.gbc',lab:'#4ab0e0'}]:[];
 var PALS=[79,16,0,32,48,64,8,24],SCREEN_W=160,SCREEN_H=144,TPS=4194304,AUDIO_FRAMES=4096,LAT=.1;
 var mod=null,em=null,cur=null,paused=false,ff=false,vol=.5,pal=0,played=0,playT=0;
@@ -704,7 +704,7 @@ function loadScript(src){return new Promise(function(res,rej){var s=document.cre
 document.documentElement.style.setProperty('--acc',C.acc);document.documentElement.style.setProperty('--ar',C.w+'/'+C.h);
 if(ISGBA)document.body.classList.add('isgba');
 $('ttl').innerHTML=esc(C.name)+'<span>'+(ISGBA?'Plays Game Boy Advance (.gba) games.':CON.id==='gbc'?'Plays Game Boy Color (.gbc) games.':'Plays original Game Boy (.gb) games.')+'</span>';
-$('cons').innerHTML=['gb','gbc','gba'].map(function(id){return '<button type="button" data-g="'+id+'"'+(id===CON.id?' class="on"':'')+'>'+esc(CONS[id].name)+'<i>'+CONS[id].tag+'</i></button>';}).join('');
+$('cons').innerHTML=['gb','gbc','gba','psx'].map(function(id){return '<button type="button" data-g="'+id+'"'+(id===CON.id?' class="on"':'')+'>'+esc(CONS[id].name)+'<i>'+CONS[id].tag+'</i></button>';}).join('');
 $('cons').onclick=function(e){var b=e.target.closest('[data-g]');if(!b||b.classList.contains('on'))return;try{parent.__suShow(b.getAttribute('data-g'),true);}catch(x){}};
 var cv=$('scr');cv.width=C.w;cv.height=C.h;
 $('romIn').setAttribute('accept',ISGBA?'.gba,.zip':'.gb,.gbc,.zip');
