@@ -1141,6 +1141,7 @@ var SUQ=(function(){
     ['rs1','e','Start a game on the Retro Station','psx','play',1],
     ['rs2','m','Play a minute on the Retro Station','psx','minute',1],
     ['ph1','e','Tune in at the Picture House','theater','tune',1],
+    ['ph2','m','Watch 5 minutes of Saddle Up TV','theater','minute',1],
     ['mn1','e','Try a round of Minesweeper','mines','open',1],
     ['gr1','e','Work the sluice at Gold Rush','gold','open',1],
     ['bg1','e','Play a game of Bingo','bingo','play',1],
