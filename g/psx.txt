@@ -634,6 +634,7 @@ body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:mi
 #sbox:fullscreen{width:100vw;height:100vh;max-width:none;padding:0;border-radius:0;background:#000;box-shadow:none;aspect-ratio:auto}#sbox:fullscreen::before{display:none}
 #sbox:fullscreen #scr{border-radius:0;object-fit:contain;background:#000}#sbox:fullscreen #ejs{inset:0;width:100%;height:100%;border-radius:0}#sbox:fullscreen .ins,#sbox:fullscreen .ptxt{inset:0;border-radius:0}
 .fsx{display:none;position:absolute;top:12px;right:12px;z-index:5;font:800 13px Inter,sans-serif;color:#fff;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:7px 11px;cursor:pointer;opacity:.35;transition:opacity .2s}.fsx:hover{opacity:1}#sbox:fullscreen .fsx{display:block}
+.sync{font:600 12px Inter,sans-serif;color:#94a3b8;text-align:center;min-height:16px}.sync.offline{color:#fbbf24}.sync.saving,.sync.pending,.sync.checking{color:#7dd3fc}
 
 </style>
 </head>
@@ -651,7 +652,10 @@ body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:mi
         <button type="button" class="fsx" id="fsx" title="Exit full screen (Esc)">&#x2715; Exit full screen</button>
       </div>
       <div class="kstrip" id="kstrip"></div>
+      <div class="sync" id="sync"></div>
       <div class="ctl">
+        <button type="button" id="bSaveS">&#x1f4be; Save state</button>
+        <button type="button" id="bLoadS">&#x23ea; Load state</button>
         <button type="button" id="bStop">&#x23cf; Eject</button>
         <button type="button" id="bFS" class="fsb" title="Full screen">&#x26f6; Full screen</button>
         <button type="button" id="bBig" title="Big screen (F)">&#x2b1c; Big screen</button>
@@ -663,7 +667,7 @@ body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:mi
         <a class="find" href="https://drive.google.com/drive/folders/1UNY8dPmzh-J0RHN9tWmfqQU9gA02jzQE?usp=drive_link" target="_blank" rel="noopener">&#x1f50e; Find games</a>
         <label class="own"><input type="file" id="romIn" multiple hidden accept=".chd,.pbp,.cue,.bin,.iso,.img,.m3u,.exe,.zip,.7z"><span>&#x1f4bf; Load your own games</span><small>A .chd or .pbp file, a .cue with its .bin files (pick them together), or a .zip. They stay on this device.</small></label>
         <div id="mine"></div>
-        <p class="note">Disc games are too big for the cloud library, so they're kept on this device only.</p>
+        <p class="note">Disc games are too big for the cloud library, so the games stay on this device. Your memory card and save states do sync to your account when you're signed in.</p>
       </section>
       <section data-p="keys"><div id="keys"></div></section>
       <button type="button" class="lnk" id="credBtn">Credits &amp; licenses</button>
@@ -677,12 +681,53 @@ body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:mi
 </div>
 <script>
 (function(){'use strict';
+/* ---------- cloud saves: in-game saves, save states and memory cards follow your account ----------
+   Newest save wins. Every save is stamped with the time it was made; opening a game pulls any newer
+   copy from your private cloud first, and every new local save is pushed a few seconds after it happens. */
+var SY=(function(){
+  var L=/*LIVE*/null/*LIVE*/,FFU='https://saddleup-arcade.vercel.app/art/gb/fflate.js',pend={},timer=0,busy=false,stat='',listeners=[];
+  function tk(){try{var s=localStorage.getItem('saddleup-arcade-tok')||'';if(s.charAt(0)==='{'){var o=JSON.parse(s);return o&&o.t?String(o.t):'';}return s;}catch(e){return '';}}
+  function on(){return !!(L&&L.url&&L.key&&tk());}
+  function call(a,o){o=o||{};o.token=tk();o.action=a;return fetch(L.url.replace(/\/$/,'')+'/functions/v1/arcade-roms',{method:'POST',headers:{'content-type':'application/json','apikey':L.key,'Authorization':'Bearer '+L.key},body:JSON.stringify(o)}).then(function(r){return r.json().catch(function(){return {error:'server'};});});}
+  function within(p,ms){return Promise.race([p,new Promise(function(_,rej){setTimeout(function(){rej(new Error('slow'));},ms);})]);}
+  function mk(con,k){return 'su_sync_'+con+'_'+k;}
+  function lm(con,k){try{return JSON.parse(localStorage.getItem(mk(con,k))||'{}')||{};}catch(e){return {};}}
+  function setLm(con,k,m){try{localStorage.setItem(mk(con,k),JSON.stringify(m));}catch(e){}}
+  var FF=null;function ff(){if(FF||window.fflate)return Promise.resolve(FF=FF||window.fflate);return new Promise(function(res,rej){var s=document.createElement('script');s.src=FFU;s.onload=function(){FF=window.fflate;res(FF);};s.onerror=rej;document.head.appendChild(s);});}
+  function b64e(u8){var s='',CH=0x8000;for(var i=0;i<u8.length;i+=CH)s+=String.fromCharCode.apply(null,u8.subarray(i,i+CH));return btoa(s);}
+  function b64d(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+  function setStat(s){stat=s;listeners.forEach(function(f){try{f(s);}catch(e){}});}
+  function idle(){setStat(on()?'synced':'local');}
+  function asU8(x){return x instanceof Uint8Array?x:x instanceof ArrayBuffer?new Uint8Array(x):ArrayBuffer.isView(x)?new Uint8Array(x.buffer,x.byteOffset,x.byteLength):null;}
+  /* a local save just changed: stamp it and queue it for the cloud */
+  function mark(con,k,slot,get){var m=lm(con,k);m[slot]=Date.now();setLm(con,k,m);pend[con+'|'+k+'|'+slot]={con:con,k:k,slot:slot,get:get,t:m[slot]};clearTimeout(timer);timer=setTimeout(flush,2500);if(on())setStat('pending');}
+  function flush(){if(busy||!on()){if(!on())idle();return Promise.resolve();}var ids=Object.keys(pend);if(!ids.length){idle();return Promise.resolve();}busy=true;setStat('saving');var bad=0;
+    return ids.reduce(function(p,id){return p.then(function(){var j=pend[id];return Promise.resolve(j.get()).then(function(raw){var u=raw&&asU8(raw);if(!u||!u.length){delete pend[id];return;}
+        return ff().then(function(F){var z=F.gzipSync(u,{level:6});return call('save_put',{con:j.con,k:j.k,slot:j.slot,t:j.t,data:b64e(z)});}).then(function(r){if(r&&(r.ok||r.stale)){if(pend[id]===j)delete pend[id];}else{bad++;if(r&&r.error==='signed_out'){bad=99;}}});}).catch(function(){bad++;});});},Promise.resolve())
+    .then(function(){busy=false;if(bad){setStat(bad>=99?'local':'offline');clearTimeout(timer);timer=setTimeout(flush,30000);}else idle();});}
+  /* opening a game: bring down anything newer from the cloud, then back up anything only this device has.
+     slots = {ram:{get:fn,apply:fn(u8,t)}, state:{...}} */
+  function pull(con,k,slots){if(!on()){idle();return Promise.resolve([]);}setStat('checking');var got=[];
+    return within(call('save_meta',{con:con,k:k}),7000).then(function(r){if(!r||!r.slots){idle();return got;}var m=lm(con,k);
+      return Object.keys(slots).reduce(function(p,slot){return p.then(function(){var cs=r.slots[slot],mine=m[slot]||0,S=slots[slot];
+          if(cs&&cs.t>mine){return within(call('save_get',{con:con,k:k,slot:slot}),7000).then(function(x){if(!x||!x.url)return;return within(fetch(x.url),20000).then(function(res){if(!res.ok)throw new Error('get');return res.arrayBuffer();})
+              .then(function(ab){return ff().then(function(F){return F.gunzipSync(new Uint8Array(ab));});}).then(function(u){return Promise.resolve(S.apply(u,cs.t)).then(function(){m=lm(con,k);m[slot]=cs.t;setLm(con,k,m);got.push({slot:slot,t:cs.t});});});}).catch(function(){});}
+          if(!cs||mine>cs.t){return Promise.resolve(S.get()).then(function(x){var u=x&&asU8(x);if(u&&u.length){if(!mine){m[slot]=Date.now();setLm(con,k,m);}pend[con+'|'+k+'|'+slot]={con:con,k:k,slot:slot,get:S.get,t:m[slot]};}}).catch(function(){});}});},Promise.resolve())
+      .then(function(){clearTimeout(timer);timer=setTimeout(flush,1500);idle();return got;});}).catch(function(){setStat('offline');return got;});}
+  function when(t){try{return new Date(t).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});}catch(e){return '';}}
+  addEventListener('pagehide',function(){flush();});
+  document.addEventListener('visibilitychange',function(){if(document.hidden)flush();});
+  setInterval(function(){if(Object.keys(pend).length&&!busy&&on())flush();},20000);
+  return {mark:mark,pull:pull,flush:flush,on:on,when:when,b64e:b64e,b64d:b64d,onStatus:function(f){listeners.push(f);f(stat||(on()?'synced':'local'));}};
+})();
+function syncBadge(el){if(!el)return;SY.onStatus(function(s){var T={synced:'☁️ Saves sync to your account',pending:'☁️ Saving to the cloud in a moment…',saving:'☁️ Saving to the cloud…',checking:'☁️ Checking the cloud for newer saves…',offline:'⚠️ Can’t reach the cloud. Saves are safe on this device and will sync later.',local:'💾 Saves stay on this device. Sign in to sync them to any device.'};el.textContent=T[s]||'';el.className='sync '+s;});}
+
 /* Retro Station: PlayStation (PS1) games on EmulatorJS (GPL-3.0) with the PCSX-ReARMed core (GPL-2.0).
    Your discs are kept in this browser (IndexedDB) and handed to the emulator inside a fresh inner frame each time. */
 var $=function(i){return document.getElementById(i);};
 function q(ev){try{window.suQ&&window.suQ(ev);}catch(e){}}
 var DATA='https://saddleup-arcade.vercel.app/art/psx/data/',FFURL='https://saddleup-arcade.vercel.app/art/gb/fflate.js';
-var ACC='#38bdf8',cur=null,played=0,playT=0,runningSince=0;
+var ACC='#38bdf8',curM=null,lastCard=null,cardPoll=0,cur=null,played=0,playT=0,runningSince=0;
 function toast(t){var el=$('tst');if(!el){el=document.createElement('div');el.id='tst';el.className='toast';document.body.appendChild(el);}el.textContent=t;el.classList.add('on');clearTimeout(el.t);el.t=setTimeout(function(){el.classList.remove('on');},2800);}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 document.documentElement.style.setProperty('--acc',ACC);document.documentElement.style.setProperty('--ar','4/3');
@@ -694,7 +739,7 @@ fitVH();addEventListener('resize',fitVH);try{top.addEventListener('resize',fitVH
 
 /* ---------- keyboard guide (these are the emulator's own keys) ---------- */
 var KG=[['D-pad','<kbd>&#x2191;</kbd><kbd>&#x2193;</kbd><kbd>&#x2190;</kbd><kbd>&#x2192;</kbd>'],['&#x2715; Cross','<kbd>X</kbd>'],['&#x25cb; Circle','<kbd>Z</kbd>'],['&#x25a1; Square','<kbd>S</kbd>'],['&#x25b3; Triangle','<kbd>A</kbd>'],
-  ['L1 / R1','<kbd>Q</kbd> / <kbd>E</kbd>'],['L2 / R2','<kbd>Tab</kbd> / <kbd>R</kbd>'],['Start','<kbd>Enter</kbd>'],['Select','<kbd>V</kbd>'],['Left stick','<kbd>T</kbd><kbd>F</kbd><kbd>G</kbd><kbd>H</kbd>'],['Right stick','<kbd>I</kbd><kbd>J</kbd><kbd>K</kbd><kbd>L</kbd>'],['Quick save / load','<kbd>1</kbd> / <kbd>2</kbd>'],['Change save slot','<kbd>3</kbd>'],['Full screen','the &#x26f6; Full screen button (<kbd>Esc</kbd> exits)'],['Big screen','<kbd>F</kbd> (outside the game)']];
+  ['L1 / R1','<kbd>Q</kbd> / <kbd>E</kbd>'],['L2 / R2','<kbd>Tab</kbd> / <kbd>R</kbd>'],['Start','<kbd>Enter</kbd>'],['Select','<kbd>V</kbd>'],['Left stick','<kbd>T</kbd><kbd>F</kbd><kbd>G</kbd><kbd>H</kbd>'],['Right stick','<kbd>I</kbd><kbd>J</kbd><kbd>K</kbd><kbd>L</kbd>'],['Save / load state','<kbd>1</kbd> / <kbd>2</kbd>'],['Full screen','the &#x26f6; Full screen button (<kbd>Esc</kbd> exits)'],['Big screen','<kbd>F</kbd> (outside the game)']];
 $('keys').innerHTML='<h3>Your keyboard is the controller</h3><table class="kt">'+KG.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>';}).join('')+'</table><p class="knote">Click the game screen first so it hears your keys. The bar at the bottom of the game has save states, settings, controls (to change keys) and full screen. Game controllers work too.</p>';
 $('kstrip').innerHTML=['<b>D-pad</b><kbd>&#x2190;</kbd><kbd>&#x2191;</kbd><kbd>&#x2193;</kbd><kbd>&#x2192;</kbd>','<b>&#x2715;</b><kbd>X</kbd>','<b>&#x25cb;</b><kbd>Z</kbd>','<b>&#x25a1;</b><kbd>S</kbd>','<b>&#x25b3;</b><kbd>A</kbd>','<b>L1</b><kbd>Q</kbd>','<b>R1</b><kbd>E</kbd>','<b>L2</b><kbd>Tab</kbd>','<b>R2</b><kbd>R</kbd>','<b>Start</b><kbd>Enter</kbd>','<b>Select</b><kbd>V</kbd>','<b>Save</b><kbd>1</kbd>','<b>Load</b><kbd>2</kbd>'].map(function(s){return '<span>'+s+'</span>';}).join('');
 function insert(t,sub){var i=$('ins');i.classList.remove('off');i.innerHTML='<b>'+esc(t)+'</b>'+(sub?'<span class="sub">'+esc(sub)+'</span>':'')+'<div class="mk">'+$('kstrip').innerHTML+'</div>';}
@@ -730,27 +775,42 @@ $('romIn').onchange=function(){var fs=[].slice.call(this.files||[]);this.value='
       return jobs.reduce(function(p,j){return p.then(function(){n++;insert('Saving '+n+' of '+jobs.length+'…','Big discs can take a moment.');
         var mk=j.cue?Promise.all([j.cue].concat(j.parts).map(function(f){return f.arrayBuffer().then(function(ab){return [f.name,new Uint8Array(ab)];});})).then(function(arr){var o={};arr.forEach(function(x){o[x[0]]=[x[1],{level:0}];});var z=FF.zipSync(o,{level:0});return new File([z],base(j.cue.name)+'.zip');}):Promise.resolve(j.one);
         return mk.then(function(file){var src=j.cue||j.one,k=keyOf(src),size=j.cue?j.parts.reduce(function(a,p){return a+p.size;},0):file.size;
-          return dbPut(k,file).then(function(){M=M.filter(function(m){return m.k!==k;});M.push({k:k,n:base(src.name).replace(/[_]+/g,' '),f:file.name,s:size});last=k;});});});},Promise.resolve())
+          return dbPut(k,file).then(function(){M=M.filter(function(m){return m.k!==k;});var nm=base(src.name).replace(/[_]+/g,' ');M.push({k:k,n:nm,f:file.name,s:size,sk:skOf({n:nm,s:size})});last=k;});});});},Promise.resolve())
       .then(function(){M.sort(function(a,b){return a.n.localeCompare(b.n);});setMine(M);shelf();if(jobs.length===1&&last)play(last);else{insert('Added '+jobs.length+' games','Pick one from the list.');toast(jobs.length+' games added on this device.');}});});})
   .catch(function(e){insert('That didn’t work',e.message);toast(e.message);});};
 
 /* ---------- running a disc: a fresh inner frame per game ---------- */
 function play(k){var m=mine().filter(function(x){return x.k===k;})[0];if(!m)return;insert('Loading '+m.n+'…','Starting the PlayStation emulator.');
   dbGet(k).then(function(file){if(!file)throw new Error('That game isn’t saved on this device any more.');
-    cur=k;shelf();
+    cur=k;curM=m;shelf();
     window.__psx={blob:file,fname:m.f,name:m.n,id:'su-'+k,data:DATA};
     var fr=$('ejs');fr.classList.add('on');
     fr.srcdoc='<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#game{width:100%;height:100%}</style></head><body><div id="game"></div><script>'+
       'var P=parent.__psx;window.EJS_player="#game";window.EJS_core="psx";window.EJS_gameUrl=new File([P.blob],P.fname);window.EJS_gameName=P.name;window.EJS_gameID=P.id;window.EJS_pathtodata=P.data;'+
-      'window.EJS_DEBUG_XX=true;window.EJS_startOnLoaded=true;window.EJS_disableDatabases=true;window.EJS_color="'+ACC+'";window.EJS_backgroundColor="#05070b";window.EJS_Buttons={netplay:false};window.EJS_language="en-US";window.EJS_disableAutoLang=true;'+
+      'window.EJS_DEBUG_XX=true;window.EJS_startOnLoaded=true;window.EJS_disableDatabases=true;window.EJS_color="'+ACC+'";window.EJS_backgroundColor="#05070b";window.EJS_Buttons={netplay:false,saveState:false,loadState:false,quickSave:false,quickLoad:false};window.EJS_language="en-US";window.EJS_disableAutoLang=true;'+
       'window.EJS_onGameStart=function(){try{parent.__psxStarted();}catch(e){}};'+
-      'addEventListener("keydown",function(e){if(e.code==="Escape"){try{parent.__psxEsc();}catch(x){}}});'+
+      'addEventListener("keydown",function(e){if(e.code==="Escape"){try{parent.__psxEsc();}catch(x){}}if((e.code==="Digit1"||e.code==="Digit2")&&!e.repeat){e.preventDefault();e.stopImmediatePropagation();try{parent[e.code==="Digit1"?"__psxSave":"__psxLoad"]();}catch(x){}}},true);'+
       'var s=document.createElement("script");s.src=P.data+"loader.js";document.body.appendChild(s);<\/script></body></html>';
     setTimeout(function(){try{fr.focus();}catch(e){}},300);})
   .catch(function(e){insert('That didn’t work',e.message);toast(e.message);});}
-window.__psxStarted=function(){$('ins').classList.add('off');runningSince=Date.now();q('play');try{$('ejs').focus();}catch(e){}};
+function skOf(m){return m.sk||((m.n.replace(/[^\w.-]/g,'').slice(0,40)||'disc')+'-'+Number(m.s||0).toString(36));}
+function EJ(){try{return $('ejs').contentWindow.EJS_emulator;}catch(e){return null;}}
+function GM(){var e=EJ();return e&&e.gameManager;}
+function hsh(u){var h=u.length;for(var i=0;i<u.length;i+=7)h=(h*31+u[i])|0;return h;}
+function readCard(){var g=GM();if(!g)return null;try{var u=g.getSaveFile(true);return u&&u.length?new Uint8Array(u):null;}catch(e){return null;}}
+function checkCard(){var u=readCard();if(!u||!curM)return;var h=hsh(u);if(lastCard===null){lastCard=h;return;}if(h!==lastCard){lastCard=h;var snap=u,sk=skOf(curM);SY.mark('psx',sk,'card',function(){return snap;});}}
+window.__psxStarted=function(){$('ins').classList.add('off');runningSince=Date.now();q('play');btns();try{$('ejs').focus();}catch(e){}
+  if(!curM)return;var sk=skOf(curM);lastCard=null;clearInterval(cardPoll);
+  SY.pull('psx',sk,{card:{get:readCard,apply:function(u){var g=GM();if(!g)return;try{g.FS.writeFile(g.getSaveFilePath(),u);g.loadSaveFiles();g.restart();}catch(e){}}},
+    state:{get:function(){return dbGet('st:'+sk);},apply:function(u){return dbPut('st:'+sk,u);}}})
+  .then(function(got){if(got&&got.length){var g=got.filter(function(x){return x.slot==='card';})[0]||got[0];toast('Picked up your cloud '+(g.slot==='card'?'memory card':'save state')+' from '+SY.when(g.t)+'.');}
+    setTimeout(function(){lastCard=null;checkCard();},1500);cardPoll=setInterval(checkCard,5000);});};
+window.__psxSave=function(){var g=GM();if(!g||!curM)return;try{var st=g.getState();var u=new Uint8Array(st),sk=skOf(curM);dbPut('st:'+sk,u).then(function(){SY.mark('psx',sk,'state',function(){return dbGet('st:'+sk);});toast('State saved'+(SY.on()?' and syncing to your account.':' on this device.'));},function(){toast('Couldn\u2019t save: your browser is out of room.');});}catch(e){toast('Couldn\u2019t save a state right now.');}};
+window.__psxLoad=function(){var g=GM();if(!g||!curM)return;dbGet('st:'+skOf(curM)).then(function(u){if(!u){toast('No saved state for this game yet.');return;}try{g.loadState(u instanceof Uint8Array?u:new Uint8Array(u));toast('State loaded.');}catch(e){toast('That state wouldn\u2019t load.');}});};
+function btns(){var on=!!cur;['bSaveS','bLoadS'].forEach(function(i){$(i).disabled=!on;});}
+$('bSaveS').onclick=function(){window.__psxSave();};$('bLoadS').onclick=function(){window.__psxLoad();};
 window.__psxEsc=function(){if(document.body.classList.contains('big'))big(false);};
-function eject(){var fr=$('ejs');fr.srcdoc='';fr.removeAttribute('srcdoc');fr.classList.remove('on');cur=null;runningSince=0;shelf();insert('Pick a game','Choose one from the list on the right, or load your own.');}
+function eject(){try{checkCard();}catch(e){}clearInterval(cardPoll);SY.flush();var fr=$('ejs');fr.srcdoc='';fr.removeAttribute('srcdoc');fr.classList.remove('on');cur=null;curM=null;runningSince=0;shelf();btns();insert('Pick a game','Choose one from the list on the right, or load your own.');}
 $('bStop').onclick=eject;
 function big(v){document.body.classList.toggle('big',v);$('bBig').classList.toggle('on',v);$('bBig').innerHTML=v?'&#x2715; Exit big screen':'&#x2b1c; Big screen';fitVH();}
 $('bBig').onclick=function(){big(!document.body.classList.contains('big'));};
@@ -760,7 +820,7 @@ document.querySelector('.tabs').onclick=function(e){var b=e.target.closest('[dat
 $('credBtn').onclick=function(){$('cred').classList.add('on');};$('credX').onclick=function(){$('cred').classList.remove('on');};
 setInterval(function(){if(runningSince&&!playT&&Date.now()-runningSince>60000&&!document.hidden){playT=1;q('minute');}},5000);
 insert('Pick a game','Choose one from the list on the right, or load your own.');
-shelf();q('open');
+syncBadge($('sync'));shelf();btns();q('open');addEventListener('pagehide',function(){try{checkCard();}catch(e){}});
 
 /* ---------- full screen: just the game, edge to edge ---------- */
 function isFS(){return !!(document.fullscreenElement||document.webkitFullscreenElement);}

@@ -632,6 +632,7 @@ body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:mi
 #sbox:fullscreen{width:100vw;height:100vh;max-width:none;padding:0;border-radius:0;background:#000;box-shadow:none;aspect-ratio:auto}#sbox:fullscreen::before{display:none}
 #sbox:fullscreen #scr{border-radius:0;object-fit:contain;background:#000}#sbox:fullscreen #ejs{inset:0;width:100%;height:100%;border-radius:0}#sbox:fullscreen .ins,#sbox:fullscreen .ptxt{inset:0;border-radius:0}
 .fsx{display:none;position:absolute;top:12px;right:12px;z-index:5;font:800 13px Inter,sans-serif;color:#fff;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:7px 11px;cursor:pointer;opacity:.35;transition:opacity .2s}.fsx:hover{opacity:1}#sbox:fullscreen .fsx{display:block}
+.sync{font:600 12px Inter,sans-serif;color:#94a3b8;text-align:center;min-height:16px}.sync.offline{color:#fbbf24}.sync.saving,.sync.pending,.sync.checking{color:#7dd3fc}
 
 </style>
 </head>
@@ -661,6 +662,7 @@ body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:mi
         <button type="button" id="bBig" title="Big screen (F)">&#x2b1c; Big screen</button>
         <label class="vol">&#x1f50a;<input type="range" id="vol" min="0" max="100" value="50" aria-label="Volume"></label>
       </div>
+      <div class="sync" id="sync"></div>
       <div class="touch" id="touch">
         <div class="dpad" id="dpad"><i class="u"></i><i class="d"></i><i class="l"></i><i class="r"></i><i class="c"></i></div>
         <div class="tmid"><div class="lr"><button type="button" data-k="l">L</button><button type="button" data-k="r">R</button></div><div class="ss"><button type="button" data-k="select">SELECT</button><button type="button" data-k="start">START</button></div></div>
@@ -687,6 +689,47 @@ body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:mi
 </div>
 <script>
 (function(){'use strict';
+/* ---------- cloud saves: in-game saves, save states and memory cards follow your account ----------
+   Newest save wins. Every save is stamped with the time it was made; opening a game pulls any newer
+   copy from your private cloud first, and every new local save is pushed a few seconds after it happens. */
+var SY=(function(){
+  var L=/*LIVE*/null/*LIVE*/,FFU='https://saddleup-arcade.vercel.app/art/gb/fflate.js',pend={},timer=0,busy=false,stat='',listeners=[];
+  function tk(){try{var s=localStorage.getItem('saddleup-arcade-tok')||'';if(s.charAt(0)==='{'){var o=JSON.parse(s);return o&&o.t?String(o.t):'';}return s;}catch(e){return '';}}
+  function on(){return !!(L&&L.url&&L.key&&tk());}
+  function call(a,o){o=o||{};o.token=tk();o.action=a;return fetch(L.url.replace(/\/$/,'')+'/functions/v1/arcade-roms',{method:'POST',headers:{'content-type':'application/json','apikey':L.key,'Authorization':'Bearer '+L.key},body:JSON.stringify(o)}).then(function(r){return r.json().catch(function(){return {error:'server'};});});}
+  function within(p,ms){return Promise.race([p,new Promise(function(_,rej){setTimeout(function(){rej(new Error('slow'));},ms);})]);}
+  function mk(con,k){return 'su_sync_'+con+'_'+k;}
+  function lm(con,k){try{return JSON.parse(localStorage.getItem(mk(con,k))||'{}')||{};}catch(e){return {};}}
+  function setLm(con,k,m){try{localStorage.setItem(mk(con,k),JSON.stringify(m));}catch(e){}}
+  var FF=null;function ff(){if(FF||window.fflate)return Promise.resolve(FF=FF||window.fflate);return new Promise(function(res,rej){var s=document.createElement('script');s.src=FFU;s.onload=function(){FF=window.fflate;res(FF);};s.onerror=rej;document.head.appendChild(s);});}
+  function b64e(u8){var s='',CH=0x8000;for(var i=0;i<u8.length;i+=CH)s+=String.fromCharCode.apply(null,u8.subarray(i,i+CH));return btoa(s);}
+  function b64d(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+  function setStat(s){stat=s;listeners.forEach(function(f){try{f(s);}catch(e){}});}
+  function idle(){setStat(on()?'synced':'local');}
+  function asU8(x){return x instanceof Uint8Array?x:x instanceof ArrayBuffer?new Uint8Array(x):ArrayBuffer.isView(x)?new Uint8Array(x.buffer,x.byteOffset,x.byteLength):null;}
+  /* a local save just changed: stamp it and queue it for the cloud */
+  function mark(con,k,slot,get){var m=lm(con,k);m[slot]=Date.now();setLm(con,k,m);pend[con+'|'+k+'|'+slot]={con:con,k:k,slot:slot,get:get,t:m[slot]};clearTimeout(timer);timer=setTimeout(flush,2500);if(on())setStat('pending');}
+  function flush(){if(busy||!on()){if(!on())idle();return Promise.resolve();}var ids=Object.keys(pend);if(!ids.length){idle();return Promise.resolve();}busy=true;setStat('saving');var bad=0;
+    return ids.reduce(function(p,id){return p.then(function(){var j=pend[id];return Promise.resolve(j.get()).then(function(raw){var u=raw&&asU8(raw);if(!u||!u.length){delete pend[id];return;}
+        return ff().then(function(F){var z=F.gzipSync(u,{level:6});return call('save_put',{con:j.con,k:j.k,slot:j.slot,t:j.t,data:b64e(z)});}).then(function(r){if(r&&(r.ok||r.stale)){if(pend[id]===j)delete pend[id];}else{bad++;if(r&&r.error==='signed_out'){bad=99;}}});}).catch(function(){bad++;});});},Promise.resolve())
+    .then(function(){busy=false;if(bad){setStat(bad>=99?'local':'offline');clearTimeout(timer);timer=setTimeout(flush,30000);}else idle();});}
+  /* opening a game: bring down anything newer from the cloud, then back up anything only this device has.
+     slots = {ram:{get:fn,apply:fn(u8,t)}, state:{...}} */
+  function pull(con,k,slots){if(!on()){idle();return Promise.resolve([]);}setStat('checking');var got=[];
+    return within(call('save_meta',{con:con,k:k}),7000).then(function(r){if(!r||!r.slots){idle();return got;}var m=lm(con,k);
+      return Object.keys(slots).reduce(function(p,slot){return p.then(function(){var cs=r.slots[slot],mine=m[slot]||0,S=slots[slot];
+          if(cs&&cs.t>mine){return within(call('save_get',{con:con,k:k,slot:slot}),7000).then(function(x){if(!x||!x.url)return;return within(fetch(x.url),20000).then(function(res){if(!res.ok)throw new Error('get');return res.arrayBuffer();})
+              .then(function(ab){return ff().then(function(F){return F.gunzipSync(new Uint8Array(ab));});}).then(function(u){return Promise.resolve(S.apply(u,cs.t)).then(function(){m=lm(con,k);m[slot]=cs.t;setLm(con,k,m);got.push({slot:slot,t:cs.t});});});}).catch(function(){});}
+          if(!cs||mine>cs.t){return Promise.resolve(S.get()).then(function(x){var u=x&&asU8(x);if(u&&u.length){if(!mine){m[slot]=Date.now();setLm(con,k,m);}pend[con+'|'+k+'|'+slot]={con:con,k:k,slot:slot,get:S.get,t:m[slot]};}}).catch(function(){});}});},Promise.resolve())
+      .then(function(){clearTimeout(timer);timer=setTimeout(flush,1500);idle();return got;});}).catch(function(){setStat('offline');return got;});}
+  function when(t){try{return new Date(t).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});}catch(e){return '';}}
+  addEventListener('pagehide',function(){flush();});
+  document.addEventListener('visibilitychange',function(){if(document.hidden)flush();});
+  setInterval(function(){if(Object.keys(pend).length&&!busy&&on())flush();},20000);
+  return {mark:mark,pull:pull,flush:flush,on:on,when:when,b64e:b64e,b64d:b64d,onStatus:function(f){listeners.push(f);f(stat||(on()?'synced':'local'));}};
+})();
+function syncBadge(el){if(!el)return;SY.onStatus(function(s){var T={synced:'☁️ Saves sync to your account',pending:'☁️ Saving to the cloud in a moment…',saving:'☁️ Saving to the cloud…',checking:'☁️ Checking the cloud for newer saves…',offline:'⚠️ Can’t reach the cloud. Saves are safe on this device and will sync later.',local:'💾 Saves stay on this device. Sign in to sync them to any device.'};el.textContent=T[s]||'';el.className='sync '+s;});}
+
 /* Saddle Up handhelds: one page, three consoles (Pocket = .gb, Color = .gbc, Advance = .gba).
    GB/GBC run on binjgb (c) Ben Smith, MIT License; the glue is adapted from binjgb's docs/simple.js (MIT).
    GBA runs on GBA.js (c) Jeffrey Pfau, BSD 2-Clause License, with its own open replacement BIOS. */
@@ -742,8 +785,8 @@ function Emu(M,rom,key){var size=(rom.byteLength+0x7fff)&~0x7fff,ac=actx();this.
   var x=loadBytes('su_gb_ram_'+key);if(x)this.withFile(M._ext_ram_file_data_new(this.e),function(fp,b){if(b.byteLength===x.length){b.set(x);M._emulator_read_ext_ram(this.e,fp);}});
   this.setPal(PALS[pal]);}
 Emu.prototype.withFile=function(fp,cb){var M=this.M,b=buf(M,M._get_file_data_ptr(fp),M._get_file_data_size(fp)),r=cb.call(this,fp,b);M._file_data_delete(fp);M._free(fp);return r;};
-Emu.prototype.saveRam=function(){var M=this.M;var d=this.withFile(M._ext_ram_file_data_new(this.e),function(fp,b){M._emulator_write_ext_ram(this.e,fp);return new Uint8Array(b);});if(d.length)saveBytes('su_gb_ram_'+this.key,d);};
-Emu.prototype.saveState=function(){var M=this.M;var d=this.withFile(M._state_file_data_new(this.e),function(fp,b){M._emulator_write_state(this.e,fp);return new Uint8Array(b);});return Promise.resolve(saveBytes('su_gb_st_'+this.key,d));};
+Emu.prototype.saveRam=function(){var M=this.M;var d=this.withFile(M._ext_ram_file_data_new(this.e),function(fp,b){M._emulator_write_ext_ram(this.e,fp);return new Uint8Array(b);});if(d.length){saveBytes('su_gb_ram_'+this.key,d);var kk=this.key;SY.mark(CON.id,kk,'ram',function(){return loadBytes('su_gb_ram_'+kk);});}};
+Emu.prototype.saveState=function(){var M=this.M;var d=this.withFile(M._state_file_data_new(this.e),function(fp,b){M._emulator_write_state(this.e,fp);return new Uint8Array(b);});var ok=saveBytes('su_gb_st_'+this.key,d),kk=this.key;if(ok)SY.mark(CON.id,kk,'state',function(){return loadBytes('su_gb_st_'+kk);});return Promise.resolve(ok);};
 Emu.prototype.loadState=function(){var M=this.M,x=loadBytes('su_gb_st_'+this.key);if(!x)return Promise.resolve(false);return Promise.resolve(this.withFile(M._state_file_data_new(this.e),function(fp,b){if(b.byteLength!==x.length)return false;b.set(x);M._emulator_read_state(this.e,fp);return true;}));};
 Emu.prototype.setPal=function(i){try{this.M._emulator_set_builtin_palette(this.e,i);}catch(e){}};
 Emu.prototype.joy=function(k,v){var f={up:'_set_joyp_up',down:'_set_joyp_down',left:'_set_joyp_left',right:'_set_joyp_right',a:'_set_joyp_A',b:'_set_joyp_B',start:'_set_joyp_start',select:'_set_joyp_select'}[k];if(f&&!this.dead)this.M[f](this.e,v?1:0);};
@@ -764,15 +807,19 @@ var G=null,GBIOS=null,gbaCrash=false;
 function loadGBA(){if(G)return Promise.resolve(G);return Promise.all([window.GameBoyAdvance?Promise.resolve():loadScript(A+'gba/gbajs.js'),fetch(A+'gba/bios.bin').then(function(r){if(!r.ok)throw new Error('The emulator didn\u2019t load.');return r.arrayBuffer();})]).then(function(x){
   GBIOS=x[1];GameBoyAdvanceKeypad.prototype.registerHandlers=function(){};GameBoyAdvanceKeypad.prototype.pollGamepads=function(){};
   G=new GameBoyAdvance();G.keypad.eatInput=true;G.setLogger(function(l,m){if(l===1){try{console.warn('[gba]',m);}catch(e){}}});G.setBios(GBIOS);G.setCanvasDirect(cv);
+  var os=G.storeSavedata;G.storeSavedata=function(){os.apply(G,arguments);if(em&&em.key&&em.code){var kk=em.key,cc=em.code;SY.mark('gba',kk,'ram',function(){return gbaRam(cc);});}};
   var ad=G.video.drawCallback;G.video.drawCallback=function(){played+=1/60;};return G;});}
-function GBA(rom,key){this.key=key;this.running=false;G.pause();if(!G.setRom(rom))throw new Error('That file isn\u2019t a Game Boy Advance ROM the emulator can read.');
+function gbaCode(rom){var u=new Uint8Array(rom,0xAC,4),s='';for(var i=0;i<4;i++)s+=String.fromCharCode(u[i]);return s;}
+function gbaRam(code){try{var s=localStorage.getItem('com.endrift.gbajs.'+code);return s?SY.b64d(s):null;}catch(e){return null;}}
+function gbaRamSet(code,u8){try{localStorage.setItem('com.endrift.gbajs.'+code,SY.b64e(u8));}catch(e){}}
+function GBA(rom,key){this.key=key;this.code=gbaCode(rom);this.running=false;G.pause();if(!G.setRom(rom))throw new Error('That file isn\u2019t a Game Boy Advance ROM the emulator can read.');
   G.audio.masterVolume=vol;try{G.audio.context&&G.audio.context.resume();}catch(e){}}
 GBA.prototype.start=function(){if(this.running)return;this.running=true;G.throttle=16;G.runStable();};
 GBA.prototype.setPaused=function(p){if(p){this.running=false;G.pause();}else this.start();};
 GBA.prototype.setFF=function(v){G.throttle=v?0:16;};GBA.prototype.setVol=function(v){G.audio.masterVolume=v;};
 GBA.prototype.joy=function(k,v){var bit={a:0,b:1,select:2,start:3,right:4,left:5,up:6,down:7,r:8,l:9}[k];if(bit==null||this.dead)return;if(v)G.keypad.currentDown&=~(1<<bit);else G.keypad.currentDown|=(1<<bit);};
-GBA.prototype.saveState=function(){var self=this;try{var f=G.freeze();return dbPut('st:'+self.key,f).then(function(){return true;},function(){return false;});}catch(e){return Promise.resolve(false);}};
-GBA.prototype.loadState=function(){return dbGet('st:'+this.key).then(function(f){if(!f)return false;try{G.defrost(f);return true;}catch(e){return false;}});};
+GBA.prototype.saveState=function(){var self=this;try{var f=Serializer.serialize(G.freeze());return f.arrayBuffer().then(function(ab){return dbPut('st:'+self.key,new Uint8Array(ab));}).then(function(){var kk=self.key;SY.mark('gba',kk,'state',function(){return dbGet('st:'+kk);});return true;},function(){return false;});}catch(e){return Promise.resolve(false);}};
+GBA.prototype.loadState=function(){return dbGet('st:'+this.key).then(function(u){if(!u||!(u instanceof Uint8Array||u instanceof ArrayBuffer))return false;try{var a=u instanceof Uint8Array?u:new Uint8Array(u),dv=new DataView(a.buffer,a.byteOffset,a.byteLength);G.defrost(Serializer.deserealizeStream(dv,new Serializer.pointer()));return true;}catch(e){return false;}});};
 GBA.prototype.setPal=function(){};GBA.prototype.ticks=function(){return G.cpu.cycles||played;};
 GBA.prototype.destroy=function(){this.running=false;this.dead=true;try{G.pause();if(G.mmu.save&&G.rom)G.storeSavedata();}catch(e){}G.keypad.currentDown=0x3FF;};
 addEventListener('error',function(e){if(ISGBA&&em&&/gba|ARM|mmu|undefined|null/i.test(String(e.message))){gbaCrash=true;}});
@@ -879,8 +926,11 @@ document.querySelector('.tabs').onclick=function(e){var b=e.target.closest('[dat
 /* ---------- running a cartridge ---------- */
 function fail(e){insert('Something went wrong',e&&e.message?e.message:'That didn\u2019t work.');toast(e&&e.message?e.message:'That didn\u2019t work.');}
 function stop(){if(em){em.destroy();em=null;}cur=null;insert('Pick a game','Choose one from the list on the right.');btns();}
+function cloudSlots(ab,sk){if(ISGBA){var code=gbaCode(ab);return {ram:{get:function(){return gbaRam(code);},apply:function(u){gbaRamSet(code,u);}},state:{get:function(){return dbGet('st:'+sk).then(function(u){return u instanceof Uint8Array?u:null;});},apply:function(u){return dbPut('st:'+sk,u);}}};}
+  return {ram:{get:function(){return loadBytes('su_gb_ram_'+sk);},apply:function(u){saveBytes('su_gb_ram_'+sk,u);}},state:{get:function(){return loadBytes('su_gb_st_'+sk);},apply:function(u){saveBytes('su_gb_st_'+sk,u);}}};}
 function boot(ab,key){actx();if(AC&&AC.state!=='running')AC.resume();if(em){em.destroy();em=null;}var sk=key.replace(/^u:/,'u_');
-  (ISGBA?loadGBA().then(function(){return new GBA(ab,sk);}):loadMod().then(function(M){return new Emu(M,ab,sk);})).then(function(e){em=e;cur=key;paused=false;gbaCrash=false;$('ptxt').classList.remove('on');em.setVol(vol);em.start();
+  var pulled=SY.on()?(insert('Checking your cloud saves…'),SY.pull(CON.id,sk,cloudSlots(ab,sk))):Promise.resolve([]);
+  pulled.then(function(got){if(got&&got.length){var g=got.filter(function(x){return x.slot==='ram';})[0]||got[0];toast('Picked up your cloud '+(g.slot==='ram'?'save':'save state')+' from '+SY.when(g.t)+'.');}return null;}).then(function(){return ISGBA?loadGBA().then(function(){return new GBA(ab,sk);}):loadMod().then(function(M){return new Emu(M,ab,sk);});}).then(function(e){em=e;cur=key;paused=false;gbaCrash=false;$('ptxt').classList.remove('on');em.setVol(vol);em.start();
   $('ins').classList.add('off');shelf();btns();q('play');try{cv.focus({preventScroll:true});}catch(x){}}).catch(fail);}
 function btns(){var on=!!em;['bPause','bSave','bLoad','bPal','bFF'].forEach(function(i){$(i).disabled=!on;});$('bPause').textContent=paused?'\u25b6 Resume':'\u275a\u275a Pause';}
 function setPause(p){if(!em)return;paused=p;$('ptxt').classList.toggle('on',paused);em.setPaused(paused);btns();}
@@ -926,7 +976,7 @@ setInterval(function(){if(em&&em.ramDirty){em.ramDirty=false;try{em.saveRam();}c
 addEventListener('pagehide',function(){if(em&&em.ramDirty)try{em.saveRam();}catch(e){}if(ISGBA&&em)em.destroy();});
 document.addEventListener('visibilitychange',function(){if(document.hidden&&em&&!paused)setPause(true);});
 insert('Pick a game','Choose one from the list on the right, or load your own.');
-shelf();btns();q('open');sortOld();drawCloud();cloudLoad();
+syncBadge($('sync'));shelf();btns();q('open');sortOld();drawCloud();cloudLoad();
 
 /* ---------- full screen: just the game, edge to edge ---------- */
 function isFS(){return !!(document.fullscreenElement||document.webkitFullscreenElement);}
