@@ -628,6 +628,7 @@ body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:mi
 .sheet h2{margin:0 0 10px;font:400 22px Rye,Georgia,serif;color:#f2d27e}.sheet a{color:#93c5fd}.sheet .fine{color:#94a3b8;font-size:12px}.go{font:800 14px Inter;color:#1a1206;background:linear-gradient(180deg,#fde68a,#d6a73a);border:0;border-radius:10px;padding:9px 16px;cursor:pointer}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#111827;border:1px solid #f2d27e;color:#fde68a;border-radius:999px;padding:8px 16px;font:700 13px Inter;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}.toast.on{opacity:1}
 @media (max-width:900px){.top{padding-right:0;padding-top:34px}#rh{flex-direction:column}.side{width:100%}.scrbox{width:100%}.cons{margin-left:0}.mlist{max-height:50vh}}
+.find{display:block;text-align:center;text-decoration:none;font:800 14px Inter,sans-serif;color:#140d05;background:var(--acc);border-radius:10px;padding:10px;margin-bottom:8px;box-shadow:0 3px 0 rgba(0,0,0,.35)}.find:hover{filter:brightness(1.08)}
 
 </style>
 </head>
@@ -664,6 +665,7 @@ body.big .side{display:none}body.big .top{display:none}body.big .scrbox{width:mi
     <aside class="side">
       <div class="tabs" role="tablist"><button type="button" data-t="games" class="on">&#x1f3ae; Games</button><button type="button" data-t="cloud">&#x2601;&#xfe0f; Cloud<em id="cbadge"></em></button><button type="button" data-t="keys">&#x2328;&#xfe0f; Keys</button></div>
       <section data-p="games" class="on">
+        <a class="find" href="https://drive.google.com/drive/folders/1UNY8dPmzh-J0RHN9tWmfqQU9gA02jzQE?usp=drive_link" target="_blank" rel="noopener">&#x1f50e; Find games</a>
         <div id="carts"></div>
         <label class="own"><input type="file" id="romIn" multiple hidden><span>&#x1f4be; Load your own ROMs</span><small id="ownTxt"></small></label>
         <div id="sort"></div>
