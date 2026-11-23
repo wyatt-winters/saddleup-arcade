@@ -600,6 +600,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 .sheet h2{margin:0 0 10px;font:400 22px Rye,Georgia,serif;color:#f2d27e}.sheet a{color:#93c5fd}.sheet .fine{color:#94a3b8;font-size:12px}.go{font:800 14px Inter;color:#1a1206;background:linear-gradient(180deg,#fde68a,#d6a73a);border:0;border-radius:10px;padding:9px 16px;cursor:pointer}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#111827;border:1px solid #f2d27e;color:#fde68a;border-radius:999px;padding:8px 16px;font:700 13px Inter;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}.toast.on{opacity:1}
 @media (max-width:760px){.shelf{width:100%;order:2}.hh{order:1}.keys{display:none}}
+.gbq{width:100%;box-sizing:border-box;background:#0b0705;color:#f8fafc;border:1px solid rgba(242,210,126,.35);border-radius:8px;padding:6px 9px;font:600 12.5px Inter;margin-bottom:6px}.mlist{max-height:360px;overflow:auto}
 
 </style>
 </head>
@@ -611,7 +612,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     <aside class="shelf">
       <h3>Cartridge shelf</h3>
       <div id="carts"></div>
-      <label class="own"><input type="file" id="romIn" accept=".gb,.gbc,.zip" hidden><span>&#x1f4be; Load your own ROM</span><small>Plays a .gb or .gbc file from your device. It stays on your device and is never uploaded.</small></label>
+      <label class="own"><input type="file" id="romIn" accept=".gb,.gbc,.zip" multiple hidden><span>&#x1f4be; Load your own ROMs</span><small>A .gb or .gbc file, or a whole .zip pack. They stay on your device and are never uploaded.</small></label>
       <div id="mine"></div>
       <button type="button" class="lnk" id="credBtn">Credits &amp; licenses</button>
     </aside>
@@ -638,6 +639,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
     </div>
   </div>
   <div class="sheet" id="cred"><div class="box"><h2>Credits &amp; licenses</h2>
+    <p><b>Zip support:</b> fflate by Arjun Barrett, MIT License. <a href="https://saddleup-arcade.vercel.app/art/gb/licenses/fflate-MIT.txt" target="_blank" rel="noopener">License</a></p>
     <p><b>Emulator:</b> binjgb by Ben Smith, MIT License. <a href="https://github.com/binji/binjgb" target="_blank" rel="noopener">Source</a> &#xb7; <a href="https://saddleup-arcade.vercel.app/art/gb/licenses/binjgb-MIT.txt" target="_blank" rel="noopener">License</a></p>
     <p><b>Libbet and the Magic Floor</b> by Damian Yerrick, a port of Martin Korth's Magic Floor. zlib License. <a href="https://github.com/pinobatch/libbet" target="_blank" rel="noopener">Source</a> &#xb7; <a href="https://saddleup-arcade.vercel.app/art/gb/licenses/libbet-zlib.txt" target="_blank" rel="noopener">License</a></p>
     <p><b>&#xb5;City</b> by Antonio Ni&#xf1;o D&#xed;az, GNU GPL v3. Built unmodified from <a href="https://github.com/AntonioND/ucity/tree/71fb08e7ca53fe4228e66316968d9c6bea3439ba" target="_blank" rel="noopener">this source</a> &#xb7; <a href="https://saddleup-arcade.vercel.app/art/gb/licenses/ucity-GPL-3.0.txt" target="_blank" rel="noopener">License</a></p>
@@ -698,19 +700,34 @@ function dbPut(k,v){return db().then(function(d){return new Promise(function(res
 function dbGet(k){return db().then(function(d){return new Promise(function(res){var r=d.transaction('roms').objectStore('roms').get(k);r.onsuccess=function(){res(r.result);};r.onerror=function(){res(null);};});});}
 function dbDel(k){return db().then(function(d){return new Promise(function(res){var t=d.transaction('roms','readwrite');t.objectStore('roms').delete(k);t.oncomplete=res;});});}
 function mine(){try{return JSON.parse(localStorage.getItem('su_gb_mine')||'[]');}catch(e){return [];}}
-function setMine(a){try{localStorage.setItem('su_gb_mine',JSON.stringify(a.slice(0,6)));}catch(e){}}
+function setMine(a){try{localStorage.setItem('su_gb_mine',JSON.stringify(a.slice(0,2000)));}catch(e){}}
 /* ---------- UI ---------- */
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function shelf(){$('carts').innerHTML=CARTS.map(function(c){return '<button type="button" class="cart'+(cur===c.id?' on':'')+'" data-c="'+c.id+'" style="--lab:'+c.lab+'"><i></i><span><b>'+esc(c.name)+'</b><small>'+esc(c.sub)+'</small></span></button>';}).join('');
-  var M=mine();$('mine').innerHTML=M.length?'<h3 style="font-size:14px;margin:8px 0 6px">Your ROMs</h3>'+M.map(function(m){return '<button type="button" class="cart'+(cur==='u:'+m.k?' on':'')+'" data-u="'+esc(m.k)+'" style="--lab:#a78bfa"><i></i><span><b>'+esc(m.n)+'</b><small>On this device only · <u data-del="'+esc(m.k)+'">remove</u></small></span></button>';}).join(''):'';}
+  var M=mine(),qy=(window.__gbq||'').toLowerCase(),L=qy?M.filter(function(m){return m.n.toLowerCase().indexOf(qy)>=0;}):M;
+  $('mine').innerHTML=M.length?'<h3 style="font-size:14px;margin:8px 0 6px">Your ROMs <small style="color:#94a3b8;font:600 11px Inter">('+M.length+')</small></h3>'+(M.length>6?'<input id="gbq" class="gbq" placeholder="Search your ROMs" value="'+esc(window.__gbq||'')+'">':'')+'<div class="mlist">'+L.slice(0,300).map(function(m){return '<button type="button" class="cart'+(cur==='u:'+m.k?' on':'')+'" data-u="'+esc(m.k)+'" style="--lab:#a78bfa"><i></i><span><b>'+esc(m.n)+'</b><small>On this device only · <u data-del="'+esc(m.k)+'">remove</u></small></span></button>';}).join('')+(L.length>300?'<small style="color:#94a3b8">Search to see more…</small>':'')+'</div>':'';
+  var gq=$('gbq');if(gq){gq.oninput=function(){window.__gbq=gq.value;var p=gq.selectionStart;shelf();var g2=$('gbq');g2.focus();try{g2.setSelectionRange(p,p);}catch(e){}};}}
 $('carts').onclick=function(e){var b=e.target.closest('[data-c]');if(!b)return;var c=CARTS.filter(function(x){return x.id===b.getAttribute('data-c');})[0];
   insert('Loading '+c.name+'…');fetch(B+c.file).then(function(r){if(!r.ok)throw new Error('Couldn\u2019t load that cartridge.');return r.arrayBuffer();}).then(function(ab){boot(ab,c.id);}).catch(fail);};
 $('mine').onclick=function(e){var d=e.target.closest('[data-del]');if(d){e.stopPropagation();var k=d.getAttribute('data-del');dbDel(k);setMine(mine().filter(function(m){return m.k!==k;}));if(cur==='u:'+k)stop();shelf();return;}
   var b=e.target.closest('[data-u]');if(!b)return;var k=b.getAttribute('data-u');insert('Loading…');dbGet(k).then(function(ab){if(!ab)throw new Error('That ROM isn\u2019t saved on this device any more.');boot(ab,'u:'+k);}).catch(fail);};
-$('romIn').onchange=function(){var f=this.files&&this.files[0];this.value='';if(!f)return;if(f.size>8*1024*1024){fail(new Error('That file is too big to be a Game Boy ROM.'));return;}
-  insert('Loading '+f.name+'…');f.arrayBuffer().then(function(ab){var h=0,u=new Uint8Array(ab);for(var i=0;i<u.length;i+=97)h=(h*31+u[i])>>>0;var k=(f.name.replace(/[^\w.-]/g,'').slice(0,24)||'rom')+'-'+h.toString(36);
-    var title='';for(var j=0x134;j<0x143&&u[j];j++)title+=String.fromCharCode(u[j]);title=title.replace(/[^\x20-\x7e]/g,'').trim();
-    return dbPut(k,ab).then(function(){var M=mine().filter(function(m){return m.k!==k;});M.unshift({k:k,n:title||f.name.replace(/\.[^.]+$/,'')});setMine(M);boot(ab,'u:'+k);});}).catch(fail);};
+/* load your own: single ROMs or whole .zip packs (zips inside zips too). Everything is unpacked here in the browser
+   and kept in this device's storage; nothing is sent anywhere. */
+var FF=null;function loadFF(){if(FF)return Promise.resolve(FF);return new Promise(function(res,rej){var s=document.createElement('script');s.src=B+'fflate.js';s.onload=function(){FF=window.fflate;res(FF);};s.onerror=function(){rej(new Error('Couldn’t open zip files right now.'));};document.head.appendChild(s);});}
+function romTitle(u,fallback){var t='';for(var j=0x134;j<0x143&&u[j];j++)t+=String.fromCharCode(u[j]);t=t.replace(/[^\x20-\x7e]/g,'').trim();return fallback||t||'Game';}
+function isRom(u){/* the Nintendo logo check bytes at 0x104 are always CE ED 66 66 */return u.length>=0x150&&u[0x104]===0xCE&&u[0x105]===0xED&&u[0x106]===0x66;}
+function keyFor(name,u){var h=0;for(var i=0;i<u.length;i+=97)h=(h*31+u[i])>>>0;return (name.replace(/[^\w.-]/g,'').slice(0,24)||'rom')+'-'+h.toString(36)+'-'+u.length.toString(36);}
+function unpack(name,u8,out,depth){if(/\.zip$/i.test(name)||(u8[0]===0x50&&u8[1]===0x4B)){if(depth>3)return;var files;try{files=FF.unzipSync(u8);}catch(e){return;}for(var n in files){var base=n.split('/').pop();if(!base||base.charAt(0)==='.')continue;unpack(base,files[n],out,depth+1);}}
+  else if(/\.(gb|gbc|sgb)$/i.test(name)&&isRom(u8))out.push({name:name.replace(/\.(gb|gbc|sgb)$/i,''),u:u8});}
+$('romIn').onchange=function(){var fs=[].slice.call(this.files||[]);this.value='';if(!fs.length)return;insert('Reading '+(fs.length>1?fs.length+' files':fs[0].name)+'…');
+  var needZip=fs.some(function(f){return /\.zip$/i.test(f.name);}),found=[];
+  (needZip?loadFF():Promise.resolve()).then(function(){return fs.reduce(function(p,f){return p.then(function(){if(f.size>400*1024*1024)return;return f.arrayBuffer().then(function(ab){unpack(f.name,new Uint8Array(ab),found,0);});});},Promise.resolve());})
+  .then(function(){if(!found.length)throw new Error('No Game Boy ROMs found in that file.');var M=mine(),idx={};M.forEach(function(m){idx[m.k]=1;});var n=0;
+    return found.reduce(function(p,r){return p.then(function(){var k=keyFor(r.name,r.u);n++;if(n%10===0)insert('Saving '+n+' of '+found.length+'…');if(idx[k])return;idx[k]=1;M.push({k:k,n:r.name});return dbPut(k,r.u.slice().buffer);});},Promise.resolve())
+    .then(function(){M.sort(function(a,b){return a.n.localeCompare(b.n);});setMine(M);shelf();
+      if(found.length===1){var k1=keyFor(found[0].name,found[0].u);return dbGet(k1).then(function(ab){boot(ab,'u:'+k1);});}
+      insert('Added '+found.length+' games');toast(found.length+' games added to Your ROMs on this device.');});})
+  .catch(fail);};
 function insert(t){var i=$('ins');i.classList.remove('off');i.innerHTML='<b>'+esc(t)+'</b>';}
 function fail(e){insert('Something went wrong');toast(e&&e.message?e.message:'That didn\u2019t work.');}
 function stop(){if(em){em.destroy();em=null;}cur=null;$('led').classList.remove('on');insert('Pick a cartridge');btns();}
