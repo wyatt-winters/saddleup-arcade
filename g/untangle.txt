@@ -584,14 +584,30 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 #ut .ubox{position:relative;border-radius:18px;overflow:hidden;border:1px solid rgba(56,189,248,.35);background:radial-gradient(ellipse at 50% 40%,#0b1b33 0%,#060d1c 60%,#03060f 100%);box-shadow:inset 0 0 80px rgba(56,189,248,.08),0 18px 50px rgba(0,0,0,.5)}
 #ut .ubox:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(56,189,248,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.06) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
 #usv{display:block;width:100%;height:auto;touch-action:none;user-select:none;-webkit-user-select:none;position:relative}
-#usv line{stroke-width:3.2;stroke-linecap:round;transition:stroke .25s}
-#usv line.ok{stroke:#38bdf8}#usv line.bad{stroke:#fb7185}
+#usv line{stroke-width:3;stroke-linecap:round}
+#usv .wire path{fill:none;stroke-linecap:round;stroke-linejoin:round;transition:stroke .25s}
+#usv .wire .core{stroke-width:1.6;opacity:.9}
+#usv .wire .arc{stroke-width:1.5;opacity:.75}
+#usv .wire .arc2{stroke-width:1;opacity:.45}
+#usv .wire.ok path{stroke:#38bdf8}
+#usv .wire.bad path{stroke:#fb7185}
+#usv .wire.bad .core{stroke-dasharray:3 5;animation:zap .35s linear infinite}
+#usv .wire.on path{stroke:#fde047}
+#usv .wire.on .core{stroke-width:2.4;opacity:1;stroke-dasharray:14 10;animation:flow .5s linear infinite}
+@keyframes zap{to{stroke-dashoffset:-8}}@keyframes flow{to{stroke-dashoffset:-24}}
+#usv .py .leg,#usv .py .lat,#usv .py .arm{fill:none;stroke:url(#steel);stroke-linecap:round;stroke-linejoin:round}
+#usv .py .leg{stroke-width:2.2}#usv .py .lat{stroke-width:1;opacity:.8}#usv .py .arm{stroke-width:2.4}
+#usv .py .base{fill:#0b1220;opacity:.55}
+#usv .nd.lit .py .leg,#usv .nd.lit .py .arm{stroke:#fde68a}
+
 #usv line.hint{stroke:#86efac;stroke-dasharray:8 8;stroke-width:3;animation:dash 1s linear infinite}
 @keyframes dash{to{stroke-dashoffset:-32}}
 #usv .nd{cursor:pointer}
+.stars{font-size:40px;letter-spacing:6px;margin:2px 0 8px;line-height:1}.stars i{font-style:normal;color:#334155;display:inline-block;transform:scale(.4);opacity:0;transition:transform .35s cubic-bezier(.3,1.6,.5,1),opacity .2s}.stars i.on{color:#facc15;text-shadow:0 0 10px rgba(250,204,21,.6)}.stars i.in{transform:scale(1);opacity:1}
+.ust.par b{color:#fde68a}
 #usv .nd circle.core{transition:r .15s}
-#usv .nd:hover circle.core{r:15}
-#usv .nd circle.ring{fill:none;stroke:#fbbf24;stroke-width:3;opacity:0}
+#usv .nd:hover circle.core{r:8.5}
+#usv .nd circle.ring{fill:none;stroke:#fbbf24;stroke-width:2.5;opacity:0}
 #usv .nd.sel circle.ring{opacity:1;animation:pulse 1s ease-in-out infinite}
 @keyframes pulse{50%{stroke-width:6;opacity:.5}}
 #ut .umsg{position:absolute;left:0;right:0;bottom:10px;text-align:center;color:#bae6fd;font-size:13px;font-weight:700;pointer-events:none;text-shadow:0 1px 4px #000}
@@ -614,21 +630,24 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
       <div class="ust"><em>Level</em><b id="uLvl">1</b></div>
       <div class="ust x"><em>Crossings</em><b id="uX">0</b></div>
       <div class="ust"><em>Swaps</em><b id="uMv">0</b></div>
+      <div class="ust par"><em>Par</em><b id="uPar">0</b></div>
       <div class="ust"><em>Time</em><b id="uT">0:00</b></div>
       <div class="ubtn"><button type="button" id="bUndo" title="Undo last swap">Undo</button><button type="button" id="bHint" title="Show a good swap">Hint</button><button type="button" id="bMode">Daily</button><button type="button" id="bRe" title="New layout of this level">Reshuffle</button><span class="uopt" data-optbtn></span></div>
     </div>
     <div class="ubox"><svg id="usv" viewBox="0 0 1000 640" preserveAspectRatio="xMidYMid meet" aria-label="Puzzle board"><defs>
-      <filter id="glow" filterUnits="userSpaceOnUse" x="-200" y="-200" width="1400" height="1300"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      <filter id="glow2" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="glow" filterUnits="userSpaceOnUse" x="-200" y="-200" width="1400" height="1300"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="glow2" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cbd5e1"/><stop offset="1" stop-color="#64748b"/></linearGradient>
+      <radialGradient id="ngP" cx="38%" cy="35%" r="65%"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#fef9c3"/><stop offset="1" stop-color="#facc15"/></radialGradient>
       <radialGradient id="ng" cx="38%" cy="35%" r="65%"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#e0f2fe"/><stop offset="1" stop-color="#38bdf8"/></radialGradient>
       <radialGradient id="ngS" cx="38%" cy="35%" r="65%"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#fef3c7"/><stop offset="1" stop-color="#f59e0b"/></radialGradient>
       <radialGradient id="ngH" cx="38%" cy="35%" r="65%"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#dcfce7"/><stop offset="1" stop-color="#22c55e"/></radialGradient>
     </defs><g id="gL"></g><g id="gN"></g></svg>
       <div class="umsg" id="uMsg"></div>
-      <div class="uwin hide" id="uWin"><div class="wbox"><h2>Untangled!</h2><p id="wTxt"></p><div class="wst" id="wSt"></div><button class="go" type="button" id="bNext">Next level</button></div></div>
+      <div class="uwin hide" id="uWin"><div class="wbox"><h2>Power on!</h2><div class="stars" id="wStars"></div><p id="wTxt"></p><div class="wst" id="wSt"></div><button class="go" type="button" id="bNext">Next level</button></div></div>
     </div>
   </div>
-  <p class="rules"><b>How to play:</b> tap a node, then tap another node to swap their places (or drag one node onto another). Every line connected to those nodes moves with them. Lines that cross another line are red; lines with no crossings are blue. When every line is blue, you win. There's no set answer: any layout with zero crossings solves it. Levels get bigger as you go, and there's a fresh <b>Daily</b> puzzle every day.</p>
+  <p class="rules"><b>How to play:</b> tap a node, then tap another node to swap their places (or drag one node onto another). Every line connected to those nodes moves with them. Lines that cross another line are red; lines with no crossings are blue. When every line is blue, the power comes on and you win. There's no set answer: any layout with zero crossings solves it. Match the <b>Par</b> swap count for three stars (a hint caps you at two). Levels get bigger as you go, and there's a fresh <b>Daily</b> puzzle every day.</p>
 </div>
 <script>
 (function(){'use strict';
@@ -655,12 +674,16 @@ function makePuzzle(n,density,R){
   for(var c=0;c<cand.length&&E.length<target;c++){var a=cand[c][0],b=cand[c][1];if(deg[a]>=maxDeg||deg[b]>=maxDeg)continue;
     var ok=E.every(function(e){if(e[0]===a||e[0]===b||e[1]===a||e[1]===b)return true;return !cross(pts[a],pts[b],pts[e[0]],pts[e[1]]);});
     if(ok){E.push([a,b]);deg[a]++;deg[b]++;}}
-  /* every node needs at least one line */
-  for(var v=0;v<n;v++)if(!deg[v]){var best=-1,bd=9;for(var w=0;w<n;w++)if(w!==v){var d=Math.hypot(pts[v].x-pts[w].x,pts[v].y-pts[w].y);if(d<bd&&E.every(function(e){return e[0]===w||e[1]===w||!cross(pts[v],pts[w],pts[e[0]],pts[e[1]]);})){bd=d;best=w;}}if(best>=0){E.push([v,best]);deg[v]++;deg[best]++;}}
+  /* every node needs at least two wires: no dangling single tethers */
+  function linked(a,b){return E.some(function(e){return (e[0]===a&&e[1]===b)||(e[0]===b&&e[1]===a);});}
+  for(var pass=0;pass<3;pass++)for(var v=0;v<n;v++)while(deg[v]<2){var best=-1,bd=9;for(var w=0;w<n;w++)if(w!==v&&!linked(v,w)&&deg[w]<8){var d=Math.hypot(pts[v].x-pts[w].x,pts[v].y-pts[w].y);if(d<bd&&E.every(function(e){return e[0]===w||e[1]===w||e[0]===v||e[1]===v||!cross(pts[v],pts[w],pts[e[0]],pts[e[1]]);})){bd=d;best=w;}}if(best<0)break;E.push([v,best]);deg[v]++;deg[best]++;}
+  if(deg.some(function(x){return x<2;})&&(makePuzzle.tries=(makePuzzle.tries||0)+1)<40)return makePuzzle(n,density,R);
+  makePuzzle.tries=0;
   /* shuffle which node sits on which spot until it's properly tangled */
   var slot=[],tries2=0,need=Math.max(2,Math.round(E.length*.35));
   do{slot=[];for(var s=0;s<n;s++)slot.push(s);for(var s2=n-1;s2>0;s2--){var r=Math.floor(R()*(s2+1)),t=slot[s2];slot[s2]=slot[r];slot[r]=t;}tries2++;}while(countX(pts,E,slot).total<need&&tries2<60);
-  return {pts:pts,E:E,slot:slot,n:n};}
+  var seen=new Array(n).fill(false),cyc=0;for(var c0=0;c0<n;c0++)if(!seen[c0]){cyc++;var k0=c0;while(!seen[k0]){seen[k0]=true;k0=slot[k0];}}
+  return {pts:pts,E:E,slot:slot,n:n,par:Math.max(1,n-cyc)};}
 function countX(pts,E,slot){var bad=new Array(E.length).fill(0),tot=0;
   for(var i=0;i<E.length;i++){var a=pts[slot[E[i][0]]],b=pts[slot[E[i][1]]];for(var j=i+1;j<E.length;j++){var e=E[j];if(e[0]===E[i][0]||e[0]===E[i][1]||e[1]===E[i][0]||e[1]===E[i][1])continue;
     if(cross(a,b,pts[slot[e[0]]],pts[slot[e[1]]])){bad[i]++;bad[j]++;tot++;}}}return {bad:bad,total:tot};}
@@ -672,16 +695,23 @@ function fitView(){var w=svg.getBoundingClientRect().width||1000,portrait=w<760;
 function sizeBoard(){var w=svg.getBoundingClientRect().width||1000,vh=0;try{vh=window.top.innerHeight;}catch(e){}vh=vh||innerHeight;var h=Math.max(280,Math.min(w*VH/VW,vh-150));svg.style.height=Math.round(h)+'px';}
 function P(i){var s=G.pz.pts[i],m=46;return {x:m+s.x*(VW-2*m),y:m+s.y*(VH-2*m)};}
 function nodeXY(v){if(anim&&anim.pos[v])return anim.pos[v];return P(G.pz.slot[v]);}
-function build(){gL.innerHTML='';gN.innerHTML='';LINES=G.pz.E.map(function(){var l=document.createElementNS(NS,'line');l.setAttribute('filter','url(#glow)');gL.appendChild(l);return l;});
+function build(){gL.innerHTML='';gN.innerHTML='';LINES=G.pz.E.map(function(){var g=document.createElementNS(NS,'g');g.setAttribute('class','wire ok');g.setAttribute('filter','url(#glow)');
+    g.innerHTML='<path class="core"/><path class="arc"/><path class="arc2"/>';gL.appendChild(g);return {g:g,core:g.children[0],arc:g.children[1],arc2:g.children[2],a:null,b:null};});
   NODES=[];for(var v=0;v<G.pz.n;v++){var g=document.createElementNS(NS,'g');g.setAttribute('class','nd');g.setAttribute('data-v',v);
-    g.innerHTML='<circle class="halo" r="20" fill="#38bdf8" opacity=".22" filter="url(#glow2)"/><circle class="ring" r="21"/><circle class="core" r="12" fill="url(#ng)" filter="url(#glow)"/>';gN.appendChild(g);NODES.push(g);}
+    /* a little transmission pylon; the wires meet at the glowing insulator on top */
+    g.innerHTML='<ellipse class="base" cx="0" cy="27" rx="12" ry="3"/><g class="py"><path class="leg" d="M-10 27 L-3 3 M10 27 L3 3"/><path class="lat" d="M-8 20 L5 9 M8 20 L-5 9 M-9 24 L9 24 M-6 14 L6 14 M-4 8 L4 8"/><path class="arm" d="M-15 6 L15 6 M-11 11 L11 11"/></g><circle class="halo" r="11" fill="#38bdf8" opacity=".12" filter="url(#glow2)"/><circle class="ring" r="13"/><circle class="core" r="6.5" fill="url(#ng)" filter="url(#glow)"/>';gN.appendChild(g);NODES.push(g);}
   draw();}
 function draw(){var X=countX(G.pz.pts,G.pz.E,G.pz.slot);G.x=X.total;
-  G.pz.E.forEach(function(e,i){var a=nodeXY(e[0]),b=nodeXY(e[1]),l=LINES[i];l.setAttribute('x1',a.x);l.setAttribute('y1',a.y);l.setAttribute('x2',b.x);l.setAttribute('y2',b.y);l.setAttribute('class',X.bad[i]?'bad':'ok');});
+  G.pz.E.forEach(function(e,i){var a=nodeXY(e[0]),b=nodeXY(e[1]),l=LINES[i];l.a=a;l.b=b;l.core.setAttribute('d','M'+a.x+' '+a.y+'L'+b.x+' '+b.y);zapWire(l);if(!l.g.classList.contains('on'))l.g.setAttribute('class','wire '+(X.bad[i]?'bad':'ok'));});
   NODES.forEach(function(g,v){var p=drag&&drag.v===v&&drag.on?drag.p:nodeXY(v);g.setAttribute('transform','translate('+p.x+' '+p.y+')');g.classList.toggle('sel',sel===v);
-    var core=g.querySelector('.core');core.setAttribute('fill',sel===v?'url(#ngS)':G.won?'url(#ngH)':'url(#ng)');});
-  $('uX').textContent=X.total;$('uX').parentNode.classList.toggle('ok',X.total===0);$('uMv').textContent=G.moves;$('uLvl').textContent=mode==='daily'?'Daily':S.lvl;
+    var core=g.querySelector('.core');core.setAttribute('fill',sel===v?'url(#ngS)':g.classList.contains('lit')?'url(#ngP)':'url(#ng)');});
+  $('uPar').textContent=G.pz.par;$('uX').textContent=X.total;$('uX').parentNode.classList.toggle('ok',X.total===0);$('uMv').textContent=G.moves;$('uLvl').textContent=mode==='daily'?'Daily':S.lvl;
   $('bUndo').disabled=!G.hist.length||G.won;$('bHint').disabled=G.won;}
+/* electricity: each wire is a straight core plus two crackling arcs that re-jitter several times a second */
+function jag(a,b,amp){var dx=b.x-a.x,dy=b.y-a.y,L=Math.hypot(dx,dy)||1,n=Math.max(3,Math.round(L/24)),nx=-dy/L,ny=dx/L,d='M'+a.x.toFixed(1)+' '+a.y.toFixed(1);
+  for(var k=1;k<n;k++){var f=k/n,o=(Math.random()*2-1)*amp*Math.sin(Math.PI*f);d+='L'+(a.x+dx*f+nx*o).toFixed(1)+' '+(a.y+dy*f+ny*o).toFixed(1);}return d+'L'+b.x.toFixed(1)+' '+b.y.toFixed(1);}
+function zapWire(l){if(!l.a)return;var bad=l.g.classList.contains('bad'),amp=bad?6:3.2;l.arc.setAttribute('d',jag(l.a,l.b,amp));l.arc2.setAttribute('d',jag(l.a,l.b,amp*1.5));}
+setInterval(function(){if(document.hidden||!LINES.length)return;for(var i=0;i<LINES.length;i++)if(Math.random()<.6)zapWire(LINES[i]);},110);
 function svgPt(e){var pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;var m=svg.getScreenCTM();return m?pt.matrixTransform(m.inverse()):{x:0,y:0};}
 function nodeAt(p,skip){var best=-1,bd=34;for(var v=0;v<G.pz.n;v++){if(v===skip)continue;var q=nodeXY(v),d=Math.hypot(q.x-p.x,q.y-p.y);if(d<bd){bd=d;best=v;}}return best;}
 /* ---------- swapping ---------- */
@@ -691,13 +721,27 @@ function swap(a,b,undo){if(a===b||anim||G.won)return;var sl=G.pz.slot,fa=P(sl[a]
   (function step(now){var k=Math.min(1,(now-t0)/D),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;anim.pos[a]={x:fa.x+(ta.x-fa.x)*e,y:fa.y+(ta.y-fa.y)*e};anim.pos[b]={x:fb.x+(tb.x-fb.x)*e,y:fb.y+(tb.y-fb.y)*e};draw();
     if(k<1)requestAnimationFrame(step);else{anim=null;draw();after();}})(t0);}
 function after(){if(G.x===0)win();else{var prev=G.lastX;G.lastX=G.x;if(prev!=null)tone(G.x<prev?760:G.x>prev?240:420,.09,'triangle',.05);msg(G.x+' crossing'+(G.x===1?'':'s')+' left');}}
-function win(){G.won=true;var t=G.t0?Math.round((Date.now()-G.t0)/1000):0;draw();q('solve');q('win');
-  [523,659,784,1047,1319].forEach(function(f,i){setTimeout(function(){tone(f,.35,'triangle',.06);},i*90);});
-  var key=mode==='daily'?'d:'+today():'L'+S.lvl,pb=S.best[key],better=!pb||G.moves<pb;if(better)S.best[key]=G.moves;
+function stars(){var p=G.pz.par,m=G.moves,s=m<=p?3:m<=p+Math.ceil(p*.5)?2:1;if(G.hints&&s>2)s=2;return s;}
+/* Power on: current runs out from the source pylon along every wire, lighting each pylon it reaches */
+function powerOn(done){var n=G.pz.n,adj=[];for(var v=0;v<n;v++)adj.push([]);G.pz.E.forEach(function(e,i){adj[e[0]].push([e[1],i]);adj[e[1]].push([e[0],i]);});
+  var src=0;for(var v2=1;v2<n;v2++)if(adj[v2].length>adj[src].length)src=v2;
+  var depth=new Array(n).fill(-1),wd=new Array(G.pz.E.length).fill(-1),qq=[src],mx=0;depth[src]=0;
+  while(qq.length){var u=qq.shift();adj[u].forEach(function(x){if(wd[x[1]]<0)wd[x[1]]=depth[u];if(depth[x[0]]<0){depth[x[0]]=depth[u]+1;mx=Math.max(mx,depth[x[0]]);qq.push(x[0]);}});}
+  var step=Math.max(110,Math.min(260,1800/(mx+1)));tone(110,.5,'sawtooth',.03);
+  for(var d=0;d<=mx+1;d++)(function(d){setTimeout(function(){
+      NODES.forEach(function(g,v){if(depth[v]===d||(d===mx+1&&depth[v]<0)){g.classList.add('lit');g.querySelector('.core').setAttribute('fill','url(#ngP)');}});
+      LINES.forEach(function(l,i){if(wd[i]===d||(d===mx+1&&wd[i]<0))l.g.setAttribute('class','wire on');});
+      tone(330+d*70,.12,'square',.025);},d*step);})(d);
+  setTimeout(function(){[523,659,784,1047,1319].forEach(function(f,i){setTimeout(function(){tone(f,.35,'triangle',.05);},i*90);});done();},(mx+2)*step+250);}
+function win(){G.won=true;var t=G.t0?Math.round((Date.now()-G.t0)/1000):0;draw();q('solve');q('win');var st=stars();
+  var key=mode==='daily'?'d:'+today():'L'+S.lvl,pb=S.best[key],better=!pb||G.moves<pb;if(better)S.best[key]=G.moves;S.stars=S.stars||{};S.stars[key]=Math.max(S.stars[key]||0,st);if(st===3)q('par');
   if(mode==='daily'){S.daily[today()]=G.moves;}else S.lvl++;save();
   $('wTxt').textContent=mode==='daily'?'Today’s puzzle is solved. Come back tomorrow for a new one.':'Every line is clear. Level '+(S.lvl)+' is bigger.';
-  $('wSt').innerHTML='<div>Swaps<b>'+G.moves+'</b></div><div>Time<b>'+fmt(t)+'</b></div><div>Hints<b>'+G.hints+'</b></div>'+(pb?'<div>Best<b>'+Math.min(pb,G.moves)+'</b></div>':'');
-  $('bNext').textContent=mode==='daily'?'Play the levels':'Next level';setTimeout(function(){$('uWin').classList.remove('hide');},700);msg('');}
+  $('wSt').innerHTML='<div>Swaps<b>'+G.moves+'</b></div><div>Par<b>'+G.pz.par+'</b></div><div>Time<b>'+fmt(t)+'</b></div><div>Hints<b>'+G.hints+'</b></div>'+(pb?'<div>Best<b>'+Math.min(pb,G.moves)+'</b></div>':'');
+  $('wStars').innerHTML='<i>\u2605</i><i>\u2605</i><i>\u2605</i>';var SI=$('wStars').children;
+  $('bNext').textContent=mode==='daily'?'Play the levels':'Next level';msg('Power on!');
+  powerOn(function(){$('uWin').classList.remove('hide');for(var k=0;k<3;k++)(function(k){setTimeout(function(){SI[k].classList.add('in');if(k<st){SI[k].classList.add('on');tone(880+k*220,.18,'triangle',.05);}},250+k*260);})(k);
+    $('wTxt').textContent=(st===3?'Par or better: three stars! ':st===2?'Close to par. ':'Solved! Try it in fewer swaps for more stars. ')+$('wTxt').textContent;});}
 function fmt(s){return Math.floor(s/60)+':'+('0'+s%60).slice(-2);}
 setInterval(function(){if(G&&G.t0&&!G.won)$('uT').textContent=fmt(Math.round((Date.now()-G.t0)/1000));},500);
 function msg(t){$('uMsg').textContent=t||'';}
