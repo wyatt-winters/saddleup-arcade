@@ -133,6 +133,21 @@ svg .wo{fill:rgba(52,211,153,.16);stroke:rgba(52,211,153,.8);stroke-width:2}
 .plate{position:relative;display:flex;align-items:center;gap:8px;background:rgba(15,23,42,.92);border:1px solid var(--edge2);border-radius:100px;padding:4px 12px 4px 4px;
   box-shadow:0 6px 18px rgba(0,0,0,.4);transition:border-color .2s,box-shadow .2s;min-width:0;width:100%}
 .seat.me .plate{border-color:rgba(16,185,129,.55)}
+/* Saddle Up win banner */
+.suban{position:fixed;left:50%;top:42%;z-index:4000;width:min(520px,88%);aspect-ratio:700/314;transform:translate(-50%,-50%) scale(.4);opacity:0;pointer-events:none;
+  background:url(https://assets.cdn.filesafe.space/iB2q5QJOsnXjnbSKdJ0s/media/6ae40048736386d0dc63e72f.webp) center/contain no-repeat;filter:drop-shadow(0 18px 40px rgba(0,0,0,.65));transition:opacity .25s,transform .45s cubic-bezier(.2,1.4,.4,1)}
+.suban.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.suban b{position:absolute;left:24%;right:24%;top:39%;height:20%;display:flex;align-items:center;justify-content:center;font:400 clamp(20px,5.4vw,40px)/1 Rye,Georgia,serif;
+  color:#fde68a;letter-spacing:.04em;text-shadow:0 2px 0 #4a1408,0 0 14px rgba(253,230,138,.55);white-space:nowrap}
+.suban span{position:absolute;left:0;right:0;top:86%;text-align:center;font:800 clamp(14px,3.6vw,22px) Inter,system-ui,sans-serif;color:#fff;text-shadow:0 2px 6px #000,0 0 12px rgba(0,0,0,.8)}
+@media (prefers-reduced-motion:reduce){.suban{transition:opacity .2s}}
+/* round result on each seat: +$X / -$X / Even, like the other tables */
+.seat .plate{position:relative}.seat .rn{display:none;position:absolute;right:10px;top:-11px;z-index:2;box-shadow:0 3px 8px rgba(0,0,0,.45);font:900 11px/1 Inter,system-ui,sans-serif;border-radius:100px;padding:3px 8px;font-variant-numeric:tabular-nums;white-space:nowrap;align-self:center;animation:rnpop .3s ease-out}
+.seat .rn.on{display:inline-block}
+.seat .rn.w{background:#10b981;color:#022c22}.seat .rn.l{background:#3b0d0d;color:#fca5a5;border:1px solid rgba(239,68,68,.6)}.seat .rn.e{background:#334155;color:#e2e8f0}
+.seat.me .rn{font-size:12.5px;padding:4px 9px}
+.tarea.portrait .seat .rn{position:static;margin-left:6px;box-shadow:none;padding:2px 7px;font-size:10.5px}.tarea.portrait .seat .plate{display:flex;align-items:center}.tarea.portrait .seat .pi{flex:1 1 auto;min-width:0}
+@keyframes rnpop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
 .seat.won .plate{border-color:var(--gold2);box-shadow:0 0 0 2px rgba(242,210,126,.4),0 0 24px rgba(242,210,126,.55)}
 .av{width:34px;height:34px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#0f172a;position:relative;
   box-shadow:inset 0 -3px 0 rgba(0,0,0,.2),0 0 0 2px rgba(15,23,42,.9)}
@@ -1842,12 +1857,12 @@ var BL={
 var SIDEL={red:'Red',black:'Black',even:'Even',odd:'Odd',low:'Low',high:'High'};
 var SEATS=[],benched={};
 function buildSeats(){for(var i=0;i<5;i++){var d=document.createElement('div');d.className='seat gone'+(i===2?' me':'');d.id='seat'+i;
-  d.innerHTML='<div class="talk"></div><div class="plate"><div class="av">'+HAT+'<span class="avc"></span></div><div class="pi"><div class="nm"><span></span><em></em></div><div class="ch">$0</div></div></div>';
-  tarea.appendChild(d);SEATS.push({el:d,talk:d.querySelector('.talk'),av:d.querySelector('.av'),avc:d.querySelector('.avc'),nm:d.querySelector('.nm span'),tag:d.querySelector('.nm em'),ch:d.querySelector('.ch'),plate:d.querySelector('.plate'),cx:0,cy:0,talkT:0});}}
+  d.innerHTML='<div class="talk"></div><div class="plate"><div class="av">'+HAT+'<span class="avc"></span></div><div class="pi"><div class="nm"><span></span><em></em></div><div class="ch">$0</div></div><b class="rn"></b></div>';
+  tarea.appendChild(d);SEATS.push({el:d,talk:d.querySelector('.talk'),av:d.querySelector('.av'),avc:d.querySelector('.avc'),nm:d.querySelector('.nm span'),tag:d.querySelector('.nm em'),ch:d.querySelector('.ch'),plate:d.querySelector('.plate'),rn:d.querySelector('.rn'),cx:0,cy:0,talkT:0});}}
 function seatOwner(i){if(i===2)return me;for(var k=0;k<bots.length;k++)if(bots[k].slot===i)return bots[k];var o=LV.others();for(k=0;k<o.length;k++)if(o[k].slot===i)return o[k];return null;}
 function renderSeats(){for(var i=0;i<5;i++){var s=SEATS[i],o=seatOwner(i);s.el.classList.toggle('gone',!o||!!(o&&o.leaving));if(!o)continue;
   var nm=o.me&&LV.mode!=='solo'&&L?L.me.name:o.name;s.av.style.background=o.col;s.avc.textContent=o.me&&nm==='You'?'Y':nm.charAt(0).toUpperCase();s.nm.textContent=nm;s.tag.textContent=o.me||o.remote?(o.me&&LV.mode!=='solo'?'you':''):STY[o.sty].tag;
-  s.ch.textContent=money(o.bank+onTable(o));s.plate.title=o.me?'You':o.remote?o.name:o.name+' ('+STY[o.sty].tag+'): '+STY[o.sty].desc;}}
+  s.ch.textContent=money(o.bank+onTable(o));if(s.rn){var rv=o.roundNet;if(rv===undefined||rv===null){s.rn.className='rn';s.rn.textContent='';}else{s.rn.className='rn on '+(rv>0?'w':rv<0?'l':'e');s.rn.textContent=rv>0?'+'+money(rv):rv<0?'\u2212'+money(-rv):'Even';}}s.plate.title=o.me?'You':o.remote?o.name:o.name+' ('+STY[o.sty].tag+'): '+STY[o.sty].desc;}}
 function botsSeated(){return bots.length;}
 function fill(t,b,extra){extra=extra||{};return String(t).replace(/\{n\}/g,b.fav?b.fav[0]:lastNum!==null?nn(lastNum):'17').replace(/\{side\}/g,SIDEL[b.side]||'Red')
   .replace(/\{amt\}/g,money(b.mg||10)).replace(/\{call\}/g,b.call||'Voisins').replace(/\{w\}/g,extra.w!==undefined?nn(extra.w):'that');}
@@ -1937,7 +1952,7 @@ async function runSpin(){
   if(phase!=='bet'&&phase!=='locked'&&phase!=='wait')return;
   phase='spin';hideTip();hover(null);if(view!=='table')setView('table');flushBots();undo=[];
   if(onTable(me)>0)lastBets=JSON.parse(JSON.stringify(me.bets));
-  clearWin();setButtons();
+  clearWin();clearRound();setButtons();
   var N=WH.N,idx=forced!==null?WH.order.indexOf(forced):-1;if(idx<0)idx=rnd(N);forced=null;
   var win=WH.order[idx],quick=!opt.cine,cine=opt.cine&&!REDUCED;
   setMsg(onTable(me)>0?'Ball is in. <b>'+money(onTable(me))+'</b> riding on this spin.':'Ball is in. You are sitting this one out.');
@@ -1956,7 +1971,7 @@ async function runSpin(){
   var res=await settle(win,quick);
   var r=res.me;setMsg(netMsg(win,r));
   if(r.net>bigWin)bigWin=r.net;
-  if(r.net>0)try{window.suQ&&window.suQ('win');}catch(e){}if(r.net>0){(r.net>=onTable0(r)*3&&r.net>=100?SFX.big:SFX.win)();SEATS[2].el.classList.add('won');after(1600,function(){SEATS[2].el.classList.remove('won');});}else if(r.net<0)SFX.lose();
+  if(r.net>0)try{window.suQ&&window.suQ('win');}catch(e){}if(r.net>0){var bigW=r.net>=onTable0(r)*3&&r.net>=100;(bigW?SFX.big:SFX.win)();suBanner(r.lines.some(function(l){return l.kind==='Straight'&&l.ret>0;})?'Straight Up!':bigW?'Big Win!':'Winner!','+'+money(r.net));SEATS[2].el.classList.add('won');after(1600,function(){SEATS[2].el.classList.remove('won');});}else if(r.net<0)SFX.lose();
   logSpin(win,r);hud();renderSeats();renderStats();
   botReact(win,res);
   await wait(quick?500:1100);
@@ -1964,6 +1979,13 @@ async function runSpin(){
   if(me.bank<5&&onTable(me)===0){showBroke();return;}
   openBets();
 }
+function clearRound(){owners().forEach(function(o){o.roundNet=null;});[me].concat(bots,(function(){try{return LV.others()||[];}catch(e){return [];}})()).forEach(function(o){if(o)o.roundNet=null;});renderSeats();}
+/* Saddle Up win banner: suBanner('Winner!','+$50') */
+var suBanner=window.suBanner=(function(){var el=null,t=0;return function(word,sub,ms){try{
+  if(!el){el=document.createElement('div');el.className='suban';el.setAttribute('aria-hidden','true');el.innerHTML='<b></b><span></span>';document.body.appendChild(el);
+    try{var l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Rye&display=swap';document.head.appendChild(l);}catch(e){}}
+  el.querySelector('b').textContent=word;el.querySelector('span').textContent=sub||'';
+  el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(t);t=setTimeout(function(){el.classList.remove('on');},ms||2200);}catch(e){}};})();
 function onTable0(r){var t=0;r.lines.forEach(function(l){t+=l.s;});return t;}
 function openBets(){
   phase='bet';clearWin();
@@ -1992,7 +2014,7 @@ async function settle(win,quick){
       if(x.pe){var pe=x.pe;try{pe.getAnimations().forEach(function(a){a.cancel();});}catch(_){}flyEl(pe,x.pp,to,520*sp,{delay:i*25+30,s1:0.6,o1:0.15});}});
     await wait(560*sp);
   }
-  os.forEach(function(o){o.bank+=res[o.id].ret;o.bets={};o.lastNet=res[o.id].net;});
+  os.forEach(function(o){o.bank+=res[o.id].ret;o.bets={};o.lastNet=res[o.id].net;o.roundNet=res[o.id].lines.length?res[o.id].net:null;});
   renderStacks();renderSeats();hud();
   return res;
 }
