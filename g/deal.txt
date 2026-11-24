@@ -469,15 +469,18 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
 .chipi{background:radial-gradient(circle,var(--cc,#c9a227) 0 44%,#fff 45% 49%,var(--cc,#c9a227) 50% 62%,transparent 63%),repeating-conic-gradient(#f8f5ec 0 14deg,var(--cc,#c9a227) 14deg 45deg)!important;
   box-shadow:inset 0 0 0 1px rgba(0,0,0,.35),inset 0 2px 2px rgba(255,255,255,.45),0 2px 0 rgba(0,0,0,.45),0 3px 5px rgba(0,0,0,.4)!important;border:0!important}
 .chipi.g{--cc:#0f9d58}.chipi.n{--cc:#1f2937}.chipi.r{--cc:#c81e1e}
+.go.practice{display:block;margin:10px auto 0;background:rgba(255,255,255,.08);color:#f5e6c4;border:1px solid rgba(245,230,196,.35);box-shadow:none;font-size:15px;padding:10px 18px}.go.practice small{display:block;font:600 11px Inter,sans-serif;opacity:.75;margin-top:2px}
+.pnote{display:inline-block;margin-top:6px;opacity:.75;font-size:.9em}
+.mode{margin-left:auto;margin-right:12px;font:800 11px Inter,sans-serif;letter-spacing:.06em;border-radius:6px;padding:3px 8px}.mode:empty{display:none}.mode.prac{background:rgba(255,255,255,.12);color:#e5e7eb}.mode.real{background:#16a34a;color:#fff}
 </style>
 </head>
 <body>
 <div class="wrap">
   <span class="pill"><i></i>Arcade &#xb7; Game Parlor &#xb7; Game Shows</span>
   <h1>Twenty-six saddlebags.<span>Saddlebag Showdown.</span></h1>
-  <p class="sub">Pick a saddlebag and hold onto it. Open the others one by one, and every time the round ends <b>the Cattle Baron rings in with an offer</b> to buy your bag. <b>Shake on it</b> and take his money, or <b>ride on</b> and see what you&rsquo;re really holding. Every rebirth earns <b>one entry</b>, and <b>everything you win</b> goes straight into your casino bankroll.</p>
+  <p class="sub">Pick a saddlebag and hold onto it. Open the others one by one, and every time the round ends <b>the Cattle Baron rings in with an offer</b> to buy your bag. <b>Shake on it</b> and take his money, or <b>ride on</b> and see what you&rsquo;re really holding. Play a <b>practice ride</b> any time for fun. To win real money, use a <b>rebirth entry</b>: every rebirth earns one, and <b>everything you win</b> on an entry goes straight into your casino bankroll.</p>
   <div id="felt">
-    <div class="top" data-optbtn><span class="ttl">Saddlebag Showdown</span><span class="paidw">Bankroll: <b id="paid">$0.00</b></span></div>
+    <div class="top" data-optbtn><span class="ttl">Saddlebag Showdown</span><span class="mode" id="modeTag"></span><span class="paidw">Bankroll: <b id="paid">$0.00</b></span></div>
     <div class="host" id="host"></div>
     <div class="flash" id="flash"></div>
 
@@ -486,7 +489,8 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
         <div class="logo">Saddlebag<br>Showdown</div>
         <div class="tix"><span class="bagIc"></span><b id="gN">0</b><small>entries</small></div>
         <p id="gMsg"></p>
-        <button type="button" class="go big" id="gStart">Ride in</button>
+        <button type="button" class="go big" id="gStart">Ride in for the prize</button>
+        <button type="button" class="go practice" id="gPrac">Practice ride <small>free &#xb7; no payout</small></button>
       </div>
     </section>
 
@@ -517,7 +521,7 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
       <div class="hist" id="hist"></div>
     </div></div>
   </div>
-  <p class="rules"><b>How to play:</b> pick one of the 26 saddlebags to keep. Then open bags from the rack: 6 in the first round, then 5, 4, 3, 2, and one at a time after that. Each value you open is crossed off the board. At the end of every round the Cattle Baron calls with an offer for your bag; his offers creep closer to what your bag is worth as the game goes on. <b>Shake on it</b> to take the offer and end the game, or <b>ride on</b>. If you ride all the way to the last two bags, you can keep yours or swap it. You win the value you leave with, and 10% of it goes into your casino bankroll. One entry per rebirth; all values are pretend, but the 10% is real casino money.</p>
+  <p class="rules"><b>How to play:</b> pick one of the 26 saddlebags to keep. Then open bags from the rack: 6 in the first round, then 5, 4, 3, 2, and one at a time after that. Each value you open is crossed off the board. At the end of every round the Cattle Baron calls with an offer for your bag; his offers creep closer to what your bag is worth as the game goes on. <b>Shake on it</b> to take the offer and end the game, or <b>ride on</b>. If you ride all the way to the last two bags, you can keep yours or swap it. You win the value you leave with. On a <b>rebirth entry</b> (one per rebirth) all of it goes into your casino bankroll. <b>Practice rides</b> are free and unlimited, but pay nothing.</p>
 </div>
 
 <script>
@@ -585,15 +589,16 @@ var G=null;
 /* make-good: Showdown used to pay only 10%, so every trip already taken comes back once */
 function makeGood(){try{if(localStorage.getItem('su_deal_fix1'))return 0;var r=rbState(),u=Math.floor(+r.scUsed||0);localStorage.setItem('su_deal_fix1','1');if(u<=0)return 0;r.scUsed=0;localStorage.setItem('su_rebirth',JSON.stringify(r));return u;}catch(e){return 0;}}
 var MG=makeGood();
-function gate(){clearT();view('vGate');var n=entries();$('gN').textContent=n;$('gStart').disabled=!n;
-  $('gMsg').innerHTML=n?'You have <b>'+n+'</b> entr'+(n===1?'y':'ies')+'. One game per entry.':'Every <b>rebirth</b> earns one entry. Reach your next rebirth to ride in.';
+function gate(){clearT();view('vGate');var n=entries();$('gN').textContent=n;$('gStart').disabled=!n;$('modeTag').textContent='';$('modeTag').className='mode';
+  $('gMsg').innerHTML=(n?'You have <b>'+n+'</b> rebirth entr'+(n===1?'y':'ies')+'. Ride in for the prize and the money is yours.':'Every <b>rebirth</b> earns one entry, and only entry rides pay out.')+'<br><span class="pnote">Practice rides are free any time, just for fun. Nothing gets paid.</span>';
   if(MG)$('gMsg').innerHTML='<b>Payout fix:</b> Saddlebag Showdown now pays <b>100%</b> of what you win (it used to pay 10%). We gave back your '+MG+' past trip'+(MG===1?'':'s')+' so you can ride again for the full prize.<br>'+$('gMsg').innerHTML;
-  host('Welcome to Saddlebag Showdown!',n?'Twenty-six saddlebags, one Cattle Baron, and one big decision.':'Come back after your next rebirth.');$('paid').textContent='$0.00';}
-function start(){clearT();useEntry();q('play');var vals=shuffle(VALUES);
-  G={bag:{},mine:0,open:{},round:0,left:ROUNDS[0],offers:[],over:false};for(var i=1;i<=26;i++)G.bag[i]=vals[i-1];
+  host('Welcome to Saddlebag Showdown!',n?'Twenty-six saddlebags, one Cattle Baron, and one big decision.':'Take a practice ride, or come back after your next rebirth to play for real.');$('paid').textContent='$0.00';}
+function start(practice){clearT();busy=false;if(!practice){useEntry();q('play');}var vals=shuffle(VALUES);
+  G={bag:{},mine:0,open:{},round:0,left:ROUNDS[0],offers:[],over:false,practice:!!practice};
+  $('modeTag').textContent=practice?'PRACTICE \u00b7 no payout':'FOR REAL \u00b7 rebirth entry';$('modeTag').className='mode '+(practice?'prac':'real');for(var i=1;i<=26;i++)G.bag[i]=vals[i-1];
   view('vPlay');board();bags();$('mineBag').innerHTML='';$('mineTxt').textContent='Pick your saddlebag';status('Pick the saddlebag you want to keep');
   SFX.fanfare();SFX.applause(true);bigCall('LET’S RIDE!','Pick the saddlebag you want to keep',2400);
-  host('Pick your saddlebag, partner.','Whatever’s inside is yours, unless the Cattle Baron buys it off you.');}
+  host('Pick your saddlebag, partner.',practice?'Just a practice ride: play it like it’s real, but nothing gets paid.':'Whatever’s inside is yours, unless the Cattle Baron buys it off you.');}
 function remaining(){var a=[];for(var i=1;i<=26;i++)if(!G.open[i])a.push(G.bag[i]);return a;}
 function board(){var lo='',hi='',gone={};for(var i=1;i<=26;i++)if(G&&G.open[i])gone[G.bag[i]]=1;
   VALUES.forEach(function(v,k){var h='<div class="val'+(gone[v]?' gone':'')+'" data-v="'+v+'">'+(v<1?cents(v):money(v))+'</div>';if(k<13)lo+=h;else hi+=h;});
@@ -653,18 +658,21 @@ function endTwo(swap){$('phone').classList.add('hide');if(swap){var t=G.mine;G.m
   later(function(){$('mineBag').innerHTML='<div class="bag"><b>'+(v<1?cents(v):money(v))+'</b></div>';
     var big=v>o;(big?SFX.win:SFX.trombone)();if(big)SFX.applause(true);
     bigCall(big?'YOU WIN '+money(v).toUpperCase()+'!':'IT HELD '+(v<1?cents(v):money(v)),big?'The other bag had '+money(o):'The other bag had '+money(o),2800,!big);later(finish,3000);},1900);}
-function finish(){var v=G.won,cash=payout(v);q('over');if(v>=100000)q('win');view('vEnd');
+function finish(){var v=G.won,cash=G.practice?0:payout(v);if(!G.practice){q('over');if(v>=100000)q('win');}view('vEnd');
   $('endT').textContent=v>=500000?'A legendary payday!':v>=100000?'Big winner!':v>=10000?'Nice ride!':'That’s the show!';
-  $('endP').innerHTML='You leave with <b>'+(v<1?cents(v):money(v))+'</b>'+(G.how==='deal'?' from the Cattle Baron':' in your saddlebag')+'.<br><b>'+cents(cash)+'</b> went straight into your casino bankroll.';
-  host('Thanks for riding in!','Rebirth again to earn another entry.');}
-$('gStart').addEventListener('click',function(){if(entries()>0)start();});
+  $('endP').innerHTML='You leave with <b>'+(v<1?cents(v):money(v))+'</b>'+(G.how==='deal'?' from the Cattle Baron':' in your saddlebag')+'.<br>'+(G.practice?'<b>Practice ride:</b> nothing was paid. Use a rebirth entry to play for real money.':'<b>'+cents(cash)+'</b> went straight into your casino bankroll.');
+  host('Thanks for riding in!',G.practice?(entries()?'You’ve got an entry waiting. Ride in for the prize!':'Rebirth to earn an entry and play for real.'):'Rebirth again to earn another entry.');}
+$('gStart').addEventListener('click',function(){if(entries()>0)start(false);});
+$('gPrac').addEventListener('click',function(){start(true);});
 $('bags').addEventListener('click',function(e){var b=e.target.closest('.bag');if(b)pickBag(+b.getAttribute('data-i'));});
 $('bDeal').addEventListener('click',function(){if(G&&!G.other)takeDeal();});
 $('bNo').addEventListener('click',function(){if(G&&!G.other)noDeal();});
 $('endBack').addEventListener('click',function(){try{parent.postMessage({arcade:'nav',to:'floor'},'*');}catch(e){}gate();});
-addEventListener('storage',function(e){if(e.key==='su_rebirth'&&(!G||G.over))gate();});
-addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='visible'&&d.on&&(!G||G.over))gate();});
-window.__dl_dbg={start:start,state:function(){return G;},pick:pickBag,deal:takeDeal,no:noDeal};
+/* refresh the entry count on the start screen, but never cover up a result you're still looking at */
+function onGate(){return !$('vGate').classList.contains('hide');}
+addEventListener('storage',function(e){if(e.key==='su_rebirth'&&(!G||(G.over&&onGate())))gate();});
+addEventListener('message',function(e){var d=e.data;if(d&&d.arcade==='visible'&&d.on&&(!G||(G.over&&$('vEnd').classList.contains('hide'))))gate();});
+window.__dl_dbg={start:start,entries:entries,state:function(){return G;},pick:pickBag,deal:takeDeal,no:noDeal};
 gate();
 })();
 </script>
