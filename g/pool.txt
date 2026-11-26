@@ -332,6 +332,11 @@ html.fs.fsnarrow .wrap{padding:6px 4px!important}
 .felt.m-short .bank{flex-direction:row;align-items:baseline;gap:6px}
 .felt.m-short .rack{height:auto;min-height:34px;padding:5px 8px;flex-wrap:wrap;gap:3px}
 .felt.m-short .rack .mb{width:13px;height:13px}
+/* the 9-Ball tracker has nine balls: let them shrink to fit instead of spilling under the buttons */
+.rack .rb{max-width:100%;flex-wrap:wrap;row-gap:2px}
+.felt.m-port .rack .rb{width:100%}.felt.m-port .rack .rb .mb{width:13px;height:13px}
+.felt.m-port .rack:has(.rb .mb:nth-child(6)){height:auto;min-height:44px;padding:4px 8px}
+.felt.m-port .rack{min-width:94px}.felt.m-port .bar>*:not(.rack){flex-shrink:1;min-width:0}.felt.m-port .bar>*:first-child{flex-shrink:0}
 .felt.m-short .bank{align-items:flex-start}.felt.m-short .bank b{font-size:15px}
 .felt.m-short .btn2{height:40px}
 .felt.m-short .optslot .fsopt-btn{width:100%;justify-content:center}
