@@ -291,7 +291,8 @@ html.fs .hud{position:absolute!important;z-index:40;pointer-events:auto}
   function soon(){if(!endT)endT=setTimeout(addEnd,350);}
   /* daily quests: a finished game (its end screen appeared) counts as "over", and a winning one also as "win" */
   window.suQ=function(ev,n){try{parent.postMessage({arcade:'quest',ev:ev,n:n==null?1:n},'*');}catch(x){}};
-  function endTrack(){try{endBtns().forEach(function(b){var vis=!!b.offsetParent;if(vis&&!b._suq){b._suq=1;var box=b.parentNode;
+  function shown(b){if(!b.offsetParent)return false;var r=b.getBoundingClientRect();if(r.width<2||r.height<2)return false;for(var el=b;el&&el!==document.documentElement;el=el.parentElement){var cs=getComputedStyle(el);if(cs.visibility==='hidden'||cs.display==='none'||+cs.opacity<0.2||el.hidden||(typeof el.className==='string'&&/(^|\s)(hide|hidden|off)(\s|$)/.test(el.className)&&el!==b))return false;}return true;}
+  function endTrack(){try{endBtns().forEach(function(b){var vis=shown(b);if(vis&&!b._suq){b._suq=1;var box=b.parentNode;
       for(var k=0;k<5&&box&&box!==document.body;k++){if(OVL.test((box.id||'')+' '+(typeof box.className==='string'?box.className:'')))break;box=box.parentNode;}
       var tx=((box&&box.textContent)||'').slice(0,500);window.suQ('over');
       if(/\byou win\b|\byou won\b|you’re the winner|\bsolved\b|\bcleared\b|\bvictory\b|\bmahjong!/i.test(tx)&&!/\byou lose\b|\byou lost\b/i.test(tx))window.suQ('win');}
