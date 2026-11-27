@@ -2434,6 +2434,21 @@ function talk(kind,seat,force){
   setTimeout(function(){try{LV.chat.post('bot-'+bot.key,bot.name,t,bot.col);}catch(e){}},500+Math.random()*700);
 }
 
+/* ================= theme switch mid-game: hand the game to the arcade, get it back after the reload ================= */
+function poolSnap(){return {v:1,at:Date.now(),G:JSON.parse(JSON.stringify(G)),opt:JSON.parse(JSON.stringify(opt)),aim:{a:AIM.a,sx:AIM.sx,sy:AIM.sy}};}
+function poolRestore(S){if(!S||S.v!==1||!S.G||Date.now()-(S.at||0)>120000)return;
+  gen++;SIMRUN=null;SINKING=[];acc=0;drag=null;
+  Object.keys(S.G).forEach(function(k){G[k]=S.G[k];});if(S.opt)Object.keys(S.opt).forEach(function(k){opt[k]=S.opt[k];});
+  resetRot();try{renderSetup();}catch(e){}$('setup').classList.add('hide');$('res').classList.add('hide');renderBank();
+  var keepBih=G.bih,keepK=G.kitchen;nextTurn();G.bih=keepBih;G.kitchen=keepK;
+  if(S.aim&&G.players[G.turn].kind==='me'){AIM.a=S.aim.a;AIM.sx=S.aim.sx||0;AIM.sy=S.aim.sy||0;VIEW.a=AIM.a;}
+  hud();toast('Theme changed — game resumed');}
+window.addEventListener('message',function(e){var d=e.data;if(!d)return;
+  if(d.arcade==='snapReq'){var solo=!G.live&&!G.watch&&(G.phase==='aim'||G.phase==='run');
+    var send=function(){try{parent.postMessage({arcade:'snap',rid:d.rid,state:solo&&G.phase==='aim'?poolSnap():null},'*');}catch(x){}};
+    if(solo&&G.phase==='run'){try{parent.postMessage({arcade:'snapWait',rid:d.rid},'*');}catch(x){}var t0=Date.now();(function w(){if(G.phase==='run'&&Date.now()-t0<9000){setTimeout(w,120);return;}send();})();}
+    else send();}
+  else if(d.arcade==='restore'&&d.state){poolRestore(d.state);}});
 /* ================= game start / end ================= */
 function startSolo(){
   var st=opt.stake;if(st>bank)return;
