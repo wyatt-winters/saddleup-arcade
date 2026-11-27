@@ -756,6 +756,8 @@ html:not(.fs) .felt.a-bg_casino:not(.fsm){background:linear-gradient(180deg,rgba
 .felt.cabframe .mt .mh{width:34px;height:34px;margin:-22px 0 0 -17px}
 .felt.cabframe .mt .flag{top:-15px;width:16px;height:24px}
 .felt.cabframe .rw{margin-bottom:52px}
+/* keep the framed reel window its own size and centred: a wider grid column used to stretch it, pushing the reels off-centre in the frame */
+.felt.cabframe .rw,.felt.cabfull .rw{justify-self:center;width:max-content;max-width:none}
 .felt.cabfull .fsbar{top:-14px}
 .felt.cabfull .marq{background:none;box-shadow:none;border:0;padding:0;max-width:none}
 .felt.cabfull .bulbs,.felt.cabfull .marq .glass{display:none}
@@ -777,6 +779,9 @@ html:not(.fs) .felt.a-bg_casino:not(.fsm){background:linear-gradient(180deg,rgba
 html.fs .felt.a-jp_grand.lay-narrow{--cw0:42px}
 .felt.a-jp_grand .jp{--coinw:var(--cw0)}
 .felt.a-jp_grand.lay-short.big .jp span{font-size:12px!important;padding:1px 6px}
+/* let the amount pill grow to its text (up to the coin's slot) so values aren't cut to "$..." */
+.felt.a-jp_grand .jp span{width:max-content!important;max-width:100%;text-overflow:clip;margin-left:auto;margin-right:auto}
+.felt.a-jp_grand.lay-short .jp span{padding-left:4px!important;padding-right:4px!important}
 .felt.a-jp_grand.lay-short:not(.big) .jp span{font-size:9.5px!important;padding:0 4px}
 .felt.a-jp_grand.lay-short:not(.big) .marq{padding:5px 6px}.felt.a-jp_grand.lay-short:not(.big) .glass{margin:0 0 3px}
 /* collector + tokens */
@@ -2559,10 +2564,12 @@ function fillBlur(c,fs){var bs=blurs[c].firstChild,h='';for(var i=0;i<8;i++){var
 var LAY='wide',CS=96,CABFULL=false;
 function setCS(cs){cs=Math.max(34,Math.floor(cs));CS=cs;felt.style.setProperty('--cs',cs+'px');felt.style.setProperty('--g',Math.max(3,Math.round(cs*0.07))+'px');try{sizeCab();}catch(e){}try{sizeBoard();}catch(e){}}
 function over(){var c=cab.getBoundingClientRect(),bad=false;[].forEach.call(cab.querySelectorAll('.marq,.lad,.rw,.side,.winbar,.ctl,.feed,.side .nb,.mtr,.bty,.coll,.pbar'),function(e){var r=e.getBoundingClientRect();if(r.width&&(r.bottom>c.bottom+1||r.top<c.top-1||r.right>c.right+1||r.left<c.left-1))bad=true;});return bad;}
+var LFORCE='';
 function layout(){
   var fs=root.classList.contains('fs'),cs0=getComputedStyle(felt);
   var W=felt.clientWidth-parseFloat(cs0.paddingLeft)-parseFloat(cs0.paddingRight),H=felt.clientHeight-parseFloat(cs0.paddingTop)-parseFloat(cs0.paddingBottom);
   var mode=fs?(W>H*1.25&&(H<520||W>H*1.45)?'short':(W>=760&&W>H*1.02?'wide':'narrow')):(W>=720?'wide':'narrow');
+  if(LFORCE)mode=LFORCE;
   var big=mode==='short'&&H>=520;
   if(mode!==LAY){felt.classList.remove('lay-'+LAY);LAY=mode;}felt.classList.add('lay-'+mode);felt.classList.toggle('big',big);
   var cs,cabOn=!!A('cabinet'),rwf=cabOn?6.65:5.52,rhf=cabOn?5.4:4.45;CABFULL=false;
@@ -2574,8 +2581,11 @@ function layout(){
   if(fs){cab.style.alignContent='start';for(var i=0;i<80&&over()&&CS>34;i++)setCS(CS-(CS>80?3:1));
     if(mode==='narrow'&&CS<cs*0.94){felt.classList.add('noside');setCS(cs);for(i=0;i<80&&over()&&CS>34;i++)setCS(CS-(CS>80?3:1));}
     cab.style.alignContent='';}
+  /* full screen: if the stacked layout had to shrink the reels a lot, the side-by-side layout usually fits them bigger */
+  if(fs&&!LFORCE&&mode==='wide'&&CS<80&&H>=420){var got=CS;LFORCE='short';layout();var alt=CS;LFORCE='';if(alt<=got){layout2('wide');}return;}
   sizeFx();placeAutoPop();try{renderJP();}catch(e){}
 }
+function layout2(m){LFORCE=m;layout();LFORCE='';}
 var relT=0,lastSig='';
 function relayout(force){cancelAnimationFrame(relT);relT=requestAnimationFrame(function(){var fs=root.classList.contains('fs'),sig=felt.clientWidth+'x'+(fs?felt.clientHeight:'n')+(fs?'f':'')+(root.classList.contains('fsshort')?'s':'');if(sig===lastSig&&!force)return;lastSig=sig;layout();});}
 addEventListener('resize',function(){relayout();});
@@ -2622,7 +2632,10 @@ function renderBet(){$('betV').textContent=money(bet());$('pbB').textContent=mon
 function jpShort(v){return v>=1e6?'$'+__suSig(v):v>=1000?'$'+(Math.round(v/100)/10)+'K':'$'+Math.round(v);}
 function renderJP(){var tiny=(LAY==='short'&&!felt.classList.contains('big'))||(LAY==='narrow'&&root.classList.contains('fs')&&felt.classList.contains('a-jp_grand'));for(var i=0;i<4;i++){var v=r2(pools[i]*bet());var el=$('jp'+i);el.textContent=tiny?jpShort(v):(LAY==='narrow'||LAY==='short')?money(Math.round(v)):money(v,true);
   /* if the amount does not fit its pill, drop the cents, then shorten to $10K */
-  if(el.scrollWidth>el.clientWidth+1){el.textContent=money(Math.round(v));if(el.scrollWidth>el.clientWidth+1)el.textContent=jpShort(v);}}}
+  el.style.removeProperty('font-size');
+  if(el.scrollWidth>el.clientWidth+1){el.textContent=money(Math.round(v));if(el.scrollWidth>el.clientWidth+1)el.textContent=jpShort(v);}
+  /* still too wide: shrink the text a step at a time rather than showing "$..." */
+  for(var fz=parseFloat(getComputedStyle(el).fontSize),k=0;k<8&&el.scrollWidth>el.clientWidth+1&&fz>7;k++){fz-=1;el.style.setProperty('font-size',fz+'px','important');}}}
 function winMsg(t){var b=$('winV');b.className='msg';b.textContent=t;$('winK').textContent='';$('winK').style.display='none';}
 function winAmt(v,label){var b=$('winV');b.className='';b.textContent=money(v,true);var k=$('winK');k.style.display='';k.textContent=label||'Win';}
 function setButtons(){
