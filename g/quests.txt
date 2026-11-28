@@ -1112,7 +1112,7 @@ var pop=null,pt=0;document.addEventListener('click',function(e){var av=e.target&
    Progress is written by the arcade shell (it hears every game), payouts are trading cards (cards_collect.js). */
 var SUQ=(function(){
   var CASINO=['bj','holdem','bacc','war','craps','roul','slots','wheel','crash','derby','pool','backgammon','bingo','keno','bspins','vpoker','coach'];
-  var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','spades','untangle','loop','fish','gb','gbc','gba','psx','theater','xword','chess','checkers','pdice','trail','wrangler','ironclads','sudoku','drop4','freecell','survey','pwheel'];
+  var PARLOR=['sol','spider','mines','gold','dominoes','mjsol','mahjong','cwar','spades','untangle','loop','fish','gb','gbc','gba','psx','theater','xword','wsearch','logic','jigsaw','chess','checkers','pdice','trail','wrangler','ironclads','sudoku','drop4','freecell','survey','pwheel'];
   /* t: e/m/h   g: a game id, 'casino', 'parlor' or 'any'   ev: open | bet | pay | over | win | spin | war | daub | play
      amt: count dollars instead of times   distinct: count different games */
   /* quests added later join the rotation from NEWDAY, so a day's picks never change mid-day */
@@ -1152,6 +1152,14 @@ var SUQ=(function(){
     ['xw1','e','Solve a crossword','xword','solve',1],
     ['xw2','m','Solve the Crossword of the Day','xword','daily',1],
     ['xw3','h','Solve a crossword with no help','xword','clean',1],
+    ['ws1','e','Solve a word search','wsearch','solve',1],
+    ['ws2','m','Solve the daily word search','wsearch','daily',1],
+    ['ws3','h','Solve a Hard word search','wsearch','hard',1],
+    ['lg1','e','Solve a logic puzzle','logic','solve',1],
+    ['lg2','m','Solve the daily logic puzzle','logic','daily',1],
+    ['lg3','h','Solve a logic puzzle with no help','logic','clean',1],
+    ['jg1','e','Finish a jigsaw puzzle','jigsaw','solve',1],
+    ['jg2','h','Finish a jigsaw with 96 or more pieces','jigsaw','big',1],
     ['ph2','m','Watch 5 minutes of Saddle Up TV','theater','minute',1],
     ['mn1','e','Try a round of Minesweeper','mines','open',1],
     ['gr1','e','Work the sluice at Gold Rush','gold','open',1],
